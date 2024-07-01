@@ -9,6 +9,9 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
+use nostr_sdk::prelude::*;
+use serde::{Deserialize, Serialize};
+use specta::Type;
 use std::sync::Mutex;
 use std::time::Duration;
 use std::{
@@ -16,24 +19,10 @@ use std::{
   io::{self, BufRead},
   str::FromStr,
 };
-
-use nostr_sdk::prelude::*;
-use serde::{Deserialize, Serialize};
-use specta::Type;
-#[cfg(target_os = "macos")]
-use tauri::tray::{MouseButtonState, TrayIconEvent};
 use tauri::{path::BaseDirectory, Manager};
-use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
-#[cfg(target_os = "macos")]
-use crate::fns::{
-  position_menubar_panel, setup_menubar_panel_listeners, swizzle_to_menubar_panel,
-  update_menubar_appearance,
-};
-
 pub mod commands;
-pub mod fns;
 pub mod nostr;
 
 #[derive(Serialize)]
@@ -129,7 +118,6 @@ fn main() {
       nostr::event::event_to_bech32,
       nostr::event::user_to_bech32,
       nostr::event::unlisten,
-      commands::folder::show_in_folder,
       commands::window::create_column,
       commands::window::close_column,
       commands::window::reposition_column,
@@ -160,37 +148,6 @@ fn main() {
       // Set a custom inset to the traffic lights
       #[cfg(target_os = "macos")]
       main_window.set_traffic_lights_inset(8.0, 16.0).unwrap();
-
-      // Create panel
-      #[cfg(target_os = "macos")]
-      swizzle_to_menubar_panel(app.handle());
-      #[cfg(target_os = "macos")]
-      update_menubar_appearance(app.handle());
-      #[cfg(target_os = "macos")]
-      setup_menubar_panel_listeners(app.handle());
-
-      // Setup tray icon
-      #[cfg(target_os = "macos")]
-      let tray = app.tray_by_id("tray_panel").unwrap();
-
-      // Handle tray icon event
-      #[cfg(target_os = "macos")]
-      tray.on_tray_icon_event(|tray, event| {
-        if let TrayIconEvent::Click { button_state, .. } = event {
-          if button_state == MouseButtonState::Up {
-            let app = tray.app_handle();
-            let panel = app.get_webview_panel("panel").unwrap();
-
-            match panel.is_visible() {
-              true => panel.order_out(None),
-              false => {
-                position_menubar_panel(app, 0.0);
-                panel.show();
-              }
-            }
-          }
-        }
-      });
 
       // Create data folder if not exist
       let home_dir = app.path().home_dir().unwrap();

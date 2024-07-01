@@ -15,7 +15,6 @@ nostr-sdk = { version = "0.32", features = ["sqlite"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-monitor = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
 tauri = { version = "2.0.0-beta", features = [
   "unstable",
   "tray-icon",
@@ -34,7 +33,6 @@ tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace"
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2" }
 tauri-specta = { version = "^2.0.0-rc.11", features = ["typescript"] }
 tauri-plugin-theme = "0.4.1"
 tauri-plugin-decorum = "0.1.0"
@@ -51,6 +49,8 @@ regex = "1.10.4"
 cocoa = "0.25.0"
 objc = "0.2.7"
 rand = "0.8.5"
+monitor = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
+tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2" }
 
 [profile.release]
 codegen-units = 1

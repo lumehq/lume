@@ -1,6 +1,12 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "app": {
+    "trayIcon": {
+      "id": "main",
+      "iconPath": "./icons/tray.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
     "windows": [
       {
         "title": "Lume",
@@ -15,22 +21,6 @@
           "state": "followsWindowActiveState",
           "effects": [
             "underWindowBackground"
-          ]
-        }
-      },
-      {
-        "title": "Lume Panel",
-        "label": "panel",
-        "url": "/panel",
-        "width": 350,
-        "height": 500,
-        "fullscreen": false,
-        "resizable": false,
-        "visible": false,
-        "decorations": false,
-        "windowEffects": {
-          "effects": [
-            "popover"
           ]
         }
       }

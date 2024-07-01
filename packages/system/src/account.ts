@@ -1,5 +1,4 @@
 import type { Metadata } from "@lume/types";
-import { Window } from "@tauri-apps/api/window";
 import { type Result, commands } from "./commands";
 
 export class NostrAccount {
@@ -24,9 +23,6 @@ export class NostrAccount {
 		}
 
 		if (query.status === "ok") {
-			const panel = Window.getByLabel("panel");
-			panel.emit("load-notification", { account: npub }); // trigger load notification
-
 			return query.data;
 		} else {
 			throw new Error(query.error);

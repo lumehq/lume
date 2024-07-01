@@ -1,18 +1,16 @@
 use std::ffi::CString;
 
-use cocoa::appkit::NSWindowCollectionBehavior;
-use tauri::Manager;
+use tauri::{AppHandle, Manager, WebviewWindow};
 use tauri_nspanel::{
   block::ConcreteBlock,
   cocoa::{
-    appkit::{NSMainMenuWindowLevel, NSView, NSWindow},
+    appkit::{NSMainMenuWindowLevel, NSView, NSWindow, NSWindowCollectionBehavior},
     base::{id, nil},
     foundation::{NSPoint, NSRect},
   },
   objc::{class, msg_send, runtime::NO, sel, sel_impl},
   panel_delegate, ManagerExt, WebviewWindowExt,
 };
-use tauri_plugin_decorum::WebviewWindowExt as WebviewWindowExt2;
 
 #[allow(non_upper_case_globals)]
 const NSWindowStyleMaskNonActivatingPanel: i32 = 1 << 7;
@@ -23,14 +21,17 @@ pub fn swizzle_to_menubar_panel(app_handle: &tauri::AppHandle) {
   });
 
   let window = app_handle.get_webview_window("panel").unwrap();
-  window.make_transparent().unwrap();
 
   let panel = window.to_panel().unwrap();
+
   let handle = app_handle.clone();
 
   panel_delegate.set_listener(Box::new(move |delegate_name: String| {
-    if delegate_name.as_str() == "window_did_resign_key" {
-      let _ = handle.emit("menubar_panel_did_resign_key", ());
+    match delegate_name.as_str() {
+      "window_did_resign_key" => {
+        let _ = handle.emit("menubar_panel_did_resign_key", ());
+      }
+      _ => (),
     }
   }));
 
@@ -47,12 +48,14 @@ pub fn swizzle_to_menubar_panel(app_handle: &tauri::AppHandle) {
   panel.set_delegate(panel_delegate);
 }
 
-pub fn setup_menubar_panel_listeners(app_handle: &tauri::AppHandle) {
+pub fn setup_menubar_panel_listeners(app_handle: &AppHandle) {
   fn hide_menubar_panel(app_handle: &tauri::AppHandle) {
     if check_menubar_frontmost() {
       return;
     }
+
     let panel = app_handle.get_webview_panel("panel").unwrap();
+
     panel.order_out(None);
   }
 
@@ -79,19 +82,16 @@ pub fn setup_menubar_panel_listeners(app_handle: &tauri::AppHandle) {
   );
 }
 
-pub fn update_menubar_appearance(app_handle: &tauri::AppHandle) {
-  let window = app_handle.get_window("panel").unwrap();
-  set_corner_radius(&window, 13.0);
-}
-
-pub fn set_corner_radius(window: &tauri::Window, radius: f64) {
+pub fn set_corner_radius(window: &WebviewWindow, radius: f64) {
   let win: id = window.ns_window().unwrap() as _;
 
   unsafe {
     let view: id = win.contentView();
+
     view.wantsLayer();
 
     let layer: id = view.layer();
+
     let _: () = msg_send![layer, setCornerRadius: radius];
   }
 }
@@ -138,7 +138,6 @@ pub fn position_menubar_panel(app_handle: &tauri::AppHandle, padding_top: f64) {
 
 fn register_workspace_listener(name: String, callback: Box<dyn Fn()>) {
   let workspace: id = unsafe { msg_send![class!(NSWorkspace), sharedWorkspace] };
-
   let notification_center: id = unsafe { msg_send![workspace, notificationCenter] };
 
   let block = ConcreteBlock::new(move |_notif: id| {
@@ -160,7 +159,6 @@ fn register_workspace_listener(name: String, callback: Box<dyn Fn()>) {
 
 fn app_pid() -> i32 {
   let process_info: id = unsafe { msg_send![class!(NSProcessInfo), processInfo] };
-
   let pid: i32 = unsafe { msg_send![process_info, processIdentifier] };
 
   pid

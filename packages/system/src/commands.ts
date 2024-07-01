@@ -396,9 +396,6 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async showInFolder(path: string) : Promise<void> {
-await TAURI_INVOKE("show_in_folder", { path });
-},
 async createColumn(column: Column) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("create_column", { column }) };
