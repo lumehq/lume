@@ -1,7 +1,7 @@
 import { CommunityIcon, LaurelIcon } from "@lume/icons";
 import type { LumeColumn } from "@lume/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { resolveResource } from "@tauri-apps/api/path";
 import { getCurrent } from "@tauri-apps/api/window";
 import { readTextFile } from "@tauri-apps/plugin-fs";
@@ -85,6 +85,9 @@ function Screen() {
 								<CommunityIcon className="size-4" />
 							</div>
 							Community
+						</div>
+						<div className="w-full h-20 rounded-xl flex items-center justify-center text-sm font-medium bg-black/5 dark:bg-white/5">
+							Coming Soon.
 						</div>
 					</div>
 				</ScrollArea.Viewport>

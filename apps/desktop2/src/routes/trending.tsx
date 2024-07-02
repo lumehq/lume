@@ -25,14 +25,14 @@ function Screen() {
 
 	return (
 		<div className="flex flex-col h-full">
-			<div className="inline-flex items-center w-full gap-1 px-3 h-11 shrink-0">
-				<div className="inline-flex items-center w-full h-full gap-1">
+			<div className="shrink-0 h-11 flex items-center w-full gap-1 px-3">
+				<div className="flex w-full h-full gap-1">
 					<Link to="/trending/notes" search={search}>
 						{({ isActive }) => (
 							<div
 								className={cn(
-									"inline-flex h-7 w-max items-center justify-center gap-2 rounded-full px-3 text-sm font-medium",
-									isActive ? "bg-neutral-50 dark:bg-white/10" : "opacity-50",
+									"inline-flex h-8 w-max items-center justify-center gap-2 rounded-full px-3 text-sm font-medium",
+									isActive ? "bg-black/10 dark:bg-white/10" : "opacity-50",
 								)}
 							>
 								<ArticleIcon className="size-4" />
@@ -44,8 +44,8 @@ function Screen() {
 						{({ isActive }) => (
 							<div
 								className={cn(
-									"inline-flex h-7 w-max items-center justify-center gap-2 rounded-full px-3 text-sm font-medium",
-									isActive ? "bg-neutral-50 dark:bg-white/10" : "opacity-50",
+									"inline-flex h-8 w-max items-center justify-center gap-2 rounded-full px-3 text-sm font-medium",
+									isActive ? "bg-black/10 dark:bg-white/10" : "opacity-50",
 								)}
 							>
 								<GroupFeedsIcon className="size-4" />
@@ -55,7 +55,7 @@ function Screen() {
 					</Link>
 				</div>
 			</div>
-			<div className="flex-1 w-full h-full p-2 overflow-y-auto scrollbar-none">
+			<div className="flex-1 w-full h-full overflow-y-auto scrollbar-none">
 				<Outlet />
 			</div>
 		</div>
