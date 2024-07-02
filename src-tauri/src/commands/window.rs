@@ -221,21 +221,6 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
 
 #[tauri::command]
 #[specta::specta]
-pub fn set_badge(count: i32) {
-  #[cfg(target_os = "macos")]
-  unsafe {
-    let label = if count == 0 {
-      nil
-    } else {
-      NSString::alloc(nil).init_str(&format!("{}", count))
-    };
-    let dock_tile: cocoa::base::id = msg_send![NSApp(), dockTile];
-    let _: cocoa::base::id = msg_send![dock_tile, setBadgeLabel: label];
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
 pub fn open_main_window(app: tauri::AppHandle) {
   if let Some(window) = app.get_window("main") {
     if window.is_visible().unwrap_or_default() {
@@ -253,5 +238,26 @@ pub fn open_main_window(app: tauri::AppHandle) {
     // Make main window transparent
     #[cfg(target_os = "macos")]
     window.make_transparent().unwrap();
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn force_quit() {
+  std::process::exit(0)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn set_badge(count: i32) {
+  #[cfg(target_os = "macos")]
+  unsafe {
+    let label = if count == 0 {
+      nil
+    } else {
+      NSString::alloc(nil).init_str(&format!("{}", count))
+    };
+    let dock_tile: cocoa::base::id = msg_send![NSApp(), dockTile];
+    let _: cocoa::base::id = msg_send![dock_tile, setBadgeLabel: label];
   }
 }
