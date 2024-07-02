@@ -34,8 +34,8 @@ function Screen() {
 			type: "add",
 			column: {
 				label: "store",
-				name: "Store",
-				content: "/store/official",
+				name: "Column Gallery",
+				content: "/store",
 			},
 		});
 	};
