@@ -428,6 +428,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async reloadColumn(label: string) : Promise<Result<null, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("reload_column", { label }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async openWindow(window: Window) : Promise<Result<null, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("open_window", { window }) };
