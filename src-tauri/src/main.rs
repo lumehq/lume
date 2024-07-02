@@ -127,7 +127,6 @@ fn main() {
       commands::window::reload_column,
       commands::window::open_window,
       commands::window::open_main_window,
-      commands::window::force_quit,
       commands::window::set_badge
     ]);
 
