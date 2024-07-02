@@ -15,7 +15,7 @@ export const Quote = memo(function Quote({
 		<Note.Provider event={event}>
 			<Note.Root
 				className={cn(
-					"bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl flex flex-col gap-3 shadow-primary dark:ring-1 ring-neutral-800/50",
+					"bg-white dark:bg-black/20 rounded-xl flex flex-col gap-3 shadow-primary dark:ring-1 ring-neutral-800/50",
 					className,
 				)}
 			>

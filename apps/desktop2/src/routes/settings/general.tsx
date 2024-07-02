@@ -132,6 +132,28 @@ function Screen() {
 						</div>
 						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
+								<h3 className="font-medium">Vibrancy Effect</h3>
+								<p className="text-sm text-neutral-700 dark:text-neutral-300">
+									Make the window transparent.
+								</p>
+							</div>
+							<div className="flex justify-end w-36 shrink-0">
+								<Switch.Root
+									checked={settings.vibrancy}
+									onClick={() =>
+										setSettings((prev) => ({
+											...prev,
+											vibrancy: !prev.vibrancy,
+										}))
+									}
+									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+								>
+									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+								</Switch.Root>
+							</div>
+						</div>
+						<div className="flex items-start justify-between w-full gap-4 py-3">
+							<div className="flex-1">
 								<h3 className="font-medium">Zap Button</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
 									Shows the Zap button when viewing a note.

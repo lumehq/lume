@@ -50,7 +50,7 @@ function Screen() {
 
 	return (
 		<Container withDrag>
-			<Box className="px-0 scrollbar-none bg-black/5 dark:bg-white/5 backdrop-blur-sm">
+			<Box className="px-0 scrollbar-none bg-black/5 dark:bg-white/5">
 				<WindowVirtualizer>
 					<User.Provider pubkey={pubkey}>
 						<User.Root>

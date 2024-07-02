@@ -45,7 +45,7 @@ function Screen() {
 							className="absolute left-0 top-0 z-10 h-full w-full object-cover"
 						/>
 					) : null}
-					<div className="absolute bottom-0 left-0 z-20 h-16 w-full bg-black/40 px-3 backdrop-blur-xl">
+					<div className="absolute bottom-0 left-0 z-20 h-16 w-full bg-black/40 px-3">
 						<div className="flex h-full items-center justify-between">
 							<div>
 								<h1 className="font-semibold text-white">{column.name}</h1>

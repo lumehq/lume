@@ -69,7 +69,7 @@ function Screen() {
 					data.map((item) => (
 						<div
 							key={item.pubkey}
-							className="w-full p-3 mb-2 overflow-hidden bg-white rounded-lg h-max dark:bg-black/20 backdrop-blur-lg shadow-primary dark:ring-1 ring-neutral-800/50"
+							className="w-full p-3 mb-2 overflow-hidden bg-white rounded-lg h-max dark:bg-black/20 shadow-primary dark:ring-1 ring-neutral-800/50"
 						>
 							<User.Provider pubkey={item.pubkey} embedProfile={item.profile}>
 								<User.Root className="flex flex-col w-full h-full gap-2">

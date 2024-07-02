@@ -188,7 +188,7 @@ function Screen() {
 						{[...data.reactions.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 bg-black/10 dark:bg-white/10"
 							>
 								<div className="flex flex-col flex-1 min-w-0 gap-2">
 									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
@@ -197,7 +197,7 @@ function Screen() {
 									<div className="flex flex-wrap items-center gap-3">
 										{events.map((event) => (
 											<User.Provider key={event.id} pubkey={event.pubkey}>
-												<User.Root className="shrink-0 flex rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
+												<User.Root className="shrink-0 flex rounded-full h-8 bg-black/10 dark:bg-white/10 p-[2px]">
 													<User.Avatar className="flex-1 rounded-full size-7" />
 													<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
 														{event.kind === Kind.Reaction ? (
@@ -222,7 +222,7 @@ function Screen() {
 						{[...data.zaps.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 bg-black/10 dark:bg-white/10"
 							>
 								<div className="flex flex-col flex-1 min-w-0 gap-2">
 									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
@@ -234,7 +234,7 @@ function Screen() {
 												key={event.id}
 												pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
 											>
-												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
+												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-8 bg-black/10 dark:bg-white/10 p-[2px]">
 													<User.Avatar className="rounded-full size-7" />
 													<div className="flex-1 h-7 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-sm truncate">
 														₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
@@ -319,7 +319,7 @@ function TextNote({ event }: { event: LumeEvent }) {
 
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className="flex flex-col p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
+			<Note.Root className="flex flex-col p-2 mb-2 rounded-lg shrink-0 bg-black/10 dark:bg-white/10">
 				<User.Provider pubkey={event.pubkey}>
 					<User.Root className="inline-flex items-center gap-2">
 						<User.Avatar className="rounded-full size-9" />

@@ -5,7 +5,7 @@ import {
 	PlusIcon,
 	SearchIcon,
 } from "@lume/icons";
-import { LumeWindow, NostrAccount } from "@lume/system";
+import { LumeWindow, NostrAccount, NostrQuery } from "@lume/system";
 import { cn } from "@lume/utils";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
@@ -15,18 +15,19 @@ import { memo, useCallback, useState } from "react";
 
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async ({ params }) => {
+		const settings = await NostrQuery.getUserSettings();
 		const accounts = await NostrAccount.getAccounts();
 		const otherAccounts = accounts.filter(
 			(account) => account !== params.account,
 		);
 
-		return { otherAccounts };
+		return { otherAccounts, settings };
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { platform } = Route.useRouteContext();
+	const { settings, platform } = Route.useRouteContext();
 
 	const openLumeStore = async () => {
 		await getCurrent().emit("columns", {
@@ -80,7 +81,14 @@ function Screen() {
 					<Accounts />
 				</div>
 			</div>
-			<div className="flex-1">
+			<div
+				className={cn(
+					"flex-1",
+					settings.vibrancy
+						? ""
+						: "bg-white dark:bg-black border-t border-black/20 dark:border-white/20",
+				)}
+			>
 				<Outlet />
 			</div>
 		</div>

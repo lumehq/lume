@@ -22,7 +22,7 @@ function Screen() {
 				</p>
 			</div>
 			<div className="px-3 flex flex-col gap-3">
-				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10 backdrop-blur-lg">
+				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10">
 					<div className="absolute top-2 left-3 text-2xl font-semibold font-serif text-neutral-600 dark:text-neutral-400">
 						01.
 					</div>
@@ -45,7 +45,7 @@ function Screen() {
 						</video>
 					</div>
 				</div>
-				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10 backdrop-blur-lg">
+				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10">
 					<div className="absolute top-2 left-3 text-2xl font-semibold font-serif text-neutral-600 dark:text-neutral-400">
 						02.
 					</div>
@@ -68,7 +68,7 @@ function Screen() {
 						</video>
 					</div>
 				</div>
-				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10 backdrop-blur-lg">
+				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10">
 					<div className="absolute top-2 left-3 text-2xl font-semibold font-serif text-neutral-600 dark:text-neutral-400">
 						03.
 					</div>
@@ -91,7 +91,7 @@ function Screen() {
 						</video>
 					</div>
 				</div>
-				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10 backdrop-blur-lg">
+				<div className="relative flex flex-col items-center justify-center rounded-xl bg-black/10 dark:bg-white/10">
 					<div className="absolute top-2 left-3 text-2xl font-semibold font-serif text-neutral-600 dark:text-neutral-400">
 						04.
 					</div>

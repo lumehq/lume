@@ -111,7 +111,7 @@ export function Screen() {
 				<Listerner />
 				<Virtualizer scrollRef={ref}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
-						<div className="flex items-center justify-center w-full mb-3 h-12 bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
+						<div className="flex items-center justify-center w-full mb-3 h-12 bg-black/10 dark:bg-white/10 rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
 							<div className="flex items-center justify-center gap-2">
 								<Spinner className="size-5" />
 								<span className="text-sm font-medium">

@@ -96,7 +96,7 @@ function Screen() {
 					/>
 				</div>
 				<div className="flex flex-col items-center w-full gap-3">
-					<div className="overflow-y-auto scrollbar-none p-2 w-full h-[450px] flex flex-col gap-3 bg-black/5 dark:bg-white/5 backdrop-blur-lg rounded-xl">
+					<div className="overflow-y-auto scrollbar-none p-2 w-full h-[450px] flex flex-col gap-3 bg-black/5 dark:bg-white/5 rounded-xl">
 						<div className="flex gap-2">
 							<input
 								name="npub"
@@ -122,7 +122,7 @@ function Screen() {
 											key={item}
 											type="button"
 											onClick={() => toggleUser(item)}
-											className="inline-flex items-center justify-between px-3 py-2 bg-white rounded-lg dark:bg-black/20 backdrop-blur-lg shadow-primary dark:ring-1 ring-neutral-800/50"
+											className="inline-flex items-center justify-between px-3 py-2 bg-white rounded-lg dark:bg-black/20 shadow-primary dark:ring-1 ring-neutral-800/50"
 										>
 											<User.Provider pubkey={item}>
 												<User.Root className="flex items-center gap-2.5">
@@ -153,7 +153,7 @@ function Screen() {
 											key={item}
 											type="button"
 											onClick={() => toggleUser(item)}
-											className="inline-flex items-center justify-between px-3 py-2 bg-white rounded-lg dark:bg-black/20 backdrop-blur-lg shadow-primary dark:ring-1 ring-neutral-800/50"
+											className="inline-flex items-center justify-between px-3 py-2 bg-white rounded-lg dark:bg-black/20 shadow-primary dark:ring-1 ring-neutral-800/50"
 										>
 											<User.Provider pubkey={item}>
 												<User.Root className="flex items-center gap-2.5">

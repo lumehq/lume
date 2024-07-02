@@ -14,7 +14,7 @@ export const TextNote = memo(function TextNote({
 		<Note.Provider event={event}>
 			<Note.Root
 				className={cn(
-					"bg-white dark:bg-black/20 backdrop-blur rounded-xl shadow-primary dark:ring-1 dark:ring-white/5",
+					"bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5",
 					className,
 				)}
 			>

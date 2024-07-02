@@ -43,6 +43,7 @@ pub struct Settings {
   display_zap_button: bool,
   display_repost_button: bool,
   display_media: bool,
+  vibrancy: bool,
 }
 
 impl Default for Settings {
@@ -56,6 +57,7 @@ impl Default for Settings {
       display_zap_button: true,
       display_repost_button: true,
       display_media: true,
+      vibrancy: true,
     }
   }
 }

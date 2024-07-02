@@ -97,7 +97,7 @@ export function NoteContent({
 	return (
 		<div className="relative flex flex-col gap-2">
 			{blurred ? (
-				<div className="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black/80 backdrop-blur-xl">
+				<div className="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black/80 backdrop-blur-lg">
 					<div className="flex flex-col items-center justify-center gap-2 text-center">
 						<p className="text-sm text-white/60">
 							The content is hidden because the author

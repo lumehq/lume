@@ -1,12 +1,12 @@
 import { Note } from "@/components/note";
 import { LumeEvent, NostrQuery } from "@lume/system";
+import type { Meta } from "@lume/types";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createFileRoute } from "@tanstack/react-router";
+import { getCurrent } from "@tauri-apps/api/window";
+import { useEffect, useRef, useState } from "react";
 import { Virtualizer } from "virtua";
 import NoteParent from "./-components/parent";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { useEffect, useRef, useState } from "react";
-import { getCurrent } from "@tauri-apps/api/window";
-import type { Meta } from "@lume/types";
 
 type Payload = {
 	raw: string;
@@ -62,7 +62,7 @@ function RootEvent() {
 
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className="bg-white dark:bg-black/10 backdrop-blur rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
+			<Note.Root className="bg-white dark:bg-black/10 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />

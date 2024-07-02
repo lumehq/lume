@@ -459,7 +459,7 @@ export type Column = { label: string; url: string; x: number; y: number; width: 
 export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
-export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
+export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; vibrancy: boolean }
 export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean }
 
 /** tauri-specta globals **/

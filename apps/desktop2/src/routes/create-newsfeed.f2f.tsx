@@ -49,7 +49,7 @@ function Screen() {
 	};
 
 	return (
-		<div className="overflow-y-auto scrollbar-none p-2 shrink-0 h-[450px] bg-white dark:bg-white/20 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
+		<div className="overflow-y-auto scrollbar-none p-2 shrink-0 h-[450px] bg-white dark:bg-white/20 rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
 			<div className="flex flex-col justify-between h-full">
 				<div className="flex-1 flex flex-col gap-1.5 justify-center px-5">
 					<p className="font-semibold text-neutral-500">

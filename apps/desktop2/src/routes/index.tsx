@@ -82,7 +82,7 @@ function Screen() {
 				</div>
 			</div>
 			<div className="flex flex-col items-center flex-1 w-full gap-3">
-				<div className="flex flex-col w-full max-w-sm mx-auto overflow-hidden bg-white divide-y divide-neutral-100 dark:divide-white/5 rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/10 dark:ring-1 ring-white/15">
+				<div className="flex flex-col w-full max-w-sm mx-auto overflow-hidden bg-white divide-y divide-neutral-100 dark:divide-white/5 rounded-xl shadow-primary dark:bg-white/10 dark:ring-1 ring-white/15">
 					{context.accounts.map((account) => (
 						<div
 							key={account}

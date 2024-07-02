@@ -12,7 +12,7 @@ function Screen() {
 			className="flex flex-col items-center justify-center w-screen h-screen"
 		>
 			<div className="w-full max-w-xs mx-auto lg:max-w-md">
-				<div className="flex flex-col w-full gap-2 px-2 bg-white rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/20 dark:ring-1 ring-neutral-800/50">
+				<div className="flex flex-col w-full gap-2 px-2 bg-white rounded-xl shadow-primary dark:bg-white/20 dark:ring-1 ring-neutral-800/50">
 					<div className="flex items-center h-20 border-b border-neutral-100 dark:border-white/5">
 						<Link
 							to="/auth/create-profile"

@@ -28,6 +28,13 @@ function Screen() {
 
 	const onSubmit = async (data: { url: string; purpose: string }) => {
 		try {
+			if (!data.url.startsWith("wss://") || !data.url.startsWith("ws://")) {
+				return await message("Relay must be starts with wss:// or ws://", {
+					title: "Bootstrap Relays",
+					kind: "info",
+				});
+			}
+
 			const relay: Relay = { url: data.url, purpose: data.purpose };
 			setRelays((prev) => [...prev, relay]);
 			reset();
@@ -50,12 +57,21 @@ function Screen() {
 	}, [bootstrapRelays]);
 
 	return (
-		<div className="flex flex-col items-center justify-center w-screen h-screen">
-			<div className="w-full max-w-sm mx-auto lg:max-w-lg">
-				<div className="text-center h-11">
-					<h1 className="font-semibold">Customize Bootstrap Relays</h1>
+		<div
+			data-tauri-drag-region
+			className="relative flex flex-col items-center justify-between w-full h-full"
+		>
+			<div
+				data-tauri-drag-region
+				className="absolute top-0 left-0 h-14 w-full"
+			/>
+			<div className="flex items-end justify-center flex-1 w-full px-4 pb-10">
+				<div className="text-center">
+					<h2 className="text-2xl font-semibold">Customize Bootstrap Relays</h2>
 				</div>
-				<div className="flex flex-col w-full px-2 bg-white rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/20 dark:ring-1 ring-neutral-800/50">
+			</div>
+			<div className="flex flex-col items-center flex-1 w-full">
+				<div className="flex flex-col w-full max-w-sm mx-auto p-3 overflow-hidden bg-white divide-y divide-neutral-100 dark:divide-white/5 rounded-xl shadow-primary dark:bg-white/10 dark:ring-1 ring-white/15">
 					{relays.map((relay) => (
 						<div
 							key={relay.url}
@@ -117,15 +133,18 @@ function Screen() {
 						</form>
 					</div>
 				</div>
-				<button
-					type="button"
-					onClick={() => save()}
-					disabled={isLoading}
-					className="inline-flex items-center justify-center w-full h-10 mt-4 text-sm font-semibold text-white bg-blue-500 rounded-lg shrink-0 hover:bg-blue-600 disabled:opacity-50"
-				>
-					{isLoading ? <Spinner /> : "Save & Relaunch"}
-				</button>
+				<div className="w-full max-w-sm mx-auto">
+					<button
+						type="button"
+						onClick={() => save()}
+						disabled={isLoading}
+						className="inline-flex items-center justify-center w-full h-9 mt-4 text-sm font-semibold text-white bg-blue-500 rounded-lg shrink-0 hover:bg-blue-600 disabled:opacity-50"
+					>
+						{isLoading ? <Spinner /> : "Save & Relaunch"}
+					</button>
+				</div>
 			</div>
+			<div className="flex-1" />
 		</div>
 	);
 }
