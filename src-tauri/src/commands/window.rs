@@ -140,6 +140,21 @@ pub fn resize_column(
 
 #[tauri::command]
 #[specta::specta]
+pub fn reload_column(label: &str, app_handle: tauri::AppHandle) -> Result<(), String> {
+  match app_handle.get_webview(label) {
+    Some(webview) => {
+      if webview.eval("window.location.reload()").is_ok() {
+        Ok(())
+      } else {
+        Err("Reload column failed".into())
+      }
+    }
+    None => Err("Webview not found".into()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
   if let Some(window) = app_handle.get_window(&window.label) {
     if window.is_visible().unwrap_or_default() {

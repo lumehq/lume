@@ -50,8 +50,8 @@ function Screen() {
 			type: "add",
 			column: {
 				label: "store",
-				name: "Store",
-				content: "/store/official",
+				name: "Column Gallery",
+				content: "/store",
 			},
 		});
 	}, []);
@@ -64,6 +64,23 @@ function Screen() {
 	const remove = useDebouncedCallback((label: string) => {
 		setColumns((prev) => prev.filter((t) => t.label !== label));
 	}, 150);
+
+	const move = useDebouncedCallback(
+		(label: string, direction: "left" | "right") => {
+			const newCols = [...columns];
+
+			const col = newCols.find((el) => el.label === label);
+			const colIndex = newCols.findIndex((el) => el.label === label);
+
+			newCols.splice(colIndex, 1);
+
+			if (direction === "left") newCols.splice(colIndex - 1, 0, col);
+			if (direction === "right") newCols.splice(colIndex + 1, 0, col);
+
+			setColumns(newCols);
+		},
+		150,
+	);
 
 	const updateName = useDebouncedCallback((label: string, title: string) => {
 		const currentColIndex = columns.findIndex((col) => col.label === label);
@@ -135,6 +152,8 @@ function Screen() {
 			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
 			if (data.payload.type === "remove") remove(data.payload.label);
+			if (data.payload.type === "move")
+				move(data.payload.label, data.payload.direction);
 			if (data.payload.type === "set_title")
 				updateName(data.payload.label, data.payload.title);
 		});

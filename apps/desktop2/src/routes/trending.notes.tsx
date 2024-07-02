@@ -1,11 +1,14 @@
+import { Conversation } from "@/components/conversation";
+import { Quote } from "@/components/quote";
+import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { LumeEvent } from "@lume/system";
-import type { NostrEvent } from "@lume/types";
+import { Kind, type NostrEvent } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { defer } from "@tanstack/react-router";
-import { Suspense, useRef } from "react";
+import { Suspense, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/trending/notes")({
@@ -21,7 +24,9 @@ export const Route = createFileRoute("/trending/notes")({
 							const events: NostrEvent[] = res.notes.map(
 								(item: { event: NostrEvent }) => item.event,
 							);
-							const lumeEvents = events.map((ev) => new LumeEvent(ev));
+							const lumeEvents = Promise.all(
+								events.map(async (ev) => await LumeEvent.build(ev)),
+							);
 							return lumeEvents;
 						}),
 				),
@@ -35,7 +40,24 @@ export const Route = createFileRoute("/trending/notes")({
 
 export function Screen() {
 	const { data } = Route.useLoaderData();
+
 	const ref = useRef<HTMLDivElement>(null);
+	const renderItem = useCallback((event: LumeEvent) => {
+		if (!event) return;
+		switch (event.kind) {
+			case Kind.Repost:
+				return <RepostNote key={event.id} event={event} className="mb-3" />;
+			default: {
+				if (event.isConversation) {
+					return <Conversation key={event.id} className="mb-3" event={event} />;
+				}
+				if (event.isQuote) {
+					return <Quote key={event.id} event={event} className="mb-3" />;
+				}
+				return <TextNote key={event.id} event={event} className="mb-3" />;
+			}
+		}
+	}, []);
 
 	return (
 		<ScrollArea.Root
@@ -60,11 +82,7 @@ export function Screen() {
 						}
 					>
 						<Await promise={data}>
-							{(notes) =>
-								notes.map((event) => (
-									<TextNote key={event.id} event={event} className="mb-3" />
-								))
-							}
+							{(notes) => notes.map((event) => renderItem(event))}
 						</Await>
 					</Suspense>
 				</Virtualizer>

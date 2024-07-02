@@ -124,6 +124,7 @@ fn main() {
       commands::window::close_column,
       commands::window::reposition_column,
       commands::window::resize_column,
+      commands::window::reload_column,
       commands::window::open_window,
       commands::window::open_main_window,
       commands::window::set_badge
