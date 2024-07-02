@@ -24,7 +24,7 @@ export const Column = memo(function Column({
 	const [isCreated, setIsCreated] = useState(false);
 
 	const repositionWebview = useCallback(async () => {
-		if (!container?.current) throw new Error("something wrong.");
+		if (!container?.current) return console.log("something wrong.");
 
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("reposition_column", {
@@ -35,7 +35,7 @@ export const Column = memo(function Column({
 	}, []);
 
 	const resizeWebview = useCallback(async () => {
-		if (!container?.current) throw new Error("something wrong.");
+		if (!container?.current) return console.log("something wrong.");
 
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("resize_column", {

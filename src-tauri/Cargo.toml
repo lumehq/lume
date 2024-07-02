@@ -21,6 +21,7 @@ tauri = { version = "2.0.0-beta", features = [
   "macos-private-api",
   "native-tls-vendored",
   "protocol-asset",
+  "devtools",
 ] }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
