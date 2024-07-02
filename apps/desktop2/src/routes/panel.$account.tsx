@@ -13,9 +13,9 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { invoke } from "@tauri-apps/api/core";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrent } from "@tauri-apps/api/window";
-import { exit } from "@tauri-apps/plugin-process";
 import { open } from "@tauri-apps/plugin-shell";
 import { type ReactNode, useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
@@ -98,7 +98,7 @@ function Screen() {
 			PredefinedMenuItem.new({ item: "Separator" }),
 			MenuItem.new({
 				text: "Quit",
-				action: async () => await exit(0),
+				action: async () => await invoke("force_quit"),
 			}),
 		]);
 

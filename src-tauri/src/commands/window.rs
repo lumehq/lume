@@ -255,3 +255,9 @@ pub fn open_main_window(app: tauri::AppHandle) {
     window.make_transparent().unwrap();
   }
 }
+
+#[tauri::command]
+#[specta::specta]
+pub fn force_quit() {
+  std::process::exit(0);
+}
