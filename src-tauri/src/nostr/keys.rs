@@ -3,6 +3,7 @@ use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
 use serde::Serialize;
 use specta::Type;
+use std::collections::HashSet;
 use std::time::Duration;
 use tauri::{EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
@@ -22,24 +23,18 @@ pub struct Account {
 #[tauri::command]
 #[specta::specta]
 pub fn get_accounts() -> Result<Vec<String>, String> {
-  let search = Search::new().unwrap();
+  let search = Search::new().map_err(|e| e.to_string())?;
   let results = search.by("Account", "nostr_secret");
 
   match List::list_credentials(results, Limit::All) {
     Ok(list) => {
-      let search: Vec<String> = list
+      let accounts: HashSet<String> = list
         .split_whitespace()
-        .map(|v| v.to_string())
         .filter(|v| v.starts_with("npub1"))
+        .map(String::from)
         .collect();
 
-      let accounts: Vec<String> = search
-        .into_iter()
-        .collect::<std::collections::HashSet<_>>()
-        .into_iter()
-        .collect();
-
-      Ok(accounts)
+      Ok(accounts.into_iter().collect())
     }
     Err(_) => Err("Empty.".into()),
   }
