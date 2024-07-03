@@ -5,12 +5,15 @@ use std::str::FromStr;
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
 use serde::{Deserialize, Serialize};
 use specta::Type;
+#[cfg(not(target_os = "linux"))]
 use tauri::utils::config::WindowEffectsConfig;
+#[cfg(not(target_os = "linux"))]
 use tauri::window::Effect;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
+#[cfg(not(target_os = "linux"))]
 use tauri_plugin_decorum::WebviewWindowExt;
 use url::Url;
 
@@ -187,26 +190,38 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     .unwrap();
 
     #[cfg(target_os = "windows")]
-    let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
-      .title(title)
-      .min_inner_size(width, height)
-      .inner_size(width, height)
-      .effects(WindowEffectsConfig {
-        state: None,
-        effects: vec![Effect::Mica],
-        radius: None,
-        color: None,
-      })
-      .build()
-      .unwrap();
+    let window = WebviewWindowBuilder::new(
+      &app_handle,
+      &window.label,
+      WebviewUrl::App(PathBuf::from(window.url)),
+    )
+    .title(title)
+    .min_inner_size(window.width, window.height)
+    .inner_size(window.width, window.height)
+    .minimizable(window.minimizable)
+    .maximizable(window.maximizable)
+    .effects(WindowEffectsConfig {
+      state: None,
+      effects: vec![Effect::Mica],
+      radius: None,
+      color: None,
+    })
+    .build()
+    .unwrap();
 
     #[cfg(target_os = "linux")]
-    let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
-      .title(title)
-      .min_inner_size(width, height)
-      .inner_size(width, height)
-      .build()
-      .unwrap();
+    let window = WebviewWindowBuilder::new(
+      &app_handle,
+      &window.label,
+      WebviewUrl::App(PathBuf::from(window.url)),
+    )
+    .title(title)
+    .min_inner_size(window.width, window.height)
+    .inner_size(window.width, window.height)
+    .minimizable(window.minimizable)
+    .maximizable(window.maximizable)
+    .build()
+    .unwrap();
 
     // Set decoration
     window.create_overlay_titlebar().unwrap();

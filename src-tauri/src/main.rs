@@ -20,6 +20,7 @@ use std::{
   str::FromStr,
 };
 use tauri::{path::BaseDirectory, Manager};
+#[cfg(not(target_os = "linux"))]
 use tauri_plugin_decorum::WebviewWindowExt;
 
 pub mod commands;
@@ -139,6 +140,10 @@ fn main() {
 
   tauri::Builder::default()
     .setup(|app| {
+      #[cfg(target_os = "macos")]
+      app.handle().plugin(tauri_nspanel::init()).unwrap();
+
+      #[cfg(not(target_os = "linux"))]
       let main_window = app.get_webview_window("main").unwrap();
 
       // Set custom decoration for Windows
@@ -215,6 +220,21 @@ fn main() {
       });
 
       Ok(())
+    })
+    .enable_macos_default_menu(false)
+    .on_window_event(move |window, event| {
+      #[cfg(target_os = "macos")]
+      if let tauri::WindowEvent::ThemeChanged(_) = event {
+        if let Some(webview) = window.get_webview_window(window.label()) {
+          webview.set_traffic_lights_inset(8.0, 16.0).unwrap();
+        }
+      }
+      #[cfg(target_os = "macos")]
+      if let tauri::WindowEvent::Resized(_) = event {
+        if let Some(webview) = window.get_webview_window(window.label()) {
+          webview.set_traffic_lights_inset(8.0, 16.0).unwrap();
+        }
+      }
     })
     .plugin(tauri_nspanel::init())
     .plugin(tauri_plugin_theme::init(ctx.config_mut()))

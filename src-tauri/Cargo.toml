@@ -37,7 +37,7 @@ tauri-specta = { git = "https://github.com/reyamir/tauri-specta", features = [
   "typescript",
 ] }
 tauri-plugin-theme = "0.4.1"
-tauri-plugin-decorum = "0.1.0"
+tauri-plugin-decorum = "0.1.3"
 specta = "^2.0.0-rc.12"
 keyring = "2"
 keyring-search = "0.2.0"
