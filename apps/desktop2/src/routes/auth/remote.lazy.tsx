@@ -37,12 +37,12 @@ function Screen() {
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center w-full h-full gap-6 px-5 mx-auto xl:max-w-xl">
+		<div className="flex flex-col items-center justify-center size-full gap-4">
 			<div className="text-center">
 				<h3 className="text-xl font-semibold">Continue with Nostr Connect</h3>
 			</div>
-			<div className="flex flex-col w-full gap-3">
-				<div className="flex flex-col gap-1">
+			<div className="flex flex-col w-full">
+				<div className="flex flex-col gap-1 w-full p-3 overflow-hidden bg-white rounded-xl shadow-primary dark:bg-white/10 dark:ring-1 ring-white/15">
 					<label
 						htmlFor="uri"
 						className="font-medium text-neutral-900 dark:text-neutral-100"
@@ -63,7 +63,7 @@ function Screen() {
 						type="button"
 						onClick={() => submit()}
 						disabled={loading}
-						className="inline-flex items-center justify-center w-full mt-3 font-semibold text-white bg-blue-500 rounded-lg h-11 shrink-0 hover:bg-blue-600 disabled:opacity-50"
+						className="inline-flex items-center justify-center w-full h-9 mt-4 text-sm font-semibold text-white bg-blue-500 rounded-lg shrink-0 hover:bg-blue-600 disabled:opacity-50"
 					>
 						{loading ? <Spinner /> : "Login"}
 					</button>

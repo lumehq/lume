@@ -1,4 +1,4 @@
-import { Box, Container } from "@lume/ui";
+import { Container } from "@lume/ui";
 import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/auth")({
@@ -8,9 +8,9 @@ export const Route = createLazyFileRoute("/auth")({
 function Screen() {
 	return (
 		<Container withDrag>
-			<Box className="px-3 pt-3">
+			<div className="max-w-sm mx-auto size-full">
 				<Outlet />
-			</Box>
+			</div>
 		</Container>
 	);
 }

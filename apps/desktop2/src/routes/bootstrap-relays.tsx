@@ -65,9 +65,9 @@ function Screen() {
 				data-tauri-drag-region
 				className="absolute top-0 left-0 h-14 w-full"
 			/>
-			<div className="flex items-end justify-center flex-1 w-full px-4 pb-10">
+			<div className="flex items-end justify-center flex-1 w-full px-4 pb-4">
 				<div className="text-center">
-					<h2 className="text-2xl font-semibold">Customize Bootstrap Relays</h2>
+					<h2 className="text-xl font-semibold">Customize Bootstrap Relays</h2>
 				</div>
 			</div>
 			<div className="flex flex-col items-center flex-1 w-full">
