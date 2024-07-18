@@ -12,7 +12,7 @@
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.11",
 		"light-bolt11-decoder": "^3.1.1",
-		"nostr-tools": "^2.7.0",
+		"nostr-tools": "^2.7.1",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"slate": "^0.103.0",
@@ -23,7 +23,7 @@
 		"@lume/types": "workspace:^",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
-		"tailwind-merge": "^2.3.0",
-		"typescript": "^5.5.2"
+		"tailwind-merge": "^2.4.0",
+		"typescript": "^5.5.3"
 	}
 }
