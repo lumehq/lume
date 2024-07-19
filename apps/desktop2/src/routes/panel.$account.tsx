@@ -21,6 +21,9 @@ import { type ReactNode, useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/panel/$account")({
+	beforeLoad: async ({ context }) => {
+		console.log(context);
+	},
 	component: Screen,
 });
 
@@ -30,6 +33,7 @@ function Screen() {
 	const { isLoading, data } = useQuery({
 		queryKey: ["notification", account],
 		queryFn: async () => {
+			console.log(queryClient);
 			const events = await NostrQuery.getNotifications();
 			return events;
 		},

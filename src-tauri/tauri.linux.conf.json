@@ -5,7 +5,6 @@
       {
         "title": "Lume",
         "label": "main",
-        "titleBarStyle": "Overlay",
         "width": 1045,
         "height": 800,
         "minWidth": 480,

@@ -11,7 +11,6 @@ interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: () => <Outlet />,
 	pendingComponent: Pending,
-	wrapInSuspense: true,
 });
 
 function Pending() {

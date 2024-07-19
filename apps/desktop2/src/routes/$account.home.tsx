@@ -30,11 +30,11 @@ function Screen() {
 	});
 
 	const scrollPrev = useCallback(() => {
-		if (emblaApi) emblaApi.scrollPrev(true);
+		if (emblaApi) emblaApi.scrollPrev();
 	}, [emblaApi]);
 
 	const scrollNext = useCallback(() => {
-		if (emblaApi) emblaApi.scrollNext(true);
+		if (emblaApi) emblaApi.scrollNext();
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {
@@ -101,10 +101,10 @@ function Screen() {
 
 		switch (event.code) {
 			case "ArrowLeft":
-				if (emblaApi) emblaApi.scrollPrev(true);
+				if (emblaApi) emblaApi.scrollPrev();
 				break;
 			case "ArrowRight":
-				if (emblaApi) emblaApi.scrollNext(true);
+				if (emblaApi) emblaApi.scrollNext();
 				break;
 			default:
 				break;

@@ -3,7 +3,7 @@ import type { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 type WindowEvent = {
@@ -106,7 +106,7 @@ function Header({
 	const [isChanged, setIsChanged] = useState(false);
 
 	const saveNewTitle = async () => {
-		const mainWindow = getCurrentWebviewWindow();
+		const mainWindow = getCurrentWindow();
 		await mainWindow.emit("columns", { type: "set_title", label, title });
 
 		// update search params
@@ -135,7 +135,7 @@ function Header({
 			MenuItem.new({
 				text: "Move left",
 				action: async () => {
-					await getCurrentWebviewWindow().emit("columns", {
+					await getCurrentWindow().emit("columns", {
 						type: "move",
 						label,
 						direction: "left",
@@ -145,7 +145,7 @@ function Header({
 			MenuItem.new({
 				text: "Move right",
 				action: async () => {
-					await getCurrentWebviewWindow().emit("columns", {
+					await getCurrentWindow().emit("columns", {
 						type: "move",
 						label,
 						direction: "right",
@@ -156,7 +156,7 @@ function Header({
 			MenuItem.new({
 				text: "Close",
 				action: async () => {
-					await getCurrentWebviewWindow().emit("columns", {
+					await getCurrentWindow().emit("columns", {
 						type: "remove",
 						label,
 					});
