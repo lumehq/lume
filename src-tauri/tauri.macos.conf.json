@@ -1,6 +1,12 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "app": {
+    "trayIcon": {
+      "id": "main",
+      "iconPath": "./icons/tray.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
     "windows": [
       {
         "title": "Lume",

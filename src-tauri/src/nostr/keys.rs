@@ -1,7 +1,9 @@
+use crate::commands::tray::create_tray_panel;
 use crate::nostr::event::RichEvent;
 use crate::nostr::internal::{get_user_settings, init_nip65};
 use crate::nostr::utils::parse_event;
 use crate::{Nostr, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
+
 use keyring::Entry;
 use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
@@ -198,6 +200,10 @@ pub async fn load_account(
 
     // Connect to user's relay (NIP-65)
     init_nip65(client).await;
+
+    // Create tray (macOS)
+    #[cfg(target_os = "macos")]
+    create_tray_panel(npub, &handle);
 
     // Get user's contact list
     if let Ok(contacts) = client.get_contact_list(None).await {
