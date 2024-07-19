@@ -34,6 +34,7 @@
   },
   "bundle": {
     "licenseFile": "../LICENSE",
+    "homepage": "https://lume.nu",
     "longDescription": "nostr client for desktop",
     "shortDescription": "nostr client",
     "targets": "all",
@@ -99,7 +100,7 @@
     "fileAssociations": [
       {
         "name": "bech32",
-        "description": "Nostr Bech32",
+        "description": "Nostr BECH32",
         "ext": [
           "npub",
           "nsec",
@@ -110,7 +111,8 @@
         ],
         "role": "Viewer"
       }
-    ]
+    ],
+    "createUpdaterArtifacts": true
   },
   "plugins": {
     "updater": {
@@ -121,7 +123,8 @@
       },
       "endpoints": [
         "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
-        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
+        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}",
+        "https://github.com/lumehq/lume/releases/latest/download/latest.json"
       ]
     }
   }
