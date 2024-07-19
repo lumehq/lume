@@ -9,6 +9,8 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
+#[cfg(target_os = "macos")]
+use border::WebviewWindowExt as BorderWebviewWindowExt;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -150,9 +152,9 @@ fn main() {
       #[cfg(target_os = "windows")]
       main_window.create_overlay_titlebar().unwrap();
 
-      // Make main window transparent
+      // Restore native border
       #[cfg(target_os = "macos")]
-      main_window.make_transparent().unwrap();
+      main_window.add_border(None);
 
       // Set a custom inset to the traffic lights
       #[cfg(target_os = "macos")]

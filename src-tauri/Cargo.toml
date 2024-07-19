@@ -16,11 +16,11 @@ tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.0.0-beta", features = [
-    "unstable",
-    "tray-icon",
-    "macos-private-api",
-    "native-tls-vendored",
-    "protocol-asset",
+  "unstable",
+  "tray-icon",
+  "macos-private-api",
+  "native-tls-vendored",
+  "protocol-asset",
 ] }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
@@ -34,7 +34,7 @@ tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", 
 tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-specta = { git = "https://github.com/reyamir/tauri-specta", branch = "feat/tauri-v2", features = [
-    "typescript",
+  "typescript",
 ] }
 tauri-plugin-theme = "0.4.1"
 tauri-plugin-decorum = { git = "https://github.com/reyamir/tauri-plugin-decorum", branch = "feat/tauri-v2" }
@@ -53,6 +53,7 @@ objc = "0.2.7"
 rand = "0.8.5"
 monitor = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
 tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2" }
+border = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
 
 [profile.release]
 codegen-units = 1

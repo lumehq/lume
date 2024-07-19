@@ -607,6 +607,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "border"
+version = "0.1.0"
+source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#8aac2f5659b036f9c269444a78e7bf15425b4bd8"
+dependencies = [
+ "cocoa",
+ "color",
+ "objc",
+ "objc-foundation",
+ "objc_id",
+ "tauri",
+]
+
+[[package]]
 name = "brotli"
 version = "3.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -860,6 +873,15 @@ dependencies = [
  "core-graphics-types",
  "libc",
  "objc",
+]
+
+[[package]]
+name = "color"
+version = "0.1.0"
+source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#8aac2f5659b036f9c269444a78e7bf15425b4bd8"
+dependencies = [
+ "cocoa",
+ "tauri",
 ]
 
 [[package]]
@@ -2780,6 +2802,7 @@ dependencies = [
 name = "lume"
 version = "4.0.0"
 dependencies = [
+ "border",
  "cocoa",
  "futures",
  "keyring",

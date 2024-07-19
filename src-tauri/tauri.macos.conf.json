@@ -17,6 +17,7 @@
         "minWidth": 480,
         "minHeight": 760,
         "hiddenTitle": true,
+        "transparent": true,
         "windowEffects": {
           "state": "followsWindowActiveState",
           "effects": [

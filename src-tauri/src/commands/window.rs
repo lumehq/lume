@@ -2,6 +2,8 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 #[cfg(target_os = "macos")]
+use border::WebviewWindowExt as BorderWebviewWindowExt;
+#[cfg(target_os = "macos")]
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -180,6 +182,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     .title_bar_style(TitleBarStyle::Overlay)
     .minimizable(window.minimizable)
     .maximizable(window.maximizable)
+    .transparent(true)
     .effects(WindowEffectsConfig {
       state: None,
       effects: vec![Effect::UnderWindowBackground],
@@ -226,9 +229,9 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     // Set decoration
     window.create_overlay_titlebar().unwrap();
 
-    // Make main window transparent
+    // Restore native border
     #[cfg(target_os = "macos")]
-    window.make_transparent().unwrap();
+    window.add_border(None);
   }
 
   Ok(())
@@ -250,9 +253,9 @@ pub fn open_main_window(app: tauri::AppHandle) {
       .build()
       .unwrap();
 
-    // Make main window transparent
+    // Restore native border
     #[cfg(target_os = "macos")]
-    window.make_transparent().unwrap();
+    window.add_border(None);
   }
 }
 
