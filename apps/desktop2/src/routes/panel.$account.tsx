@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-shell";
 import { type ReactNode, useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
@@ -110,7 +110,7 @@ function Screen() {
 	}, []);
 
 	useEffect(() => {
-		const unlisten = getCurrent().listen("notification", async (data) => {
+		const unlisten = getCurrentWindow().listen("notification", async (data) => {
 			const event: LumeEvent = JSON.parse(data.payload as string);
 			await queryClient.setQueryData(
 				["notification", account],

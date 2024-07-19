@@ -3,7 +3,7 @@ import { LumeEvent, NostrQuery } from "@lume/system";
 import type { Meta } from "@lume/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createFileRoute } from "@tanstack/react-router";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useEffect, useRef, useState } from "react";
 import { Virtualizer } from "virtua";
 import NoteParent from "./-components/parent";
@@ -83,14 +83,17 @@ function ReplyList() {
 	const [replies, setReplies] = useState<LumeEvent[]>([]);
 
 	useEffect(() => {
-		const unlistenEvent = getCurrent().listen<Payload>("new_reply", (data) => {
-			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-			setReplies((prev) => [event, ...prev]);
-		});
+		const unlistenEvent = getCurrentWindow().listen<Payload>(
+			"new_reply",
+			(data) => {
+				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
+				setReplies((prev) => [event, ...prev]);
+			},
+		);
 
-		const unlistenWindow = getCurrent().onCloseRequested(async () => {
+		const unlistenWindow = getCurrentWindow().onCloseRequested(async () => {
 			await event.unlistenEventReply();
-			await getCurrent().destroy();
+			await getCurrentWindow().destroy();
 		});
 
 		return () => {

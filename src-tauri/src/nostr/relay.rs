@@ -39,7 +39,8 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
   match client.get_events_of(vec![filter], None).await {
     Ok(events) => {
       if let Some(event) = events.first() {
-        let nip65_list = nip65::extract_relay_list(event);
+        let nip65_list = nip65::extract_relay_list(event).collect::<Vec<_>>();
+
         let read = nip65_list
           .iter()
           .filter_map(|(url, meta)| {
@@ -50,6 +51,7 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
             }
           })
           .collect();
+
         let write = nip65_list
           .iter()
           .filter_map(|(url, meta)| {
@@ -60,6 +62,7 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
             }
           })
           .collect();
+
         let both = nip65_list
           .iter()
           .filter_map(|(url, meta)| {

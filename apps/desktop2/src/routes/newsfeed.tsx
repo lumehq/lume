@@ -10,7 +10,7 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Virtualizer } from "virtua";
 
@@ -195,7 +195,7 @@ function Listerner() {
 	};
 
 	useEffect(() => {
-		const unlisten = getCurrent().listen<Payload>("new_event", (data) => {
+		const unlisten = getCurrentWindow().listen<Payload>("new_event", (data) => {
 			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
 			setEvents((prev) => [event, ...prev]);
 		});

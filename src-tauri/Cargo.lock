@@ -5406,8 +5406,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-decorum"
 version = "0.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fccbcf16f789b3fb01470511cbed050d98803d7580bdd55f53f8ef6d8737e8f1"
+source = "git+https://github.com/reyamir/tauri-plugin-decorum?branch=feat/tauri-v2#d19a643f8574c8f6ba9f5793672d7baaf05ba001"
 dependencies = [
  "anyhow",
  "cocoa",
@@ -5663,7 +5662,7 @@ dependencies = [
 [[package]]
 name = "tauri-specta"
 version = "2.0.0-rc.11"
-source = "git+https://github.com/oscartbeaumont/tauri-specta#a49885967adc01c80e33962e3ecac25fe7497839"
+source = "git+https://github.com/reyamir/tauri-specta?branch=feat/tauri-v2#5c09319b345814bfce3c4c02527e481d18339051"
 dependencies = [
  "heck 0.5.0",
  "indoc",
@@ -5678,7 +5677,7 @@ dependencies = [
 [[package]]
 name = "tauri-specta-macros"
 version = "2.0.0-rc.5"
-source = "git+https://github.com/oscartbeaumont/tauri-specta#a49885967adc01c80e33962e3ecac25fe7497839"
+source = "git+https://github.com/reyamir/tauri-specta?branch=feat/tauri-v2#5c09319b345814bfce3c4c02527e481d18339051"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",

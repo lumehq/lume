@@ -5,7 +5,7 @@ use serde::Serialize;
 use specta::Type;
 use std::collections::HashSet;
 use std::time::Duration;
-use tauri::{EventTarget, Manager, State};
+use tauri::{Emitter, EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 
 use crate::commands::tray::create_tray_panel;

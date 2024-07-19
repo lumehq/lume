@@ -3,7 +3,7 @@ import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { insertImage, isImagePath } from "@lume/utils";
 import type { UnlistenFn } from "@tauri-apps/api/event";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
 import { useSlateStatic } from "slate-react";
@@ -32,7 +32,7 @@ export function MediaButton() {
 		let unlisten: UnlistenFn = undefined;
 
 		async function listenFileDrop() {
-			const window = getCurrent();
+			const window = getCurrentWindow();
 			if (!unlisten) {
 				unlisten = await window.listen("tauri://file-drop", async (event) => {
 					// @ts-ignore, lfg !!!

@@ -5,7 +5,7 @@ import { NostrQuery } from "@lume/system";
 import type { ColumnEvent, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
@@ -38,15 +38,15 @@ function Screen() {
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {
-		getCurrent().emit("child_webview", { scroll: true });
+		getCurrentWindow().emit("child_webview", { scroll: true });
 	}, []);
 
 	const emitResizeEvent = useCallback(() => {
-		getCurrent().emit("child_webview", { resize: true, direction: "x" });
+		getCurrentWindow().emit("child_webview", { resize: true, direction: "x" });
 	}, []);
 
 	const openLumeStore = useCallback(async () => {
-		await getCurrent().emit("columns", {
+		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "store",

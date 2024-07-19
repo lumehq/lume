@@ -33,11 +33,11 @@ tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace"
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-specta = { git = "https://github.com/oscartbeaumont/tauri-specta", features = [
+tauri-specta = { git = "https://github.com/reyamir/tauri-specta", branch = "feat/tauri-v2", features = [
     "typescript",
 ] }
 tauri-plugin-theme = "0.4.1"
-tauri-plugin-decorum = "0.1.3"
+tauri-plugin-decorum = { git = "https://github.com/reyamir/tauri-plugin-decorum", branch = "feat/tauri-v2" }
 specta = "^2.0.0-rc.12"
 keyring = "2"
 keyring-search = "0.2.0"

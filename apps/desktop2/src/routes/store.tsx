@@ -3,7 +3,7 @@ import type { LumeColumn } from "@lume/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createFileRoute } from "@tanstack/react-router";
 import { resolveResource } from "@tauri-apps/api/path";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
 export const Route = createFileRoute("/store")({
@@ -24,7 +24,7 @@ function Screen() {
 	const { officialColumns } = Route.useRouteContext();
 
 	const install = async (column: LumeColumn) => {
-		const mainWindow = getCurrent();
+		const mainWindow = getCurrentWindow();
 		await mainWindow.emit("columns", { type: "add", column });
 	};
 

@@ -1,7 +1,7 @@
 import { Button, init } from "@getalby/bitcoin-connect-react";
 import { NostrAccount } from "@lume/system";
 import { createFileRoute } from "@tanstack/react-router";
-import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 export const Route = createFileRoute("/settings/bitcoin-connect")({
 	beforeLoad: () => {
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/settings/bitcoin-connect")({
 function Screen() {
 	const setNwcUri = async (uri: string) => {
 		const cmd = await NostrAccount.setWallet(uri);
-		if (cmd) getCurrent().close();
+		if (cmd) getCurrentWebviewWindow().close();
 	};
 
 	return (

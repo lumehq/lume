@@ -1,28 +1,31 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"files": {
-    "ignore": ["apps/desktop2/src/router.gen.ts"]
-  },
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"style": {
-				"noNonNullAssertion": "warn",
-				"noUselessElse": "off"
-			},
-			"correctness": {
-				"useExhaustiveDependencies": "off"
-			},
-			"a11y": {
-				"noSvgWithoutTitle": "off"
-			},
-			"complexity": {
-				"noStaticOnlyClass": "off"
-			}
-		}
-	}
+    "$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
+    "organizeImports": {
+        "enabled": true
+    },
+    "files": {
+        "ignore": [
+            "apps/desktop2/src/router.gen.ts",
+            "packages/system/src/commands.ts"
+        ]
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "style": {
+                "noNonNullAssertion": "warn",
+                "noUselessElse": "off"
+            },
+            "correctness": {
+                "useExhaustiveDependencies": "off"
+            },
+            "a11y": {
+                "noSvgWithoutTitle": "off"
+            },
+            "complexity": {
+                "noStaticOnlyClass": "off"
+            }
+        }
+    }
 }

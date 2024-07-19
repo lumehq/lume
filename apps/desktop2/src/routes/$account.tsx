@@ -9,7 +9,7 @@ import { LumeWindow, NostrAccount, NostrQuery } from "@lume/system";
 import { cn } from "@lume/utils";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { getCurrent } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { memo, useCallback, useState } from "react";
 
@@ -30,7 +30,7 @@ function Screen() {
 	const { settings, platform } = Route.useRouteContext();
 
 	const openLumeStore = async () => {
-		await getCurrent().emit("columns", {
+		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "store",
@@ -137,7 +137,7 @@ const Accounts = memo(function Accounts() {
 
 			if (select) {
 				// Reset current columns
-				await getCurrent().emit("columns", { type: "reset" });
+				await getCurrentWindow().emit("columns", { type: "reset" });
 
 				// Redirect to new account
 				return navigate({

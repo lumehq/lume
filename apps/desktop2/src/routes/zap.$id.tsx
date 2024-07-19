@@ -1,7 +1,7 @@
 import { User } from "@/components/user";
 import { NostrQuery } from "@lume/system";
 import { createFileRoute } from "@tanstack/react-router";
-import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
@@ -35,7 +35,7 @@ function Screen() {
 			if (val) {
 				setIsCompleted(true);
 				// close current window
-				await getCurrent().close();
+				await getCurrentWebviewWindow().close();
 			}
 		} catch (e) {
 			setIsLoading(false);
