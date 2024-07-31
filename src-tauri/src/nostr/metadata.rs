@@ -359,7 +359,7 @@ pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), ()> {
     let client = &state.client;
     let keyring = Entry::new("Lume Secret", "Bitcoin Connect").unwrap();
 
-    match keyring.delete_password() {
+    match keyring.delete_credential() {
         Ok(_) => {
             client.unset_zapper().await;
             Ok(())

@@ -4,12 +4,7 @@ import { type Result, commands } from "./commands";
 export const NostrAccount = {
 	getAccounts: async () => {
 		const query = await commands.getAccounts();
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			return [];
-		}
+		return query;
 	},
 	loadAccount: async (npub: string) => {
 		const bunker: string = localStorage.getItem(`${npub}_bunker`);

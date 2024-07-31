@@ -16,11 +16,11 @@ tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.0.0-beta", features = [
-  "unstable",
-  "tray-icon",
-  "macos-private-api",
-  "native-tls-vendored",
-  "protocol-asset",
+	"unstable",
+	"tray-icon",
+	"macos-private-api",
+	"native-tls-vendored",
+	"protocol-asset",
 ] }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
@@ -34,18 +34,22 @@ tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", 
 tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-specta = { git = "https://github.com/reyamir/tauri-specta", branch = "feat/tauri-v2", features = [
-  "typescript",
+	"typescript",
 ] }
 tauri-plugin-theme = "0.4.1"
 tauri-plugin-decorum = { git = "https://github.com/reyamir/tauri-plugin-decorum", branch = "feat/tauri-v2" }
 specta = "^2.0.0-rc.12"
-keyring = "2"
-keyring-search = "0.2.0"
 reqwest = "0.12.4"
 url = "2.5.0"
 futures = "0.3.30"
 linkify = "0.10.0"
 regex = "1.10.4"
+keyring = { version = "3", features = [
+	"apple-native",
+	"windows-native",
+	"sync-secret-service",
+] }
+keyring-search = "1.2.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"

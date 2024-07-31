@@ -22,22 +22,17 @@ pub struct Account {
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_accounts() -> Result<Vec<String>, String> {
-    let search = Search::new().map_err(|e| e.to_string())?;
-    let results = search.by("Account", "nostr_secret");
+pub fn get_accounts() -> Vec<String> {
+    let search = Search::new().expect("Unexpected.");
+    let results = search.by_service("Lume");
+    let list = List::list_credentials(&results, Limit::All);
+    let accounts: HashSet<String> = list
+        .split_whitespace()
+        .filter(|v| v.starts_with("npub1"))
+        .map(String::from)
+        .collect();
 
-    match List::list_credentials(results, Limit::All) {
-        Ok(list) => {
-            let accounts: HashSet<String> = list
-                .split_whitespace()
-                .filter(|v| v.starts_with("npub1"))
-                .map(String::from)
-                .collect();
-
-            Ok(accounts.into_iter().collect())
-        }
-        Err(_) => Err("Empty.".into()),
-    }
+    accounts.into_iter().collect()
 }
 
 #[tauri::command]
@@ -58,7 +53,7 @@ pub fn create_account() -> Result<Account, String> {
 #[tauri::command]
 #[specta::specta]
 pub fn get_private_key(npub: &str) -> Result<String, String> {
-    let keyring = Entry::new(npub, "nostr_secret").unwrap();
+    let keyring = Entry::new("Lume", npub).unwrap();
 
     if let Ok(nsec) = keyring.get_password() {
         let secret_key = SecretKey::from_bech32(nsec).unwrap();
@@ -90,7 +85,7 @@ pub async fn save_account(
             let npub = nostr_keys.public_key().to_bech32().unwrap();
             let nsec = nostr_keys.secret_key().unwrap().to_bech32().unwrap();
 
-            let keyring = Entry::new(&npub, "nostr_secret").unwrap();
+            let keyring = Entry::new("Lume", &npub).unwrap();
             let _ = keyring.set_password(&nsec);
 
             let signer = NostrSigner::Keys(nostr_keys);
@@ -121,7 +116,7 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
 
             match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None).await {
                 Ok(signer) => {
-                    let keyring = Entry::new(&remote_npub, "nostr_secret").unwrap();
+                    let keyring = Entry::new("Lume", &remote_npub).unwrap();
                     let _ = keyring.set_password(&app_secret);
 
                     // Update signer
@@ -139,7 +134,7 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
 #[tauri::command]
 #[specta::specta]
 pub async fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
-    let keyring = Entry::new(npub, "nostr_secret").unwrap();
+    let keyring = Entry::new("Lume", npub).unwrap();
 
     if let Ok(nsec) = keyring.get_password() {
         let secret_key = SecretKey::from_bech32(nsec).unwrap();
@@ -165,7 +160,7 @@ pub async fn load_account(
 ) -> Result<bool, String> {
     let handle = app.clone();
     let client = &state.client;
-    let keyring = Entry::new(npub, "nostr_secret").unwrap();
+    let keyring = Entry::new("Lume", npub).unwrap();
 
     let password = match keyring.get_password() {
         Ok(pw) => pw,

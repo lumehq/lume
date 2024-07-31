@@ -44,13 +44,8 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getAccounts() : Promise<Result<string[], string>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("get_accounts") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
+async getAccounts() : Promise<string[]> {
+return await TAURI_INVOKE("get_accounts");
 },
 async createAccount() : Promise<Result<Account, string>> {
 try {
