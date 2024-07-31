@@ -37,7 +37,7 @@ tauri-specta = { git = "https://github.com/reyamir/tauri-specta", branch = "feat
 	"typescript",
 ] }
 tauri-plugin-theme = "0.4.1"
-tauri-plugin-decorum = { git = "https://github.com/reyamir/tauri-plugin-decorum", branch = "feat/tauri-v2" }
+tauri-plugin-decorum = "0.1.6"
 specta = "^2.0.0-rc.12"
 reqwest = "0.12.4"
 url = "2.5.0"
