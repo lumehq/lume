@@ -198,7 +198,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
             &window.label,
             WebviewUrl::App(PathBuf::from(window.url)),
         )
-        .title(title)
+        .title(&window.title)
         .min_inner_size(window.width, window.height)
         .inner_size(window.width, window.height)
         .minimizable(window.minimizable)
@@ -218,7 +218,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
             &window.label,
             WebviewUrl::App(PathBuf::from(window.url)),
         )
-        .title(title)
+        .title(&window.title)
         .min_inner_size(window.width, window.height)
         .inner_size(window.width, window.height)
         .minimizable(window.minimizable)
@@ -227,6 +227,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .unwrap();
 
         // Set decoration
+        #[cfg(not(target_os = "linux"))]
         window.create_overlay_titlebar().unwrap();
 
         // Restore native border

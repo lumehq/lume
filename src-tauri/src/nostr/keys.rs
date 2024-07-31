@@ -1,3 +1,4 @@
+#[cfg(target_os = "macos")]
 use crate::commands::tray::create_tray_panel;
 use crate::nostr::event::RichEvent;
 use crate::nostr::internal::{get_user_settings, init_nip65};

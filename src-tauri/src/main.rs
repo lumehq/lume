@@ -140,7 +140,13 @@ fn main() {
         builder.build().unwrap()
     };
 
-    tauri::Builder::default()
+    #[cfg(target_os = "macos")]
+    let builder = tauri::Builder::default().plugin(tauri_nspanel::init());
+
+    #[cfg(not(target_os = "macos"))]
+    let builder = tauri::Builder::default();
+
+    builder
         .setup(|app| {
             #[cfg(target_os = "macos")]
             app.handle().plugin(tauri_nspanel::init()).unwrap();
@@ -239,8 +245,6 @@ fn main() {
 
             Ok(())
         })
-        .enable_macos_default_menu(false)
-        .plugin(tauri_nspanel::init())
         .plugin(tauri_plugin_theme::init(ctx.config_mut()))
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_clipboard_manager::init())
