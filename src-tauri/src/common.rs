@@ -1,13 +1,12 @@
+use linkify::LinkFinder;
+use nostr_sdk::prelude::*;
+use reqwest::Client as ReqClient;
+use serde::Serialize;
+use specta::Type;
 use std::collections::HashSet;
 use std::str::FromStr;
 
-use linkify::LinkFinder;
-use nostr_sdk::prelude::Nip19Event;
-use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
-use reqwest::Client;
-use serde::Serialize;
-use specta::Type;
-use url::Url;
+use crate::Settings;
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct Meta {
@@ -45,6 +44,90 @@ const NOSTR_MENTIONS: [&str; 10] = [
 ];
 const IMAGES: [&str; 7] = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
 const VIDEOS: [&str; 5] = ["mp4", "mov", "avi", "webm", "mkv"];
+
+pub async fn init_nip65(client: &Client) {
+    let signer = match client.signer().await {
+        Ok(signer) => signer,
+        Err(e) => {
+            eprintln!("Failed to get signer: {:?}", e);
+            return;
+        }
+    };
+    let public_key = match signer.public_key().await {
+        Ok(public_key) => public_key,
+        Err(e) => {
+            eprintln!("Failed to get public key: {:?}", e);
+            return;
+        }
+    };
+
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::RelayList)
+        .limit(1);
+
+    if let Ok(events) = client.get_events_of(vec![filter], None).await {
+        if let Some(event) = events.first() {
+            let relay_list = nip65::extract_relay_list(event);
+            for (url, metadata) in relay_list {
+                let opts = match metadata {
+                    Some(RelayMetadata::Read) => RelayOptions::new().read(true).write(false),
+                    Some(_) => RelayOptions::new().write(true).read(false),
+                    None => RelayOptions::default(),
+                };
+                if let Err(e) = client.add_relay_with_opts(&url.to_string(), opts).await {
+                    eprintln!("Failed to add relay {}: {:?}", url, e);
+                }
+                if let Err(e) = client.connect_relay(url.to_string()).await {
+                    eprintln!("Failed to connect to relay {}: {:?}", url, e);
+                } else {
+                    println!("Connecting to relay: {} - {:?}", url, metadata);
+                }
+            }
+        }
+    } else {
+        eprintln!("Failed to get events for RelayList.");
+    }
+}
+
+pub async fn get_user_settings(client: &Client) -> Result<Settings, String> {
+    let ident = "lume:settings";
+    let signer = client
+        .signer()
+        .await
+        .map_err(|e| format!("Failed to get signer: {:?}", e))?;
+    let public_key = signer
+        .public_key()
+        .await
+        .map_err(|e| format!("Failed to get public key: {:?}", e))?;
+
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ApplicationSpecificData)
+        .identifier(ident)
+        .limit(1);
+
+    match client.get_events_of(vec![filter], None).await {
+        Ok(events) => {
+            if let Some(event) = events.first() {
+                let content = event.content();
+                match signer.nip44_decrypt(public_key, content).await {
+                    Ok(decrypted) => match serde_json::from_str(&decrypted) {
+                        Ok(parsed) => Ok(parsed),
+                        Err(_) => Err("Could not parse settings payload".into()),
+                    },
+                    Err(e) => Err(format!("Failed to decrypt settings content: {:?}", e)),
+                }
+            } else {
+                Err("Settings not found.".into())
+            }
+        }
+        Err(e) => Err(format!(
+            "Failed to get events for ApplicationSpecificData: {:?}",
+            e
+        )),
+    }
+}
 
 pub fn get_latest_event(events: &[Event]) -> Option<&Event> {
     events.iter().next()
@@ -102,7 +185,7 @@ pub async fn parse_event(content: &str) -> Meta {
     let mut text = content.to_string();
 
     if !urls.is_empty() {
-        let client = Client::new();
+        let client = ReqClient::new();
 
         for url in urls {
             let url_str = url.as_str();

@@ -7,7 +7,7 @@ use tauri::{
 use tauri::{AppHandle, Manager, WebviewUrl};
 use tauri_nspanel::ManagerExt;
 
-use super::fns::{
+use crate::macos::{
     position_menubar_panel, set_corner_radius, setup_menubar_panel_listeners,
     swizzle_to_menubar_panel,
 };

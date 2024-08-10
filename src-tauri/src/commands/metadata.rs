@@ -1,12 +1,10 @@
-use std::{str::FromStr, time::Duration};
-
 use keyring::Entry;
 use nostr_sdk::prelude::*;
+use std::{str::FromStr, time::Duration};
 use tauri::State;
 
+use crate::common::get_latest_event;
 use crate::{Nostr, Settings};
-
-use super::get_latest_event;
 
 #[tauri::command]
 #[specta::specta]

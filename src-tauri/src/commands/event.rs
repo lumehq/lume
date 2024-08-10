@@ -1,12 +1,11 @@
-use std::{str::FromStr, time::Duration};
-
 use futures::future::join_all;
 use nostr_sdk::prelude::*;
 use serde::Serialize;
 use specta::Type;
+use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
+use crate::common::{create_event_tags, dedup_event, parse_event, Meta};
 use crate::{Nostr, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]

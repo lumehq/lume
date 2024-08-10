@@ -10,17 +10,17 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.5.10",
+		"@astrojs/check": "^0.9.2",
 		"@astrojs/tailwind": "^5.1.0",
 		"@fontsource/alice": "^5.0.13",
-		"astro": "^4.11.6",
+		"astro": "^4.13.3",
 		"astro-seo-meta": "^4.1.1",
 		"astro-seo-schema": "^4.0.2",
 		"schema-dts": "^1.1.2",
-		"tailwindcss": "^3.4.6",
-		"typescript": "^5.5.3"
+		"tailwindcss": "^3.4.9",
+		"typescript": "^5.5.4"
 	},
 	"devDependencies": {
-		"@tailwindcss/typography": "^0.5.13"
+		"@tailwindcss/typography": "^0.5.14"
 	}
 }

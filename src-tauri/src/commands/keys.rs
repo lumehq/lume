@@ -1,9 +1,7 @@
 #[cfg(target_os = "macos")]
 use crate::commands::tray::create_tray_panel;
-use crate::nostr::event::RichEvent;
-use crate::nostr::internal::{get_user_settings, init_nip65};
-use crate::nostr::utils::parse_event;
-use crate::{Nostr, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
+use crate::common::{get_user_settings, init_nip65, parse_event};
+use crate::{Nostr, RichEvent, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
 
 use keyring::Entry;
 use keyring_search::{Limit, List, Search};

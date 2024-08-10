@@ -8,37 +8,37 @@ edition = "2021"
 rust-version = "1.70"
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-beta", features = [] }
+tauri-build = { version = "2.0.0-rc", features = [] }
 
 [dependencies]
-nostr-sdk = { version = "0.33", features = ["sqlite"] }
+nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = [
+	"sqlite",
+] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-beta", features = [
+tauri = { version = "2.0.0-rc", features = [
 	"unstable",
 	"tray-icon",
 	"macos-private-api",
-	"native-tls-vendored",
 	"protocol-asset",
 ] }
-tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-dialog = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-fs = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-http = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-notification = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-specta = { git = "https://github.com/reyamir/tauri-specta", branch = "feat/tauri-v2", features = [
-	"typescript",
-] }
+tauri-plugin-window-state = "2.0.0-rc"
+tauri-plugin-clipboard-manager = "2.0.0-rc"
+tauri-plugin-dialog = "2.0.0-rc"
+tauri-plugin-fs = "2.0.0-rc"
+tauri-plugin-http = "2.0.0-rc"
+tauri-plugin-notification = "2.0.0-rc"
+tauri-plugin-os = "2.0.0-rc"
+tauri-plugin-process = "2.0.0-rc"
+tauri-plugin-shell = "2.0.0-rc"
+tauri-plugin-updater = "2.0.0-rc"
+tauri-plugin-upload = "2.0.0-rc"
 tauri-plugin-theme = "0.4.1"
-tauri-plugin-decorum = "0.1.6"
-specta = "^2.0.0-rc.12"
+tauri-plugin-decorum = "1.0.0"
+tauri-specta = { version = "2.0.0-rc.15", features = ["derive", "typescript"] }
+specta = "^2.0.0-rc.20"
+specta-typescript = "0.0.7"
 reqwest = "0.12.4"
 url = "2.5.0"
 futures = "0.3.30"

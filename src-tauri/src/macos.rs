@@ -1,5 +1,4 @@
 use std::ffi::CString;
-
 use tauri::{AppHandle, Emitter, Listener, Manager, WebviewWindow};
 use tauri_nspanel::{
     block::ConcreteBlock,

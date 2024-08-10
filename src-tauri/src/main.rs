@@ -11,22 +11,27 @@ extern crate objc;
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
+use commands::{event::*, keys::*, metadata::*, relay::*, window::*};
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::sync::Mutex;
-use std::time::Duration;
+use specta_typescript::Typescript;
 use std::{
     fs,
     io::{self, BufRead},
     str::FromStr,
+    sync::Mutex,
+    time::Duration,
 };
 use tauri::{path::BaseDirectory, Manager};
 #[cfg(not(target_os = "linux"))]
 use tauri_plugin_decorum::WebviewWindowExt;
+use tauri_specta::{collect_commands, Builder};
 
 pub mod commands;
-pub mod nostr;
+pub mod common;
+#[cfg(target_os = "macos")]
+pub mod macos;
 
 #[derive(Serialize)]
 pub struct Nostr {
@@ -70,84 +75,86 @@ pub const NEWSFEED_NEG_LIMIT: usize = 256;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 
 fn main() {
-    let mut ctx = tauri::generate_context!();
-
-    let invoke_handler = {
-        let builder = tauri_specta::ts::builder().commands(tauri_specta::collect_commands![
-            nostr::relay::get_relays,
-            nostr::relay::connect_relay,
-            nostr::relay::remove_relay,
-            nostr::relay::get_bootstrap_relays,
-            nostr::relay::save_bootstrap_relays,
-            nostr::keys::get_accounts,
-            nostr::keys::create_account,
-            nostr::keys::save_account,
-            nostr::keys::get_encrypted_key,
-            nostr::keys::get_private_key,
-            nostr::keys::connect_remote_account,
-            nostr::keys::load_account,
-            nostr::metadata::get_current_profile,
-            nostr::metadata::get_profile,
-            nostr::metadata::get_contact_list,
-            nostr::metadata::set_contact_list,
-            nostr::metadata::create_profile,
-            nostr::metadata::is_contact_list_empty,
-            nostr::metadata::check_contact,
-            nostr::metadata::toggle_contact,
-            nostr::metadata::get_nstore,
-            nostr::metadata::set_nstore,
-            nostr::metadata::set_wallet,
-            nostr::metadata::load_wallet,
-            nostr::metadata::remove_wallet,
-            nostr::metadata::zap_profile,
-            nostr::metadata::zap_event,
-            nostr::metadata::friend_to_friend,
-            nostr::metadata::get_notifications,
-            nostr::metadata::get_settings,
-            nostr::metadata::set_new_settings,
-            nostr::metadata::verify_nip05,
-            nostr::event::get_event_meta,
-            nostr::event::get_event,
-            nostr::event::get_event_from,
-            nostr::event::get_replies,
-            nostr::event::listen_event_reply,
-            nostr::event::get_events_by,
-            nostr::event::get_local_events,
-            nostr::event::listen_local_event,
-            nostr::event::get_group_events,
-            nostr::event::get_global_events,
-            nostr::event::get_hashtag_events,
-            nostr::event::publish,
-            nostr::event::reply,
-            nostr::event::repost,
-            nostr::event::event_to_bech32,
-            nostr::event::user_to_bech32,
-            nostr::event::unlisten,
-            commands::window::create_column,
-            commands::window::close_column,
-            commands::window::reposition_column,
-            commands::window::resize_column,
-            commands::window::reload_column,
-            commands::window::open_window,
-            commands::window::open_main_window,
-            commands::window::force_quit,
-            commands::window::set_badge
+    let builder = Builder::<tauri::Wry>::new()
+        // Then register them (separated by a comma)
+        .commands(collect_commands![
+            get_relays,
+            connect_relay,
+            remove_relay,
+            get_bootstrap_relays,
+            save_bootstrap_relays,
+            get_accounts,
+            create_account,
+            save_account,
+            get_encrypted_key,
+            get_private_key,
+            connect_remote_account,
+            load_account,
+            get_current_profile,
+            get_profile,
+            get_contact_list,
+            set_contact_list,
+            create_profile,
+            is_contact_list_empty,
+            check_contact,
+            toggle_contact,
+            get_nstore,
+            set_nstore,
+            set_wallet,
+            load_wallet,
+            remove_wallet,
+            zap_profile,
+            zap_event,
+            friend_to_friend,
+            get_notifications,
+            get_settings,
+            set_new_settings,
+            verify_nip05,
+            get_event_meta,
+            get_event,
+            get_event_from,
+            get_replies,
+            listen_event_reply,
+            get_events_by,
+            get_local_events,
+            listen_local_event,
+            get_group_events,
+            get_global_events,
+            get_hashtag_events,
+            publish,
+            reply,
+            repost,
+            event_to_bech32,
+            user_to_bech32,
+            unlisten,
+            create_column,
+            close_column,
+            reposition_column,
+            resize_column,
+            reload_column,
+            open_window,
+            open_main_window,
+            force_quit,
+            set_badge
         ]);
 
-        #[cfg(debug_assertions)]
-        let builder = builder.path("../packages/system/src/commands.ts");
-
-        builder.build().unwrap()
-    };
+    builder
+        .export(Typescript::default(), "../packages/system/src/commands.ts")
+        .expect("Failed to export typescript bindings");
 
     #[cfg(target_os = "macos")]
-    let builder = tauri::Builder::default().plugin(tauri_nspanel::init());
+    let tauri_builder = tauri::Builder::default().plugin(tauri_nspanel::init());
 
     #[cfg(not(target_os = "macos"))]
-    let builder = tauri::Builder::default();
+    let tauri_builder = tauri::Builder::default();
 
-    builder
-        .setup(|app| {
+    let mut ctx = tauri::generate_context!();
+
+    tauri_builder
+        .invoke_handler(builder.invoke_handler())
+        .setup(move |app| {
+            builder.mount_events(app);
+
             #[cfg(target_os = "macos")]
             app.handle().plugin(tauri_nspanel::init()).unwrap();
 
@@ -257,7 +264,6 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .invoke_handler(invoke_handler)
         .run(ctx)
         .expect("error while running tauri application");
 }
