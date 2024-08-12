@@ -139,7 +139,7 @@ fn main() {
         ]);
 
     builder
-        .export(Typescript::default(), "../packages/system/src/commands.ts")
+        .export(Typescript::default(), "../src/commands.gen.ts")
         .expect("Failed to export typescript bindings");
 
     #[cfg(target_os = "macos")]

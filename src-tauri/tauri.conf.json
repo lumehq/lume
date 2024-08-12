@@ -4,9 +4,9 @@
 	"version": "4.0.15",
 	"identifier": "nu.lume.Lume",
 	"build": {
-		"beforeBuildCommand": "pnpm desktop:build",
-		"beforeDevCommand": "pnpm desktop:dev",
+		"beforeDevCommand": "pnpm dev",
 		"devUrl": "http://localhost:3000",
+		"beforeBuildCommand": "pnpm build",
 		"frontendDist": "../dist"
 	},
 	"app": {
