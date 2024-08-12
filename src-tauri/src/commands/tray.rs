@@ -36,8 +36,7 @@ pub fn create_tray_panel(account: &str, app: &AppHandle) {
         let _ = window.destroy();
     };
 
-    let mut url = "/panel/".to_owned();
-    url.push_str(account);
+    let url = format!("/{}/panel", account);
 
     let window = WebviewWindowBuilder::new(app, "panel", WebviewUrl::App(PathBuf::from(url)))
         .title("Panel")

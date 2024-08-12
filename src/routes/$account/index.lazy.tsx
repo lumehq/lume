@@ -6,23 +6,14 @@ import {
 	SearchIcon,
 } from "@/components";
 import { User } from "@/components/user";
-import { LumeWindow, NostrAccount, NostrQuery } from "@/system";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { LumeWindow, NostrAccount } from "@/system";
+import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { memo, useCallback, useState } from "react";
 
-export const Route = createFileRoute("/$account")({
-	beforeLoad: async ({ params }) => {
-		const settings = await NostrQuery.getUserSettings();
-		const accounts = await NostrAccount.getAccounts();
-		const otherAccounts = accounts.filter(
-			(account) => account !== params.account,
-		);
-
-		return { otherAccounts, settings };
-	},
+export const Route = createLazyFileRoute("/$account/")({
 	component: Screen,
 });
 

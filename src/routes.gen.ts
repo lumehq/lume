@@ -26,9 +26,9 @@ import { Route as CreateTopicImport } from './routes/create-topic'
 import { Route as CreateNewsfeedImport } from './routes/create-newsfeed'
 import { Route as CreateGroupImport } from './routes/create-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
-import { Route as AccountImport } from './routes/$account'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
+import { Route as AccountIndexImport } from './routes/$account/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
 import { Route as UsersPubkeyImport } from './routes/users/$pubkey'
 import { Route as TrendingUsersImport } from './routes/trending.users'
@@ -41,12 +41,12 @@ import { Route as SettingsBitcoinConnectImport } from './routes/settings/bitcoin
 import { Route as SettingsBackupImport } from './routes/settings/backup'
 import { Route as SearchUsersImport } from './routes/search.users'
 import { Route as SearchNotesImport } from './routes/search.notes'
-import { Route as PanelAccountImport } from './routes/panel.$account'
 import { Route as EventsIdImport } from './routes/events/$id'
 import { Route as CreateNewsfeedUsersImport } from './routes/create-newsfeed.users'
 import { Route as CreateNewsfeedF2fImport } from './routes/create-newsfeed.f2f'
 import { Route as AuthCreateProfileImport } from './routes/auth/create-profile'
-import { Route as AccountHomeImport } from './routes/$account.home'
+import { Route as AccountPanelImport } from './routes/$account/panel'
+import { Route as AccountHomeImport } from './routes/$account/home'
 import { Route as AuthAccountBackupImport } from './routes/auth/$account.backup'
 
 // Create Virtual Routes
@@ -133,11 +133,6 @@ const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AccountRoute = AccountImport.update({
-  path: '/$account',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -147,6 +142,13 @@ const EditorIndexRoute = EditorIndexImport.update({
   path: '/editor/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const AccountIndexRoute = AccountIndexImport.update({
+  path: '/$account/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/$account/index.lazy').then((d) => d.Route),
+)
 
 const AuthRemoteLazyRoute = AuthRemoteLazyImport.update({
   path: '/remote',
@@ -218,11 +220,6 @@ const SearchNotesRoute = SearchNotesImport.update({
   getParentRoute: () => SearchRoute,
 } as any)
 
-const PanelAccountRoute = PanelAccountImport.update({
-  path: '/panel/$account',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EventsIdRoute = EventsIdImport.update({
   path: '/events/$id',
   getParentRoute: () => rootRoute,
@@ -243,10 +240,17 @@ const AuthCreateProfileRoute = AuthCreateProfileImport.update({
   getParentRoute: () => AuthLazyRoute,
 } as any)
 
+const AccountPanelRoute = AccountPanelImport.update({
+  path: '/$account/panel',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/$account/panel.lazy').then((d) => d.Route),
+)
+
 const AccountHomeRoute = AccountHomeImport.update({
-  path: '/home',
-  getParentRoute: () => AccountRoute,
-} as any)
+  path: '/$account/home',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/$account/home.lazy').then((d) => d.Route))
 
 const AuthAccountBackupRoute = AuthAccountBackupImport.update({
   path: '/$account/backup',
@@ -262,13 +266,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/$account': {
-      id: '/$account'
-      path: '/$account'
-      fullPath: '/$account'
-      preLoaderRoute: typeof AccountImport
       parentRoute: typeof rootRoute
     }
     '/bootstrap-relays': {
@@ -378,10 +375,17 @@ declare module '@tanstack/react-router' {
     }
     '/$account/home': {
       id: '/$account/home'
-      path: '/home'
+      path: '/$account/home'
       fullPath: '/$account/home'
       preLoaderRoute: typeof AccountHomeImport
-      parentRoute: typeof AccountImport
+      parentRoute: typeof rootRoute
+    }
+    '/$account/panel': {
+      id: '/$account/panel'
+      path: '/$account/panel'
+      fullPath: '/$account/panel'
+      preLoaderRoute: typeof AccountPanelImport
+      parentRoute: typeof rootRoute
     }
     '/auth/create-profile': {
       id: '/auth/create-profile'
@@ -409,13 +413,6 @@ declare module '@tanstack/react-router' {
       path: '/events/$id'
       fullPath: '/events/$id'
       preLoaderRoute: typeof EventsIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/panel/$account': {
-      id: '/panel/$account'
-      path: '/panel/$account'
-      fullPath: '/panel/$account'
-      preLoaderRoute: typeof PanelAccountImport
       parentRoute: typeof rootRoute
     }
     '/search/notes': {
@@ -516,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRemoteLazyImport
       parentRoute: typeof AuthLazyImport
     }
+    '/$account/': {
+      id: '/$account/'
+      path: '/$account'
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/editor/': {
       id: '/editor/'
       path: '/editor'
@@ -537,7 +541,6 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  AccountRoute: AccountRoute.addChildren({ AccountHomeRoute }),
   BootstrapRelaysRoute,
   CreateGroupRoute,
   CreateNewsfeedRoute: CreateNewsfeedRoute.addChildren({
@@ -571,10 +574,12 @@ export const routeTree = rootRoute.addChildren({
     AuthAccountBackupRoute,
   }),
   LandingLazyRoute,
+  AccountHomeRoute,
+  AccountPanelRoute,
   EventsIdRoute,
-  PanelAccountRoute,
   UsersPubkeyRoute,
   ZapIdRoute,
+  AccountIndexRoute,
   EditorIndexRoute,
 })
 
@@ -587,7 +592,6 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/$account",
         "/bootstrap-relays",
         "/create-group",
         "/create-newsfeed",
@@ -603,21 +607,17 @@ export const routeTree = rootRoute.addChildren({
         "/trending",
         "/auth",
         "/landing",
+        "/$account/home",
+        "/$account/panel",
         "/events/$id",
-        "/panel/$account",
         "/users/$pubkey",
         "/zap/$id",
+        "/$account/",
         "/editor/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/$account": {
-      "filePath": "$account.tsx",
-      "children": [
-        "/$account/home"
-      ]
     },
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
@@ -691,8 +691,10 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "landing.lazy.tsx"
     },
     "/$account/home": {
-      "filePath": "$account.home.tsx",
-      "parent": "/$account"
+      "filePath": "$account/home.tsx"
+    },
+    "/$account/panel": {
+      "filePath": "$account/panel.tsx"
     },
     "/auth/create-profile": {
       "filePath": "auth/create-profile.tsx",
@@ -708,9 +710,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/events/$id": {
       "filePath": "events/$id.tsx"
-    },
-    "/panel/$account": {
-      "filePath": "panel.$account.tsx"
     },
     "/search/notes": {
       "filePath": "search.notes.tsx",
@@ -765,6 +764,9 @@ export const routeTree = rootRoute.addChildren({
     "/auth/remote": {
       "filePath": "auth/remote.lazy.tsx",
       "parent": "/auth"
+    },
+    "/$account/": {
+      "filePath": "$account/index.tsx"
     },
     "/editor/": {
       "filePath": "editor/index.tsx"

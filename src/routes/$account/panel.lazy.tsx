@@ -12,7 +12,7 @@ import { Kind } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -20,10 +20,7 @@ import { open } from "@tauri-apps/plugin-shell";
 import { type ReactNode, useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createFileRoute("/panel/$account")({
-	beforeLoad: async ({ context }) => {
-		console.log(context);
-	},
+export const Route = createLazyFileRoute("/$account/panel")({
 	component: Screen,
 });
 
@@ -33,7 +30,6 @@ function Screen() {
 	const { isLoading, data } = useQuery({
 		queryKey: ["notification", account],
 		queryFn: async () => {
-			console.log(queryClient);
 			const events = await NostrQuery.getNotifications();
 			return events;
 		},
@@ -72,6 +68,7 @@ function Screen() {
 
 			return { texts, zaps, reactions };
 		},
+		refetchOnWindowFocus: false,
 	});
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
@@ -125,7 +122,7 @@ function Screen() {
 		return () => {
 			unlisten.then((f) => f());
 		};
-	}, []);
+	}, [account]);
 
 	if (isLoading) {
 		return (

@@ -3,7 +3,7 @@ import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
 import { NostrQuery } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import useEmblaCarousel from "embla-carousel-react";
@@ -11,11 +11,7 @@ import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-export const Route = createFileRoute("/$account/home")({
-	loader: async () => {
-		const columns = await NostrQuery.getColumns();
-		return columns;
-	},
+export const Route = createLazyFileRoute("/$account/home")({
 	component: Screen,
 });
 
