@@ -8,7 +8,7 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 
-export const Route = createFileRoute("/auth/$account/backup")({
+export const Route = createFileRoute("/$account/backup")({
 	component: Screen,
 });
 

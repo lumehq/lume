@@ -1,4 +1,6 @@
 export * from "./container";
+export * from "./frame";
+export * from "./back";
 export * from "./box";
 export * from "./spinner";
 export * from "./quote";

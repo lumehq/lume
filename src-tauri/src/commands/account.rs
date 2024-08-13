@@ -1,29 +1,30 @@
-#[cfg(target_os = "macos")]
-use crate::commands::tray::create_tray_panel;
-use crate::common::{get_user_settings, init_nip65, parse_event};
-use crate::{Nostr, RichEvent, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
-
 use keyring::Entry;
 use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::collections::HashSet;
-use std::time::Duration;
+use std::{collections::HashSet, str::FromStr, time::Duration};
 use tauri::{Emitter, EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 
-#[derive(Serialize, Type)]
-pub struct Account {
-    npub: String,
-    nsec: String,
+// #[cfg(target_os = "macos")]
+// use crate::commands::tray::create_tray_panel;
+use crate::{
+    common::{get_user_settings, init_nip65, parse_event},
+    Nostr, RichEvent, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT,
+};
+
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+struct Account {
+    password: String,
+    nostr_connect: Option<String>,
 }
 
 #[tauri::command]
 #[specta::specta]
 pub fn get_accounts() -> Vec<String> {
     let search = Search::new().expect("Unexpected.");
-    let results = search.by_service("Lume");
+    let results = search.by_service("Lume Secret Storage");
     let list = List::list_credentials(&results, Limit::All);
     let accounts: HashSet<String> = list
         .split_whitespace()
@@ -36,76 +37,96 @@ pub fn get_accounts() -> Vec<String> {
 
 #[tauri::command]
 #[specta::specta]
-pub fn create_account() -> Result<Account, String> {
-    let keys = Keys::generate();
-    let public_key = keys.public_key();
-    let secret_key = keys.secret_key().unwrap();
-
-    let result = Account {
-        npub: public_key.to_bech32().unwrap(),
-        nsec: secret_key.to_bech32().unwrap(),
-    };
-
-    Ok(result)
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn get_private_key(npub: &str) -> Result<String, String> {
-    let keyring = Entry::new("Lume", npub).unwrap();
-
-    if let Ok(nsec) = keyring.get_password() {
-        let secret_key = SecretKey::from_bech32(nsec).unwrap();
-        Ok(secret_key.to_bech32().unwrap())
-    } else {
-        Err("Key not found".into())
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn save_account(
-    nsec: &str,
-    password: &str,
+pub async fn create_account(
+    name: String,
+    about: String,
+    picture: String,
+    password: String,
     state: State<'_, Nostr>,
 ) -> Result<String, String> {
-    let secret_key = if nsec.starts_with("ncryptsec") {
-        let encrypted_key = EncryptedSecretKey::from_bech32(nsec).unwrap();
-        encrypted_key
-            .to_secret_key(password)
-            .map_err(|err| err.to_string())
-    } else {
-        SecretKey::from_bech32(nsec).map_err(|err| err.to_string())
+    let client = &state.client;
+    let keys = Keys::generate();
+    let npub = keys.public_key().to_bech32().map_err(|e| e.to_string())?;
+    let secret_key = keys.secret_key().map_err(|e| e.to_string())?;
+    let enc = EncryptedSecretKey::new(secret_key, password, 16, KeySecurity::Medium)
+        .map_err(|err| err.to_string())?;
+    let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
+
+    // Save account
+    let keyring = Entry::new("Lume Secret Storage", &npub).map_err(|e| e.to_string())?;
+    let account = Account {
+        password: enc_bech32,
+        nostr_connect: None,
     };
+    let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
+    let _ = keyring.set_password(&j);
 
-    match secret_key {
-        Ok(val) => {
-            let nostr_keys = Keys::new(val);
-            let npub = nostr_keys.public_key().to_bech32().unwrap();
-            let nsec = nostr_keys.secret_key().unwrap().to_bech32().unwrap();
+    let signer = NostrSigner::Keys(keys);
 
-            let keyring = Entry::new("Lume", &npub).unwrap();
-            let _ = keyring.set_password(&nsec);
+    // Update signer
+    client.set_signer(Some(signer)).await;
 
-            let signer = NostrSigner::Keys(nostr_keys);
-            let client = &state.client;
+    let mut metadata = Metadata::new()
+        .display_name(name.clone())
+        .name(name.to_lowercase())
+        .about(about);
 
-            // Update client's signer
-            client.set_signer(Some(signer)).await;
+    if let Ok(url) = Url::parse(&picture) {
+        metadata = metadata.picture(url)
+    }
 
-            Ok(npub)
-        }
-        Err(msg) => Err(msg),
+    match client.set_metadata(&metadata).await {
+        Ok(_) => Ok(npub),
+        Err(e) => Err(e.to_string()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn import_account(
+    key: String,
+    password: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<String, String> {
+    let client = &state.client;
+    let secret_key = SecretKey::from_bech32(key).map_err(|err| err.to_string())?;
+    let keys = Keys::new(secret_key.clone());
+    let npub = keys.public_key().to_bech32().unwrap();
+
+    let enc_bech32 = match password {
+        Some(pw) => {
+            let enc = EncryptedSecretKey::new(&secret_key, pw, 16, KeySecurity::Medium)
+                .map_err(|err| err.to_string())?;
+
+            enc.to_bech32().map_err(|err| err.to_string())?
+        }
+        None => secret_key.to_bech32().map_err(|err| err.to_string())?,
+    };
+
+    let keyring = Entry::new("Lume Secret Storage", &npub).map_err(|e| e.to_string())?;
+    let account = Account {
+        password: enc_bech32,
+        nostr_connect: None,
+    };
+    let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
+    let _ = keyring.set_password(&j);
+
+    let signer = NostrSigner::Keys(keys);
+
+    // Update client's signer
+    client.set_signer(Some(signer)).await;
+
+    Ok(npub)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
 
-    match NostrConnectURI::parse(uri) {
+    match NostrConnectURI::parse(uri.clone()) {
         Ok(bunker_uri) => {
+            // Local user
             let app_keys = Keys::generate();
             let app_secret = app_keys.secret_key().unwrap().to_string();
 
@@ -115,8 +136,22 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
 
             match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None).await {
                 Ok(signer) => {
-                    let keyring = Entry::new("Lume", &remote_npub).unwrap();
-                    let _ = keyring.set_password(&app_secret);
+                    let mut url = Url::parse(&uri).unwrap();
+                    let query: Vec<(String, String)> = url
+                        .query_pairs()
+                        .filter(|(name, _)| name != "secret")
+                        .map(|(name, value)| (name.into_owned(), value.into_owned()))
+                        .collect();
+                    url.query_pairs_mut().clear().extend_pairs(&query);
+
+                    let key = format!("{}_nostrconnect", remote_npub);
+                    let keyring = Entry::new("Lume Secret Storage", &key).unwrap();
+                    let account = Account {
+                        password: app_secret,
+                        nostr_connect: Some(url.to_string()),
+                    };
+                    let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
+                    let _ = keyring.set_password(&j);
 
                     // Update signer
                     let _ = client.set_signer(Some(signer.into())).await;
@@ -132,75 +167,74 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
-    let keyring = Entry::new("Lume", npub).unwrap();
+pub fn delete_account(id: String) -> Result<(), String> {
+    let keyring = Entry::new("Lume Secret Storage", &id).map_err(|e| e.to_string())?;
+    let _ = keyring.delete_credential();
 
-    if let Ok(nsec) = keyring.get_password() {
-        let secret_key = SecretKey::from_bech32(nsec).unwrap();
-        let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium);
-
-        if let Ok(key) = new_key {
-            Ok(key.to_bech32().unwrap())
-        } else {
-            Err("Encrypt key failed".into())
-        }
-    } else {
-        Err("Key not found".into())
-    }
+    Ok(())
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn load_account(
-    npub: &str,
-    bunker: Option<&str>,
+pub async fn login(
+    account: String,
+    password: String,
     state: State<'_, Nostr>,
     app: tauri::AppHandle,
-) -> Result<bool, String> {
+) -> Result<String, String> {
     let handle = app.clone();
     let client = &state.client;
-    let keyring = Entry::new("Lume", npub).unwrap();
+    let keyring = Entry::new("Lume Secret Storage", &account).map_err(|e| e.to_string())?;
 
-    let password = match keyring.get_password() {
-        Ok(pw) => pw,
-        Err(_) => return Err("Cancelled".into()),
+    let account = match keyring.get_password() {
+        Ok(pw) => {
+            let account: Account = serde_json::from_str(&pw).map_err(|e| e.to_string())?;
+            account
+        }
+        Err(e) => return Err(e.to_string()),
     };
 
-    match bunker {
-        Some(uri) => {
-            let app_keys =
-                Keys::parse(password).expect("Secret Key is modified, please check again.");
-
-            match NostrConnectURI::parse(uri) {
-                Ok(bunker_uri) => {
-                    match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(30), None)
-                        .await
-                    {
-                        Ok(signer) => client.set_signer(Some(signer.into())).await,
-                        Err(err) => return Err(err.to_string()),
-                    }
-                }
-                Err(err) => return Err(err.to_string()),
-            }
-        }
+    let public_key = match account.nostr_connect {
         None => {
-            let keys = Keys::parse(password).expect("Secret Key is modified, please check again.");
+            let ncryptsec =
+                EncryptedSecretKey::from_bech32(account.password).map_err(|e| e.to_string())?;
+            let secret_key = ncryptsec
+                .to_secret_key(password)
+                .map_err(|_| "Wrong password.")?;
+            let keys = Keys::new(secret_key);
+            let public_key = keys.public_key().to_bech32().unwrap();
             let signer = NostrSigner::Keys(keys);
 
             // Update signer
             client.set_signer(Some(signer)).await;
+
+            public_key
         }
-    }
+        Some(bunker) => {
+            let uri = NostrConnectURI::parse(bunker).map_err(|e| e.to_string())?;
+            let public_key = uri.signer_public_key().unwrap().to_bech32().unwrap();
+            let app_keys = Keys::from_str(&account.password).map_err(|e| e.to_string())?;
+
+            match Nip46Signer::new(uri, app_keys, Duration::from_secs(120), None).await {
+                Ok(signer) => {
+                    // Update signer
+                    client.set_signer(Some(signer.into())).await;
+                    public_key
+                }
+                Err(e) => return Err(e.to_string()),
+            }
+        }
+    };
 
     // Connect to user's relay (NIP-65)
     init_nip65(client).await;
 
     // Create tray (macOS)
-    #[cfg(target_os = "macos")]
-    create_tray_panel(npub, &handle);
+    // #[cfg(target_os = "macos")]
+    // create_tray_panel(&public_key.to_bech32().unwrap(), &handle);
 
     // Get user's contact list
-    if let Ok(contacts) = client.get_contact_list(None).await {
+    if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
         *state.contact_list.lock().unwrap() = contacts
     };
 
@@ -418,5 +452,5 @@ pub async fn load_account(
             .await
     });
 
-    Ok(true)
+    Ok(public_key)
 }

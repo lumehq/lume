@@ -11,6 +11,9 @@ importers:
       '@getalby/bitcoin-connect-react':
         specifier: ^3.6.1
         version: 3.6.1(immer@10.1.1)(react@19.0.0-rc-d025ddd3-20240722)(types-react@19.0.0-rc.1)(typescript@5.5.4)
+      '@phosphor-icons/react':
+        specifier: ^2.1.7
+        version: 2.1.7(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)
       '@radix-ui/react-avatar':
         specifier: ^1.1.0
         version: 1.1.0(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)
@@ -606,6 +609,13 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@phosphor-icons/react@2.1.7':
+    resolution: {integrity: sha512-g2e2eVAn1XG2a+LI09QU3IORLhnFNAFkNbo2iwbX6NOKSLOwvEMmTa7CgOzEbgNWR47z8i8kwjdvYZ5fkGx1mQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>= 16.8'
+      react-dom: '>= 16.8'
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -2603,6 +2613,11 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  '@phosphor-icons/react@2.1.7(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)':
+    dependencies:
+      react: 19.0.0-rc-d025ddd3-20240722
+      react-dom: 19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722)
 
   '@pkgjs/parseargs@0.11.0':
     optional: true

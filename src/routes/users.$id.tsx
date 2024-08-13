@@ -11,19 +11,19 @@ import { Await } from "@tanstack/react-router";
 import { Suspense, useCallback } from "react";
 import { WindowVirtualizer } from "virtua";
 
-export const Route = createFileRoute("/users/$pubkey")({
+export const Route = createFileRoute("/users/$id")({
 	beforeLoad: async () => {
 		const settings = await NostrQuery.getUserSettings();
 		return { settings };
 	},
 	loader: async ({ params }) => {
-		return { data: defer(NostrQuery.getUserEvents(params.pubkey)) };
+		return { data: defer(NostrQuery.getUserEvents(params.id)) };
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { pubkey } = Route.useParams();
+	const { id } = Route.useParams();
 	const { data } = Route.useLoaderData();
 
 	const renderItem = useCallback(
@@ -52,7 +52,7 @@ function Screen() {
 		<Container withDrag>
 			<Box className="px-0 scrollbar-none bg-black/5 dark:bg-white/5">
 				<WindowVirtualizer>
-					<User.Provider pubkey={pubkey}>
+					<User.Provider pubkey={id}>
 						<User.Root>
 							<User.Cover className="object-cover w-full h-44" />
 							<div className="relative flex flex-col px-3 -mt-8">

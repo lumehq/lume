@@ -48,49 +48,41 @@ async saveBootstrapRelays(relays: string) : Promise<Result<null, string>> {
 async getAccounts() : Promise<string[]> {
     return await TAURI_INVOKE("get_accounts");
 },
-async createAccount() : Promise<Result<Account, string>> {
+async createAccount(name: string, about: string, picture: string, password: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("create_account") };
+    return { status: "ok", data: await TAURI_INVOKE("create_account", { name, about, picture, password }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async saveAccount(nsec: string, password: string) : Promise<Result<string, string>> {
+async importAccount(key: string, password: string | null) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("save_account", { nsec, password }) };
+    return { status: "ok", data: await TAURI_INVOKE("import_account", { key, password }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getEncryptedKey(npub: string, password: string) : Promise<Result<string, string>> {
+async connectAccount(uri: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_encrypted_key", { npub, password }) };
+    return { status: "ok", data: await TAURI_INVOKE("connect_account", { uri }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getPrivateKey(npub: string) : Promise<Result<string, string>> {
+async deleteAccount(id: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_private_key", { npub }) };
+    return { status: "ok", data: await TAURI_INVOKE("delete_account", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async connectRemoteAccount(uri: string) : Promise<Result<string, string>> {
+async login(account: string, password: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("connect_remote_account", { uri }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async loadAccount(npub: string, bunker: string | null) : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("load_account", { npub, bunker }) };
+    return { status: "ok", data: await TAURI_INVOKE("login", { account, password }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -461,7 +453,6 @@ async setBadge(count: number) : Promise<void> {
 
 /** user-defined types **/
 
-export type Account = { npub: string; nsec: string }
 export type Column = { label: string; url: string; x: number; y: number; width: number; height: number }
 export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }

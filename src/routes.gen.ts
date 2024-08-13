@@ -26,11 +26,11 @@ import { Route as CreateTopicImport } from './routes/create-topic'
 import { Route as CreateNewsfeedImport } from './routes/create-newsfeed'
 import { Route as CreateGroupImport } from './routes/create-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
+import { Route as AccountImport } from './routes/$account'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
-import { Route as AccountIndexImport } from './routes/$account/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
-import { Route as UsersPubkeyImport } from './routes/users/$pubkey'
+import { Route as UsersIdImport } from './routes/users.$id'
 import { Route as TrendingUsersImport } from './routes/trending.users'
 import { Route as TrendingNotesImport } from './routes/trending.notes'
 import { Route as SettingsWalletImport } from './routes/settings/wallet'
@@ -44,29 +44,23 @@ import { Route as SearchNotesImport } from './routes/search.notes'
 import { Route as EventsIdImport } from './routes/events/$id'
 import { Route as CreateNewsfeedUsersImport } from './routes/create-newsfeed.users'
 import { Route as CreateNewsfeedF2fImport } from './routes/create-newsfeed.f2f'
-import { Route as AuthCreateProfileImport } from './routes/auth/create-profile'
-import { Route as AccountPanelImport } from './routes/$account/panel'
 import { Route as AccountHomeImport } from './routes/$account/home'
-import { Route as AuthAccountBackupImport } from './routes/auth/$account.backup'
+import { Route as AccountBackupImport } from './routes/$account/backup'
 
 // Create Virtual Routes
 
-const LandingLazyImport = createFileRoute('/landing')()
-const AuthLazyImport = createFileRoute('/auth')()
-const AuthRemoteLazyImport = createFileRoute('/auth/remote')()
+const NewLazyImport = createFileRoute('/new')()
+const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
+const AuthConnectLazyImport = createFileRoute('/auth/connect')()
+const AccountPanelLazyImport = createFileRoute('/$account/panel')()
 
 // Create/Update Routes
 
-const LandingLazyRoute = LandingLazyImport.update({
-  path: '/landing',
+const NewLazyRoute = NewLazyImport.update({
+  path: '/new',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/landing.lazy').then((d) => d.Route))
-
-const AuthLazyRoute = AuthLazyImport.update({
-  path: '/auth',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/auth.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
 
 const TrendingRoute = TrendingImport.update({
   path: '/trending',
@@ -133,40 +127,50 @@ const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AccountRoute = AccountImport.update({
+  path: '/$account',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/$account.lazy').then((d) => d.Route))
+
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const EditorIndexRoute = EditorIndexImport.update({
   path: '/editor/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AccountIndexRoute = AccountIndexImport.update({
-  path: '/$account/',
+const AuthNewLazyRoute = AuthNewLazyImport.update({
+  path: '/auth/new',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/$account/index.lazy').then((d) => d.Route),
-)
-
-const AuthRemoteLazyRoute = AuthRemoteLazyImport.update({
-  path: '/remote',
-  getParentRoute: () => AuthLazyRoute,
-} as any).lazy(() => import('./routes/auth/remote.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/auth/new.lazy').then((d) => d.Route))
 
 const AuthImportLazyRoute = AuthImportLazyImport.update({
-  path: '/import',
-  getParentRoute: () => AuthLazyRoute,
+  path: '/auth/import',
+  getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/auth/import.lazy').then((d) => d.Route))
+
+const AuthConnectLazyRoute = AuthConnectLazyImport.update({
+  path: '/auth/connect',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/auth/connect.lazy').then((d) => d.Route))
+
+const AccountPanelLazyRoute = AccountPanelLazyImport.update({
+  path: '/panel',
+  getParentRoute: () => AccountRoute,
+} as any).lazy(() =>
+  import('./routes/$account/panel.lazy').then((d) => d.Route),
+)
 
 const ZapIdRoute = ZapIdImport.update({
   path: '/zap/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
-const UsersPubkeyRoute = UsersPubkeyImport.update({
-  path: '/users/$pubkey',
+const UsersIdRoute = UsersIdImport.update({
+  path: '/users/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -235,26 +239,14 @@ const CreateNewsfeedF2fRoute = CreateNewsfeedF2fImport.update({
   getParentRoute: () => CreateNewsfeedRoute,
 } as any)
 
-const AuthCreateProfileRoute = AuthCreateProfileImport.update({
-  path: '/create-profile',
-  getParentRoute: () => AuthLazyRoute,
-} as any)
-
-const AccountPanelRoute = AccountPanelImport.update({
-  path: '/$account/panel',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/$account/panel.lazy').then((d) => d.Route),
-)
-
 const AccountHomeRoute = AccountHomeImport.update({
-  path: '/$account/home',
-  getParentRoute: () => rootRoute,
+  path: '/home',
+  getParentRoute: () => AccountRoute,
 } as any).lazy(() => import('./routes/$account/home.lazy').then((d) => d.Route))
 
-const AuthAccountBackupRoute = AuthAccountBackupImport.update({
-  path: '/$account/backup',
-  getParentRoute: () => AuthLazyRoute,
+const AccountBackupRoute = AccountBackupImport.update({
+  path: '/backup',
+  getParentRoute: () => AccountRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -266,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/$account': {
+      id: '/$account'
+      path: '/$account'
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountImport
       parentRoute: typeof rootRoute
     }
     '/bootstrap-relays': {
@@ -359,40 +358,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrendingImport
       parentRoute: typeof rootRoute
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthLazyImport
+    '/new': {
+      id: '/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof NewLazyImport
       parentRoute: typeof rootRoute
     }
-    '/landing': {
-      id: '/landing'
-      path: '/landing'
-      fullPath: '/landing'
-      preLoaderRoute: typeof LandingLazyImport
-      parentRoute: typeof rootRoute
+    '/$account/backup': {
+      id: '/$account/backup'
+      path: '/backup'
+      fullPath: '/$account/backup'
+      preLoaderRoute: typeof AccountBackupImport
+      parentRoute: typeof AccountImport
     }
     '/$account/home': {
       id: '/$account/home'
-      path: '/$account/home'
+      path: '/home'
       fullPath: '/$account/home'
       preLoaderRoute: typeof AccountHomeImport
-      parentRoute: typeof rootRoute
-    }
-    '/$account/panel': {
-      id: '/$account/panel'
-      path: '/$account/panel'
-      fullPath: '/$account/panel'
-      preLoaderRoute: typeof AccountPanelImport
-      parentRoute: typeof rootRoute
-    }
-    '/auth/create-profile': {
-      id: '/auth/create-profile'
-      path: '/create-profile'
-      fullPath: '/auth/create-profile'
-      preLoaderRoute: typeof AuthCreateProfileImport
-      parentRoute: typeof AuthLazyImport
+      parentRoute: typeof AccountImport
     }
     '/create-newsfeed/f2f': {
       id: '/create-newsfeed/f2f'
@@ -485,11 +470,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrendingUsersImport
       parentRoute: typeof TrendingImport
     }
-    '/users/$pubkey': {
-      id: '/users/$pubkey'
-      path: '/users/$pubkey'
-      fullPath: '/users/$pubkey'
-      preLoaderRoute: typeof UsersPubkeyImport
+    '/users/$id': {
+      id: '/users/$id'
+      path: '/users/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof UsersIdImport
       parentRoute: typeof rootRoute
     }
     '/zap/$id': {
@@ -499,25 +484,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ZapIdImport
       parentRoute: typeof rootRoute
     }
+    '/$account/panel': {
+      id: '/$account/panel'
+      path: '/panel'
+      fullPath: '/$account/panel'
+      preLoaderRoute: typeof AccountPanelLazyImport
+      parentRoute: typeof AccountImport
+    }
+    '/auth/connect': {
+      id: '/auth/connect'
+      path: '/auth/connect'
+      fullPath: '/auth/connect'
+      preLoaderRoute: typeof AuthConnectLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/import': {
       id: '/auth/import'
-      path: '/import'
+      path: '/auth/import'
       fullPath: '/auth/import'
       preLoaderRoute: typeof AuthImportLazyImport
-      parentRoute: typeof AuthLazyImport
+      parentRoute: typeof rootRoute
     }
-    '/auth/remote': {
-      id: '/auth/remote'
-      path: '/remote'
-      fullPath: '/auth/remote'
-      preLoaderRoute: typeof AuthRemoteLazyImport
-      parentRoute: typeof AuthLazyImport
-    }
-    '/$account/': {
-      id: '/$account/'
-      path: '/$account'
-      fullPath: '/$account'
-      preLoaderRoute: typeof AccountIndexImport
+    '/auth/new': {
+      id: '/auth/new'
+      path: '/auth/new'
+      fullPath: '/auth/new'
+      preLoaderRoute: typeof AuthNewLazyImport
       parentRoute: typeof rootRoute
     }
     '/editor/': {
@@ -527,13 +519,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorIndexImport
       parentRoute: typeof rootRoute
     }
-    '/auth/$account/backup': {
-      id: '/auth/$account/backup'
-      path: '/$account/backup'
-      fullPath: '/auth/$account/backup'
-      preLoaderRoute: typeof AuthAccountBackupImport
-      parentRoute: typeof AuthLazyImport
-    }
   }
 }
 
@@ -541,6 +526,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  AccountRoute: AccountRoute.addChildren({
+    AccountBackupRoute,
+    AccountHomeRoute,
+    AccountPanelLazyRoute,
+  }),
   BootstrapRelaysRoute,
   CreateGroupRoute,
   CreateNewsfeedRoute: CreateNewsfeedRoute.addChildren({
@@ -567,19 +557,13 @@ export const routeTree = rootRoute.addChildren({
     TrendingNotesRoute,
     TrendingUsersRoute,
   }),
-  AuthLazyRoute: AuthLazyRoute.addChildren({
-    AuthCreateProfileRoute,
-    AuthImportLazyRoute,
-    AuthRemoteLazyRoute,
-    AuthAccountBackupRoute,
-  }),
-  LandingLazyRoute,
-  AccountHomeRoute,
-  AccountPanelRoute,
+  NewLazyRoute,
   EventsIdRoute,
-  UsersPubkeyRoute,
+  UsersIdRoute,
   ZapIdRoute,
-  AccountIndexRoute,
+  AuthConnectLazyRoute,
+  AuthImportLazyRoute,
+  AuthNewLazyRoute,
   EditorIndexRoute,
 })
 
@@ -592,6 +576,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/$account",
         "/bootstrap-relays",
         "/create-group",
         "/create-newsfeed",
@@ -605,19 +590,26 @@ export const routeTree = rootRoute.addChildren({
         "/store",
         "/topic",
         "/trending",
-        "/auth",
-        "/landing",
-        "/$account/home",
-        "/$account/panel",
+        "/new",
         "/events/$id",
-        "/users/$pubkey",
+        "/users/$id",
         "/zap/$id",
-        "/$account/",
+        "/auth/connect",
+        "/auth/import",
+        "/auth/new",
         "/editor/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/$account": {
+      "filePath": "$account.tsx",
+      "children": [
+        "/$account/backup",
+        "/$account/home",
+        "/$account/panel"
+      ]
     },
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
@@ -678,27 +670,16 @@ export const routeTree = rootRoute.addChildren({
         "/trending/users"
       ]
     },
-    "/auth": {
-      "filePath": "auth.lazy.tsx",
-      "children": [
-        "/auth/create-profile",
-        "/auth/import",
-        "/auth/remote",
-        "/auth/$account/backup"
-      ]
+    "/new": {
+      "filePath": "new.lazy.tsx"
     },
-    "/landing": {
-      "filePath": "landing.lazy.tsx"
+    "/$account/backup": {
+      "filePath": "$account/backup.tsx",
+      "parent": "/$account"
     },
     "/$account/home": {
-      "filePath": "$account/home.tsx"
-    },
-    "/$account/panel": {
-      "filePath": "$account/panel.tsx"
-    },
-    "/auth/create-profile": {
-      "filePath": "auth/create-profile.tsx",
-      "parent": "/auth"
+      "filePath": "$account/home.tsx",
+      "parent": "/$account"
     },
     "/create-newsfeed/f2f": {
       "filePath": "create-newsfeed.f2f.tsx",
@@ -751,29 +732,27 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "trending.users.tsx",
       "parent": "/trending"
     },
-    "/users/$pubkey": {
-      "filePath": "users/$pubkey.tsx"
+    "/users/$id": {
+      "filePath": "users.$id.tsx"
     },
     "/zap/$id": {
       "filePath": "zap.$id.tsx"
     },
+    "/$account/panel": {
+      "filePath": "$account/panel.lazy.tsx",
+      "parent": "/$account"
+    },
+    "/auth/connect": {
+      "filePath": "auth/connect.lazy.tsx"
+    },
     "/auth/import": {
-      "filePath": "auth/import.lazy.tsx",
-      "parent": "/auth"
+      "filePath": "auth/import.lazy.tsx"
     },
-    "/auth/remote": {
-      "filePath": "auth/remote.lazy.tsx",
-      "parent": "/auth"
-    },
-    "/$account/": {
-      "filePath": "$account/index.tsx"
+    "/auth/new": {
+      "filePath": "auth/new.lazy.tsx"
     },
     "/editor/": {
       "filePath": "editor/index.tsx"
-    },
-    "/auth/$account/backup": {
-      "filePath": "auth/$account.backup.tsx",
-      "parent": "/auth"
     }
   }
 }

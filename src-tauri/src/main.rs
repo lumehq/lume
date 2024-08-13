@@ -11,7 +11,7 @@ extern crate objc;
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{event::*, keys::*, metadata::*, relay::*, window::*};
+use commands::{account::*, event::*, metadata::*, relay::*, window::*};
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -85,11 +85,10 @@ fn main() {
             save_bootstrap_relays,
             get_accounts,
             create_account,
-            save_account,
-            get_encrypted_key,
-            get_private_key,
-            connect_remote_account,
-            load_account,
+            import_account,
+            connect_account,
+            delete_account,
+            login,
             get_current_profile,
             get_profile,
             get_contact_list,
