@@ -89,7 +89,6 @@ fn main() {
             connect_account,
             delete_account,
             login,
-            get_current_profile,
             get_profile,
             get_contact_list,
             set_contact_list,

@@ -39,7 +39,10 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, S
     };
 
     match client
-        .get_events_of(vec![Filter::new().id(event_id)], None)
+        .get_events_of(
+            vec![Filter::new().id(event_id)],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
         .await
     {
         Ok(events) => {
@@ -88,7 +91,10 @@ pub async fn get_event_from(
 
     if !settings.use_relay_hint {
         match client
-            .get_events_of(vec![Filter::new().id(event_id)], None)
+            .get_events_of(
+                vec![Filter::new().id(event_id)],
+                EventSource::both(Some(Duration::from_secs(5))),
+            )
             .await
         {
             Ok(events) => {
@@ -152,7 +158,13 @@ pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEv
 
     let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
-    match client.get_events_of(vec![filter], None).await {
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
         Ok(events) => {
             let futures = events.into_iter().map(|ev| async move {
                 let raw = ev.as_json();
@@ -217,7 +229,13 @@ pub async fn get_events_by(
                 .limit(FETCH_LIMIT)
                 .until(until);
 
-            match client.get_events_of(vec![filter], None).await {
+            match client
+                .get_events_of(
+                    vec![filter],
+                    EventSource::both(Some(Duration::from_secs(5))),
+                )
+                .await
+            {
                 Ok(events) => {
                     let futures = events.into_iter().map(|ev| async move {
                         let raw = ev.as_json();
@@ -344,7 +362,10 @@ pub async fn get_group_events(
         .authors(authors);
 
     match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
         .await
     {
         Ok(events) => {
@@ -387,7 +408,10 @@ pub async fn get_global_events(
         .until(as_of);
 
     match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(8)))
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
         .await
     {
         Ok(events) => {
@@ -428,7 +452,13 @@ pub async fn get_hashtag_events(
         .until(as_of)
         .hashtags(hashtags);
 
-    match client.get_events_of(vec![filter], None).await {
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
         Ok(events) => {
             let dedup = dedup_event(&events);
             let futures = dedup.into_iter().map(|ev| async move {
@@ -644,7 +674,7 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
                 .author(public_key)
                 .kind(Kind::RelayList)
                 .limit(1)],
-            Some(Duration::from_secs(10)),
+            EventSource::both(Some(Duration::from_secs(5))),
         )
         .await
     {

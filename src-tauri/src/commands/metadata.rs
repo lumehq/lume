@@ -3,22 +3,18 @@ use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::common::get_latest_event;
 use crate::{Nostr, Settings};
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_current_profile(state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
-
-    let signer = match client.signer().await {
-        Ok(signer) => signer,
-        Err(err) => return Err(format!("Failed to get signer: {}", err)),
-    };
-
-    let public_key = match signer.public_key().await {
-        Ok(pk) => pk,
-        Err(err) => return Err(format!("Failed to get public key: {}", err)),
+    let public_key: PublicKey = match id {
+        Some(user_id) => match PublicKey::from_str(&user_id) {
+            Ok(val) => val,
+            Err(_) => return Err("Public Key is not valid".into()),
+        },
+        None => client.signer().await.unwrap().public_key().await.unwrap(),
     };
 
     let filter = Filter::new()
@@ -26,70 +22,25 @@ pub async fn get_current_profile(state: State<'_, Nostr>) -> Result<String, Stri
         .kind(Kind::Metadata)
         .limit(1);
 
-    let events_result = client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+    let query = client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(3))),
+        )
         .await;
 
-    match events_result {
-        Ok(events) => {
-            if let Some(event) = get_latest_event(&events) {
-                match Metadata::from_json(&event.content) {
-                    Ok(metadata) => Ok(metadata.as_json()),
-                    Err(_) => Err("Failed to parse metadata.".into()),
-                }
+    if let Ok(events) = query {
+        if let Some(event) = events.first() {
+            if let Ok(metadata) = Metadata::from_json(&event.content) {
+                Ok(metadata.as_json())
             } else {
-                Err("No matching events found.".into())
-            }
-        }
-        Err(err) => Err(format!("Failed to get events: {}", err)),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
-    let client = &state.client;
-    let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
-        Ok(val) => match val {
-            Nip19::Pubkey(key) => Some(key),
-            Nip19::Profile(profile) => {
-                let relays = profile.relays;
-                for relay in relays.into_iter() {
-                    let _ = client.add_relay(&relay).await.unwrap_or_default();
-                    client.connect_relay(&relay).await.unwrap_or_default();
-                }
-                Some(profile.public_key)
-            }
-            _ => None,
-        },
-        Err(_) => match PublicKey::from_str(id) {
-            Ok(val) => Some(val),
-            Err(_) => None,
-        },
-    };
-
-    if let Some(author) = public_key {
-        let filter = Filter::new().author(author).kind(Kind::Metadata).limit(1);
-        let query = client
-            .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-            .await;
-
-        if let Ok(events) = query {
-            if let Some(event) = events.first() {
-                if let Ok(metadata) = Metadata::from_json(&event.content) {
-                    Ok(metadata.as_json())
-                } else {
-                    Err("Parse metadata failed".into())
-                }
-            } else {
-                let rand_metadata = Metadata::new();
-                Ok(rand_metadata.as_json())
+                Err("Parse metadata failed".into())
             }
         } else {
-            Err("Get metadata failed".into())
+            Ok(Metadata::new().as_json())
         }
     } else {
-        Err("Public Key is not valid".into())
+        Err("Get metadata failed".into())
     }
 }
 
@@ -185,10 +136,10 @@ pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> 
 
 #[tauri::command]
 #[specta::specta]
-pub async fn check_contact(hex: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let contact_list = state.contact_list.lock().unwrap();
 
-    match PublicKey::from_str(hex) {
+    match PublicKey::from_str(&hex) {
         Ok(public_key) => match contact_list.iter().position(|x| x.public_key == public_key) {
             Some(_) => Ok(true),
             None => Ok(false),
@@ -244,27 +195,19 @@ pub async fn set_nstore(
     state: State<'_, Nostr>,
 ) -> Result<String, String> {
     let client = &state.client;
+    let signer = client.signer().await.map_err(|e| e.to_string())?;
+    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
 
-    match client.signer().await {
-        Ok(signer) => {
-            let public_key = match signer.public_key().await {
-                Ok(pk) => pk,
-                Err(err) => return Err(format!("Failed to get public key: {}", err)),
-            };
+    let encrypted = signer
+        .nip44_encrypt(public_key, content)
+        .await
+        .map_err(|e| e.to_string())?;
 
-            let encrypted = match signer.nip44_encrypt(public_key, content).await {
-                Ok(enc) => enc,
-                Err(err) => return Err(format!("Encryption failed: {}", err)),
-            };
+    let tag = Tag::identifier(key);
+    let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
-            let tag = Tag::identifier(key);
-            let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
-
-            match client.send_event_builder(builder).await {
-                Ok(event_id) => Ok(event_id.to_string()),
-                Err(err) => Err(err.to_string()),
-            }
-        }
+    match client.send_event_builder(builder).await {
+        Ok(event_id) => Ok(event_id.to_string()),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -273,38 +216,34 @@ pub async fn set_nstore(
 #[specta::specta]
 pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
+    let signer = client.signer().await.map_err(|e| e.to_string())?;
+    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
 
-    if let Ok(signer) = client.signer().await {
-        let public_key = match signer.public_key().await {
-            Ok(pk) => pk,
-            Err(err) => return Err(format!("Failed to get public key: {}", err)),
-        };
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ApplicationSpecificData)
+        .identifier(key)
+        .limit(1);
 
-        let filter = Filter::new()
-            .author(public_key)
-            .kind(Kind::ApplicationSpecificData)
-            .identifier(key)
-            .limit(1);
-
-        match client
-            .get_events_of(vec![filter], Some(Duration::from_secs(5)))
-            .await
-        {
-            Ok(events) => {
-                if let Some(event) = events.first() {
-                    let content = event.content();
-                    match signer.nip44_decrypt(public_key, content).await {
-                        Ok(decrypted) => Ok(decrypted),
-                        Err(_) => Err(event.content.to_string()),
-                    }
-                } else {
-                    Err("Value not found".into())
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            if let Some(event) = events.first() {
+                let content = event.content();
+                match signer.nip44_decrypt(public_key, content).await {
+                    Ok(decrypted) => Ok(decrypted),
+                    Err(_) => Err(event.content.to_string()),
                 }
+            } else {
+                Err("Not found".into())
             }
-            Err(err) => Err(err.to_string()),
         }
-    } else {
-        Err("Signer is required".into())
+        Err(err) => Err(err.to_string()),
     }
 }
 
@@ -329,7 +268,8 @@ pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, Stri
 #[specta::specta]
 pub async fn load_wallet(state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
-    let keyring = Entry::new("Lume Secret", "Bitcoin Connect").unwrap();
+    let keyring =
+        Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
     match keyring.get_password() {
         Ok(val) => {
@@ -353,16 +293,17 @@ pub async fn load_wallet(state: State<'_, Nostr>) -> Result<String, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), ()> {
+pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
-    let keyring = Entry::new("Lume Secret", "Bitcoin Connect").unwrap();
+    let keyring =
+        Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
     match keyring.delete_credential() {
         Ok(_) => {
             client.unset_zapper().await;
             Ok(())
         }
-        Err(_) => Err(()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -375,23 +316,10 @@ pub async fn zap_profile(
     state: State<'_, Nostr>,
 ) -> Result<bool, String> {
     let client = &state.client;
-    let public_key = match Nip19::from_bech32(id) {
-        Ok(val) => match val {
-            Nip19::Pubkey(key) => key,
-            Nip19::Profile(profile) => profile.public_key,
-            _ => return Err("Public Key is not valid.".into()),
-        },
-        Err(_) => match PublicKey::from_str(id) {
-            Ok(val) => val,
-            Err(_) => return Err("Public Key is not valid.".into()),
-        },
-    };
+    let public_key: PublicKey = PublicKey::from_str(id).map_err(|e| e.to_string())?;
 
     let details = ZapDetails::new(ZapType::Private).message(message);
-    let num = match amount.parse::<u64>() {
-        Ok(val) => val,
-        Err(_) => return Err("Invalid amount.".into()),
-    };
+    let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
 
     if client.zap(public_key, num, Some(details)).await.is_ok() {
         Ok(true)
@@ -422,10 +350,7 @@ pub async fn zap_event(
     };
 
     let details = ZapDetails::new(ZapType::Private).message(message);
-    let num = match amount.parse::<u64>() {
-        Ok(val) => val,
-        Err(_) => return Err("Invalid amount.".into()),
-    };
+    let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
 
     if client.zap(event_id, num, Some(details)).await.is_ok() {
         Ok(true)
@@ -447,8 +372,12 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
                 .kind(Kind::ContactList)
                 .limit(1);
 
-            if let Ok(contact_list_events) =
-                client.get_events_of(vec![contact_list_filter], None).await
+            if let Ok(contact_list_events) = client
+                .get_events_of(
+                    vec![contact_list_filter],
+                    EventSource::both(Some(Duration::from_secs(5))),
+                )
+                .await
             {
                 for event in contact_list_events.into_iter() {
                     for tag in event.into_iter_tags() {
@@ -477,19 +406,22 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
 pub async fn get_following(
     state: State<'_, Nostr>,
     public_key: &str,
-    timeout: Option<u64>,
 ) -> Result<Vec<String>, String> {
     let client = &state.client;
-    let public_key = match PublicKey::from_str(public_key) {
-        Ok(val) => val,
-        Err(err) => return Err(err.to_string()),
-    };
-    let duration = timeout.map(Duration::from_secs);
+    let public_key = PublicKey::from_str(public_key).map_err(|e| e.to_string())?;
+
     let filter = Filter::new().kind(Kind::ContactList).author(public_key);
-    let events = match client.get_events_of(vec![filter], duration).await {
+    let events = match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
         Ok(events) => events,
         Err(err) => return Err(err.to_string()),
     };
+
     let mut ret: Vec<String> = vec![];
     if let Some(latest_event) = events.iter().max_by_key(|event| event.created_at()) {
         ret.extend(latest_event.tags().iter().filter_map(|tag| {
@@ -503,33 +435,38 @@ pub async fn get_following(
             }
         }));
     }
+
     Ok(ret)
 }
 
 pub async fn get_followers(
     state: State<'_, Nostr>,
     public_key: &str,
-    timeout: Option<u64>,
 ) -> Result<Vec<String>, String> {
     let client = &state.client;
-    let public_key = match PublicKey::from_str(public_key) {
-        Ok(val) => val,
-        Err(err) => return Err(err.to_string()),
-    };
-    let duration = timeout.map(Duration::from_secs);
+    let public_key = PublicKey::from_str(public_key).map_err(|e| e.to_string())?;
 
     let filter = Filter::new().kind(Kind::ContactList).custom_tag(
         SingleLetterTag::lowercase(Alphabet::P),
         vec![public_key.to_hex()],
     );
-    let events = match client.get_events_of(vec![filter], duration).await {
+
+    let events = match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
         Ok(events) => events,
         Err(err) => return Err(err.to_string()),
     };
+
     let ret: Vec<String> = events
         .into_iter()
         .map(|event| event.author().to_hex())
         .collect();
+
     Ok(ret)
     // TODO: get more than 500 events
 }

@@ -5,6 +5,7 @@ use serde::Serialize;
 use specta::Type;
 use std::collections::HashSet;
 use std::str::FromStr;
+use std::time::Duration;
 
 use crate::Settings;
 
@@ -66,7 +67,13 @@ pub async fn init_nip65(client: &Client) {
         .kind(Kind::RelayList)
         .limit(1);
 
-    if let Ok(events) = client.get_events_of(vec![filter], None).await {
+    if let Ok(events) = client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
         if let Some(event) = events.first() {
             let relay_list = nip65::extract_relay_list(event);
             for (url, metadata) in relay_list {
@@ -107,7 +114,13 @@ pub async fn get_user_settings(client: &Client) -> Result<Settings, String> {
         .identifier(ident)
         .limit(1);
 
-    match client.get_events_of(vec![filter], None).await {
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
         Ok(events) => {
             if let Some(event) = events.first() {
                 let content = event.content();
