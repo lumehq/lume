@@ -429,9 +429,6 @@ async openMainWindow() : Promise<void> {
 },
 async forceQuit() : Promise<void> {
     await TAURI_INVOKE("force_quit");
-},
-async setBadge(count: number) : Promise<void> {
-    await TAURI_INVOKE("set_badge", { count });
 }
 }
 

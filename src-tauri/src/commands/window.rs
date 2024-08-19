@@ -1,25 +1,15 @@
 use std::path::PathBuf;
-use std::str::FromStr;
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-#[cfg(target_os = "macos")]
-use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
 use serde::{Deserialize, Serialize};
 use specta::Type;
-#[cfg(not(target_os = "linux"))]
 use tauri::utils::config::WindowEffectsConfig;
-#[cfg(not(target_os = "linux"))]
 use tauri::window::Effect;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::WebviewWindowBuilder;
-use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
-#[cfg(not(target_os = "linux"))]
-use tauri_plugin_decorum::WebviewWindowExt;
-use url::Url;
-
-use crate::Nostr;
+use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct Window {
@@ -43,44 +33,28 @@ pub struct Column {
     height: f32,
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
-pub fn create_column(
-    column: Column,
-    app_handle: tauri::AppHandle,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
-    let settings = state.settings.lock().unwrap().clone();
-
+pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<String, String> {
     match app_handle.get_window("main") {
         Some(main_window) => match app_handle.get_webview(&column.label) {
             Some(_) => Ok(column.label),
             None => {
                 let path = PathBuf::from(column.url);
                 let webview_url = WebviewUrl::App(path);
-                let builder = match settings.proxy {
-                    Some(url) => {
-                        let proxy = Url::from_str(&url).unwrap();
-                        tauri::webview::WebviewBuilder::new(column.label, webview_url)
-                            .user_agent("Lume/4.0")
-                            .zoom_hotkeys_enabled(true)
-                            .enable_clipboard_access()
-                            .transparent(true)
-                            .proxy_url(proxy)
-                    }
-                    None => tauri::webview::WebviewBuilder::new(column.label, webview_url)
-                        .user_agent("Lume/4.0")
-                        .zoom_hotkeys_enabled(true)
-                        .enable_clipboard_access()
-                        .transparent(true),
-                };
-                match main_window.add_child(
+
+                let builder = tauri::webview::WebviewBuilder::new(column.label, webview_url)
+                    .incognito(true)
+                    .transparent(true);
+
+                if let Ok(webview) = main_window.add_child(
                     builder,
                     LogicalPosition::new(column.x, column.y),
                     LogicalSize::new(column.width, column.height),
                 ) {
-                    Ok(webview) => Ok(webview.label().into()),
-                    Err(_) => Err("Create webview failed".into()),
+                    Ok(webview.label().into())
+                } else {
+                    Err("Create webview failed".into())
                 }
             }
         },
@@ -88,10 +62,10 @@ pub fn create_column(
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
-pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, String> {
-    match app_handle.get_webview(label) {
+pub fn close_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
+    match app_handle.get_webview(&label) {
         Some(webview) => {
             if webview.close().is_ok() {
                 Ok(true)
@@ -103,15 +77,15 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, S
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
 pub fn reposition_column(
-    label: &str,
+    label: String,
     x: f32,
     y: f32,
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
-    match app_handle.get_webview(label) {
+    match app_handle.get_webview(&label) {
         Some(webview) => {
             if webview.set_position(LogicalPosition::new(x, y)).is_ok() {
                 Ok(())
@@ -123,15 +97,15 @@ pub fn reposition_column(
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
 pub fn resize_column(
-    label: &str,
+    label: String,
     width: f32,
     height: f32,
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
-    match app_handle.get_webview(label) {
+    match app_handle.get_webview(&label) {
         Some(webview) => {
             if webview.set_size(LogicalSize::new(width, height)).is_ok() {
                 Ok(())
@@ -143,10 +117,10 @@ pub fn resize_column(
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
-pub fn reload_column(label: &str, app_handle: tauri::AppHandle) -> Result<(), String> {
-    match app_handle.get_webview(label) {
+pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+    match app_handle.get_webview(&label) {
         Some(webview) => {
             if webview.eval("window.location.reload()").is_ok() {
                 Ok(())
@@ -203,6 +177,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .inner_size(window.width, window.height)
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
+        .transparent(true)
         .effects(WindowEffectsConfig {
             state: None,
             effects: vec![Effect::Mica],
@@ -212,22 +187,8 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .build()
         .unwrap();
 
-        #[cfg(target_os = "linux")]
-        let window = WebviewWindowBuilder::new(
-            &app_handle,
-            &window.label,
-            WebviewUrl::App(PathBuf::from(window.url)),
-        )
-        .title(&window.title)
-        .min_inner_size(window.width, window.height)
-        .inner_size(window.width, window.height)
-        .minimizable(window.minimizable)
-        .maximizable(window.maximizable)
-        .build()
-        .unwrap();
-
         // Set decoration
-        #[cfg(not(target_os = "linux"))]
+        #[cfg(target_os = "windows")]
         window.create_overlay_titlebar().unwrap();
 
         // Restore native border
@@ -265,19 +226,4 @@ pub fn open_main_window(app: tauri::AppHandle) {
 #[specta::specta]
 pub fn force_quit() {
     std::process::exit(0)
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn set_badge(count: i32) {
-    #[cfg(target_os = "macos")]
-    unsafe {
-        let label = if count == 0 {
-            nil
-        } else {
-            NSString::alloc(nil).init_str(&format!("{}", count))
-        };
-        let dock_tile: cocoa::base::id = msg_send![NSApp(), dockTile];
-        let _: cocoa::base::id = msg_send![dock_tile, setBadgeLabel: label];
-    }
 }

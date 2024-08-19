@@ -1,5 +1,5 @@
-import type { LumeColumn } from "@/types";
 import { CheckIcon, HorizontalDotsIcon } from "@/components";
+import type { LumeColumn } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
@@ -84,7 +84,7 @@ export const Column = memo(function Column({
 	}, [account]);
 
 	return (
-		<div className="h-full w-[480px] shrink-0 p-2">
+		<div className="h-full w-[440px] shrink-0 p-2">
 			<div className="flex flex-col w-full h-full rounded-xl bg-black/5 dark:bg-white/10">
 				<Header
 					label={column.label}

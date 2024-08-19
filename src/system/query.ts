@@ -381,7 +381,7 @@ export const NostrQuery = {
 			return [];
 		}
 	},
-	saveBootstrapRelays: async (relays: Relay[]) => {
+	saveBootstrapRelays: async (relays: string[]) => {
 		const text = relays
 			.map((relay) => Object.values(relay).join(","))
 			.join("\n");

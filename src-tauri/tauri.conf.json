@@ -51,36 +51,15 @@
 			"icons/icon.icns",
 			"icons/icon.ico"
 		],
-		"linux": {
-			"appimage": {
-				"bundleMediaFramework": true,
-				"files": {}
-			},
-			"deb": {
-				"files": {}
-			},
-			"rpm": {
-				"epoch": 0,
-				"files": {},
-				"release": "1"
+		"windows": {
+			"allowDowngrades": true,
+			"webviewInstallMode": {
+				"silent": true,
+				"type": "downloadBootstrapper"
 			}
 		},
 		"macOS": {
 			"minimumSystemVersion": "10.15"
-		},
-		"windows": {
-			"allowDowngrades": true,
-			"certificateThumbprint": null,
-			"digestAlgorithm": "sha256",
-			"nsis": null,
-			"timestampUrl": null,
-			"tsp": false,
-			"webviewFixedRuntimePath": null,
-			"webviewInstallMode": {
-				"silent": true,
-				"type": "downloadBootstrapper"
-			},
-			"wix": null
 		},
 		"fileAssociations": [
 			{

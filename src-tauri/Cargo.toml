@@ -44,11 +44,7 @@ url = "2.5.0"
 futures = "0.3.30"
 linkify = "0.10.0"
 regex = "1.10.4"
-keyring = { version = "3", features = [
-	"apple-native",
-	"windows-native",
-	"sync-secret-service",
-] }
+keyring = { version = "3", features = ["apple-native", "windows-native"] }
 keyring-search = "1.2.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]

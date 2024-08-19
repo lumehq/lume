@@ -125,7 +125,9 @@ const CreateGroupRoute = CreateGroupImport.update({
 const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   path: '/bootstrap-relays',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/bootstrap-relays.lazy').then((d) => d.Route),
+)
 
 const AccountRoute = AccountImport.update({
   path: '/$account',

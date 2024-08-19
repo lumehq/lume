@@ -5,9 +5,6 @@
 
 #[cfg(target_os = "macos")]
 extern crate cocoa;
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
@@ -24,7 +21,6 @@ use std::{
     time::Duration,
 };
 use tauri::{path::BaseDirectory, Manager};
-#[cfg(not(target_os = "linux"))]
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_specta::{collect_commands, Builder};
 
@@ -132,8 +128,7 @@ fn main() {
             reload_column,
             open_window,
             open_main_window,
-            force_quit,
-            set_badge
+            force_quit
         ]);
 
     builder
@@ -156,7 +151,7 @@ fn main() {
             #[cfg(target_os = "macos")]
             app.handle().plugin(tauri_nspanel::init()).unwrap();
 
-            #[cfg(not(target_os = "linux"))]
+            let handle = app.handle();
             let main_window = app.get_webview_window("main").unwrap();
 
             // Set custom decoration for Windows
@@ -188,9 +183,11 @@ fn main() {
             let home_dir = app.path().home_dir().unwrap();
             let _ = fs::create_dir_all(home_dir.join("Lume/"));
 
-            tauri::async_runtime::block_on(async move {
+            let client = tauri::async_runtime::block_on(async move {
                 // Setup database
-                let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
+                let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db"))
+                    .await
+                    .expect("Error.");
 
                 // Config
                 let opts = Options::new()
@@ -199,13 +196,13 @@ fn main() {
                     .timeout(Duration::from_secs(30));
 
                 // Setup nostr client
-                let client = match database {
-                    Ok(db) => ClientBuilder::default().database(db).opts(opts).build(),
-                    Err(_) => ClientBuilder::default().opts(opts).build(),
-                };
+                let client = ClientBuilder::default()
+                    .database(database)
+                    .opts(opts)
+                    .build();
 
                 // Get bootstrap relays
-                if let Ok(path) = app
+                if let Ok(path) = handle
                     .path()
                     .resolve("resources/relays.txt", BaseDirectory::Resource)
                 {
@@ -240,12 +237,14 @@ fn main() {
                 // Connect
                 client.connect().await;
 
-                // Update global state
-                app.handle().manage(Nostr {
-                    client,
-                    contact_list: Mutex::new(vec![]),
-                    settings: Mutex::new(Settings::default()),
-                })
+                client
+            });
+
+            // Create global state
+            app.manage(Nostr {
+                client,
+                contact_list: Mutex::new(vec![]),
+                settings: Mutex::new(Settings::default()),
             });
 
             Ok(())

@@ -16,12 +16,12 @@ jobs:
             args: "--target aarch64-apple-darwin"
           - platform: "macos-latest" # for Intel based macs.
             args: "--target x86_64-apple-darwin"
-          - platform: "macos-latest" # for Intel based macs.
+          - platform: "macos-latest" # for Intel & Arm based macs.
             args: "--target universal-apple-darwin"
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: '--target x86_64-pc-windows-msvc'
+          #- platform: 'ubuntu-22.04'
+          #  args: ''
+          #- platform: 'windows-latest'
+          #  args: '--target x86_64-pc-windows-msvc'
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
