@@ -132,7 +132,7 @@ pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), 
     }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
 pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
     if let Some(window) = app_handle.get_window(&window.label) {
@@ -178,6 +178,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
         .transparent(true)
+        .decoration(false)
         .effects(WindowEffectsConfig {
             state: None,
             effects: vec![Effect::Mica],

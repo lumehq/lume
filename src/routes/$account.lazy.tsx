@@ -37,7 +37,7 @@ function Screen() {
 				data-tauri-drag-region
 				className={cn(
 					"flex h-11 shrink-0 items-center justify-between",
-					platform === "macos" ? "pl-[72px] pr-3" : "pr-[128px] pl-3",
+					platform === "macos" ? "pl-[72px] pr-3" : "pr-[156px] pl-3",
 				)}
 			>
 				<div
