@@ -10,6 +10,8 @@ use tauri::window::Effect;
 use tauri::TitleBarStyle;
 use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
+#[cfg(target_os = "windows")]
+use tauri_plugin_decorum::WebviewWindowExt;
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct Window {
@@ -132,7 +134,7 @@ pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), 
     }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 #[specta::specta]
 pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
     if let Some(window) = app_handle.get_window(&window.label) {
@@ -152,7 +154,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .title(&window.title)
         .min_inner_size(window.width, window.height)
         .inner_size(window.width, window.height)
-        .hidden_title(window.hidden_title)
+        .hidden_title(true)
         .title_bar_style(TitleBarStyle::Overlay)
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
@@ -178,7 +180,6 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
         .transparent(true)
-        .decoration(false)
         .effects(WindowEffectsConfig {
             state: None,
             effects: vec![Effect::Mica],
@@ -216,6 +217,10 @@ pub fn open_main_window(app: tauri::AppHandle) {
                 .unwrap()
                 .build()
                 .unwrap();
+
+        // Set decoration
+        #[cfg(target_os = "windows")]
+        window.create_overlay_titlebar().unwrap();
 
         // Restore native border
         #[cfg(target_os = "macos")]

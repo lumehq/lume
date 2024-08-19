@@ -7055,6 +7055,41 @@
           ]
         },
         {
+          "description": "prevent-default:default -> Default permissions for the prevent-default plugin",
+          "type": "string",
+          "enum": [
+            "prevent-default:default"
+          ]
+        },
+        {
+          "description": "prevent-default:allow-keyboard -> Enables the keyboard command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "prevent-default:allow-keyboard"
+          ]
+        },
+        {
+          "description": "prevent-default:allow-pointer -> Enables the pointer command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "prevent-default:allow-pointer"
+          ]
+        },
+        {
+          "description": "prevent-default:deny-keyboard -> Denies the keyboard command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "prevent-default:deny-keyboard"
+          ]
+        },
+        {
+          "description": "prevent-default:deny-pointer -> Denies the pointer command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "prevent-default:deny-pointer"
+          ]
+        },
+        {
           "description": "process:default -> This permission set configures which\nprocess feeatures are by default exposed.\n\n#### Granted Permissions\n\nThis enables to quit via `allow-exit` and restart via `allow-restart`\nthe application.\n",
           "type": "string",
           "enum": [

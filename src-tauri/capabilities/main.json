@@ -34,7 +34,6 @@
 		"updater:default",
 		"updater:allow-check",
 		"updater:allow-download-and-install",
-		"core:window:allow-start-dragging",
 		"core:window:allow-create",
 		"core:window:allow-close",
 		"core:window:allow-destroy",
@@ -63,8 +62,8 @@
 		"theme:allow-get-theme",
 		"core:menu:allow-new",
 		"core:menu:allow-popup",
-		"http:default",
 		"shell:allow-open",
+		"prevent-default:default",
 		{
 			"identifier": "http:default",
 			"allow": [

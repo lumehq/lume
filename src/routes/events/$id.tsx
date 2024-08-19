@@ -29,17 +29,13 @@ function Screen() {
 	const ref = useRef<HTMLDivElement>(null);
 
 	return (
-		<div className="h-full flex flex-col">
-			<div
-				data-tauri-drag-region
-				className="shrink-0 h-8 w-full border-b border-black/5 dark:border-white/5"
-			/>
+		<div data-tauri-drag-region className="h-full flex flex-col">
 			<ScrollArea.Root
 				type={"scroll"}
 				scrollHideDelay={300}
 				className="overflow-hidden size-full flex-1"
 			>
-				<ScrollArea.Viewport ref={ref} className="h-full p-3">
+				<ScrollArea.Viewport ref={ref} className="h-full pt-12 px-3 pb-3">
 					<RootEvent />
 					<Virtualizer scrollRef={ref}>
 						<ReplyList />
