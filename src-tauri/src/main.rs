@@ -174,9 +174,6 @@ fn main() {
                 if let tauri::WindowEvent::ThemeChanged(_) = event {
                     win.set_traffic_lights_inset(8.0, 16.0).unwrap();
                 }
-                if let tauri::WindowEvent::Resized(_) = event {
-                    win.set_traffic_lights_inset(8.0, 16.0).unwrap();
-                }
             });
 
             // Create data folder if not exist

@@ -35,14 +35,14 @@ function Screen() {
 		<div className="flex flex-col w-screen h-screen">
 			<div
 				data-tauri-drag-region
-				className="flex h-11 shrink-0 items-center justify-between px-3"
+				className={cn(
+					"flex h-11 shrink-0 items-center justify-between",
+					platform === "macos" ? "pl-[72px] pr-3" : "pr-[128px] pl-3",
+				)}
 			>
 				<div
 					data-tauri-drag-region
-					className={cn(
-						"flex-1 flex items-center gap-2",
-						platform === "macos" ? "pl-[64px]" : "",
-					)}
+					className="relative z-[200] flex-1 flex items-center gap-2"
 				>
 					<button
 						type="button"
@@ -54,12 +54,15 @@ function Screen() {
 					</button>
 					<div id="toolbar" />
 				</div>
-				<div data-tauri-drag-region className="hidden md:flex md:flex-1">
+				<div
+					data-tauri-drag-region
+					className="relative z-[200] hidden md:flex md:flex-1"
+				>
 					<Search />
 				</div>
 				<div
 					data-tauri-drag-region
-					className="flex-1 flex items-center justify-end gap-3"
+					className="relative z-[200] flex-1 flex items-center justify-end gap-3"
 				>
 					<button
 						type="button"
