@@ -60,7 +60,6 @@ export function UserAvatar({ className }: { className?: string }) {
 			<Avatar.Image
 				src={picture}
 				alt={user.pubkey}
-				loading="lazy"
 				decoding="async"
 				className="w-full aspect-square object-cover outline-[.5px] outline-black/5 content-visibility-auto contain-intrinsic-size-[auto]"
 			/>

@@ -95,7 +95,7 @@ const OnboardingRoute = OnboardingImport.update({
 const NewsfeedRoute = NewsfeedImport.update({
   path: '/newsfeed',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/newsfeed.lazy').then((d) => d.Route))
 
 const GroupRoute = GroupImport.update({
   path: '/group',
@@ -229,7 +229,7 @@ const SearchNotesRoute = SearchNotesImport.update({
 const EventsIdRoute = EventsIdImport.update({
   path: '/events/$id',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/events/$id.lazy').then((d) => d.Route))
 
 const CreateNewsfeedUsersRoute = CreateNewsfeedUsersImport.update({
   path: '/users',

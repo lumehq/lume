@@ -14,21 +14,19 @@ use std::{
     fs,
     io::{self, BufRead},
     str::FromStr,
-    sync::Mutex,
     time::Duration,
 };
 use tauri::{path::BaseDirectory, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_specta::{collect_commands, Builder};
+use tokio::sync::Mutex;
 
 pub mod commands;
 pub mod common;
 #[cfg(target_os = "macos")]
 pub mod macos;
 
-#[derive(Serialize)]
 pub struct Nostr {
-    #[serde(skip_serializing)]
     client: Client,
     contact_list: Mutex<Vec<Contact>>,
     settings: Mutex<Settings>,
@@ -108,7 +106,6 @@ fn main() {
             listen_event_reply,
             get_events_by,
             get_local_events,
-            listen_local_event,
             get_group_events,
             get_global_events,
             get_hashtag_events,
@@ -161,7 +158,7 @@ fn main() {
 
             // Set a custom inset to the traffic lights
             #[cfg(target_os = "macos")]
-            main_window.set_traffic_lights_inset(7.0, 13.0).unwrap();
+            main_window.set_traffic_lights_inset(7.0, 10.0).unwrap();
 
             #[cfg(target_os = "macos")]
             let win = main_window.clone();
@@ -169,7 +166,7 @@ fn main() {
             #[cfg(target_os = "macos")]
             main_window.on_window_event(move |event| {
                 if let tauri::WindowEvent::ThemeChanged(_) = event {
-                    win.set_traffic_lights_inset(7.0, 13.0).unwrap();
+                    win.set_traffic_lights_inset(7.0, 10.0).unwrap();
                 }
             });
 
@@ -243,7 +240,7 @@ fn main() {
 
             Ok(())
         })
-        .plugin(tauri_plugin_prevent_default::init())
+        .plugin(prevent_default())
         .plugin(tauri_plugin_theme::init(ctx.config_mut()))
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -258,4 +255,18 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .run(ctx)
         .expect("error while running tauri application");
+}
+
+#[cfg(debug_assertions)]
+fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
+    use tauri_plugin_prevent_default::Flags;
+
+    tauri_plugin_prevent_default::Builder::new()
+        .with_flags(Flags::all().difference(Flags::CONTEXT_MENU))
+        .build()
+}
+
+#[cfg(not(debug_assertions))]
+fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
+    tauri_plugin_prevent_default::Builder::new().build()
 }

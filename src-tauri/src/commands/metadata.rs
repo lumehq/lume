@@ -10,10 +10,7 @@ use crate::{Nostr, Settings};
 pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let public_key: PublicKey = match id {
-        Some(user_id) => match PublicKey::from_str(&user_id) {
-            Ok(val) => val,
-            Err(_) => return Err("Public Key is not valid".into()),
-        },
+        Some(user_id) => PublicKey::from_str(&user_id).map_err(|e| e.to_string())?,
         None => client.signer().await.unwrap().public_key().await.unwrap(),
     };
 
@@ -22,25 +19,25 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
         .kind(Kind::Metadata)
         .limit(1);
 
-    let query = client
+    match client
         .get_events_of(
             vec![filter],
             EventSource::both(Some(Duration::from_secs(3))),
         )
-        .await;
-
-    if let Ok(events) = query {
-        if let Some(event) = events.first() {
-            if let Ok(metadata) = Metadata::from_json(&event.content) {
-                Ok(metadata.as_json())
+        .await
+    {
+        Ok(events) => {
+            if let Some(event) = events.first() {
+                if let Ok(metadata) = Metadata::from_json(&event.content) {
+                    Ok(metadata.as_json())
+                } else {
+                    Err("Parse metadata failed".into())
+                }
             } else {
-                Err("Parse metadata failed".into())
+                Ok(Metadata::new().as_json())
             }
-        } else {
-            Ok(Metadata::new().as_json())
         }
-    } else {
-        Err("Get metadata failed".into())
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -130,14 +127,13 @@ pub async fn create_profile(
 #[tauri::command]
 #[specta::specta]
 pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> {
-    let contact_list = state.contact_list.lock().unwrap();
-    Ok(contact_list.is_empty())
+    Ok(state.contact_list.lock().await.is_empty())
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let contact_list = state.contact_list.lock().unwrap();
+    let contact_list = state.contact_list.lock().await;
 
     match PublicKey::from_str(&hex) {
         Ok(public_key) => match contact_list.iter().position(|x| x.public_key == public_key) {
@@ -175,7 +171,7 @@ pub async fn toggle_contact(
             }
 
             // Update local state
-            state.contact_list.lock().unwrap().clone_from(&contact_list);
+            state.contact_list.lock().await.clone_from(&contact_list);
 
             // Publish
             match client.set_contact_list(contact_list).await {
@@ -505,8 +501,7 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
 #[tauri::command]
 #[specta::specta]
 pub async fn get_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
-    let settings = state.settings.lock().unwrap().clone();
-    Ok(settings)
+    Ok(state.settings.lock().await.to_owned())
 }
 
 #[tauri::command]
@@ -514,7 +509,7 @@ pub async fn get_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
 pub async fn set_new_settings(settings: &str, state: State<'_, Nostr>) -> Result<(), ()> {
     let parsed: Settings =
         serde_json::from_str(settings).expect("Could not parse settings payload");
-    *state.settings.lock().unwrap() = parsed;
+    *state.settings.lock().await = parsed;
 
     Ok(())
 }
@@ -523,10 +518,10 @@ pub async fn set_new_settings(settings: &str, state: State<'_, Nostr>) -> Result
 #[specta::specta]
 pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
     match PublicKey::from_str(key) {
-        Ok(public_key) => {
-            let status = nip05::verify(&public_key, nip05, None).await;
-            Ok(status.is_ok())
-        }
-        Err(err) => Err(err.to_string()),
+        Ok(public_key) => match nip05::verify(&public_key, nip05, None).await {
+            Ok(status) => Ok(status),
+            Err(e) => Err(e.to_string()),
+        },
+        Err(e) => Err(e.to_string()),
     }
 }

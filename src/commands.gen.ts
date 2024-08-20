@@ -296,14 +296,6 @@ async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>
     else return { status: "error", error: e  as any };
 }
 },
-async listenLocalEvent(label: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("listen_local_event", { label }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async getGroupEvents(publicKeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_group_events", { publicKeys, until }) };
@@ -368,9 +360,9 @@ async userToBech32(user: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async unlisten(id: string) : Promise<Result<null, null>> {
+async unlisten(label: string) : Promise<Result<null, null>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("unlisten", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("unlisten", { label }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -426,6 +418,9 @@ async openWindow(window: Window) : Promise<Result<null, string>> {
 },
 async reopenLume() : Promise<void> {
     await TAURI_INVOKE("reopen_lume");
+},
+async quit() : Promise<void> {
+    await TAURI_INVOKE("quit");
 }
 }
 

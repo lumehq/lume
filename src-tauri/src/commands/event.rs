@@ -71,11 +71,7 @@ pub async fn get_event_from(
     state: State<'_, Nostr>,
 ) -> Result<RichEvent, String> {
     let client = &state.client;
-    let settings = state
-        .settings
-        .lock()
-        .map_err(|err| err.to_string())?
-        .clone();
+    let settings = state.settings.lock().await;
 
     let event_id = match Nip19::from_bech32(id) {
         Ok(val) => match val {
@@ -265,22 +261,17 @@ pub async fn get_local_events(
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let contact_list = state
-        .contact_list
-        .lock()
-        .map_err(|err| err.to_string())?
-        .clone();
+    let contact_list = state.contact_list.lock().await;
+    let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
 
     let as_of = match until {
         Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),
     };
 
-    let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
-
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(64)
+        .limit(FETCH_LIMIT)
         .until(as_of)
         .authors(authors);
 
@@ -303,31 +294,6 @@ pub async fn get_local_events(
         }
         Err(err) => Err(err.to_string()),
     }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn listen_local_event(label: &str, state: State<'_, Nostr>) -> Result<(), String> {
-    let client = &state.client;
-
-    let contact_list = state
-        .contact_list
-        .lock()
-        .map_err(|err| err.to_string())?
-        .clone();
-
-    let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
-    let sub_id = SubscriptionId::new(label);
-
-    let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Repost])
-        .authors(authors)
-        .since(Timestamp::now());
-
-    // Subscribe
-    let _ = client.subscribe_with_id(sub_id, vec![filter], None).await;
-
-    Ok(())
 }
 
 #[tauri::command]
@@ -704,9 +670,9 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
 
 #[tauri::command]
 #[specta::specta]
-pub async fn unlisten(id: &str, state: State<'_, Nostr>) -> Result<(), ()> {
+pub async fn unlisten(label: String, state: State<'_, Nostr>) -> Result<(), ()> {
     let client = &state.client;
-    let sub_id = SubscriptionId::new(id);
+    let sub_id = SubscriptionId::new(label);
 
     // Remove subscription
     client.unsubscribe(sub_id).await;

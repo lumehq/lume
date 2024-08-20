@@ -1,4 +1,3 @@
-import type { Contact } from "@/types";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check } from "@tauri-apps/plugin-updater";
@@ -13,7 +12,10 @@ import ReactDOM from "react-dom";
 import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
+import type { RichEvent } from "./commands.gen";
 import { AUDIOS, IMAGES, VIDEOS } from "./constants";
+import { LumeEvent } from "./system";
+import type { NostrEvent } from "./types";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -272,4 +274,22 @@ export async function checkForAppUpdates(silent: boolean) {
 
 		return;
 	}
+}
+
+export function toLumeEvents(richEvents: RichEvent[]) {
+	const events = richEvents.map((item) => {
+		const nostrEvent: NostrEvent = JSON.parse(item.raw);
+
+		if (item.parsed) {
+			nostrEvent.meta = item.parsed;
+		} else {
+			nostrEvent.meta = null;
+		}
+
+		const lumeEvent = new LumeEvent(nostrEvent);
+
+		return lumeEvent;
+	});
+
+	return events;
 }

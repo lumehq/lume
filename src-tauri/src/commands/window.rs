@@ -173,6 +173,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
         .transparent(true)
+        .decorations(false)
         .effects(WindowEffectsConfig {
             state: None,
             effects: vec![Effect::Mica],
