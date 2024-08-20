@@ -26,11 +26,11 @@ function Screen() {
 	});
 
 	const scrollPrev = useCallback(() => {
-		if (emblaApi) emblaApi.scrollPrev();
+		if (emblaApi) emblaApi.scrollPrev(true);
 	}, [emblaApi]);
 
 	const scrollNext = useCallback(() => {
-		if (emblaApi) emblaApi.scrollNext();
+		if (emblaApi) emblaApi.scrollNext(true);
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {

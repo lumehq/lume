@@ -392,7 +392,7 @@ async closeColumn(label: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async repositionColumn(label: string, x: number, y: number) : Promise<Result<null, string>> {
+async repositionColumn(label: string, x: number, y: number) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reposition_column", { label, x, y }) };
 } catch (e) {
@@ -400,7 +400,7 @@ async repositionColumn(label: string, x: number, y: number) : Promise<Result<nul
     else return { status: "error", error: e  as any };
 }
 },
-async resizeColumn(label: string, width: number, height: number) : Promise<Result<null, string>> {
+async resizeColumn(label: string, width: number, height: number) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("resize_column", { label, width, height }) };
 } catch (e) {
@@ -408,7 +408,7 @@ async resizeColumn(label: string, width: number, height: number) : Promise<Resul
     else return { status: "error", error: e  as any };
 }
 },
-async reloadColumn(label: string) : Promise<Result<null, string>> {
+async reloadColumn(label: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reload_column", { label }) };
 } catch (e) {
@@ -424,11 +424,8 @@ async openWindow(window: Window) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async openMainWindow() : Promise<void> {
-    await TAURI_INVOKE("open_main_window");
-},
-async forceQuit() : Promise<void> {
-    await TAURI_INVOKE("force_quit");
+async reopenLume() : Promise<void> {
+    await TAURI_INVOKE("reopen_lume");
 }
 }
 

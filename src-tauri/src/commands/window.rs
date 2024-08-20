@@ -8,9 +8,8 @@ use tauri::utils::config::WindowEffectsConfig;
 use tauri::window::Effect;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
-use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
-#[cfg(target_os = "windows")]
+use tauri::{WebviewBuilder, WebviewWindowBuilder};
 use tauri_plugin_decorum::WebviewWindowExt;
 
 #[derive(Serialize, Deserialize, Type)]
@@ -45,7 +44,7 @@ pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<Str
                 let path = PathBuf::from(column.url);
                 let webview_url = WebviewUrl::App(path);
 
-                let builder = tauri::webview::WebviewBuilder::new(column.label, webview_url)
+                let builder = WebviewBuilder::new(column.label, webview_url)
                     .incognito(true)
                     .transparent(true);
 
@@ -68,14 +67,8 @@ pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<Str
 #[specta::specta]
 pub fn close_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
-        Some(webview) => {
-            if webview.close().is_ok() {
-                Ok(true)
-            } else {
-                Ok(false)
-            }
-        }
-        None => Err("Column not found.".into()),
+        Some(webview) => Ok(webview.close().is_ok()),
+        None => Err("Not found.".into()),
     }
 }
 
@@ -86,16 +79,10 @@ pub fn reposition_column(
     x: f32,
     y: f32,
     app_handle: tauri::AppHandle,
-) -> Result<(), String> {
+) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
-        Some(webview) => {
-            if webview.set_position(LogicalPosition::new(x, y)).is_ok() {
-                Ok(())
-            } else {
-                Err("Reposition column failed".into())
-            }
-        }
-        None => Err("Webview not found".into()),
+        Some(webview) => Ok(webview.set_position(LogicalPosition::new(x, y)).is_ok()),
+        None => Err("Not found".into()),
     }
 }
 
@@ -106,36 +93,25 @@ pub fn resize_column(
     width: f32,
     height: f32,
     app_handle: tauri::AppHandle,
-) -> Result<(), String> {
+) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
-        Some(webview) => {
-            if webview.set_size(LogicalSize::new(width, height)).is_ok() {
-                Ok(())
-            } else {
-                Err("Resize column failed".into())
-            }
-        }
-        None => Err("Webview not found".into()),
+        Some(webview) => Ok(webview.set_size(LogicalSize::new(width, height)).is_ok()),
+        None => Err("Not found".into()),
     }
 }
 
 #[tauri::command(async)]
 #[specta::specta]
-pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
-        Some(webview) => {
-            if webview.eval("window.location.reload()").is_ok() {
-                Ok(())
-            } else {
-                Err("Reload column failed".into())
-            }
-        }
-        None => Err("Webview not found".into()),
+        Some(webview) => Ok(webview.eval("window.location.reload()").is_ok()),
+        None => Err("Not found".into()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
+#[cfg(target_os = "macos")]
 pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
     if let Some(window) = app_handle.get_window(&window.label) {
         if window.is_visible().unwrap_or_default() {
@@ -145,7 +121,6 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
             let _ = window.set_focus();
         };
     } else {
-        #[cfg(target_os = "macos")]
         let window = WebviewWindowBuilder::new(
             &app_handle,
             &window.label,
@@ -168,7 +143,25 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .build()
         .unwrap();
 
-        #[cfg(target_os = "windows")]
+        // Restore native border
+        window.add_border(None);
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+#[cfg(target_os = "windows")]
+pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
+    if let Some(window) = app_handle.get_window(&window.label) {
+        if window.is_visible().unwrap_or_default() {
+            let _ = window.set_focus();
+        } else {
+            let _ = window.show();
+            let _ = window.set_focus();
+        };
+    } else {
         let window = WebviewWindowBuilder::new(
             &app_handle,
             &window.label,
@@ -190,12 +183,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .unwrap();
 
         // Set decoration
-        #[cfg(target_os = "windows")]
         window.create_overlay_titlebar().unwrap();
-
-        // Restore native border
-        #[cfg(target_os = "macos")]
-        window.add_border(None);
     }
 
     Ok(())
@@ -203,7 +191,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
 
 #[tauri::command]
 #[specta::specta]
-pub fn open_main_window(app: tauri::AppHandle) {
+pub fn reopen_lume(app: tauri::AppHandle) {
     if let Some(window) = app.get_window("main") {
         if window.is_visible().unwrap_or_default() {
             let _ = window.set_focus();
@@ -225,11 +213,25 @@ pub fn open_main_window(app: tauri::AppHandle) {
         // Restore native border
         #[cfg(target_os = "macos")]
         window.add_border(None);
+
+        // Set a custom inset to the traffic lights
+        #[cfg(target_os = "macos")]
+        window.set_traffic_lights_inset(7.0, 13.0).unwrap();
+
+        #[cfg(target_os = "macos")]
+        let win = window.clone();
+
+        #[cfg(target_os = "macos")]
+        window.on_window_event(move |event| {
+            if let tauri::WindowEvent::ThemeChanged(_) = event {
+                win.set_traffic_lights_inset(7.0, 13.0).unwrap();
+            }
+        });
     }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub fn force_quit() {
+pub fn quit() {
     std::process::exit(0)
 }

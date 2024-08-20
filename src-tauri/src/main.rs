@@ -4,9 +4,6 @@
 )]
 
 #[cfg(target_os = "macos")]
-extern crate cocoa;
-
-#[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
 use commands::{account::*, event::*, metadata::*, relay::*, window::*};
 use nostr_sdk::prelude::*;
@@ -127,8 +124,8 @@ fn main() {
             resize_column,
             reload_column,
             open_window,
-            open_main_window,
-            force_quit
+            reopen_lume,
+            quit
         ]);
 
     builder
