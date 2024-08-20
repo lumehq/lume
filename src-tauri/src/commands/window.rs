@@ -150,7 +150,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     Ok(())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 #[specta::specta]
 #[cfg(target_os = "windows")]
 pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
