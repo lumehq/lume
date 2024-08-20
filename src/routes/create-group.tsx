@@ -1,8 +1,8 @@
 import { Spinner } from "@/components";
-import { CancelIcon, PlusIcon } from "@/components";
 import { User } from "@/components/user";
 import { NostrAccount, NostrQuery } from "@/system";
 import type { ColumnRouteSearch } from "@/types";
+import { Plus, X } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
@@ -110,7 +110,7 @@ function Screen() {
 								onClick={() => addUser()}
 								className="inline-flex items-center justify-center text-white rounded-lg size-9 bg-black/20 dark:bg-white/20 shrink-0 hover:bg-blue-500"
 							>
-								<PlusIcon className="size-6" />
+								<Plus className="size-5" />
 							</button>
 						</div>
 						<div className="flex flex-col gap-2">
@@ -133,7 +133,7 @@ function Screen() {
 												</User.Root>
 											</User.Provider>
 											<div>
-												<CancelIcon className="size-4" />
+												<X className="size-4" />
 											</div>
 										</button>
 									))

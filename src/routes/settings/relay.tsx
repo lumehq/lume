@@ -1,5 +1,5 @@
-import { CancelIcon, PlusIcon } from "@/components";
 import { NostrQuery } from "@/system";
+import { Plus, X } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
@@ -67,7 +67,7 @@ function Screen() {
 										onClick={() => NostrQuery.removeRelay(relay)}
 										className="inline-flex items-center justify-center rounded-md size-7 hover:bg-black/10 dark:hover:bg-white/10"
 									>
-										<CancelIcon className="size-4" />
+										<X className="size-4" />
 									</button>
 								</div>
 							</div>
@@ -92,7 +92,7 @@ function Screen() {
 									disabled={isLoading}
 									className="inline-flex items-center justify-center w-16 px-2 text-sm font-medium text-white rounded-lg shrink-0 h-9 bg-black/20 dark:bg-white/20 hover:bg-blue-500 disabled:opacity-50"
 								>
-									<PlusIcon className="size-7" />
+									<Plus className="size-5" />
 								</button>
 							</form>
 						</div>

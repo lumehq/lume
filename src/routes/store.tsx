@@ -1,5 +1,5 @@
-import { CommunityIcon, LaurelIcon } from "@/components";
 import type { LumeColumn } from "@/types";
+import { SealCheck, UsersThree } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createFileRoute } from "@tanstack/react-router";
 import { resolveResource } from "@tauri-apps/api/path";
@@ -39,7 +39,7 @@ function Screen() {
 					<div className="flex flex-col gap-3 mb-10">
 						<div className="inline-flex items-center gap-1.5 font-semibold leading-tight">
 							<div className="size-7 rounded-md inline-flex items-center justify-center bg-black/10 dark:bg-white/10">
-								<LaurelIcon className="size-4" />
+								<SealCheck className="size-4" />
 							</div>
 							Official
 						</div>
@@ -82,7 +82,7 @@ function Screen() {
 					<div className="flex flex-col gap-3">
 						<div className="inline-flex items-center gap-1.5 font-semibold leading-tight">
 							<div className="size-7 rounded-md inline-flex items-center justify-center bg-black/10 dark:bg-white/10">
-								<CommunityIcon className="size-4" />
+								<UsersThree className="size-4" />
 							</div>
 							Community
 						</div>

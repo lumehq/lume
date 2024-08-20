@@ -1,5 +1,5 @@
 [package]
-name = "lume"
+name = "Lume"
 version = "4.0.0"
 description = "nostr client"
 authors = ["npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445"]

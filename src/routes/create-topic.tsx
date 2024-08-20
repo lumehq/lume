@@ -1,8 +1,8 @@
 import { Spinner } from "@/components";
-import { CheckCircleIcon } from "@/components";
 import { TOPICS } from "@/constants";
 import { NostrQuery } from "@/system";
 import type { ColumnRouteSearch } from "@/types";
+import { CheckCircle } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
@@ -94,7 +94,7 @@ function Screen() {
 										</div>
 									</div>
 									{topics.find((item) => item.title === topic.title) ? (
-										<CheckCircleIcon className="text-teal-500 size-4" />
+										<CheckCircle className="text-teal-500 size-4" />
 									) : null}
 								</button>
 							))}

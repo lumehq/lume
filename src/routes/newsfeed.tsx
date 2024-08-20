@@ -1,11 +1,11 @@
 import { Spinner } from "@/components";
-import { ArrowRightCircleIcon, ArrowUpIcon } from "@/components";
 import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { LumeEvent, NostrAccount, NostrQuery } from "@/system";
 import { type ColumnRouteSearch, Kind, type Meta } from "@/types";
+import { ArrowCircleRight, ArrowUp } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -144,7 +144,7 @@ export function Screen() {
 									<Spinner className="size-5" />
 								) : (
 									<>
-										<ArrowRightCircleIcon className="size-5" />
+										<ArrowCircleRight className="size-5" />
 										Load more
 									</>
 								)}
@@ -217,7 +217,7 @@ function Listerner() {
 				onClick={() => pushNewEvents()}
 				className="w-max h-8 pl-2 pr-3 inline-flex items-center justify-center gap-1.5 rounded-full shadow-lg text-sm font-medium text-white bg-black dark:text-black dark:bg-white"
 			>
-				<ArrowUpIcon className="size-4" />
+				<ArrowUp className="size-4" />
 				{events.length} new notes
 			</button>
 		</div>

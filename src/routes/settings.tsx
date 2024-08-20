@@ -1,11 +1,11 @@
 import { cn } from "@/commons";
 import {
-	RelayIcon,
-	SecureIcon,
-	SettingsIcon,
-	UserIcon,
-	ZapIcon,
-} from "@/components";
+	CurrencyBtc,
+	GearSix,
+	HardDrives,
+	Shield,
+	User,
+} from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
@@ -32,7 +32,7 @@ function Screen() {
 											: "text-neutral-700 hover:bg-black/10 dark:text-neutral-300 dark:hover:bg-white/10",
 									)}
 								>
-									<SettingsIcon className="size-5 shrink-0" />
+									<GearSix className="size-5 shrink-0" />
 									<p className="text-sm font-medium">General</p>
 								</div>
 							);
@@ -49,7 +49,7 @@ function Screen() {
 											: "text-neutral-700 hover:bg-black/10 dark:text-neutral-300 dark:hover:bg-white/10",
 									)}
 								>
-									<UserIcon className="size-5 shrink-0" />
+									<User className="size-5 shrink-0" />
 									<p className="text-sm font-medium">User</p>
 								</div>
 							);
@@ -66,7 +66,7 @@ function Screen() {
 											: "text-neutral-700 hover:bg-black/10 dark:text-neutral-300 dark:hover:bg-white/10",
 									)}
 								>
-									<RelayIcon className="size-5 shrink-0" />
+									<HardDrives className="size-5 shrink-0" />
 									<p className="text-sm font-medium">Relay</p>
 								</div>
 							);
@@ -83,7 +83,7 @@ function Screen() {
 											: "text-neutral-700 hover:bg-black/10 dark:text-neutral-300 dark:hover:bg-white/10",
 									)}
 								>
-									<ZapIcon className="size-5 shrink-0" />
+									<CurrencyBtc className="size-5 shrink-0" />
 									<p className="text-sm font-medium">Wallet</p>
 								</div>
 							);
@@ -100,7 +100,7 @@ function Screen() {
 											: "text-neutral-700 hover:bg-black/10 dark:text-neutral-300 dark:hover:bg-white/10",
 									)}
 								>
-									<SecureIcon className="size-5 shrink-0" />
+									<Shield className="size-5 shrink-0" />
 									<p className="text-sm font-medium">Backup</p>
 								</div>
 							);

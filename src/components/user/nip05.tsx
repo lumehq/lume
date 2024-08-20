@@ -1,6 +1,6 @@
 import { displayLongHandle, displayNpub } from "@/commons";
-import { VerifiedIcon } from "@/components";
 import { NostrQuery } from "@/system";
+import { SealCheck } from "@phosphor-icons/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 import { useQuery } from "@tanstack/react-query";
@@ -39,7 +39,7 @@ export function UserNip05() {
 			<Tooltip.Root delayDuration={150}>
 				<Tooltip.Trigger>
 					{!isLoading && verified ? (
-						<VerifiedIcon className="text-teal-500 size-4" />
+						<SealCheck className="text-green-500 size-4" weight="fill" />
 					) : null}
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

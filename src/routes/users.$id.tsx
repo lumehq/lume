@@ -1,4 +1,4 @@
-import { Box, Container, Spinner } from "@/components";
+import { Frame, Spinner } from "@/components";
 import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
@@ -49,8 +49,12 @@ function Screen() {
 	);
 
 	return (
-		<Container withDrag>
-			<Box className="px-0 scrollbar-none bg-black/5 dark:bg-white/5">
+		<div className="flex flex-col">
+			<div
+				data-tauri-drag-region
+				className="bg-transparent flex h-11 w-full shrink-0"
+			/>
+			<Frame className="flex-1 px-0 scrollbar-none bg-black/5 dark:bg-white/5">
 				<WindowVirtualizer>
 					<User.Provider pubkey={id}>
 						<User.Root>
@@ -86,7 +90,7 @@ function Screen() {
 						</Suspense>
 					</div>
 				</WindowVirtualizer>
-			</Box>
-		</Container>
+			</Frame>
+		</div>
 	);
 }

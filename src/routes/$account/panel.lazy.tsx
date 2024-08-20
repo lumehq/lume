@@ -4,11 +4,11 @@ import {
 	formatCreatedAt,
 } from "@/commons";
 import { Spinner } from "@/components";
-import { HorizontalDotsIcon, InfoIcon, RepostIcon } from "@/components";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
 import { type LumeEvent, LumeWindow, NostrQuery, useEvent } from "@/system";
 import { Kind } from "@/types";
+import { DotsThree, Info, Repeat } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useQuery } from "@tanstack/react-query";
@@ -149,7 +149,7 @@ function Screen() {
 						onClick={(e) => showContextMenu(e)}
 						className="inline-flex items-center justify-center rounded-full size-7 bg-black/5 dark:bg-white/5"
 					>
-						<HorizontalDotsIcon className="size-4" />
+						<DotsThree className="size-4" />
 					</button>
 				</div>
 			</div>
@@ -208,7 +208,7 @@ function Screen() {
 																event.content
 															)
 														) : (
-															<RepostIcon className="text-teal-400 size-4 dark:text-teal-600" />
+															<Repeat className="text-teal-400 size-4 dark:text-teal-600" />
 														)}
 													</div>
 												</User.Root>
@@ -289,7 +289,7 @@ function RootNote({ id }: { id: string }) {
 		return (
 			<div className="flex items-center gap-2">
 				<div className="inline-flex items-center justify-center text-white bg-red-500 rounded-full size-8 shrink-0">
-					<InfoIcon className="size-5" />
+					<Info className="size-5" />
 				</div>
 				<p className="text-sm text-red-500">
 					Event not found with your current relay set

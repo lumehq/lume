@@ -1,7 +1,7 @@
 import { cn } from "@/commons";
-import { ThreadIcon } from "@/components";
 import { Note } from "@/components/note";
 import type { LumeEvent } from "@/system";
+import { ChatsTeardrop } from "@phosphor-icons/react";
 import { memo, useMemo } from "react";
 
 export const Conversation = memo(function Conversation({
@@ -25,7 +25,7 @@ export const Conversation = memo(function Conversation({
 					{thread?.root?.id ? <Note.Child event={thread?.root} isRoot /> : null}
 					<div className="flex items-center gap-2 px-3">
 						<div className="inline-flex items-center gap-1.5 shrink-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">
-							<ThreadIcon className="size-4" />
+							<ChatsTeardrop className="size-4" />
 							Thread
 						</div>
 						<div className="flex-1 h-px bg-neutral-100 dark:bg-white/5" />

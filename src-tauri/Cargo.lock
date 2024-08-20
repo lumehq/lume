@@ -9,6 +9,48 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fe438c63458706e03479442743baae6c88256498e6431708f6dfc520a26515d3"
 
 [[package]]
+name = "Lume"
+version = "4.0.0"
+dependencies = [
+ "border",
+ "cocoa 0.25.0",
+ "futures",
+ "keyring",
+ "keyring-search",
+ "linkify",
+ "monitor",
+ "nostr-sdk",
+ "objc",
+ "rand 0.8.5",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "specta",
+ "specta-typescript",
+ "tauri",
+ "tauri-build",
+ "tauri-nspanel",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-decorum",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-http",
+ "tauri-plugin-notification",
+ "tauri-plugin-os",
+ "tauri-plugin-prevent-default",
+ "tauri-plugin-process",
+ "tauri-plugin-shell",
+ "tauri-plugin-theme",
+ "tauri-plugin-updater",
+ "tauri-plugin-upload",
+ "tauri-plugin-window-state",
+ "tauri-specta",
+ "tokio",
+ "url",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2934,48 +2976,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37ee39891760e7d94734f6f63fedc29a2e4a152f836120753a72503f09fcf904"
 dependencies = [
  "hashbrown 0.14.5",
-]
-
-[[package]]
-name = "lume"
-version = "4.0.0"
-dependencies = [
- "border",
- "cocoa 0.25.0",
- "futures",
- "keyring",
- "keyring-search",
- "linkify",
- "monitor",
- "nostr-sdk",
- "objc",
- "rand 0.8.5",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "specta",
- "specta-typescript",
- "tauri",
- "tauri-build",
- "tauri-nspanel",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-decorum",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-http",
- "tauri-plugin-notification",
- "tauri-plugin-os",
- "tauri-plugin-prevent-default",
- "tauri-plugin-process",
- "tauri-plugin-shell",
- "tauri-plugin-theme",
- "tauri-plugin-updater",
- "tauri-plugin-upload",
- "tauri-plugin-window-state",
- "tauri-specta",
- "tokio",
- "url",
 ]
 
 [[package]]

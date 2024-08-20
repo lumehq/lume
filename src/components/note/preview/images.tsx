@@ -1,6 +1,6 @@
 import { cn } from "@/commons";
 import { Spinner } from "@/components";
-import { ArrowLeftIcon, ArrowRightIcon } from "@/components";
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import { useRouteContext } from "@tanstack/react-router";
 import { open } from "@tauri-apps/plugin-shell";
 import useEmblaCarousel from "embla-carousel-react";
@@ -119,7 +119,7 @@ export function Images({ urls }: { urls: string[] }) {
 					)}
 					onClick={() => scrollPrev()}
 				>
-					<ArrowLeftIcon className="size-6" />
+					<ArrowLeft className="size-6" />
 				</button>
 				<button
 					type="button"
@@ -130,7 +130,7 @@ export function Images({ urls }: { urls: string[] }) {
 					)}
 					onClick={() => scrollNext()}
 				>
-					<ArrowRightIcon className="size-6" />
+					<ArrowRight className="size-6" />
 				</button>
 			</div>
 		</div>

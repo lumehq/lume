@@ -1,11 +1,11 @@
 import { Spinner } from "@/components";
-import { ArrowRightCircleIcon } from "@/components";
 import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { type LumeEvent, NostrQuery } from "@/system";
 import { type ColumnRouteSearch, Kind } from "@/types";
+import { ArrowCircleRight } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -114,7 +114,7 @@ export function Screen() {
 									<Spinner className="size-5" />
 								) : (
 									<>
-										<ArrowRightCircleIcon className="size-5" />
+										<ArrowCircleRight className="size-5" />
 										Load more
 									</>
 								)}

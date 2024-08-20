@@ -1,6 +1,6 @@
 import { cn } from "@/commons";
-import { ReplyIcon } from "@/components";
 import { LumeWindow } from "@/system";
+import { ShareFat } from "@phosphor-icons/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useNoteContext } from "../provider";
 
@@ -21,7 +21,7 @@ export function NoteReply({ large = false }: { large?: boolean }) {
 								: "size-7",
 						)}
 					>
-						<ReplyIcon className="shrink-0 size-4" />
+						<ShareFat className="shrink-0 size-4" />
 						{large ? "Reply" : null}
 					</button>
 				</Tooltip.Trigger>

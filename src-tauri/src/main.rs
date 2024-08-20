@@ -164,7 +164,7 @@ fn main() {
 
             // Set a custom inset to the traffic lights
             #[cfg(target_os = "macos")]
-            main_window.set_traffic_lights_inset(8.0, 16.0).unwrap();
+            main_window.set_traffic_lights_inset(7.0, 13.0).unwrap();
 
             #[cfg(target_os = "macos")]
             let win = main_window.clone();
@@ -172,7 +172,7 @@ fn main() {
             #[cfg(target_os = "macos")]
             main_window.on_window_event(move |event| {
                 if let tauri::WindowEvent::ThemeChanged(_) = event {
-                    win.set_traffic_lights_inset(8.0, 16.0).unwrap();
+                    win.set_traffic_lights_inset(7.0, 13.0).unwrap();
                 }
             });
 

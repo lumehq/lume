@@ -1,7 +1,7 @@
 import { cn } from "@/commons";
 import { Spinner } from "@/components";
-import { RepostIcon } from "@/components";
 import { LumeWindow } from "@/system";
+import { Repeat } from "@phosphor-icons/react";
 import { useRouteContext } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -73,7 +73,7 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 			{loading ? (
 				<Spinner className="size-4" />
 			) : (
-				<RepostIcon className={cn("size-4", isRepost ? "text-blue-500" : "")} />
+				<Repeat className={cn("size-4", isRepost ? "text-blue-500" : "")} />
 			)}
 			{large ? "Repost" : null}
 		</button>

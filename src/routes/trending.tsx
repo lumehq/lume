@@ -1,7 +1,7 @@
 import { cn } from "@/commons";
-import { ArticleIcon, GroupFeedsIcon } from "@/components";
 import { NostrQuery } from "@/system";
 import type { ColumnRouteSearch } from "@/types";
+import { Note, UsersThree } from "@phosphor-icons/react";
 import { Link, Outlet } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -35,7 +35,7 @@ function Screen() {
 									isActive ? "bg-black/10 dark:bg-white/10" : "opacity-50",
 								)}
 							>
-								<ArticleIcon className="size-4" />
+								<Note className="size-4" />
 								Notes
 							</div>
 						)}
@@ -48,7 +48,7 @@ function Screen() {
 									isActive ? "bg-black/10 dark:bg-white/10" : "opacity-50",
 								)}
 							>
-								<GroupFeedsIcon className="size-4" />
+								<UsersThree className="size-4" />
 								Users
 							</div>
 						)}

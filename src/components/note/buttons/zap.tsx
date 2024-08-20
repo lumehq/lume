@@ -1,6 +1,6 @@
 import { cn } from "@/commons";
-import { ZapIcon } from "@/components";
 import { LumeWindow } from "@/system";
+import { Lightning } from "@phosphor-icons/react";
 import { useRouteContext } from "@tanstack/react-router";
 import { useNoteContext } from "../provider";
 
@@ -21,7 +21,7 @@ export function NoteZap({ large = false }: { large?: boolean }) {
 					: "size-7",
 			)}
 		>
-			<ZapIcon className="size-4" />
+			<Lightning className="size-4" />
 			{large ? "Zap" : null}
 		</button>
 	);

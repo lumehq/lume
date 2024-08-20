@@ -1,7 +1,7 @@
 import { Spinner } from "@/components";
-import { LinkIcon } from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow, useEvent } from "@/system";
+import { Link } from "@phosphor-icons/react";
 
 export function MentionNote({
 	eventId,
@@ -64,7 +64,7 @@ export function MentionNote({
 							className="inline-flex items-center gap-1 text-blue-500 text-sm"
 						>
 							View post
-							<LinkIcon className="size-3" />
+							<Link className="size-3" />
 						</button>
 					</div>
 				) : (

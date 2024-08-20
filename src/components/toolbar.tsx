@@ -1,5 +1,4 @@
-import type { ReactNode } from "@tanstack/react-router";
-import { useLayoutEffect, useState } from "react";
+import { type ReactNode, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export function Toolbar({ children }: { children: ReactNode }) {

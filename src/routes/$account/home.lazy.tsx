@@ -1,8 +1,8 @@
-import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from "@/components";
 import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
 import { NostrQuery } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
+import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -175,9 +175,9 @@ function Screen() {
 							<button
 								type="button"
 								onClick={() => openLumeStore()}
-								className="inline-flex items-center justify-center gap-0.5 rounded-full text-sm font-medium h-8 w-max pl-1.5 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
+								className="inline-flex items-center justify-center gap-1 rounded-full text-sm font-medium h-8 w-max pl-2 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
 							>
-								<PlusIcon className="size-5" />
+								<Plus className="size-4" />
 								Add Column
 							</button>
 						</div>
@@ -188,16 +188,16 @@ function Screen() {
 				<button
 					type="button"
 					onClick={() => scrollPrev()}
-					className="inline-flex items-center justify-center rounded-full size-8 hover:bg-black/5 dark:hover:bg-white/5"
+					className="inline-flex items-center justify-center rounded-full size-7 hover:bg-black/5 dark:hover:bg-white/5"
 				>
-					<ArrowLeftIcon className="size-4" />
+					<ArrowLeft className="size-4" />
 				</button>
 				<button
 					type="button"
 					onClick={() => scrollNext()}
-					className="inline-flex items-center justify-center rounded-full size-8 hover:bg-black/5 dark:hover:bg-white/5"
+					className="inline-flex items-center justify-center rounded-full size-7 hover:bg-black/5 dark:hover:bg-white/5"
 				>
-					<ArrowRightIcon className="size-4" />
+					<ArrowRight className="size-4" />
 				</button>
 			</Toolbar>
 		</div>

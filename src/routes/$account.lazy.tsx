@@ -1,12 +1,7 @@
 import { cn } from "@/commons";
-import {
-	ChevronDownIcon,
-	ComposeFilledIcon,
-	PlusIcon,
-	SearchIcon,
-} from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow, NostrAccount } from "@/system";
+import { CaretDown, Feather, MagnifyingGlass } from "@phosphor-icons/react";
 import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -20,60 +15,42 @@ export const Route = createLazyFileRoute("/$account")({
 function Screen() {
 	const { settings, platform } = Route.useRouteContext();
 
-	const openLumeStore = async () => {
-		await getCurrentWindow().emit("columns", {
-			type: "add",
-			column: {
-				label: "store",
-				name: "Column Gallery",
-				content: "/store",
-			},
-		});
-	};
-
 	return (
 		<div className="flex flex-col w-screen h-screen">
 			<div
 				data-tauri-drag-region
 				className={cn(
-					"flex h-11 shrink-0 items-center justify-between",
+					"flex h-10 shrink-0 items-center justify-between",
 					platform === "macos" ? "pl-[72px] pr-3" : "pr-[156px] pl-3",
 				)}
 			>
 				<div
 					data-tauri-drag-region
-					className="relative z-[200] flex-1 flex items-center gap-2"
+					className="relative z-[200] flex-1 flex items-center gap-4"
 				>
-					<button
-						type="button"
-						onClick={() => openLumeStore()}
-						className="inline-flex items-center justify-center gap-0.5 rounded-full text-sm font-medium h-8 w-max pl-1.5 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
-					>
-						<PlusIcon className="size-5" />
-						Column
-					</button>
-					<div id="toolbar" />
-				</div>
-				<div
-					data-tauri-drag-region
-					className="relative z-[200] hidden md:flex md:flex-1"
-				>
-					<Search />
-				</div>
-				<div
-					data-tauri-drag-region
-					className="relative z-[200] flex-1 flex items-center justify-end gap-3"
-				>
-					<button
-						type="button"
-						onClick={() => LumeWindow.openEditor()}
-						className="inline-flex items-center justify-center h-8 gap-1 px-3 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
-					>
-						<ComposeFilledIcon className="size-4" />
-						New Post
-					</button>
 					<Accounts />
+					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							className="inline-flex items-center justify-center size-7 bg-black/5 dark:bg-white/5 rounded-full hover:bg-blue-500 hover:text-white"
+						>
+							<MagnifyingGlass className="size-4" />
+						</button>
+						<button
+							type="button"
+							onClick={() => LumeWindow.openEditor()}
+							className="inline-flex items-center justify-center h-7 gap-1.5 px-2 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
+						>
+							<Feather className="size-4" />
+							New Post
+						</button>
+					</div>
 				</div>
+				<div
+					id="toolbar"
+					data-tauri-drag-region
+					className="relative z-[200] flex-1 flex items-center justify-end gap-1"
+				/>
 			</div>
 			<div
 				className={cn(
@@ -149,15 +126,6 @@ const Accounts = memo(function Accounts() {
 
 	return (
 		<div data-tauri-drag-region className="hidden md:flex items-center gap-3">
-			{otherAccounts.map((npub) => (
-				<button key={npub} type="button" onClick={(e) => changeAccount(npub)}>
-					<User.Provider pubkey={npub}>
-						<User.Root className="shrink-0 rounded-full transition-all ease-in-out duration-150 will-change-auto hover:ring-1 hover:ring-blue-500">
-							<User.Avatar className="rounded-full size-8" />
-						</User.Root>
-					</User.Provider>
-				</button>
-			))}
 			<button
 				type="button"
 				onClick={(e) => showContextMenu(e)}
@@ -165,63 +133,20 @@ const Accounts = memo(function Accounts() {
 			>
 				<User.Provider pubkey={account}>
 					<User.Root className="shrink-0 rounded-full">
-						<User.Avatar className="rounded-full size-8" />
+						<User.Avatar className="rounded-full size-7" />
 					</User.Root>
 				</User.Provider>
-				<ChevronDownIcon className="size-3" />
+				<CaretDown className="size-3" />
 			</button>
-		</div>
-	);
-});
-
-const Search = memo(function Search() {
-	const [searchType, setSearchType] = useState<"notes" | "users">("notes");
-	const [query, setQuery] = useState("");
-
-	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
-		e.preventDefault();
-
-		const menuItems = await Promise.all([
-			MenuItem.new({
-				text: "Notes",
-				action: () => setSearchType("notes"),
-			}),
-			MenuItem.new({
-				text: "Users",
-				action: () => setSearchType("users"),
-			}),
-		]);
-
-		const menu = await Menu.new({
-			items: menuItems,
-		});
-
-		await menu.popup().catch((e) => console.error(e));
-	}, []);
-
-	return (
-		<div className="h-8 w-full px-3 text-sm rounded-full inline-flex items-center bg-black/5 dark:bg-white/5">
-			<button
-				type="button"
-				onClick={(e) => showContextMenu(e)}
-				className="inline-flex items-center gap-1 capitalize text-sm font-medium pr-2 border-r border-black/10 dark:border-white/10 text-black/50 dark:text-white/50"
-			>
-				{searchType}
-				<ChevronDownIcon className="size-3" />
-			</button>
-			<input
-				type="text"
-				name="search"
-				placeholder="Search..."
-				onChange={(e) => setQuery(e.target.value)}
-				onKeyDown={(event) => {
-					if (event.key === "Enter") {
-						LumeWindow.openSearch(searchType, query);
-					}
-				}}
-				className="h-full w-full px-3 text-sm rounded-full border-none ring-0 focus:ring-0 focus:outline-none bg-transparent placeholder:text-black/50 dark:placeholder:text-white/50"
-			/>
-			<SearchIcon className="size-5" />
+			{otherAccounts.map((npub) => (
+				<button key={npub} type="button" onClick={(e) => changeAccount(npub)}>
+					<User.Provider pubkey={npub}>
+						<User.Root className="shrink-0 rounded-full transition-all ease-in-out duration-150 will-change-auto hover:ring-1 hover:ring-blue-500">
+							<User.Avatar className="rounded-full size-7" />
+						</User.Root>
+					</User.Provider>
+				</button>
+			))}
 		</div>
 	);
 });

@@ -1,5 +1,5 @@
-import { CheckIcon, HorizontalDotsIcon } from "@/components";
 import type { LumeColumn } from "@/types";
+import { Check, DotsThree } from "@phosphor-icons/react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
@@ -194,7 +194,7 @@ function Header({
 							onClick={() => saveNewTitle()}
 							className="text-teal-500 hover:text-teal-600"
 						>
-							<CheckIcon className="size-4" />
+							<Check className="size-4" />
 						</button>
 					) : null}
 				</div>
@@ -204,7 +204,7 @@ function Header({
 				onClick={(e) => showContextMenu(e)}
 				className="inline-flex items-center justify-center rounded-lg size-7 hover:bg-black/10 dark:hover:bg-white/10"
 			>
-				<HorizontalDotsIcon className="size-5" />
+				<DotsThree className="size-5" />
 			</button>
 		</div>
 	);

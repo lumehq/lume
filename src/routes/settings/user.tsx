@@ -2,7 +2,7 @@ import { Spinner } from "@/components";
 import { AvatarUploader } from "@/components/avatarUploader";
 import { NostrAccount } from "@/system";
 import type { Metadata } from "@/types";
-import { PlusIcon } from "@/components";
+import { Plus } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -55,7 +55,7 @@ function Screen() {
 						setPicture={setPicture}
 						className="absolute inset-0 z-20 flex items-center justify-center w-full h-full text-white rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
 					>
-						<PlusIcon className="size-8" />
+						<Plus className="size-5" />
 					</AvatarUploader>
 				</div>
 				<div className="flex flex-col items-center text-center">

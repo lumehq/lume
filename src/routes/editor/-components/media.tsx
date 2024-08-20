@@ -1,7 +1,7 @@
 import { insertImage, isImagePath } from "@/commons";
 import { Spinner } from "@/components";
-import { AddMediaIcon } from "@/components";
 import { NostrQuery } from "@/system";
+import { Images } from "@phosphor-icons/react";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -66,11 +66,7 @@ export function MediaButton() {
 			disabled={loading}
 			className="inline-flex items-center h-8 gap-2 px-2.5 text-sm rounded-lg text-black/70 dark:text-white/70 w-max hover:bg-black/10 dark:hover:bg-white/10"
 		>
-			{loading ? (
-				<Spinner className="size-4" />
-			) : (
-				<AddMediaIcon className="size-4" />
-			)}
+			{loading ? <Spinner className="size-4" /> : <Images className="size-4" />}
 			Add media
 		</button>
 	);

@@ -1,10 +1,10 @@
 import { cn, insertImage, insertNostrEvent, isImageUrl } from "@/commons";
 import { Spinner } from "@/components";
-import { ComposeFilledIcon } from "@/components";
 import { Note } from "@/components/note";
 import { MentionNote } from "@/components/note/mentions/note";
 import { User } from "@/components/user";
 import { LumeEvent, useEvent } from "@/system";
+import { Feather } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
@@ -219,7 +219,7 @@ function Screen() {
 						{loading ? (
 							<Spinner className="size-4" />
 						) : (
-							<ComposeFilledIcon className="size-4" />
+							<Feather className="size-4" />
 						)}
 						Publish
 					</button>

@@ -1,6 +1,6 @@
 import { displayNsec } from "@/commons";
 import { Spinner } from "@/components";
-import { CheckIcon } from "@/components";
+import { Check } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
@@ -127,7 +127,7 @@ function Screen() {
 										id="confirm1"
 									>
 										<Checkbox.Indicator className="text-blue-500">
-											<CheckIcon className="size-4" />
+											<Check className="size-4" />
 										</Checkbox.Indicator>
 									</Checkbox.Root>
 									<label
@@ -147,7 +147,7 @@ function Screen() {
 										id="confirm2"
 									>
 										<Checkbox.Indicator className="text-blue-500">
-											<CheckIcon className="size-4" />
+											<Check className="size-4" />
 										</Checkbox.Indicator>
 									</Checkbox.Root>
 									<label
