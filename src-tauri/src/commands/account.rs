@@ -5,11 +5,10 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{collections::HashSet, str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
-use tauri_plugin_notification::NotificationExt;
 
 use crate::{
-    common::{get_user_settings, init_nip65, parse_event},
-    Nostr, RichEvent, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT,
+    common::{get_user_settings, init_nip65},
+    Nostr, LOCAL_SUB_ID, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT, NOTIFICATION_SUB_ID,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -246,8 +245,8 @@ pub async fn login(
         let signer = client.signer().await.unwrap();
         let public_key = signer.public_key().await.unwrap();
 
-        let local_id = SubscriptionId::new("local");
-        let notification_id = SubscriptionId::new("notification");
+        let local_id = SubscriptionId::new(LOCAL_SUB_ID);
+        let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
 
         if !contact_list.is_empty() {
             let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
@@ -257,26 +256,21 @@ pub async fn login(
                 .kinds(vec![Kind::TextNote, Kind::Repost])
                 .limit(NEWSFEED_NEG_LIMIT);
 
-            match client.reconcile(sync, NegentropyOptions::default()).await {
-                Ok(_) => {
-                    if handle.emit("newsfeed_synchronized", ()).is_err() {
-                        println!("Failed.")
-                    }
-                }
-                Err(_) => println!("Failed."),
-            };
+            if client
+                .reconcile(sync, NegentropyOptions::default())
+                .await
+                .is_ok()
+            {
+                handle.emit("newsfeed_synchronized", ()).unwrap();
+            }
 
             let local = Filter::new()
                 .kinds(vec![Kind::TextNote, Kind::Repost])
                 .authors(authors)
                 .since(Timestamp::now());
 
-            if client
-                .subscribe_with_id(local_id.clone(), vec![local], None)
-                .await
-                .is_ok()
-            {
-                println!("Subscribing for local events")
+            if let Err(e) = client.subscribe_with_id(local_id, vec![local], None).await {
+                println!("Error: {}", e)
             }
         };
 
@@ -292,14 +286,14 @@ pub async fn login(
             ])
             .limit(NOTIFICATION_NEG_LIMIT);
 
-        match client.reconcile(sync, NegentropyOptions::default()).await {
-            Ok(_) => {
-                if handle.emit("notification_synchronized", ()).is_err() {
-                    println!("Failed.")
-                }
-            }
-            Err(_) => println!("Failed."),
-        };
+        // Sync notification with negentropy
+        if client
+            .reconcile(sync, NegentropyOptions::default())
+            .await
+            .is_ok()
+        {
+            handle.emit("notification_synchronized", ()).unwrap();
+        }
 
         let notification = Filter::new()
             .pubkey(public_key)
@@ -312,96 +306,12 @@ pub async fn login(
             .since(Timestamp::now());
 
         // Subscribing for new notification...
-        if client
-            .subscribe_with_id(notification_id.clone(), vec![notification], None)
+        if let Err(e) = client
+            .subscribe_with_id(notification_id, vec![notification], None)
             .await
-            .is_ok()
         {
-            println!("Subscribing for notification")
+            println!("Error: {}", e)
         }
-
-        // Handle notifications
-        client
-            .handle_notifications(|notification| async {
-                if let RelayPoolNotification::Message { message, .. } = notification {
-                    if let RelayMessage::Event {
-                        subscription_id,
-                        event,
-                    } = message
-                    {
-                        if subscription_id == notification_id {
-                            let author = client
-                                .metadata(event.pubkey)
-                                .await
-                                .unwrap_or_else(|_| Metadata::new());
-
-                            match event.kind() {
-                                Kind::TextNote => {
-                                    if let Err(e) = handle
-                                        .notification()
-                                        .builder()
-                                        .body("Mentioned you in a thread.")
-                                        .title(
-                                            author
-                                                .display_name
-                                                .unwrap_or_else(|| "Lume".to_string()),
-                                        )
-                                        .show()
-                                    {
-                                        println!("Error: {}", e);
-                                    }
-                                }
-                                Kind::Repost => {
-                                    if let Err(e) = handle
-                                        .notification()
-                                        .builder()
-                                        .body("Reposted your note.")
-                                        .title(
-                                            author
-                                                .display_name
-                                                .unwrap_or_else(|| "Lume".to_string()),
-                                        )
-                                        .show()
-                                    {
-                                        println!("Error: {}", e);
-                                    }
-                                }
-                                Kind::ZapReceipt => {
-                                    if let Err(e) = handle
-                                        .notification()
-                                        .builder()
-                                        .body("Zapped you.")
-                                        .title(
-                                            author
-                                                .display_name
-                                                .unwrap_or_else(|| "Lume".to_string()),
-                                        )
-                                        .show()
-                                    {
-                                        println!("Error: {}", e);
-                                    }
-                                }
-                                _ => {}
-                            }
-                        } else if subscription_id == local_id {
-                            let raw = event.as_json();
-                            let parsed = if event.kind == Kind::TextNote {
-                                Some(parse_event(&event.content).await)
-                            } else {
-                                None
-                            };
-
-                            handle
-                                .emit("local_event", RichEvent { raw, parsed })
-                                .unwrap();
-                        }
-                    } else {
-                        println!("new message: {}", message.as_json())
-                    }
-                }
-                Ok(false)
-            })
-            .await
     });
 
     Ok(public_key)

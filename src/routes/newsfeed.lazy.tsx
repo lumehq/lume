@@ -181,7 +181,13 @@ function Listerner() {
 				},
 			);
 
+			// Invalidate the cache
+			await queryClient.invalidateQueries({ queryKey: [label, account] });
+
+			// Reset temporary array
 			setEvents([]);
+
+			return;
 		});
 	};
 
@@ -190,11 +196,7 @@ function Listerner() {
 			"local_event",
 			(data) => {
 				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-				const exist = events.findIndex((ev) => ev.id === event.id);
-
-				if (exist === -1) {
-					setEvents((prev) => [event, ...prev]);
-				}
+				setEvents((prev) => [event, ...prev]);
 			},
 		);
 

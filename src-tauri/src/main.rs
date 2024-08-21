@@ -6,6 +6,7 @@
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
 use commands::{account::*, event::*, metadata::*, relay::*, window::*};
+use common::parse_event;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -16,8 +17,9 @@ use std::{
     str::FromStr,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Manager};
+use tauri::{path::BaseDirectory, Emitter, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
+use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, Builder};
 use tokio::sync::Mutex;
 
@@ -64,6 +66,8 @@ impl Default for Settings {
 pub const FETCH_LIMIT: usize = 20;
 pub const NEWSFEED_NEG_LIMIT: usize = 256;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
+pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
+pub const LOCAL_SUB_ID: &str = "lume_local";
 
 fn main() {
     let builder = Builder::<tauri::Wry>::new()
@@ -81,9 +85,9 @@ fn main() {
             delete_account,
             login,
             get_profile,
+            set_profile,
             get_contact_list,
             set_contact_list,
-            create_profile,
             is_contact_list_empty,
             check_contact,
             toggle_contact,
@@ -103,7 +107,7 @@ fn main() {
             get_event,
             get_event_from,
             get_replies,
-            listen_event_reply,
+            subscribe_thread,
             get_events_by,
             get_local_events,
             get_group_events,
@@ -114,7 +118,6 @@ fn main() {
             repost,
             event_to_bech32,
             user_to_bech32,
-            unlisten,
             create_column,
             close_column,
             reposition_column,
@@ -142,10 +145,8 @@ fn main() {
         .setup(move |app| {
             builder.mount_events(app);
 
-            #[cfg(target_os = "macos")]
-            app.handle().plugin(tauri_nspanel::init()).unwrap();
-
             let handle = app.handle();
+            let handle_clone = handle.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             // Set custom decoration for Windows
@@ -170,21 +171,22 @@ fn main() {
                 }
             });
 
-            // Create data folder if not exist
-            let home_dir = app.path().home_dir().unwrap();
-            let _ = fs::create_dir_all(home_dir.join("Lume/"));
-
             let client = tauri::async_runtime::block_on(async move {
+                // Create data folder if not exist
+                let home_dir = handle.path().home_dir().expect("Home directory not found.");
+                let _ = fs::create_dir_all(home_dir.join("Lume/"));
+
                 // Setup database
                 let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db"))
                     .await
-                    .expect("Error.");
+                    .expect("Database error.");
 
                 // Config
                 let opts = Options::new()
+                    .max_avg_latency(Duration::from_millis(500))
                     .automatic_authentication(true)
                     .connection_timeout(Some(Duration::from_secs(5)))
-                    .timeout(Duration::from_secs(30));
+                    .timeout(Duration::from_secs(20));
 
                 // Setup nostr client
                 let client = ClientBuilder::default()
@@ -205,10 +207,6 @@ fn main() {
                         if let Some((relay, option)) = line.split_once(',') {
                             match RelayMetadata::from_str(option) {
                                 Ok(meta) => {
-                                    println!(
-                                        "connecting to bootstrap relay...: {} - {}",
-                                        relay, meta
-                                    );
                                     let opts = if meta == RelayMetadata::Read {
                                         RelayOptions::new().read(true).write(false)
                                     } else {
@@ -217,7 +215,6 @@ fn main() {
                                     let _ = client.add_relay_with_opts(relay, opts).await;
                                 }
                                 Err(_) => {
-                                    println!("connecting to bootstrap relay...: {}", relay);
                                     let _ = client.add_relay(relay).await;
                                 }
                             }
@@ -236,6 +233,66 @@ fn main() {
                 client,
                 contact_list: Mutex::new(vec![]),
                 settings: Mutex::new(Settings::default()),
+            });
+
+            tauri::async_runtime::spawn(async move {
+                let state = handle_clone.state::<Nostr>();
+                let client = &state.client;
+
+                let local_id = SubscriptionId::new(LOCAL_SUB_ID);
+                let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
+
+                let allow_notification = match handle_clone.notification().request_permission() {
+                    Ok(_) => {
+                        if let Ok(perm) = handle_clone.notification().permission_state() {
+                            PermissionState::Granted == perm
+                        } else {
+                            false
+                        }
+                    }
+                    Err(_) => false,
+                };
+
+                client
+                    .handle_notifications(|notification| async {
+                        if let RelayPoolNotification::Message { message, .. } = notification {
+                            if let RelayMessage::Event {
+                                subscription_id,
+                                event,
+                            } = message
+                            {
+                                // Handle event from notification subscription
+                                if subscription_id == notification_id {
+                                    // Send native notification
+                                    if allow_notification {
+                                        let author = client
+                                            .metadata(event.pubkey)
+                                            .await
+                                            .unwrap_or_else(|_| Metadata::new());
+
+                                        send_notification(event, author, &handle_clone);
+                                    }
+                                }
+                                // Handle event from local subscription
+                                else if subscription_id == local_id {
+                                    let raw = event.as_json();
+                                    let parsed = if event.kind == Kind::TextNote {
+                                        Some(parse_event(&event.content).await)
+                                    } else {
+                                        None
+                                    };
+
+                                    handle_clone
+                                        .emit("local_event", RichEvent { raw, parsed })
+                                        .unwrap();
+                                }
+                            } else {
+                                println!("new message: {}", message.as_json())
+                            }
+                        }
+                        Ok(false)
+                    })
+                    .await
             });
 
             Ok(())
@@ -269,4 +326,43 @@ fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
 #[cfg(not(debug_assertions))]
 fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
     tauri_plugin_prevent_default::Builder::new().build()
+}
+
+fn send_notification(event: Box<Event>, author: Metadata, handle: &tauri::AppHandle) {
+    match event.kind() {
+        Kind::TextNote => {
+            if let Err(e) = handle
+                .notification()
+                .builder()
+                .body("Mentioned you in a thread.")
+                .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                .show()
+            {
+                println!("Error: {}", e);
+            }
+        }
+        Kind::Repost => {
+            if let Err(e) = handle
+                .notification()
+                .builder()
+                .body("Reposted your note.")
+                .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                .show()
+            {
+                println!("Error: {}", e);
+            }
+        }
+        Kind::ZapReceipt => {
+            if let Err(e) = handle
+                .notification()
+                .builder()
+                .body("Zapped you.")
+                .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                .show()
+            {
+                println!("Error: {}", e);
+            }
+        }
+        _ => {}
+    }
 }

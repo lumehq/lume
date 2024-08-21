@@ -1,9 +1,23 @@
 use keyring::Entry;
 use nostr_sdk::prelude::*;
+use serde::{Deserialize, Serialize};
+use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 use crate::{Nostr, Settings};
+
+#[derive(Clone, Serialize, Deserialize, Type)]
+pub struct Profile {
+    name: String,
+    display_name: String,
+    about: Option<String>,
+    picture: String,
+    banner: Option<String>,
+    nip05: Option<String>,
+    lud16: Option<String>,
+    website: Option<String>,
+}
 
 #[tauri::command]
 #[specta::specta]
@@ -86,41 +100,34 @@ pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn create_profile(
-    name: &str,
-    display_name: &str,
-    about: &str,
-    picture: &str,
-    banner: &str,
-    nip05: &str,
-    lud16: &str,
-    website: &str,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
+pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let mut metadata = Metadata::new()
-        .name(name)
-        .display_name(display_name)
-        .about(about)
-        .nip05(nip05)
-        .lud16(lud16);
+        .name(profile.name)
+        .display_name(profile.display_name)
+        .about(profile.about.unwrap_or_default())
+        .nip05(profile.nip05.unwrap_or_default())
+        .lud16(profile.lud16.unwrap_or_default());
 
-    if let Ok(url) = Url::parse(picture) {
+    if let Ok(url) = Url::parse(&profile.picture) {
         metadata = metadata.picture(url)
     }
 
-    if let Ok(url) = Url::parse(banner) {
-        metadata = metadata.banner(url)
+    if let Some(b) = profile.banner {
+        if let Ok(url) = Url::parse(&b) {
+            metadata = metadata.banner(url)
+        }
     }
 
-    if let Ok(url) = Url::parse(website) {
-        metadata = metadata.website(url)
+    if let Some(w) = profile.website {
+        if let Ok(url) = Url::parse(&w) {
+            metadata = metadata.website(url)
+        }
     }
 
-    if let Ok(event_id) = client.set_metadata(&metadata).await {
-        Ok(event_id.to_string())
-    } else {
-        Err("Create profile failed".into())
+    match client.set_metadata(&metadata).await {
+        Ok(id) => Ok(id.to_string()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -140,22 +147,22 @@ pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool,
             Some(_) => Ok(true),
             None => Ok(false),
         },
-        Err(err) => Err(err.to_string()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn toggle_contact(
-    hex: &str,
-    alias: Option<&str>,
+    hex: String,
+    alias: Option<String>,
     state: State<'_, Nostr>,
 ) -> Result<String, String> {
     let client = &state.client;
 
     match client.get_contact_list(None).await {
         Ok(mut contact_list) => {
-            let public_key = PublicKey::from_str(hex).unwrap();
+            let public_key = PublicKey::from_str(&hex).unwrap();
 
             match contact_list.iter().position(|x| x.public_key == public_key) {
                 Some(index) => {

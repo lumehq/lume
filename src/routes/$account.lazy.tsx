@@ -2,7 +2,11 @@ import { cn } from "@/commons";
 import { User } from "@/components/user";
 import { LumeWindow, NostrAccount } from "@/system";
 import { CaretDown, Feather, MagnifyingGlass } from "@phosphor-icons/react";
-import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
+import {
+	Outlet,
+	createLazyFileRoute,
+	useNavigate,
+} from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -28,7 +32,7 @@ function Screen() {
 					data-tauri-drag-region
 					className="relative z-[200] flex-1 flex items-center gap-4"
 				>
-					<Accounts />
+					<Account />
 					<div className="flex items-center gap-2">
 						<button
 							type="button"
@@ -66,11 +70,9 @@ function Screen() {
 	);
 }
 
-const Accounts = memo(function Accounts() {
-	const { otherAccounts } = Route.useRouteContext();
-	const { account } = Route.useParams();
-
+const Account = memo(function Account() {
 	const navigate = Route.useNavigate();
+	const { account } = Route.useParams();
 
 	const showContextMenu = useCallback(
 		async (e: React.MouseEvent) => {
@@ -81,7 +83,6 @@ const Accounts = memo(function Accounts() {
 					text: "New Post",
 					action: () => LumeWindow.openEditor(),
 				}),
-				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
 					text: "View Profile",
 					action: () => LumeWindow.openProfile(account),
@@ -89,6 +90,11 @@ const Accounts = memo(function Accounts() {
 				MenuItem.new({
 					text: "Open Settings",
 					action: () => LumeWindow.openSettings(),
+				}),
+				PredefinedMenuItem.new({ item: "Separator" }),
+				MenuItem.new({
+					text: "Logout",
+					action: () => navigate({ to: "/" }),
 				}),
 			]);
 
@@ -101,52 +107,18 @@ const Accounts = memo(function Accounts() {
 		[account],
 	);
 
-	const changeAccount = useCallback(
-		async (npub: string) => {
-			// Change current account and update signer
-			const select = await NostrAccount.loadAccount(npub);
-
-			if (select) {
-				// Reset current columns
-				await getCurrentWindow().emit("columns", { type: "reset" });
-
-				// Redirect to new account
-				return navigate({
-					to: "/$account/home",
-					params: { account: npub },
-					resetScroll: true,
-					replace: true,
-				});
-			} else {
-				await message("Something wrong.", { title: "Accounts", kind: "error" });
-			}
-		},
-		[otherAccounts],
-	);
-
 	return (
-		<div data-tauri-drag-region className="hidden md:flex items-center gap-3">
-			<button
-				type="button"
-				onClick={(e) => showContextMenu(e)}
-				className="inline-flex items-center gap-1.5"
-			>
-				<User.Provider pubkey={account}>
-					<User.Root className="shrink-0 rounded-full">
-						<User.Avatar className="rounded-full size-7" />
-					</User.Root>
-				</User.Provider>
-				<CaretDown className="size-3" />
-			</button>
-			{otherAccounts.map((npub) => (
-				<button key={npub} type="button" onClick={(e) => changeAccount(npub)}>
-					<User.Provider pubkey={npub}>
-						<User.Root className="shrink-0 rounded-full transition-all ease-in-out duration-150 will-change-auto hover:ring-1 hover:ring-blue-500">
-							<User.Avatar className="rounded-full size-7" />
-						</User.Root>
-					</User.Provider>
-				</button>
-			))}
-		</div>
+		<button
+			type="button"
+			onClick={(e) => showContextMenu(e)}
+			className="inline-flex items-center gap-1.5"
+		>
+			<User.Provider pubkey={account}>
+				<User.Root className="shrink-0 rounded-full">
+					<User.Avatar className="rounded-full size-7" />
+				</User.Root>
+			</User.Provider>
+			<CaretDown className="size-3" />
+		</button>
 	);
 });
