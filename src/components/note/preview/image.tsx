@@ -6,7 +6,7 @@ export function ImagePreview({ url }: { url: string }) {
 	const { settings } = useRouteContext({ strict: false });
 
 	const imageUrl = useMemo(() => {
-		if (settings.image_resize_service.length) {
+		if (settings.image_resize_service?.length) {
 			const newUrl = `${settings.image_resize_service}?url=${url}&ll&af&default=1&n=-1`;
 			return newUrl;
 		} else {

@@ -58,7 +58,7 @@ export const Column = memo(function Column({
 		if (!container?.current) return;
 
 		const rect = container.current.getBoundingClientRect();
-		const url = `${column.content}?account=${account}&label=${column.label}&name=${column.name}`;
+		const url = `${column.url}?account=${account}&label=${column.label}&name=${column.name}`;
 
 		const prop = {
 			label: webviewLabel,

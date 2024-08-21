@@ -7,7 +7,7 @@ import { Await, defer } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { Suspense, useState } from "react";
 
-export const Route = createFileRoute("/create-newsfeed/users")({
+export const Route = createFileRoute("/columns/_layout/create-newsfeed/users")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,

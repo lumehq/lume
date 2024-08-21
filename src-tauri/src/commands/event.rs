@@ -5,7 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::common::{create_event_tags, dedup_event, parse_event, Meta};
+use crate::common::{create_event_tags, filter_converstation, parse_event, Meta};
 use crate::{Nostr, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
@@ -122,9 +122,9 @@ pub async fn get_event_from(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
+pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let event_id = EventId::from_str(id).map_err(|err| err.to_string())?;
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
     let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
     match client
@@ -155,10 +155,10 @@ pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEv
 
 #[tauri::command]
 #[specta::specta]
-pub async fn subscribe_thread(id: String, state: State<'_, Nostr>) -> Result<(), String> {
+pub async fn subscribe_to(id: String, state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
 
-    let sub_id = SubscriptionId::new(&id);
+    let subscription_id = SubscriptionId::new(&id);
     let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
 
     let filter = Filter::new()
@@ -166,11 +166,13 @@ pub async fn subscribe_thread(id: String, state: State<'_, Nostr>) -> Result<(),
         .event(event_id)
         .since(Timestamp::now());
 
-    let _ = client
-        .subscribe_with_id(sub_id.clone(), vec![filter], None)
-        .await;
-
-    Ok(())
+    match client
+        .subscribe_with_id(subscription_id, vec![filter], None)
+        .await
+    {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
 }
 
 #[tauri::command]
@@ -221,13 +223,17 @@ pub async fn get_events_by(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_local_events(
+pub async fn get_events_from_contacts(
     until: Option<&str>,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let contact_list = state.contact_list.lock().await;
     let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
+
+    if authors.is_empty() {
+        return Err("Contact List is empty.".into());
+    }
 
     let as_of = match until {
         Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
@@ -242,8 +248,8 @@ pub async fn get_local_events(
 
     match client.database().query(vec![filter], Order::Desc).await {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-            let futures = dedup.iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -300,9 +306,8 @@ pub async fn get_group_events(
         .await
     {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-
-            let futures = dedup.iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -346,8 +351,8 @@ pub async fn get_global_events(
         .await
     {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-            let futures = dedup.iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -391,8 +396,8 @@ pub async fn get_hashtag_events(
         .await
     {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-            let futures = dedup.iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)

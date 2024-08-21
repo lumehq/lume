@@ -11,7 +11,7 @@ import { defer } from "@tanstack/react-router";
 import { Suspense, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createFileRoute("/trending/notes")({
+export const Route = createFileRoute("/columns/_layout/trending/notes")({
 	loader: async ({ abortController }) => {
 		try {
 			return {

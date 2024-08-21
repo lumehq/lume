@@ -3,7 +3,7 @@ import { cn } from "@/commons";
 import { Link, Outlet } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/create-newsfeed")({
+export const Route = createFileRoute("/columns/_layout/create-newsfeed")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,

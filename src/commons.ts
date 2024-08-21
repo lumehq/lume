@@ -1,3 +1,7 @@
+import type {
+	AsyncStorage,
+	PersistedQuery,
+} from "@tanstack/query-persist-client-core";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check } from "@tauri-apps/plugin-updater";
@@ -6,9 +10,8 @@ import { type ClassValue, clsx } from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { type UseStore, del, get, set } from "idb-keyval";
 import { decode } from "light-bolt11-decoder";
-import type { ReactNode } from "react";
-import ReactDOM from "react-dom";
 import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
@@ -36,12 +39,6 @@ dayjs.updateLocale("en", {
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
-
-export const Portal = ({ children }: { children?: ReactNode }) => {
-	return typeof document === "object"
-		? ReactDOM.createPortal(children, document.body)
-		: null;
-};
 
 export const isImagePath = (path: string) => {
 	for (const suffix of ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"]) {
@@ -292,4 +289,14 @@ export function toLumeEvents(richEvents: RichEvent[]) {
 	});
 
 	return events;
+}
+
+export function newIdbStorage(
+	idbStore: UseStore,
+): AsyncStorage<PersistedQuery> {
+	return {
+		getItem: async (key) => await get(key, idbStore),
+		setItem: async (key, value) => await set(key, value, idbStore),
+		removeItem: async (key) => await del(key, idbStore),
+	};
 }

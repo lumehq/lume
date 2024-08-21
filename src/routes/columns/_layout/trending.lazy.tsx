@@ -1,22 +1,9 @@
 import { cn } from "@/commons";
-import { NostrQuery } from "@/system";
-import type { ColumnRouteSearch } from "@/types";
 import { Note, UsersThree } from "@phosphor-icons/react";
 import { Link, Outlet } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/trending")({
-	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
-		return {
-			account: search.account,
-			label: search.label,
-			name: search.name,
-		};
-	},
-	beforeLoad: async () => {
-		const settings = await NostrQuery.getUserSettings();
-		return { settings };
-	},
+export const Route = createLazyFileRoute("/columns/_layout/trending")({
 	component: Screen,
 });
 

@@ -17,7 +17,7 @@ use std::{
     str::FromStr,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Emitter, Manager};
+use tauri::{path::BaseDirectory, Emitter, EventTarget, Listener, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, Builder};
@@ -51,7 +51,7 @@ impl Default for Settings {
     fn default() -> Self {
         Self {
             proxy: None,
-            image_resize_service: Some("https://wsrv.nl/".into()),
+            image_resize_service: None,
             use_relay_hint: true,
             content_warning: true,
             display_avatar: true,
@@ -63,7 +63,7 @@ impl Default for Settings {
     }
 }
 
-pub const FETCH_LIMIT: usize = 20;
+pub const FETCH_LIMIT: usize = 44;
 pub const NEWSFEED_NEG_LIMIT: usize = 256;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
@@ -107,9 +107,9 @@ fn main() {
             get_event,
             get_event_from,
             get_replies,
-            subscribe_thread,
+            subscribe_to,
             get_events_by,
-            get_local_events,
+            get_events_from_contacts,
             get_group_events,
             get_global_events,
             get_hashtag_events,
@@ -147,6 +147,7 @@ fn main() {
 
             let handle = app.handle();
             let handle_clone = handle.clone();
+            let handle_clone_child = handle_clone.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             // Set custom decoration for Windows
@@ -235,12 +236,22 @@ fn main() {
                 settings: Mutex::new(Settings::default()),
             });
 
+            app.listen_any("unsubscribe", move |event| {
+                let handle = handle_clone_child.to_owned();
+                let payload = event.payload().to_string();
+
+                tauri::async_runtime::spawn(async move {
+                    let subscription_id = SubscriptionId::new(payload);
+                    let state = handle.state::<Nostr>();
+                    let client = &state.client;
+
+                    client.unsubscribe(subscription_id).await
+                });
+            });
+
             tauri::async_runtime::spawn(async move {
                 let state = handle_clone.state::<Nostr>();
                 let client = &state.client;
-
-                let local_id = SubscriptionId::new(LOCAL_SUB_ID);
-                let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
 
                 let allow_notification = match handle_clone.notification().request_permission() {
                     Ok(_) => {
@@ -253,6 +264,8 @@ fn main() {
                     Err(_) => false,
                 };
 
+                let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
+
                 client
                     .handle_notifications(|notification| async {
                         if let RelayPoolNotification::Message { message, .. } = notification {
@@ -261,7 +274,7 @@ fn main() {
                                 event,
                             } = message
                             {
-                                // Handle event from notification subscription
+                                // Handle events from notification subscription
                                 if subscription_id == notification_id {
                                     // Send native notification
                                     if allow_notification {
@@ -273,8 +286,9 @@ fn main() {
                                         send_notification(event, author, &handle_clone);
                                     }
                                 }
-                                // Handle event from local subscription
-                                else if subscription_id == local_id {
+                                // Handle other events
+                                else {
+                                    let label = subscription_id.to_string();
                                     let raw = event.as_json();
                                     let parsed = if event.kind == Kind::TextNote {
                                         Some(parse_event(&event.content).await)
@@ -283,7 +297,11 @@ fn main() {
                                     };
 
                                     handle_clone
-                                        .emit("local_event", RichEvent { raw, parsed })
+                                        .emit_to(
+                                            EventTarget::labeled(label),
+                                            "event",
+                                            RichEvent { raw, parsed },
+                                        )
                                         .unwrap();
                                 }
                             } else {

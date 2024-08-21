@@ -1,11 +1,14 @@
 import { commands } from "@/commands.gen";
-import type { NostrEvent } from "@/types";
+import type { LumeColumn, NostrEvent } from "@/types";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { LumeEvent } from "./event";
 
 export const LumeWindow = {
-	openMainWindow: async () => {
-		const query = await commands.openMainWindow();
-		return query;
+	openColumn: async (column: LumeColumn) => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column,
+		});
 	},
 	openEvent: async (event: NostrEvent | LumeEvent) => {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
@@ -17,22 +20,7 @@ export const LumeWindow = {
 		const url = `/events/${root ?? reply ?? event.id}`;
 		const label = `event-${root ?? reply ?? event.id}`;
 
-		const query = await commands.openWindow({
-			label,
-			url,
-			title: "Thread",
-			width: 500,
-			height: 800,
-			maximizable: true,
-			minimizable: true,
-			hidden_title: false,
-		});
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
+		LumeWindow.openColumn({ label, content: url, name: "Thread" });
 	},
 	openProfile: async (pubkey: string) => {
 		const label = `user-${pubkey}`;
@@ -147,5 +135,9 @@ export const LumeWindow = {
 		} else {
 			throw new Error(query.error);
 		}
+	},
+	openMainWindow: async () => {
+		const query = await commands.reopenLume();
+		return query;
 	},
 };

@@ -1,7 +1,6 @@
 export * from "./frame";
 export * from "./back";
 export * from "./spinner";
-export * from "./toolbar";
 export * from "./column";
 export * from "./avatarUploader";
 

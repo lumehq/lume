@@ -1,5 +1,0 @@
-[
-	{ "label": "onboarding", "name": "Onboarding", "content": "/onboarding" },
-	{ "label": "lume_newsfeed", "name": "Newsfeed", "content": "/newsfeed" },
-	{ "label": "lume_topic", "name": "Topic", "content": "/topic" }
-]

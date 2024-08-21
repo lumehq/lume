@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 
-export const Route = createFileRoute("/create-group")({
+export const Route = createFileRoute("/columns/_layout/create-group")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,

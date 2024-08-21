@@ -12,7 +12,7 @@ type Topic = {
 	content: string[];
 };
 
-export const Route = createFileRoute("/create-topic")({
+export const Route = createFileRoute("/columns/_layout/create-topic")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,

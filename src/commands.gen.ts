@@ -272,9 +272,9 @@ async getReplies(id: string) : Promise<Result<RichEvent[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async subscribeThread(id: string) : Promise<Result<null, string>> {
+async subscribeTo(id: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("subscribe_thread", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("subscribe_to", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -288,9 +288,9 @@ async getEventsBy(publicKey: string, asOf: string | null) : Promise<Result<RichE
     else return { status: "error", error: e  as any };
 }
 },
-async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
+async getEventsFromContacts(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_events_from_contacts", { until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

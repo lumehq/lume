@@ -8,11 +8,11 @@ import { type ColumnRouteSearch, Kind } from "@/types";
 import { ArrowCircleRight } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createFileRoute("/global")({
+export const Route = createFileRoute("/columns/_layout/group")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,
@@ -20,15 +20,29 @@ export const Route = createFileRoute("/global")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async () => {
+	beforeLoad: async ({ search }) => {
+		const key = `lume:group:${search.label}`;
+		const groups: string[] = await NostrQuery.getNstore(key);
 		const settings = await NostrQuery.getUserSettings();
-		return { settings };
+
+		if (!groups?.length) {
+			throw redirect({
+				to: "/create-group",
+				search: {
+					...search,
+					redirect: "/group",
+				},
+			});
+		}
+
+		return { groups, settings };
 	},
 	component: Screen,
 });
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
+	const { groups } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -40,7 +54,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await NostrQuery.getGlobalEvents(pageParam);
+			const events = await NostrQuery.getGroupEvents(groups, pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,

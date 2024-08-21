@@ -17,7 +17,7 @@ export function Images({ urls }: { urls: string[] }) {
 	});
 
 	const imageUrls = useMemo(() => {
-		if (settings.image_resize_service.length) {
+		if (settings.image_resize_service?.length) {
 			let newUrls: string[];
 
 			if (urls.length === 1) {

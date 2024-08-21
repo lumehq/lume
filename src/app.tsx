@@ -5,9 +5,27 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { routeTree } from "./routes.gen"; // auto generated file
 import "./app.css";
+import {
+	type PersistedQuery,
+	experimental_createPersister,
+} from "@tanstack/query-persist-client-core";
+import { createStore } from "idb-keyval";
+import { newIdbStorage } from "./commons";
 
-const queryClient = new QueryClient();
 const platform = type();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			gcTime: 1000 * 30,
+			persister: experimental_createPersister<PersistedQuery>({
+				storage: newIdbStorage(createStore("nostr", "storage")),
+				maxAge: 1000 * 60 * 60 * 24, // 24 hours,
+				serialize: (persistedQuery) => persistedQuery,
+				deserialize: (cached) => cached,
+			}),
+		},
+	},
+});
 
 const router = createRouter({
 	routeTree,

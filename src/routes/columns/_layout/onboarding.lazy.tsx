@@ -1,14 +1,6 @@
-import type { ColumnRouteSearch } from "@/types";
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/onboarding")({
-	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
-		return {
-			account: search.account,
-			label: search.label,
-			name: search.name,
-		};
-	},
+export const Route = createLazyFileRoute("/columns/_layout/onboarding")({
 	component: Screen,
 });
 

@@ -92,6 +92,9 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
+      idb-keyval:
+        specifier: ^6.2.1
+        version: 6.2.1
       light-bolt11-decoder:
         specifier: ^3.1.1
         version: 3.1.1
@@ -1557,6 +1560,9 @@ packages:
 
   i18next@23.13.0:
     resolution: {integrity: sha512-B+g0/KTKmN3+NeMKPljQxdrih6Q6lyDF5O2e/Ofd0JQsTLojJD/BSTTN04iw6OVc0yBiHeypu5hoBNV6ag44Zw==}
+
+  idb-keyval@6.2.1:
+    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
 
   immer@10.1.1:
     resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
@@ -3520,6 +3526,8 @@ snapshots:
   i18next@23.13.0:
     dependencies:
       '@babel/runtime': 7.25.0
+
+  idb-keyval@6.2.1: {}
 
   immer@10.1.1: {}
 

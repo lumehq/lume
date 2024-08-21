@@ -12,7 +12,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createFileRoute("/group")({
+type Topic = {
+	content: string[];
+};
+
+export const Route = createFileRoute("/columns/_layout/topic")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,
@@ -21,28 +25,34 @@ export const Route = createFileRoute("/group")({
 		};
 	},
 	beforeLoad: async ({ search }) => {
-		const key = `lume:group:${search.label}`;
-		const groups: string[] = await NostrQuery.getNstore(key);
+		const key = `lume:topic:${search.label}`;
+		const topics: Topic[] = await NostrQuery.getNstore(key);
 		const settings = await NostrQuery.getUserSettings();
 
-		if (!groups?.length) {
+		if (!topics?.length) {
 			throw redirect({
-				to: "/create-group",
+				to: "/create-topic",
 				search: {
 					...search,
-					redirect: "/group",
+					redirect: "/topic",
 				},
 			});
 		}
 
-		return { groups, settings };
+		const hashtags: string[] = [];
+
+		for (const topic of topics) {
+			hashtags.push(...topic.content);
+		}
+
+		return { settings, hashtags };
 	},
 	component: Screen,
 });
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { groups } = Route.useRouteContext();
+	const { hashtags } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -54,7 +64,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await NostrQuery.getGroupEvents(groups, pageParam);
+			const events = NostrQuery.getHashtagEvents(hashtags, pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,

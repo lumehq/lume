@@ -8,15 +8,11 @@ import { type ColumnRouteSearch, Kind } from "@/types";
 import { ArrowCircleRight } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-type Topic = {
-	content: string[];
-};
-
-export const Route = createFileRoute("/topic")({
+export const Route = createFileRoute("/columns/_layout/global")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,
@@ -24,35 +20,15 @@ export const Route = createFileRoute("/topic")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async ({ search }) => {
-		const key = `lume:topic:${search.label}`;
-		const topics: Topic[] = await NostrQuery.getNstore(key);
+	beforeLoad: async () => {
 		const settings = await NostrQuery.getUserSettings();
-
-		if (!topics?.length) {
-			throw redirect({
-				to: "/create-topic",
-				search: {
-					...search,
-					redirect: "/topic",
-				},
-			});
-		}
-
-		const hashtags: string[] = [];
-
-		for (const topic of topics) {
-			hashtags.push(...topic.content);
-		}
-
-		return { settings, hashtags };
+		return { settings };
 	},
 	component: Screen,
 });
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { hashtags } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -64,7 +40,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = NostrQuery.getHashtagEvents(hashtags, pageParam);
+			const events = await NostrQuery.getGlobalEvents(pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,

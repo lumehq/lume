@@ -5,7 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 
-export const Route = createFileRoute("/create-newsfeed/f2f")({
+export const Route = createFileRoute("/columns/_layout/create-newsfeed/f2f")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,

@@ -66,13 +66,10 @@ export interface ColumnRouteSearch {
 export interface LumeColumn {
 	label: string;
 	name: string;
-	content: URL | string;
-	description?: string;
-	author?: string;
-	logo?: string;
-	cover?: string;
-	coverRetina?: string;
-	featured?: boolean;
+	url: string;
+	picture?: string;
+	default?: boolean;
+	official?: boolean;
 }
 
 export interface ColumnEvent {

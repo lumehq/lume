@@ -1,6 +1,4 @@
 import { Column } from "@/components/column";
-import { Toolbar } from "@/components/toolbar";
-import { NostrQuery } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
 import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -8,7 +6,14 @@ import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
-import { useCallback, useEffect, useState } from "react";
+import {
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useState,
+} from "react";
+import { createPortal } from "react-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 export const Route = createLazyFileRoute("/$account/home")({
@@ -124,8 +129,10 @@ function Screen() {
 	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
 
 	useEffect(() => {
-		if (columns?.length) {
-			NostrQuery.setColumns(columns).then(() => console.log("saved"));
+		if (columns) {
+			getCurrentWindow().emit("save_column", {
+				columns: JSON.stringify(columns),
+			});
 		}
 	}, [columns]);
 
@@ -201,5 +208,20 @@ function Screen() {
 				</button>
 			</Toolbar>
 		</div>
+	);
+}
+
+function Toolbar({ children }: { children: ReactNode[] }) {
+	const [domReady, setDomReady] = useState(false);
+
+	useLayoutEffect(() => {
+		setDomReady(true);
+	}, []);
+
+	return domReady ? (
+		// @ts-ignore, react bug ???
+		createPortal(children, document.getElementById("toolbar"))
+	) : (
+		<></>
 	);
 }

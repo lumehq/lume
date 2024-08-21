@@ -4,7 +4,7 @@ import { Await, defer } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 
-export const Route = createFileRoute("/trending/users")({
+export const Route = createFileRoute("/columns/_layout/trending/users")({
 	loader: async ({ abortController }) => {
 		try {
 			return {

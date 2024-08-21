@@ -1,6 +1,5 @@
 import { commands } from "@/commands.gen";
 import type { Metadata } from "@/types";
-import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 import { useQuery } from "@tanstack/react-query";
 
 export function useProfile(pubkey: string, embed?: string) {
@@ -30,10 +29,6 @@ export function useProfile(pubkey: string, embed?: string) {
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
 		retry: 1,
-		persister: experimental_createPersister({
-			storage: localStorage,
-			maxAge: 1000 * 60 * 60 * 24, // 24 hours
-		}),
 	});
 
 	return { isLoading, isError, profile };

@@ -15,7 +15,14 @@ import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import {
+	memo,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
 import { Virtualizer } from "virtua";
 
 type Payload = {
@@ -23,7 +30,7 @@ type Payload = {
 	parsed: Meta;
 };
 
-export const Route = createLazyFileRoute("/newsfeed")({
+export const Route = createLazyFileRoute("/columns/_layout/newsfeed")({
 	component: Screen,
 });
 
@@ -43,7 +50,7 @@ export function Screen() {
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until: string =
 				pageParam && pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getLocalEvents(until);
+			const res = await commands.getEventsFromContacts(until);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);
@@ -67,13 +74,13 @@ export function Screen() {
 				default: {
 					if (event.isConversation) {
 						return (
-							<Conversation key={event.id} className="mb-3" event={event} />
+							<Conversation key={event.id} event={event} className="mb-3" />
 						);
-					}
-					if (event.isQuote) {
+					} else if (event.isQuote) {
 						return <Quote key={event.id} event={event} className="mb-3" />;
+					} else {
+						return <TextNote key={event.id} event={event} className="mb-3" />;
 					}
-					return <TextNote key={event.id} event={event} className="mb-3" />;
 				}
 			}
 		},
@@ -153,38 +160,33 @@ export function Screen() {
 	);
 }
 
-function Listerner() {
+const Listerner = memo(function Listerner() {
 	const { queryClient } = Route.useRouteContext();
 	const { label, account } = Route.useSearch();
 
 	const [events, setEvents] = useState<LumeEvent[]>([]);
 	const [isPending, startTransition] = useTransition();
 
+	const queryStatus = queryClient.getQueryState([label, account]);
+
 	const pushNewEvents = () => {
-		startTransition(async () => {
+		startTransition(() => {
 			queryClient.setQueryData(
 				[label, account],
 				(oldData: InfiniteData<LumeEvent[], number> | undefined) => {
-					if (!oldData) return oldData;
+					if (oldData) {
+						const firstPage = oldData.pages[0];
+						const newPage = [...events, ...firstPage];
 
-					const [firstPage, ...rest] = oldData.pages;
-					const newFirstPage = firstPage
-						? [...events, ...firstPage]
-						: [...events];
-
-					const newData = {
-						...oldData,
-						pages: [...newFirstPage, ...rest],
-					};
-
-					return newData;
+						return {
+							...oldData,
+							pages: [newPage, ...oldData.pages.slice(1)],
+						};
+					}
 				},
 			);
 
-			// Invalidate the cache
-			await queryClient.invalidateQueries({ queryKey: [label, account] });
-
-			// Reset temporary array
+			// Reset array
 			setEvents([]);
 
 			return;
@@ -205,7 +207,7 @@ function Listerner() {
 		};
 	}, []);
 
-	if (events.length) {
+	if (events.length && queryStatus.fetchStatus !== "fetching") {
 		return (
 			<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
 				<button
@@ -225,4 +227,4 @@ function Listerner() {
 	}
 
 	return null;
-}
+});
