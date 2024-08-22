@@ -16,7 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SettingsImport } from './routes/settings'
 import { Route as SearchImport } from './routes/search'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
-import { Route as AccountImport } from './routes/$account'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
@@ -29,8 +28,7 @@ import { Route as SettingsBackupImport } from './routes/settings/backup'
 import { Route as SearchUsersImport } from './routes/search.users'
 import { Route as SearchNotesImport } from './routes/search.notes'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
-import { Route as AccountHomeImport } from './routes/$account/home'
-import { Route as AccountBackupImport } from './routes/$account/backup'
+import { Route as AccountLayoutImport } from './routes/$account/_layout'
 import { Route as ColumnsLayoutTopicImport } from './routes/columns/_layout/topic'
 import { Route as ColumnsLayoutGroupImport } from './routes/columns/_layout/group'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
@@ -38,6 +36,8 @@ import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/ga
 import { Route as ColumnsLayoutCreateTopicImport } from './routes/columns/_layout/create-topic'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
 import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
+import { Route as AccountLayoutHomeImport } from './routes/$account/_layout/home'
+import { Route as AccountLayoutBackupImport } from './routes/$account/_layout/backup'
 import { Route as ColumnsLayoutUsersIdImport } from './routes/columns/_layout/users.$id'
 import { Route as ColumnsLayoutTrendingUsersImport } from './routes/columns/_layout/trending.users'
 import { Route as ColumnsLayoutTrendingNotesImport } from './routes/columns/_layout/trending.notes'
@@ -47,16 +47,19 @@ import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/
 // Create Virtual Routes
 
 const ColumnsImport = createFileRoute('/columns')()
+const AccountImport = createFileRoute('/$account')()
 const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthConnectLazyImport = createFileRoute('/auth/connect')()
-const AccountPanelLazyImport = createFileRoute('/$account/panel')()
 const ColumnsLayoutTrendingLazyImport = createFileRoute(
   '/columns/_layout/trending',
 )()
 const ColumnsLayoutOnboardingLazyImport = createFileRoute(
   '/columns/_layout/onboarding',
+)()
+const ColumnsLayoutNotificationLazyImport = createFileRoute(
+  '/columns/_layout/notification',
 )()
 const ColumnsLayoutNewsfeedLazyImport = createFileRoute(
   '/columns/_layout/newsfeed',
@@ -72,6 +75,11 @@ const ColumnsLayoutEventsIdLazyImport = createFileRoute(
 
 const ColumnsRoute = ColumnsImport.update({
   path: '/columns',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountRoute = AccountImport.update({
+  path: '/$account',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -97,11 +105,6 @@ const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   import('./routes/bootstrap-relays.lazy').then((d) => d.Route),
 )
 
-const AccountRoute = AccountImport.update({
-  path: '/$account',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/$account.lazy').then((d) => d.Route))
-
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -126,13 +129,6 @@ const AuthConnectLazyRoute = AuthConnectLazyImport.update({
   path: '/auth/connect',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/auth/connect.lazy').then((d) => d.Route))
-
-const AccountPanelLazyRoute = AccountPanelLazyImport.update({
-  path: '/panel',
-  getParentRoute: () => AccountRoute,
-} as any).lazy(() =>
-  import('./routes/$account/panel.lazy').then((d) => d.Route),
-)
 
 const ZapIdRoute = ZapIdImport.update({
   path: '/zap/$id',
@@ -184,15 +180,12 @@ const ColumnsLayoutRoute = ColumnsLayoutImport.update({
   getParentRoute: () => ColumnsRoute,
 } as any)
 
-const AccountHomeRoute = AccountHomeImport.update({
-  path: '/home',
+const AccountLayoutRoute = AccountLayoutImport.update({
+  id: '/_layout',
   getParentRoute: () => AccountRoute,
-} as any).lazy(() => import('./routes/$account/home.lazy').then((d) => d.Route))
-
-const AccountBackupRoute = AccountBackupImport.update({
-  path: '/backup',
-  getParentRoute: () => AccountRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/$account/_layout.lazy').then((d) => d.Route),
+)
 
 const ColumnsLayoutTrendingLazyRoute = ColumnsLayoutTrendingLazyImport.update({
   path: '/trending',
@@ -207,6 +200,14 @@ const ColumnsLayoutOnboardingLazyRoute =
     getParentRoute: () => ColumnsLayoutRoute,
   } as any).lazy(() =>
     import('./routes/columns/_layout/onboarding.lazy').then((d) => d.Route),
+  )
+
+const ColumnsLayoutNotificationLazyRoute =
+  ColumnsLayoutNotificationLazyImport.update({
+    path: '/notification',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/notification.lazy').then((d) => d.Route),
   )
 
 const ColumnsLayoutNewsfeedLazyRoute = ColumnsLayoutNewsfeedLazyImport.update({
@@ -252,6 +253,18 @@ const ColumnsLayoutCreateNewsfeedRoute =
 const ColumnsLayoutCreateGroupRoute = ColumnsLayoutCreateGroupImport.update({
   path: '/create-group',
   getParentRoute: () => ColumnsLayoutRoute,
+} as any)
+
+const AccountLayoutHomeRoute = AccountLayoutHomeImport.update({
+  path: '/home',
+  getParentRoute: () => AccountLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_layout/home.lazy').then((d) => d.Route),
+)
+
+const AccountLayoutBackupRoute = AccountLayoutBackupImport.update({
+  path: '/backup',
+  getParentRoute: () => AccountLayoutRoute,
 } as any)
 
 const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
@@ -314,13 +327,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/$account': {
-      id: '/$account'
-      path: '/$account'
-      fullPath: '/$account'
-      preLoaderRoute: typeof AccountImport
-      parentRoute: typeof rootRoute
-    }
     '/bootstrap-relays': {
       id: '/bootstrap-relays'
       path: '/bootstrap-relays'
@@ -349,19 +355,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewLazyImport
       parentRoute: typeof rootRoute
     }
-    '/$account/backup': {
-      id: '/$account/backup'
-      path: '/backup'
-      fullPath: '/$account/backup'
-      preLoaderRoute: typeof AccountBackupImport
-      parentRoute: typeof AccountImport
+    '/$account': {
+      id: '/$account'
+      path: '/$account'
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountImport
+      parentRoute: typeof rootRoute
     }
-    '/$account/home': {
-      id: '/$account/home'
-      path: '/home'
-      fullPath: '/$account/home'
-      preLoaderRoute: typeof AccountHomeImport
-      parentRoute: typeof AccountImport
+    '/$account/_layout': {
+      id: '/$account/_layout'
+      path: '/$account'
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountLayoutImport
+      parentRoute: typeof AccountRoute
     }
     '/columns': {
       id: '/columns'
@@ -440,13 +446,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ZapIdImport
       parentRoute: typeof rootRoute
     }
-    '/$account/panel': {
-      id: '/$account/panel'
-      path: '/panel'
-      fullPath: '/$account/panel'
-      preLoaderRoute: typeof AccountPanelLazyImport
-      parentRoute: typeof AccountImport
-    }
     '/auth/connect': {
       id: '/auth/connect'
       path: '/auth/connect'
@@ -474,6 +473,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/editor'
       preLoaderRoute: typeof EditorIndexImport
       parentRoute: typeof rootRoute
+    }
+    '/$account/_layout/backup': {
+      id: '/$account/_layout/backup'
+      path: '/backup'
+      fullPath: '/$account/backup'
+      preLoaderRoute: typeof AccountLayoutBackupImport
+      parentRoute: typeof AccountLayoutImport
+    }
+    '/$account/_layout/home': {
+      id: '/$account/_layout/home'
+      path: '/home'
+      fullPath: '/$account/home'
+      preLoaderRoute: typeof AccountLayoutHomeImport
+      parentRoute: typeof AccountLayoutImport
     }
     '/columns/_layout/create-group': {
       id: '/columns/_layout/create-group'
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       path: '/newsfeed'
       fullPath: '/columns/newsfeed'
       preLoaderRoute: typeof ColumnsLayoutNewsfeedLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/notification': {
+      id: '/columns/_layout/notification'
+      path: '/notification'
+      fullPath: '/columns/notification'
+      preLoaderRoute: typeof ColumnsLayoutNotificationLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/onboarding': {
@@ -601,11 +621,6 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  AccountRoute: AccountRoute.addChildren({
-    AccountBackupRoute,
-    AccountHomeRoute,
-    AccountPanelLazyRoute,
-  }),
   BootstrapRelaysRoute,
   SearchRoute: SearchRoute.addChildren({ SearchNotesRoute, SearchUsersRoute }),
   SettingsRoute: SettingsRoute.addChildren({
@@ -617,6 +632,12 @@ export const routeTree = rootRoute.addChildren({
     SettingsWalletRoute,
   }),
   NewLazyRoute,
+  AccountRoute: AccountRoute.addChildren({
+    AccountLayoutRoute: AccountLayoutRoute.addChildren({
+      AccountLayoutBackupRoute,
+      AccountLayoutHomeRoute,
+    }),
+  }),
   ColumnsRoute: ColumnsRoute.addChildren({
     ColumnsLayoutRoute: ColumnsLayoutRoute.addChildren({
       ColumnsLayoutCreateGroupRoute,
@@ -631,6 +652,7 @@ export const routeTree = rootRoute.addChildren({
       ColumnsLayoutGroupRoute,
       ColumnsLayoutTopicRoute,
       ColumnsLayoutNewsfeedLazyRoute,
+      ColumnsLayoutNotificationLazyRoute,
       ColumnsLayoutOnboardingLazyRoute,
       ColumnsLayoutTrendingLazyRoute:
         ColumnsLayoutTrendingLazyRoute.addChildren({
@@ -658,11 +680,11 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/$account",
         "/bootstrap-relays",
         "/search",
         "/settings",
         "/new",
+        "/$account",
         "/columns",
         "/zap/$id",
         "/auth/connect",
@@ -673,14 +695,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/$account": {
-      "filePath": "$account.tsx",
-      "children": [
-        "/$account/backup",
-        "/$account/home",
-        "/$account/panel"
-      ]
     },
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
@@ -706,13 +720,19 @@ export const routeTree = rootRoute.addChildren({
     "/new": {
       "filePath": "new.lazy.tsx"
     },
-    "/$account/backup": {
-      "filePath": "$account/backup.tsx",
-      "parent": "/$account"
+    "/$account": {
+      "filePath": "$account",
+      "children": [
+        "/$account/_layout"
+      ]
     },
-    "/$account/home": {
-      "filePath": "$account/home.tsx",
-      "parent": "/$account"
+    "/$account/_layout": {
+      "filePath": "$account/_layout.tsx",
+      "parent": "/$account",
+      "children": [
+        "/$account/_layout/backup",
+        "/$account/_layout/home"
+      ]
     },
     "/columns": {
       "filePath": "columns",
@@ -732,6 +752,7 @@ export const routeTree = rootRoute.addChildren({
         "/columns/_layout/group",
         "/columns/_layout/topic",
         "/columns/_layout/newsfeed",
+        "/columns/_layout/notification",
         "/columns/_layout/onboarding",
         "/columns/_layout/trending",
         "/columns/_layout/users/$id",
@@ -774,10 +795,6 @@ export const routeTree = rootRoute.addChildren({
     "/zap/$id": {
       "filePath": "zap.$id.tsx"
     },
-    "/$account/panel": {
-      "filePath": "$account/panel.lazy.tsx",
-      "parent": "/$account"
-    },
     "/auth/connect": {
       "filePath": "auth/connect.lazy.tsx"
     },
@@ -789,6 +806,14 @@ export const routeTree = rootRoute.addChildren({
     },
     "/editor/": {
       "filePath": "editor/index.tsx"
+    },
+    "/$account/_layout/backup": {
+      "filePath": "$account/_layout/backup.tsx",
+      "parent": "/$account/_layout"
+    },
+    "/$account/_layout/home": {
+      "filePath": "$account/_layout/home.tsx",
+      "parent": "/$account/_layout"
     },
     "/columns/_layout/create-group": {
       "filePath": "columns/_layout/create-group.tsx",
@@ -824,6 +849,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/columns/_layout/newsfeed": {
       "filePath": "columns/_layout/newsfeed.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/notification": {
+      "filePath": "columns/_layout/notification.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/onboarding": {

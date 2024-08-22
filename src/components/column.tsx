@@ -1,3 +1,4 @@
+import { commands } from "@/commands.gen";
 import type { LumeColumn } from "@/types";
 import { Check, DotsThree } from "@phosphor-icons/react";
 import { invoke } from "@tauri-apps/api/core";
@@ -120,11 +121,12 @@ function Header({
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
 
+		const window = getCurrentWindow();
 		const menuItems = await Promise.all([
 			MenuItem.new({
 				text: "Reload",
 				action: async () => {
-					await invoke("reload_column", { label: webview });
+					await commands.reloadColumn(label);
 				},
 			}),
 			MenuItem.new({
@@ -135,7 +137,7 @@ function Header({
 			MenuItem.new({
 				text: "Move left",
 				action: async () => {
-					await getCurrentWindow().emit("columns", {
+					await window.emit("columns", {
 						type: "move",
 						label,
 						direction: "left",
@@ -145,7 +147,7 @@ function Header({
 			MenuItem.new({
 				text: "Move right",
 				action: async () => {
-					await getCurrentWindow().emit("columns", {
+					await window.emit("columns", {
 						type: "move",
 						label,
 						direction: "right",
@@ -156,7 +158,7 @@ function Header({
 			MenuItem.new({
 				text: "Close",
 				action: async () => {
-					await getCurrentWindow().emit("columns", {
+					await window.emit("columns", {
 						type: "remove",
 						label,
 					});

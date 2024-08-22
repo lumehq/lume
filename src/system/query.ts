@@ -232,7 +232,7 @@ export const NostrQuery = {
 		}
 	},
 	getNstore: async (key: string) => {
-		const query = await commands.getNstore(key);
+		const query = await commands.getLumeStore(key);
 
 		if (query.status === "ok") {
 			const data = query.data ? JSON.parse(query.data) : null;
@@ -242,7 +242,7 @@ export const NostrQuery = {
 		}
 	},
 	setNstore: async (key: string, value: string) => {
-		const query = await commands.setNstore(key, value);
+		const query = await commands.setLumeStore(key, value);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -277,7 +277,7 @@ export const NostrQuery = {
 		const defaultColumns = systemColumns.filter((col) => col.default);
 
 		const key = "lume_v4:columns";
-		const query = await commands.getNstore(key);
+		const query = await commands.getLumeStore(key);
 
 		try {
 			if (query.status === "ok") {
@@ -298,7 +298,7 @@ export const NostrQuery = {
 	setColumns: async (columns: LumeColumn[]) => {
 		const key = "lume_v4:columns";
 		const content = JSON.stringify(columns);
-		const query = await commands.setNstore(key, content);
+		const query = await commands.setLumeStore(key, content);
 
 		if (query.status === "ok") {
 			return query.data;

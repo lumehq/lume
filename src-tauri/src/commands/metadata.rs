@@ -192,9 +192,9 @@ pub async fn toggle_contact(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_nstore(
-    key: &str,
-    content: &str,
+pub async fn set_lume_store(
+    key: String,
+    content: String,
     state: State<'_, Nostr>,
 ) -> Result<String, String> {
     let client = &state.client;
@@ -209,7 +209,13 @@ pub async fn set_nstore(
     let tag = Tag::identifier(key);
     let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
-    match client.send_event_builder(builder).await {
+    let unsigned = builder.to_unsigned_event(public_key);
+    let event = signer
+        .sign_event(unsigned)
+        .await
+        .map_err(|e| e.to_string())?;
+
+    match client.database().save_event(&event).await {
         Ok(event_id) => Ok(event_id.to_string()),
         Err(err) => Err(err.to_string()),
     }
@@ -217,7 +223,7 @@ pub async fn set_nstore(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_lume_store(key: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let signer = client.signer().await.map_err(|e| e.to_string())?;
     let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
@@ -229,16 +235,12 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
         .limit(1);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {
             if let Some(event) = events.first() {
-                let content = event.content();
-                match signer.nip44_decrypt(public_key, content).await {
+                match signer.nip44_decrypt(public_key, event.content()).await {
                     Ok(decrypted) => Ok(decrypted),
                     Err(_) => Err(event.content.to_string()),
                 }

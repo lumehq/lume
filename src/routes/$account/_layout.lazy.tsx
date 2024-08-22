@@ -12,7 +12,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { memo, useCallback, useState } from "react";
 
-export const Route = createLazyFileRoute("/$account")({
+export const Route = createLazyFileRoute("/$account/_layout")({
 	component: Screen,
 });
 

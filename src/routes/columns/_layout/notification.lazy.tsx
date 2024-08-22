@@ -1,31 +1,25 @@
-import {
-	checkForAppUpdates,
-	decodeZapInvoice,
-	formatCreatedAt,
-} from "@/commons";
+import { decodeZapInvoice, formatCreatedAt } from "@/commons";
 import { Spinner } from "@/components";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { type LumeEvent, LumeWindow, NostrQuery, useEvent } from "@/system";
+import { type LumeEvent, NostrQuery, useEvent } from "@/system";
 import { Kind } from "@/types";
-import { DotsThree, Info, Repeat } from "@phosphor-icons/react";
+import { Info, Repeat } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { invoke } from "@tauri-apps/api/core";
-import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { open } from "@tauri-apps/plugin-shell";
-import { type ReactNode, useCallback, useEffect, useRef } from "react";
+import { nip19 } from "nostr-tools";
+import { type ReactNode, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/$account/panel")({
+export const Route = createLazyFileRoute("/columns/_layout/notification")({
 	component: Screen,
 });
 
 function Screen() {
-	const { account } = Route.useParams();
+	const { account } = Route.useSearch();
 	const { queryClient } = Route.useRouteContext();
 	const { isLoading, data } = useQuery({
 		queryKey: ["notification", account],
@@ -36,7 +30,11 @@ function Screen() {
 		select: (events) => {
 			const zaps = new Map<string, LumeEvent[]>();
 			const reactions = new Map<string, LumeEvent[]>();
-			const texts = events.filter((ev) => ev.kind === Kind.Text);
+			const hex = nip19.decode(account).data;
+
+			const texts = events.filter(
+				(ev) => ev.kind === Kind.Text && ev.pubkey !== hex,
+			);
 			const zapEvents = events.filter((ev) => ev.kind === Kind.ZapReceipt);
 			const reactEvents = events.filter(
 				(ev) => ev.kind === Kind.Repost || ev.kind === Kind.Reaction,
@@ -71,47 +69,8 @@ function Screen() {
 		refetchOnWindowFocus: false,
 	});
 
-	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
-		e.preventDefault();
-
-		const menuItems = await Promise.all([
-			MenuItem.new({
-				text: "Open Lume",
-				action: () => LumeWindow.openMainWindow(),
-			}),
-			MenuItem.new({
-				text: "New Post",
-				action: () => LumeWindow.openEditor(),
-			}),
-			PredefinedMenuItem.new({ item: "Separator" }),
-			MenuItem.new({
-				text: "About Lume",
-				action: async () => await open("https://lume.nu"),
-			}),
-			MenuItem.new({
-				text: "Check for Updates",
-				action: async () => await checkForAppUpdates(false),
-			}),
-			MenuItem.new({
-				text: "Settings",
-				action: () => LumeWindow.openSettings(),
-			}),
-			PredefinedMenuItem.new({ item: "Separator" }),
-			MenuItem.new({
-				text: "Quit",
-				action: async () => await invoke("force_quit"),
-			}),
-		]);
-
-		const menu = await Menu.new({
-			items: menuItems,
-		});
-
-		await menu.popup().catch((e) => console.error(e));
-	}, []);
-
 	useEffect(() => {
-		const unlisten = getCurrentWindow().listen("notification", async (data) => {
+		const unlisten = getCurrentWindow().listen("event", async (data) => {
 			const event: LumeEvent = JSON.parse(data.payload as string);
 			await queryClient.setQueryData(
 				["notification", account],
@@ -134,41 +93,22 @@ function Screen() {
 
 	return (
 		<div className="flex flex-col size-full overflow-hidden">
-			<div className="flex items-center justify-between px-4 border-b h-11 shrink-0 border-black/5 dark:border-white/5">
-				<div>
-					<h1 className="text-sm font-semibold">Notifications</h1>
-				</div>
-				<div className="inline-flex items-center gap-2">
-					<User.Provider pubkey={account}>
-						<User.Root>
-							<User.Avatar className="rounded-full size-7" />
-						</User.Root>
-					</User.Provider>
-					<button
-						type="button"
-						onClick={(e) => showContextMenu(e)}
-						className="inline-flex items-center justify-center rounded-full size-7 bg-black/5 dark:bg-white/5"
-					>
-						<DotsThree className="size-4" />
-					</button>
-				</div>
-			</div>
 			<Tabs.Root defaultValue="replies" className="flex flex-col h-full">
 				<Tabs.List className="h-8 shrink-0 flex items-center">
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
 						value="replies"
 					>
 						Replies
 					</Tabs.Trigger>
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
 						value="reactions"
 					>
 						Reactions
 					</Tabs.Trigger>
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
 						value="zaps"
 					>
 						Zaps
@@ -189,7 +129,7 @@ function Screen() {
 						{[...data.reactions.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
 							>
 								<div className="flex flex-col flex-1 min-w-0 gap-2">
 									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
@@ -223,7 +163,7 @@ function Screen() {
 						{[...data.zaps.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
 							>
 								<div className="flex flex-col flex-1 min-w-0 gap-2">
 									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
@@ -235,9 +175,9 @@ function Screen() {
 												key={event.id}
 												pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
 											>
-												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-8 bg-black/10 dark:bg-white/10 p-[2px]">
-													<User.Avatar className="rounded-full size-7" />
-													<div className="flex-1 h-7 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-sm truncate">
+												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
+													<User.Avatar className="rounded-full size-6" />
+													<div className="flex-1 h-6 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-xs font-semibold truncate">
 														₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
 													</div>
 												</User.Root>
@@ -266,7 +206,7 @@ function Tab({ value, children }: { value: string; children: ReactNode[] }) {
 
 	return (
 		<Tabs.Content value={value} className="size-full">
-			<ScrollArea.Viewport ref={ref} className="h-full px-2 pt-2">
+			<ScrollArea.Viewport ref={ref} className="h-full p-3">
 				<Virtualizer scrollRef={ref}>{children}</Virtualizer>
 			</ScrollArea.Viewport>
 		</Tabs.Content>
@@ -320,7 +260,7 @@ function TextNote({ event }: { event: LumeEvent }) {
 
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className="flex flex-col p-2 mb-2 rounded-lg shrink-0 bg-black/10 dark:bg-white/10">
+			<Note.Root className="flex flex-col p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
 				<User.Provider pubkey={event.pubkey}>
 					<User.Root className="inline-flex items-center gap-2">
 						<User.Avatar className="rounded-full size-9" />

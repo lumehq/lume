@@ -1,4 +1,5 @@
 import { Column } from "@/components/column";
+import { NostrQuery } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
 import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -16,7 +17,7 @@ import {
 import { createPortal } from "react-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-export const Route = createLazyFileRoute("/$account/home")({
+export const Route = createLazyFileRoute("/$account/_layout/home")({
 	component: Screen,
 });
 
@@ -46,13 +47,13 @@ function Screen() {
 		getCurrentWindow().emit("child_webview", { resize: true, direction: "x" });
 	}, []);
 
-	const openLumeStore = useCallback(async () => {
+	const openGallery = useCallback(async () => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
-				label: "store",
-				name: "Column Gallery",
-				content: "/store",
+				label: "columns_gallery",
+				name: "Columns Gallery",
+				content: "/gallery",
 			},
 		});
 	}, []);
@@ -130,9 +131,7 @@ function Screen() {
 
 	useEffect(() => {
 		if (columns) {
-			getCurrentWindow().emit("save_column", {
-				columns: JSON.stringify(columns),
-			});
+			NostrQuery.setColumns(columns).then(() => console.log("saved"));
 		}
 	}, [columns]);
 
@@ -181,7 +180,7 @@ function Screen() {
 						<div className="size-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center justify-center">
 							<button
 								type="button"
-								onClick={() => openLumeStore()}
+								onClick={() => openGallery()}
 								className="inline-flex items-center justify-center gap-1 rounded-full text-sm font-medium h-8 w-max pl-2 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
 							>
 								<Plus className="size-4" />

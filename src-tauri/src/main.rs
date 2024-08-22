@@ -91,8 +91,8 @@ fn main() {
             is_contact_list_empty,
             check_contact,
             toggle_contact,
-            get_nstore,
-            set_nstore,
+            get_lume_store,
+            set_lume_store,
             set_wallet,
             load_wallet,
             remove_wallet,
@@ -283,27 +283,25 @@ fn main() {
                                             .await
                                             .unwrap_or_else(|_| Metadata::new());
 
-                                        send_notification(event, author, &handle_clone);
+                                        send_notification(&event, author, &handle_clone);
                                     }
                                 }
-                                // Handle other events
-                                else {
-                                    let label = subscription_id.to_string();
-                                    let raw = event.as_json();
-                                    let parsed = if event.kind == Kind::TextNote {
-                                        Some(parse_event(&event.content).await)
-                                    } else {
-                                        None
-                                    };
 
-                                    handle_clone
-                                        .emit_to(
-                                            EventTarget::labeled(label),
-                                            "event",
-                                            RichEvent { raw, parsed },
-                                        )
-                                        .unwrap();
-                                }
+                                let label = subscription_id.to_string();
+                                let raw = event.as_json();
+                                let parsed = if event.kind == Kind::TextNote {
+                                    Some(parse_event(&event.content).await)
+                                } else {
+                                    None
+                                };
+
+                                handle_clone
+                                    .emit_to(
+                                        EventTarget::labeled(label),
+                                        "event",
+                                        RichEvent { raw, parsed },
+                                    )
+                                    .unwrap();
                             } else {
                                 println!("new message: {}", message.as_json())
                             }
@@ -346,7 +344,7 @@ fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
     tauri_plugin_prevent_default::Builder::new().build()
 }
 
-fn send_notification(event: Box<Event>, author: Metadata, handle: &tauri::AppHandle) {
+fn send_notification(event: &Event, author: Metadata, handle: &tauri::AppHandle) {
     match event.kind() {
         Kind::TextNote => {
             if let Err(e) = handle

@@ -1,7 +1,7 @@
 import { NostrAccount, NostrQuery } from "@/system";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/$account")({
+export const Route = createFileRoute("/$account/_layout")({
 	beforeLoad: async ({ params }) => {
 		const settings = await NostrQuery.getUserSettings();
 		const accounts = await NostrAccount.getAccounts();

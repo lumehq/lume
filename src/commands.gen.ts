@@ -144,17 +144,17 @@ async toggleContact(hex: string, alias: string | null) : Promise<Result<string, 
     else return { status: "error", error: e  as any };
 }
 },
-async getNstore(key: string) : Promise<Result<string, string>> {
+async getLumeStore(key: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_nstore", { key }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_lume_store", { key }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async setNstore(key: string, content: string) : Promise<Result<string, string>> {
+async setLumeStore(key: string, content: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_nstore", { key, content }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_lume_store", { key, content }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
