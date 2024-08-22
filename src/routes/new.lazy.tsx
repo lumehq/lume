@@ -27,13 +27,13 @@ function Screen() {
 					<div className="flex flex-col gap-2">
 						<Link
 							to="/auth/connect"
-							className="w-full h-10 bg-white hover:bg-neutral-100 dark:hover:bg-neutral-100 dark:bg-white dark:text-black rounded-lg inline-flex items-center justify-center"
+							className="w-full h-10 bg-white hover:bg-neutral-100 dark:hover:bg-neutral-100 dark:text-black rounded-lg inline-flex items-center justify-center"
 						>
 							Login with Nostr Connect
 						</Link>
 						<Link
 							to="/auth/import"
-							className="w-full h-10 bg-white hover:bg-neutral-100 dark:hover:bg-neutral-100 dark:bg-white dark:text-black rounded-lg inline-flex items-center justify-center"
+							className="w-full h-10 bg-white hover:bg-neutral-100 dark:hover:bg-neutral-100 dark:text-black rounded-lg inline-flex items-center justify-center"
 						>
 							Login with Private Key
 						</Link>

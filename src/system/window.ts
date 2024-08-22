@@ -17,10 +17,10 @@ export const LumeWindow = {
 		const reply: string =
 			eTags.find((el) => el[3] === "reply")?.[1] ?? eTags[1]?.[1];
 
-		const url = `/events/${root ?? reply ?? event.id}`;
+		const url = `/columns/events/${root ?? reply ?? event.id}`;
 		const label = `event-${root ?? reply ?? event.id}`;
 
-		LumeWindow.openColumn({ label, content: url, name: "Thread" });
+		LumeWindow.openColumn({ label, url, name: "Thread" });
 	},
 	openProfile: async (pubkey: string) => {
 		const label = `user-${pubkey}`;

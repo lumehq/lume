@@ -80,7 +80,6 @@ export function Images({ urls }: { urls: string[] }) {
 				<img
 					src={imageUrls[0]}
 					alt={urls[0]}
-					loading="lazy"
 					decoding="async"
 					style={{ contentVisibility: "auto" }}
 					className="max-h-[400px] w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
@@ -159,7 +158,6 @@ function LazyImage({ url, inView }: { url: string; inView: boolean }) {
 				}
 				data-src={url}
 				alt={url}
-				loading="lazy"
 				decoding="async"
 				style={{ contentVisibility: "auto" }}
 				className="object-cover w-full h-full rounded-lg outline outline-1 -outline-offset-1 outline-black/15"

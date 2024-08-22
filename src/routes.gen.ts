@@ -20,7 +20,6 @@ import { Route as AccountImport } from './routes/$account'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
-import { Route as UsersIdImport } from './routes/users.$id'
 import { Route as SettingsWalletImport } from './routes/settings/wallet'
 import { Route as SettingsUserImport } from './routes/settings/user'
 import { Route as SettingsRelayImport } from './routes/settings/relay'
@@ -29,7 +28,6 @@ import { Route as SettingsBitcoinConnectImport } from './routes/settings/bitcoin
 import { Route as SettingsBackupImport } from './routes/settings/backup'
 import { Route as SearchUsersImport } from './routes/search.users'
 import { Route as SearchNotesImport } from './routes/search.notes'
-import { Route as EventsIdImport } from './routes/events/$id'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountHomeImport } from './routes/$account/home'
 import { Route as AccountBackupImport } from './routes/$account/backup'
@@ -40,6 +38,7 @@ import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/ga
 import { Route as ColumnsLayoutCreateTopicImport } from './routes/columns/_layout/create-topic'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
 import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
+import { Route as ColumnsLayoutUsersIdImport } from './routes/columns/_layout/users.$id'
 import { Route as ColumnsLayoutTrendingUsersImport } from './routes/columns/_layout/trending.users'
 import { Route as ColumnsLayoutTrendingNotesImport } from './routes/columns/_layout/trending.notes'
 import { Route as ColumnsLayoutCreateNewsfeedUsersImport } from './routes/columns/_layout/create-newsfeed.users'
@@ -61,6 +60,12 @@ const ColumnsLayoutOnboardingLazyImport = createFileRoute(
 )()
 const ColumnsLayoutNewsfeedLazyImport = createFileRoute(
   '/columns/_layout/newsfeed',
+)()
+const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
+  '/columns/_layout/replies/$id',
+)()
+const ColumnsLayoutEventsIdLazyImport = createFileRoute(
+  '/columns/_layout/events/$id',
 )()
 
 // Create/Update Routes
@@ -134,11 +139,6 @@ const ZapIdRoute = ZapIdImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/zap.$id.lazy').then((d) => d.Route))
 
-const UsersIdRoute = UsersIdImport.update({
-  path: '/users/$id',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/users.$id.lazy').then((d) => d.Route))
-
 const SettingsWalletRoute = SettingsWalletImport.update({
   path: '/wallet',
   getParentRoute: () => SettingsRoute,
@@ -178,11 +178,6 @@ const SearchNotesRoute = SearchNotesImport.update({
   path: '/notes',
   getParentRoute: () => SearchRoute,
 } as any)
-
-const EventsIdRoute = EventsIdImport.update({
-  path: '/events/$id',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/events/$id.lazy').then((d) => d.Route))
 
 const ColumnsLayoutRoute = ColumnsLayoutImport.update({
   id: '/_layout',
@@ -258,6 +253,29 @@ const ColumnsLayoutCreateGroupRoute = ColumnsLayoutCreateGroupImport.update({
   path: '/create-group',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any)
+
+const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
+  {
+    path: '/replies/$id',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/columns/_layout/replies.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
+  path: '/events/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/events.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutUsersIdRoute = ColumnsLayoutUsersIdImport.update({
+  path: '/users/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/users.$id.lazy').then((d) => d.Route),
+)
 
 const ColumnsLayoutTrendingUsersRoute = ColumnsLayoutTrendingUsersImport.update(
   {
@@ -359,13 +377,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutImport
       parentRoute: typeof ColumnsRoute
     }
-    '/events/$id': {
-      id: '/events/$id'
-      path: '/events/$id'
-      fullPath: '/events/$id'
-      preLoaderRoute: typeof EventsIdImport
-      parentRoute: typeof rootRoute
-    }
     '/search/notes': {
       id: '/search/notes'
       path: '/notes'
@@ -421,13 +432,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/wallet'
       preLoaderRoute: typeof SettingsWalletImport
       parentRoute: typeof SettingsImport
-    }
-    '/users/$id': {
-      id: '/users/$id'
-      path: '/users/$id'
-      fullPath: '/users/$id'
-      preLoaderRoute: typeof UsersIdImport
-      parentRoute: typeof rootRoute
     }
     '/zap/$id': {
       id: '/zap/$id'
@@ -569,6 +573,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutTrendingUsersImport
       parentRoute: typeof ColumnsLayoutTrendingLazyImport
     }
+    '/columns/_layout/users/$id': {
+      id: '/columns/_layout/users/$id'
+      path: '/users/$id'
+      fullPath: '/columns/users/$id'
+      preLoaderRoute: typeof ColumnsLayoutUsersIdImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/events/$id': {
+      id: '/columns/_layout/events/$id'
+      path: '/events/$id'
+      fullPath: '/columns/events/$id'
+      preLoaderRoute: typeof ColumnsLayoutEventsIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/replies/$id': {
+      id: '/columns/_layout/replies/$id'
+      path: '/replies/$id'
+      fullPath: '/columns/replies/$id'
+      preLoaderRoute: typeof ColumnsLayoutRepliesIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
   }
 }
 
@@ -612,10 +637,11 @@ export const routeTree = rootRoute.addChildren({
           ColumnsLayoutTrendingNotesRoute,
           ColumnsLayoutTrendingUsersRoute,
         }),
+      ColumnsLayoutUsersIdRoute,
+      ColumnsLayoutEventsIdLazyRoute,
+      ColumnsLayoutRepliesIdLazyRoute,
     }),
   }),
-  EventsIdRoute,
-  UsersIdRoute,
   ZapIdRoute,
   AuthConnectLazyRoute,
   AuthImportLazyRoute,
@@ -638,8 +664,6 @@ export const routeTree = rootRoute.addChildren({
         "/settings",
         "/new",
         "/columns",
-        "/events/$id",
-        "/users/$id",
         "/zap/$id",
         "/auth/connect",
         "/auth/import",
@@ -709,11 +733,11 @@ export const routeTree = rootRoute.addChildren({
         "/columns/_layout/topic",
         "/columns/_layout/newsfeed",
         "/columns/_layout/onboarding",
-        "/columns/_layout/trending"
+        "/columns/_layout/trending",
+        "/columns/_layout/users/$id",
+        "/columns/_layout/events/$id",
+        "/columns/_layout/replies/$id"
       ]
-    },
-    "/events/$id": {
-      "filePath": "events/$id.tsx"
     },
     "/search/notes": {
       "filePath": "search.notes.tsx",
@@ -746,9 +770,6 @@ export const routeTree = rootRoute.addChildren({
     "/settings/wallet": {
       "filePath": "settings/wallet.tsx",
       "parent": "/settings"
-    },
-    "/users/$id": {
-      "filePath": "users.$id.tsx"
     },
     "/zap/$id": {
       "filePath": "zap.$id.tsx"
@@ -832,6 +853,18 @@ export const routeTree = rootRoute.addChildren({
     "/columns/_layout/trending/users": {
       "filePath": "columns/_layout/trending.users.tsx",
       "parent": "/columns/_layout/trending"
+    },
+    "/columns/_layout/users/$id": {
+      "filePath": "columns/_layout/users.$id.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/events/$id": {
+      "filePath": "columns/_layout/events.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/replies/$id": {
+      "filePath": "columns/_layout/replies.$id.lazy.tsx",
+      "parent": "/columns/_layout"
     }
   }
 }

@@ -11,6 +11,7 @@ import {
 } from "@tanstack/query-persist-client-core";
 import { createStore } from "idb-keyval";
 import { newIdbStorage } from "./commons";
+import type { LumeEvent } from "./system";
 
 const platform = type();
 const queryClient = new QueryClient({
@@ -41,6 +42,9 @@ const router = createRouter({
 declare module "@tanstack/react-router" {
 	interface Register {
 		router: typeof router;
+	}
+	interface HistoryState {
+		events?: LumeEvent[];
 	}
 }
 

@@ -1,7 +1,7 @@
 import { commands } from "@/commands.gen";
-import { Note, Spinner } from "@/components";
+import { Note, ReplyNote, Spinner } from "@/components";
 import { LumeEvent, useEvent } from "@/system";
-import type { Meta } from "@/types";
+import type { EventPayload } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -9,15 +9,10 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/events/$id")({
+export const Route = createLazyFileRoute("/columns/_layout/events/$id")({
 	component: Screen,
 	pendingComponent: Pending,
 });
-
-type Payload = {
-	raw: string;
-	parsed: Meta;
-};
 
 function Pending() {
 	return (
@@ -80,7 +75,7 @@ function RootEvent() {
 
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className="bg-white dark:bg-black/10 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
+			<Note.Root className="bg-white dark:bg-white/10 rounded-xl shadow-primary dark:shadow-none">
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />
@@ -118,14 +113,79 @@ function ReplyList() {
 				throw new Error(res.error);
 			}
 		},
+		select: (events) => {
+			const removeQueues = new Set();
+
+			for (const event of events) {
+				const tags = event.tags.filter((t) => t[0] === "e" && t[1] !== id);
+
+				if (tags.length === 1) {
+					const index = events.findIndex((ev) => ev.id === tags[0][1]);
+
+					if (index !== -1) {
+						const rootEvent = events[index];
+
+						if (rootEvent.replies?.length) {
+							rootEvent.replies.push(event);
+						} else {
+							rootEvent.replies = [event];
+						}
+
+						// Add current event to queue
+						removeQueues.add(event.id);
+
+						continue;
+					}
+				}
+
+				for (const tag of tags) {
+					const id = tag[1];
+					const rootIndex = events.findIndex((ev) => ev.id === id);
+
+					if (rootIndex !== -1) {
+						const rootEvent = events[rootIndex];
+
+						if (rootEvent.replies?.length) {
+							const childIndex = rootEvent.replies.findIndex(
+								(ev) => ev.id === id,
+							);
+
+							if (childIndex !== -1) {
+								const childEvent = rootEvent.replies[rootIndex];
+
+								if (childEvent.replies?.length) {
+									childEvent.replies.push(event);
+								} else {
+									childEvent.replies = [event];
+								}
+
+								// Add current event to queue
+								removeQueues.add(event.id);
+							}
+						} else {
+							rootEvent.replies = [event];
+							// Add current event to queue
+							removeQueues.add(event.id);
+						}
+					}
+
+					break;
+				}
+			}
+
+			return events.filter((ev) => !removeQueues.has(ev.id));
+		},
 		refetchOnWindowFocus: false,
 	});
 
 	useEffect(() => {
-		const unlisten = getCurrentWindow().listen<Payload>("event", (data) => {
-			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-			console.log(event);
-		});
+		const unlisten = getCurrentWindow().listen<EventPayload>(
+			"event",
+			(data) => {
+				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
+				console.log(event);
+			},
+		);
 
 		return () => {
 			unlisten.then((f) => f());
@@ -156,7 +216,7 @@ function ReplyList() {
 							</div>
 						</div>
 					) : (
-						data.map((event) => <p key={event.id}>{event.content}</p>)
+						data.map((event) => <ReplyNote key={event.id} event={event} />)
 					)}
 				</div>
 			)}

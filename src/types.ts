@@ -1,8 +1,3 @@
-export interface Keys {
-	npub: string;
-	nsec: string;
-}
-
 export enum Kind {
 	Metadata = 0,
 	Text = 1,
@@ -57,9 +52,9 @@ export interface Metadata {
 }
 
 export interface ColumnRouteSearch {
-	account: string;
-	label: string;
-	name: string;
+	account?: string;
+	label?: string;
+	name?: string;
 	redirect?: string;
 }
 
@@ -90,4 +85,9 @@ export interface Relays {
 export interface Relay {
 	url: string;
 	purpose: "read" | "write" | string;
+}
+
+export interface EventPayload {
+	raw: string;
+	parsed: Meta;
 }

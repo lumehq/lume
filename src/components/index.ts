@@ -9,6 +9,7 @@ export * from "./repost";
 export * from "./conversation";
 export * from "./quote";
 export * from "./text";
+export * from "./reply";
 
 // Global components
 export * from "./note";

@@ -16,7 +16,6 @@ import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import type { RichEvent } from "./commands.gen";
-import { AUDIOS, IMAGES, VIDEOS } from "./constants";
 import { LumeEvent } from "./system";
 import type { NostrEvent } from "./types";
 
@@ -126,6 +125,13 @@ export function formatCreatedAt(time: number, message = false) {
 	return formated;
 }
 
+export function replyTime(time: number) {
+	const inputTime = dayjs.unix(time);
+	const formated = inputTime.format("MM-DD-YY HH:mm");
+
+	return formated;
+}
+
 export function displayNsec(key: string, len: number) {
 	if (key.length <= len) return key;
 
@@ -164,32 +170,6 @@ export function displayLongHandle(str: string) {
 	const service = split[1];
 
 	return `${handle.substring(0, 16)}...@${service}`;
-}
-
-// convert number to K, M, B, T, etc.
-export const compactNumber = Intl.NumberFormat("en", { notation: "compact" });
-
-// country name
-export const regionNames = new Intl.DisplayNames(["en"], { type: "language" });
-
-// verify link can be preview
-export function canPreview(text: string) {
-	const url = new URL(text);
-	const ext = url.pathname.split(".").pop();
-	const hostname = url.hostname;
-
-	if (VIDEOS.includes(ext)) return false;
-	if (IMAGES.includes(ext)) return false;
-	if (AUDIOS.includes(ext)) return false;
-
-	if (hostname === "youtube.com") return false;
-	if (hostname === "youtu.be") return false;
-	if (hostname === "x.com") return false;
-	if (hostname === "twitter.com") return false;
-	if (hostname === "facebook.com") return false;
-	if (hostname === "vimeo.com") return false;
-
-	return true;
 }
 
 // source: https://github.com/synonymdev/bitkit/blob/master/src/utils/displayValues/index.ts

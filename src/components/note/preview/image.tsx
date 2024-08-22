@@ -1,5 +1,4 @@
 import { useRouteContext } from "@tanstack/react-router";
-import { open } from "@tauri-apps/plugin-shell";
 import { useMemo } from "react";
 
 export function ImagePreview({ url }: { url: string }) {
@@ -35,9 +34,7 @@ export function ImagePreview({ url }: { url: string }) {
 				loading="lazy"
 				decoding="async"
 				style={{ contentVisibility: "auto" }}
-				className="max-h-[400px] max-w-[400px] h-auto w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
-				onClick={() => open(url)}
-				onKeyDown={() => open(url)}
+				className="max-h-[400px] w-full h-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 				onError={({ currentTarget }) => {
 					currentTarget.onerror = null;
 					currentTarget.src = "/404.jpg";

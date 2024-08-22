@@ -11,7 +11,7 @@ import { Await } from "@tanstack/react-router";
 import { Suspense, useCallback } from "react";
 import { WindowVirtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/users/$id")({
+export const Route = createLazyFileRoute("/columns/_layout/users/$id")({
 	component: Screen,
 });
 
