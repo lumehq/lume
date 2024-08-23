@@ -24,22 +24,12 @@ export const LumeWindow = {
 	},
 	openProfile: async (pubkey: string) => {
 		const label = `user-${pubkey}`;
-		const query = await commands.openWindow({
-			label,
-			url: `/users/${pubkey}`,
-			title: "Profile",
-			width: 500,
-			height: 800,
-			maximizable: true,
-			minimizable: true,
-			hidden_title: true,
-		});
 
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
+		LumeWindow.openColumn({
+			label,
+			url: `/columns/users/${pubkey}`,
+			name: "Profile",
+		});
 	},
 	openEditor: async (reply_to?: string, quote?: string) => {
 		let url: string;

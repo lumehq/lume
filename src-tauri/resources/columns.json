@@ -26,6 +26,22 @@
 	{
 		"default": false,
 		"official": true,
+		"label": "notification",
+		"name": "Notification",
+		"url": "/columns/notification",
+		"picture": "/notification.png"
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "stories",
+		"name": "Stories",
+		"url": "/columns/stories",
+		"picture": "/stories.png"
+	},
+	{
+		"default": false,
+		"official": true,
 		"label": "global_feeds",
 		"name": "Global Feeds",
 		"url": "/columns/global",
@@ -44,15 +60,7 @@
 		"official": true,
 		"label": "trending",
 		"name": "Trending",
-		"url": "/columns/trending/notes",
+		"url": "/columns/trending",
 		"picture": "/trending.png"
-	},
-	{
-		"default": false,
-		"official": true,
-		"label": "notification",
-		"name": "Notification",
-		"url": "/columns/notification",
-		"picture": "/notification.png"
 	}
 ]

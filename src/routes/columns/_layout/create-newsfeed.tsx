@@ -1,5 +1,5 @@
-import type { ColumnRouteSearch } from "@/types";
 import { cn } from "@/commons";
+import type { ColumnRouteSearch } from "@/types";
 import { Link, Outlet } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -29,7 +29,7 @@ function Screen() {
 			<div className="flex flex-col w-4/5 max-w-full gap-3">
 				<div className="w-full h-9 shrink-0 flex items-center justify-between bg-black/5 dark:bg-white/5 rounded-lg px-0.5">
 					<Link
-						to="/create-newsfeed/users"
+						to="/columns/create-newsfeed/users"
 						search={search}
 						className="flex-1 h-8"
 					>
@@ -47,7 +47,7 @@ function Screen() {
 						)}
 					</Link>
 					<Link
-						to="/create-newsfeed/f2f"
+						to="/columns/create-newsfeed/f2f"
 						search={search}
 						className="flex-1 h-8"
 					>

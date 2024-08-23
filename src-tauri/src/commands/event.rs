@@ -179,21 +179,16 @@ pub async fn subscribe_to(id: String, state: State<'_, Nostr>) -> Result<(), Str
 #[specta::specta]
 pub async fn get_events_by(
     public_key: String,
-    as_of: Option<&str>,
+    limit: i32,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let author = PublicKey::from_str(&public_key).map_err(|err| err.to_string())?;
 
-    let until = match as_of {
-        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
-        None => Timestamp::now(),
-    };
     let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .kinds(vec![Kind::TextNote])
         .author(author)
-        .limit(FETCH_LIMIT)
-        .until(until);
+        .limit(limit as usize);
 
     match client
         .get_events_of(
@@ -203,7 +198,8 @@ pub async fn get_events_by(
         .await
     {
         Ok(events) => {
-            let futures = events.iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)

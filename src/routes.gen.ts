@@ -29,7 +29,9 @@ import { Route as SearchUsersImport } from './routes/search.users'
 import { Route as SearchNotesImport } from './routes/search.notes'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountLayoutImport } from './routes/$account/_layout'
+import { Route as ColumnsLayoutTrendingImport } from './routes/columns/_layout/trending'
 import { Route as ColumnsLayoutTopicImport } from './routes/columns/_layout/topic'
+import { Route as ColumnsLayoutStoriesImport } from './routes/columns/_layout/stories'
 import { Route as ColumnsLayoutGroupImport } from './routes/columns/_layout/group'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
 import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/gallery'
@@ -38,9 +40,6 @@ import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_la
 import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
 import { Route as AccountLayoutHomeImport } from './routes/$account/_layout/home'
 import { Route as AccountLayoutBackupImport } from './routes/$account/_layout/backup'
-import { Route as ColumnsLayoutUsersIdImport } from './routes/columns/_layout/users.$id'
-import { Route as ColumnsLayoutTrendingUsersImport } from './routes/columns/_layout/trending.users'
-import { Route as ColumnsLayoutTrendingNotesImport } from './routes/columns/_layout/trending.notes'
 import { Route as ColumnsLayoutCreateNewsfeedUsersImport } from './routes/columns/_layout/create-newsfeed.users'
 import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/_layout/create-newsfeed.f2f'
 
@@ -52,9 +51,6 @@ const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthConnectLazyImport = createFileRoute('/auth/connect')()
-const ColumnsLayoutTrendingLazyImport = createFileRoute(
-  '/columns/_layout/trending',
-)()
 const ColumnsLayoutOnboardingLazyImport = createFileRoute(
   '/columns/_layout/onboarding',
 )()
@@ -63,6 +59,9 @@ const ColumnsLayoutNotificationLazyImport = createFileRoute(
 )()
 const ColumnsLayoutNewsfeedLazyImport = createFileRoute(
   '/columns/_layout/newsfeed',
+)()
+const ColumnsLayoutUsersIdLazyImport = createFileRoute(
+  '/columns/_layout/users/$id',
 )()
 const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
   '/columns/_layout/replies/$id',
@@ -187,13 +186,6 @@ const AccountLayoutRoute = AccountLayoutImport.update({
   import('./routes/$account/_layout.lazy').then((d) => d.Route),
 )
 
-const ColumnsLayoutTrendingLazyRoute = ColumnsLayoutTrendingLazyImport.update({
-  path: '/trending',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/trending.lazy').then((d) => d.Route),
-)
-
 const ColumnsLayoutOnboardingLazyRoute =
   ColumnsLayoutOnboardingLazyImport.update({
     path: '/onboarding',
@@ -217,15 +209,31 @@ const ColumnsLayoutNewsfeedLazyRoute = ColumnsLayoutNewsfeedLazyImport.update({
   import('./routes/columns/_layout/newsfeed.lazy').then((d) => d.Route),
 )
 
+const ColumnsLayoutTrendingRoute = ColumnsLayoutTrendingImport.update({
+  path: '/trending',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/trending.lazy').then((d) => d.Route),
+)
+
 const ColumnsLayoutTopicRoute = ColumnsLayoutTopicImport.update({
   path: '/topic',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any)
 
+const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
+  path: '/stories',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/stories.lazy').then((d) => d.Route),
+)
+
 const ColumnsLayoutGroupRoute = ColumnsLayoutGroupImport.update({
   path: '/group',
   getParentRoute: () => ColumnsLayoutRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/columns/_layout/group.lazy').then((d) => d.Route),
+)
 
 const ColumnsLayoutGlobalRoute = ColumnsLayoutGlobalImport.update({
   path: '/global',
@@ -253,7 +261,9 @@ const ColumnsLayoutCreateNewsfeedRoute =
 const ColumnsLayoutCreateGroupRoute = ColumnsLayoutCreateGroupImport.update({
   path: '/create-group',
   getParentRoute: () => ColumnsLayoutRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/columns/_layout/create-group.lazy').then((d) => d.Route),
+)
 
 const AccountLayoutHomeRoute = AccountLayoutHomeImport.update({
   path: '/home',
@@ -266,6 +276,13 @@ const AccountLayoutBackupRoute = AccountLayoutBackupImport.update({
   path: '/backup',
   getParentRoute: () => AccountLayoutRoute,
 } as any)
+
+const ColumnsLayoutUsersIdLazyRoute = ColumnsLayoutUsersIdLazyImport.update({
+  path: '/users/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/users.$id.lazy').then((d) => d.Route),
+)
 
 const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
   {
@@ -281,27 +298,6 @@ const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
   import('./routes/columns/_layout/events.$id.lazy').then((d) => d.Route),
-)
-
-const ColumnsLayoutUsersIdRoute = ColumnsLayoutUsersIdImport.update({
-  path: '/users/$id',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/users.$id.lazy').then((d) => d.Route),
-)
-
-const ColumnsLayoutTrendingUsersRoute = ColumnsLayoutTrendingUsersImport.update(
-  {
-    path: '/users',
-    getParentRoute: () => ColumnsLayoutTrendingLazyRoute,
-  } as any,
-)
-
-const ColumnsLayoutTrendingNotesRoute = ColumnsLayoutTrendingNotesImport.update(
-  {
-    path: '/notes',
-    getParentRoute: () => ColumnsLayoutTrendingLazyRoute,
-  } as any,
 )
 
 const ColumnsLayoutCreateNewsfeedUsersRoute =
@@ -530,11 +526,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutGroupImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/stories': {
+      id: '/columns/_layout/stories'
+      path: '/stories'
+      fullPath: '/columns/stories'
+      preLoaderRoute: typeof ColumnsLayoutStoriesImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/topic': {
       id: '/columns/_layout/topic'
       path: '/topic'
       fullPath: '/columns/topic'
       preLoaderRoute: typeof ColumnsLayoutTopicImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/trending': {
+      id: '/columns/_layout/trending'
+      path: '/trending'
+      fullPath: '/columns/trending'
+      preLoaderRoute: typeof ColumnsLayoutTrendingImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/newsfeed': {
@@ -558,13 +568,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutOnboardingLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
-    '/columns/_layout/trending': {
-      id: '/columns/_layout/trending'
-      path: '/trending'
-      fullPath: '/columns/trending'
-      preLoaderRoute: typeof ColumnsLayoutTrendingLazyImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
     '/columns/_layout/create-newsfeed/f2f': {
       id: '/columns/_layout/create-newsfeed/f2f'
       path: '/f2f'
@@ -579,27 +582,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedUsersImport
       parentRoute: typeof ColumnsLayoutCreateNewsfeedImport
     }
-    '/columns/_layout/trending/notes': {
-      id: '/columns/_layout/trending/notes'
-      path: '/notes'
-      fullPath: '/columns/trending/notes'
-      preLoaderRoute: typeof ColumnsLayoutTrendingNotesImport
-      parentRoute: typeof ColumnsLayoutTrendingLazyImport
-    }
-    '/columns/_layout/trending/users': {
-      id: '/columns/_layout/trending/users'
-      path: '/users'
-      fullPath: '/columns/trending/users'
-      preLoaderRoute: typeof ColumnsLayoutTrendingUsersImport
-      parentRoute: typeof ColumnsLayoutTrendingLazyImport
-    }
-    '/columns/_layout/users/$id': {
-      id: '/columns/_layout/users/$id'
-      path: '/users/$id'
-      fullPath: '/columns/users/$id'
-      preLoaderRoute: typeof ColumnsLayoutUsersIdImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
     '/columns/_layout/events/$id': {
       id: '/columns/_layout/events/$id'
       path: '/events/$id'
@@ -612,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/replies/$id'
       fullPath: '/columns/replies/$id'
       preLoaderRoute: typeof ColumnsLayoutRepliesIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/users/$id': {
+      id: '/columns/_layout/users/$id'
+      path: '/users/$id'
+      fullPath: '/columns/users/$id'
+      preLoaderRoute: typeof ColumnsLayoutUsersIdLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
   }
@@ -650,18 +639,15 @@ export const routeTree = rootRoute.addChildren({
       ColumnsLayoutGalleryRoute,
       ColumnsLayoutGlobalRoute,
       ColumnsLayoutGroupRoute,
+      ColumnsLayoutStoriesRoute,
       ColumnsLayoutTopicRoute,
+      ColumnsLayoutTrendingRoute,
       ColumnsLayoutNewsfeedLazyRoute,
       ColumnsLayoutNotificationLazyRoute,
       ColumnsLayoutOnboardingLazyRoute,
-      ColumnsLayoutTrendingLazyRoute:
-        ColumnsLayoutTrendingLazyRoute.addChildren({
-          ColumnsLayoutTrendingNotesRoute,
-          ColumnsLayoutTrendingUsersRoute,
-        }),
-      ColumnsLayoutUsersIdRoute,
       ColumnsLayoutEventsIdLazyRoute,
       ColumnsLayoutRepliesIdLazyRoute,
+      ColumnsLayoutUsersIdLazyRoute,
     }),
   }),
   ZapIdRoute,
@@ -750,14 +736,15 @@ export const routeTree = rootRoute.addChildren({
         "/columns/_layout/gallery",
         "/columns/_layout/global",
         "/columns/_layout/group",
+        "/columns/_layout/stories",
         "/columns/_layout/topic",
+        "/columns/_layout/trending",
         "/columns/_layout/newsfeed",
         "/columns/_layout/notification",
         "/columns/_layout/onboarding",
-        "/columns/_layout/trending",
-        "/columns/_layout/users/$id",
         "/columns/_layout/events/$id",
-        "/columns/_layout/replies/$id"
+        "/columns/_layout/replies/$id",
+        "/columns/_layout/users/$id"
       ]
     },
     "/search/notes": {
@@ -843,8 +830,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "columns/_layout/group.tsx",
       "parent": "/columns/_layout"
     },
+    "/columns/_layout/stories": {
+      "filePath": "columns/_layout/stories.tsx",
+      "parent": "/columns/_layout"
+    },
     "/columns/_layout/topic": {
       "filePath": "columns/_layout/topic.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/trending": {
+      "filePath": "columns/_layout/trending.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/newsfeed": {
@@ -859,14 +854,6 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "columns/_layout/onboarding.lazy.tsx",
       "parent": "/columns/_layout"
     },
-    "/columns/_layout/trending": {
-      "filePath": "columns/_layout/trending.lazy.tsx",
-      "parent": "/columns/_layout",
-      "children": [
-        "/columns/_layout/trending/notes",
-        "/columns/_layout/trending/users"
-      ]
-    },
     "/columns/_layout/create-newsfeed/f2f": {
       "filePath": "columns/_layout/create-newsfeed.f2f.tsx",
       "parent": "/columns/_layout/create-newsfeed"
@@ -875,24 +862,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "columns/_layout/create-newsfeed.users.tsx",
       "parent": "/columns/_layout/create-newsfeed"
     },
-    "/columns/_layout/trending/notes": {
-      "filePath": "columns/_layout/trending.notes.tsx",
-      "parent": "/columns/_layout/trending"
-    },
-    "/columns/_layout/trending/users": {
-      "filePath": "columns/_layout/trending.users.tsx",
-      "parent": "/columns/_layout/trending"
-    },
-    "/columns/_layout/users/$id": {
-      "filePath": "columns/_layout/users.$id.tsx",
-      "parent": "/columns/_layout"
-    },
     "/columns/_layout/events/$id": {
       "filePath": "columns/_layout/events.$id.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/replies/$id": {
       "filePath": "columns/_layout/replies.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/users/$id": {
+      "filePath": "columns/_layout/users.$id.lazy.tsx",
       "parent": "/columns/_layout"
     }
   }

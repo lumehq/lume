@@ -93,6 +93,7 @@ function RootEvent() {
 
 function ReplyList() {
 	const { id } = Route.useParams();
+	const { queryClient } = Route.useRouteContext();
 	const { data, isLoading } = useQuery({
 		queryKey: ["reply", id],
 		queryFn: async () => {
@@ -181,9 +182,15 @@ function ReplyList() {
 	useEffect(() => {
 		const unlisten = getCurrentWindow().listen<EventPayload>(
 			"event",
-			(data) => {
+			async (data) => {
 				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-				console.log(event);
+				await queryClient.setQueryData(
+					["reply", id],
+					(prevEvents: LumeEvent[]) => {
+						if (!prevEvents) return [event];
+						return [event, ...prevEvents];
+					},
+				);
 			},
 		);
 
