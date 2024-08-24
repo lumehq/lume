@@ -40,6 +40,16 @@ export const LumeWindow = {
 			},
 		});
 	},
+	openSearch: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "search",
+				name: "Search",
+				url: "/columns/search",
+			},
+		});
+	},
 	openEvent: async (event: NostrEvent | LumeEvent) => {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
 		const root: string =
@@ -120,31 +130,6 @@ export const LumeWindow = {
 			title: "Settings",
 			width: 800,
 			height: 500,
-			maximizable: false,
-			minimizable: false,
-			hidden_title: true,
-		});
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
-	},
-	openSearch: async (searchType: "notes" | "users", searchQuery: string) => {
-		const url = `/search/${searchType}?query=${searchQuery}`;
-		const label = `search-${searchQuery
-			.toLowerCase()
-			.replace(/[^\w ]+/g, "")
-			.replace(/ +/g, "_")
-			.replace(/_+/g, "_")}`;
-
-		const query = await commands.openWindow({
-			label,
-			url,
-			title: "Search",
-			width: 400,
-			height: 600,
 			maximizable: false,
 			minimizable: false,
 			hidden_title: true,

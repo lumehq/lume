@@ -113,6 +113,7 @@ fn main() {
             get_group_events,
             get_global_events,
             get_hashtag_events,
+            search,
             publish,
             reply,
             repost,

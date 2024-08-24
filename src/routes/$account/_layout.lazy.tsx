@@ -30,6 +30,7 @@ function Screen() {
 					<div className="flex items-center gap-2">
 						<button
 							type="button"
+							onClick={() => LumeWindow.openSearch()}
 							className="inline-flex items-center justify-center size-7 bg-black/5 dark:bg-white/5 rounded-full hover:bg-blue-500 hover:text-white"
 						>
 							<MagnifyingGlass className="size-4" />

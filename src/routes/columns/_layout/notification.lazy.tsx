@@ -92,112 +92,110 @@ function Screen() {
 	}
 
 	return (
-		<div className="flex flex-col size-full overflow-hidden">
-			<Tabs.Root defaultValue="replies" className="flex flex-col h-full">
-				<Tabs.List className="h-8 shrink-0 flex items-center">
-					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
-						value="replies"
-					>
-						Replies
-					</Tabs.Trigger>
-					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
-						value="reactions"
-					>
-						Reactions
-					</Tabs.Trigger>
-					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
-						value="zaps"
-					>
-						Zaps
-					</Tabs.Trigger>
-				</Tabs.List>
-				<ScrollArea.Root
-					type={"scroll"}
-					scrollHideDelay={300}
-					className="min-h-0 flex-1 overflow-x-hidden"
+		<Tabs.Root defaultValue="replies" className="flex flex-col h-full">
+			<Tabs.List className="h-8 shrink-0 flex items-center">
+				<Tabs.Trigger
+					className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+					value="replies"
 				>
-					<Tab value="replies">
-						{data.texts.map((event, index) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-							<TextNote key={event.id + index} event={event} />
-						))}
-					</Tab>
-					<Tab value="reactions">
-						{[...data.reactions.entries()].map(([root, events]) => (
-							<div
-								key={root}
-								className="flex flex-col gap-1 p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
-							>
-								<div className="flex flex-col flex-1 min-w-0 gap-2">
-									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
-										<RootNote id={root} />
-									</div>
-									<div className="flex flex-wrap items-center gap-3">
-										{events.map((event) => (
-											<User.Provider key={event.id} pubkey={event.pubkey}>
-												<User.Root className="shrink-0 flex rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
-													<User.Avatar className="flex-1 rounded-full size-6" />
-													<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
-														{event.kind === Kind.Reaction ? (
-															event.content === "+" ? (
-																"👍"
-															) : (
-																event.content
-															)
+					Replies
+				</Tabs.Trigger>
+				<Tabs.Trigger
+					className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+					value="reactions"
+				>
+					Reactions
+				</Tabs.Trigger>
+				<Tabs.Trigger
+					className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+					value="zaps"
+				>
+					Zaps
+				</Tabs.Trigger>
+			</Tabs.List>
+			<ScrollArea.Root
+				type={"scroll"}
+				scrollHideDelay={300}
+				className="min-h-0 flex-1 overflow-x-hidden"
+			>
+				<Tab value="replies">
+					{data.texts.map((event, index) => (
+						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						<TextNote key={event.id + index} event={event} />
+					))}
+				</Tab>
+				<Tab value="reactions">
+					{[...data.reactions.entries()].map(([root, events]) => (
+						<div
+							key={root}
+							className="flex flex-col gap-1 p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
+						>
+							<div className="flex flex-col flex-1 min-w-0 gap-2">
+								<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
+									<RootNote id={root} />
+								</div>
+								<div className="flex flex-wrap items-center gap-3">
+									{events.map((event) => (
+										<User.Provider key={event.id} pubkey={event.pubkey}>
+											<User.Root className="shrink-0 flex rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
+												<User.Avatar className="flex-1 rounded-full size-6" />
+												<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
+													{event.kind === Kind.Reaction ? (
+														event.content === "+" ? (
+															"👍"
 														) : (
-															<Repeat className="text-teal-400 size-4 dark:text-teal-600" />
-														)}
-													</div>
-												</User.Root>
-											</User.Provider>
-										))}
-									</div>
+															event.content
+														)
+													) : (
+														<Repeat className="text-teal-400 size-4 dark:text-teal-600" />
+													)}
+												</div>
+											</User.Root>
+										</User.Provider>
+									))}
 								</div>
 							</div>
-						))}
-					</Tab>
-					<Tab value="zaps">
-						{[...data.zaps.entries()].map(([root, events]) => (
-							<div
-								key={root}
-								className="flex flex-col gap-1 p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
-							>
-								<div className="flex flex-col flex-1 min-w-0 gap-2">
-									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
-										<RootNote id={root} />
-									</div>
-									<div className="flex flex-wrap items-center gap-3">
-										{events.map((event) => (
-											<User.Provider
-												key={event.id}
-												pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
-											>
-												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
-													<User.Avatar className="rounded-full size-6" />
-													<div className="flex-1 h-6 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-xs font-semibold truncate">
-														₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
-													</div>
-												</User.Root>
-											</User.Provider>
-										))}
-									</div>
+						</div>
+					))}
+				</Tab>
+				<Tab value="zaps">
+					{[...data.zaps.entries()].map(([root, events]) => (
+						<div
+							key={root}
+							className="flex flex-col gap-1 p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
+						>
+							<div className="flex flex-col flex-1 min-w-0 gap-2">
+								<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
+									<RootNote id={root} />
+								</div>
+								<div className="flex flex-wrap items-center gap-3">
+									{events.map((event) => (
+										<User.Provider
+											key={event.id}
+											pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
+										>
+											<User.Root className="shrink-0 flex gap-1.5 rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
+												<User.Avatar className="rounded-full size-6" />
+												<div className="flex-1 h-6 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-xs font-semibold truncate">
+													₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
+												</div>
+											</User.Root>
+										</User.Provider>
+									))}
 								</div>
 							</div>
-						))}
-					</Tab>
-					<ScrollArea.Scrollbar
-						className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
-						orientation="vertical"
-					>
-						<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
-					</ScrollArea.Scrollbar>
-					<ScrollArea.Corner className="bg-transparent" />
-				</ScrollArea.Root>
-			</Tabs.Root>
-		</div>
+						</div>
+					))}
+				</Tab>
+				<ScrollArea.Scrollbar
+					className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
+					orientation="vertical"
+				>
+					<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+				</ScrollArea.Scrollbar>
+				<ScrollArea.Corner className="bg-transparent" />
+			</ScrollArea.Root>
+		</Tabs.Root>
 	);
 }
 

@@ -320,6 +320,14 @@ async getHashtagEvents(hashtags: string[], until: string | null) : Promise<Resul
     else return { status: "error", error: e  as any };
 }
 },
+async search(query: string, until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("search", { query, until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async publish(content: string, warning: string | null, difficulty: number | null) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("publish", { content, warning, difficulty }) };

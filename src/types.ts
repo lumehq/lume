@@ -61,7 +61,7 @@ export interface ColumnRouteSearch {
 export interface LumeColumn {
 	label: string;
 	name: string;
-	description: string;
+	description?: string;
 	url: string;
 	picture?: string;
 	default?: boolean;

@@ -14,7 +14,6 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SettingsImport } from './routes/settings'
-import { Route as SearchImport } from './routes/search'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
@@ -25,8 +24,6 @@ import { Route as SettingsRelayImport } from './routes/settings/relay'
 import { Route as SettingsGeneralImport } from './routes/settings/general'
 import { Route as SettingsBitcoinConnectImport } from './routes/settings/bitcoin-connect'
 import { Route as SettingsBackupImport } from './routes/settings/backup'
-import { Route as SearchUsersImport } from './routes/search.users'
-import { Route as SearchNotesImport } from './routes/search.notes'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountLayoutImport } from './routes/$account/_layout'
 import { Route as ColumnsLayoutTrendingImport } from './routes/columns/_layout/trending'
@@ -51,6 +48,9 @@ const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthConnectLazyImport = createFileRoute('/auth/connect')()
+const ColumnsLayoutSearchLazyImport = createFileRoute(
+  '/columns/_layout/search',
+)()
 const ColumnsLayoutOnboardingLazyImport = createFileRoute(
   '/columns/_layout/onboarding',
 )()
@@ -89,11 +89,6 @@ const NewLazyRoute = NewLazyImport.update({
 
 const SettingsRoute = SettingsImport.update({
   path: '/settings',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SearchRoute = SearchImport.update({
-  path: '/search',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -164,16 +159,6 @@ const SettingsBackupRoute = SettingsBackupImport.update({
   getParentRoute: () => SettingsRoute,
 } as any)
 
-const SearchUsersRoute = SearchUsersImport.update({
-  path: '/users',
-  getParentRoute: () => SearchRoute,
-} as any)
-
-const SearchNotesRoute = SearchNotesImport.update({
-  path: '/notes',
-  getParentRoute: () => SearchRoute,
-} as any)
-
 const ColumnsLayoutRoute = ColumnsLayoutImport.update({
   id: '/_layout',
   getParentRoute: () => ColumnsRoute,
@@ -184,6 +169,13 @@ const AccountLayoutRoute = AccountLayoutImport.update({
   getParentRoute: () => AccountRoute,
 } as any).lazy(() =>
   import('./routes/$account/_layout.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutSearchLazyRoute = ColumnsLayoutSearchLazyImport.update({
+  path: '/search',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/search.lazy').then((d) => d.Route),
 )
 
 const ColumnsLayoutOnboardingLazyRoute =
@@ -330,13 +322,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BootstrapRelaysImport
       parentRoute: typeof rootRoute
     }
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchImport
-      parentRoute: typeof rootRoute
-    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -378,20 +363,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/columns'
       preLoaderRoute: typeof ColumnsLayoutImport
       parentRoute: typeof ColumnsRoute
-    }
-    '/search/notes': {
-      id: '/search/notes'
-      path: '/notes'
-      fullPath: '/search/notes'
-      preLoaderRoute: typeof SearchNotesImport
-      parentRoute: typeof SearchImport
-    }
-    '/search/users': {
-      id: '/search/users'
-      path: '/users'
-      fullPath: '/search/users'
-      preLoaderRoute: typeof SearchUsersImport
-      parentRoute: typeof SearchImport
     }
     '/settings/backup': {
       id: '/settings/backup'
@@ -568,6 +539,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutOnboardingLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/search': {
+      id: '/columns/_layout/search'
+      path: '/search'
+      fullPath: '/columns/search'
+      preLoaderRoute: typeof ColumnsLayoutSearchLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/create-newsfeed/f2f': {
       id: '/columns/_layout/create-newsfeed/f2f'
       path: '/f2f'
@@ -611,7 +589,6 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   BootstrapRelaysRoute,
-  SearchRoute: SearchRoute.addChildren({ SearchNotesRoute, SearchUsersRoute }),
   SettingsRoute: SettingsRoute.addChildren({
     SettingsBackupRoute,
     SettingsBitcoinConnectRoute,
@@ -645,6 +622,7 @@ export const routeTree = rootRoute.addChildren({
       ColumnsLayoutNewsfeedLazyRoute,
       ColumnsLayoutNotificationLazyRoute,
       ColumnsLayoutOnboardingLazyRoute,
+      ColumnsLayoutSearchLazyRoute,
       ColumnsLayoutEventsIdLazyRoute,
       ColumnsLayoutRepliesIdLazyRoute,
       ColumnsLayoutUsersIdLazyRoute,
@@ -667,7 +645,6 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/bootstrap-relays",
-        "/search",
         "/settings",
         "/new",
         "/$account",
@@ -684,13 +661,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
-    },
-    "/search": {
-      "filePath": "search.tsx",
-      "children": [
-        "/search/notes",
-        "/search/users"
-      ]
     },
     "/settings": {
       "filePath": "settings.tsx",
@@ -742,18 +712,11 @@ export const routeTree = rootRoute.addChildren({
         "/columns/_layout/newsfeed",
         "/columns/_layout/notification",
         "/columns/_layout/onboarding",
+        "/columns/_layout/search",
         "/columns/_layout/events/$id",
         "/columns/_layout/replies/$id",
         "/columns/_layout/users/$id"
       ]
-    },
-    "/search/notes": {
-      "filePath": "search.notes.tsx",
-      "parent": "/search"
-    },
-    "/search/users": {
-      "filePath": "search.users.tsx",
-      "parent": "/search"
     },
     "/settings/backup": {
       "filePath": "settings/backup.tsx",
@@ -852,6 +815,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/columns/_layout/onboarding": {
       "filePath": "columns/_layout/onboarding.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/search": {
+      "filePath": "columns/_layout/search.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/create-newsfeed/f2f": {

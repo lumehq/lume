@@ -634,3 +634,50 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
         },
     }
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn search(
+    query: String,
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+
+    let timestamp = match until {
+        Some(str) => Timestamp::from_str(&str).map_err(|err| err.to_string())?,
+        None => Timestamp::now(),
+    };
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Metadata])
+        .search(query)
+        .until(timestamp)
+        .limit(FETCH_LIMIT);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
+                let raw = ev.as_json();
+                let parsed = if ev.kind == Kind::TextNote {
+                    Some(parse_event(&ev.content).await)
+                } else {
+                    None
+                };
+
+                RichEvent { raw, parsed }
+            });
+
+            let rich_events = join_all(futures).await;
+
+            Ok(rich_events)
+        }
+        Err(e) => Err(e.to_string()),
+    }
+}

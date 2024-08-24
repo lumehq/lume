@@ -6,7 +6,7 @@
 		"name": "Onboarding",
 		"description": "Tips for Mastering Lume.",
 		"url": "/columns/onboarding",
-		"picture": "/onboarding.png"
+		"picture": ""
 	},
 	{
 		"default": true,
@@ -15,7 +15,7 @@
 		"name": "Columns Gallery",
 		"description": "Expand your experiences.",
 		"url": "/columns/gallery",
-		"picture": "/gallery.png"
+		"picture": ""
 	},
 	{
 		"default": false,
@@ -24,7 +24,7 @@
 		"name": "Local Feeds",
 		"description": "All notes from your follows.",
 		"url": "/columns/newsfeed",
-		"picture": "/newsfeed.png"
+		"picture": ""
 	},
 	{
 		"default": false,
@@ -33,7 +33,16 @@
 		"name": "Notification",
 		"description": "All things around you.",
 		"url": "/columns/notification",
-		"picture": "/notification.png"
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "search",
+		"name": "Search",
+		"description": "Find anything.",
+		"url": "/columns/search",
+		"picture": ""
 	},
 	{
 		"default": false,
@@ -42,7 +51,7 @@
 		"name": "Stories",
 		"description": "Keep up to date with your follows.",
 		"url": "/columns/stories",
-		"picture": "/stories.png"
+		"picture": ""
 	},
 	{
 		"default": false,
@@ -51,7 +60,7 @@
 		"name": "Global Feeds",
 		"description": "Discover all global notes.",
 		"url": "/columns/global",
-		"picture": "/global.png"
+		"picture": ""
 	},
 	{
 		"default": false,
@@ -60,7 +69,7 @@
 		"name": "Group Feeds",
 		"description": "Keep up with specific people.",
 		"url": "/columns/group",
-		"picture": "/group.png"
+		"picture": ""
 	},
 	{
 		"default": false,
@@ -69,6 +78,6 @@
 		"name": "Trending",
 		"description": "Discover all trending notes.",
 		"url": "/columns/trending",
-		"picture": "/trending.png"
+		"picture": ""
 	}
 ]
