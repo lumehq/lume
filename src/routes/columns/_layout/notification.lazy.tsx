@@ -138,8 +138,8 @@ function Screen() {
 									<div className="flex flex-wrap items-center gap-3">
 										{events.map((event) => (
 											<User.Provider key={event.id} pubkey={event.pubkey}>
-												<User.Root className="shrink-0 flex rounded-full h-8 bg-black/10 dark:bg-white/10 p-[2px]">
-													<User.Avatar className="flex-1 rounded-full size-7" />
+												<User.Root className="shrink-0 flex rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
+													<User.Avatar className="flex-1 rounded-full size-6" />
 													<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
 														{event.kind === Kind.Reaction ? (
 															event.content === "+" ? (

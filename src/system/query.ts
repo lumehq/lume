@@ -1,8 +1,7 @@
 import { type Result, type RichEvent, commands } from "@/commands.gen";
 import type { LumeColumn, Metadata, NostrEvent, Relay } from "@/types";
-import { resolveResource } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
-import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { nip19 } from "nostr-tools";
 import { LumeEvent } from "./event";
@@ -177,17 +176,6 @@ export const NostrQuery = {
 			}
 		}
 	},
-	getUserEvents: async (pubkey: string, asOf?: number) => {
-		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.getEventsBy(pubkey, until);
-
-		if (query.status === "ok") {
-			const data = toLumeEvents(query.data);
-			return data;
-		} else {
-			return [];
-		}
-	},
 	getGroupEvents: async (pubkeys: string[], asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getGroupEvents(pubkeys, until);
@@ -266,33 +254,6 @@ export const NostrQuery = {
 			return query.data;
 		} else {
 			return query.error;
-		}
-	},
-	getColumns: async () => {
-		const systemPath = "resources/columns.json";
-		const resourcePath = await resolveResource(systemPath);
-		const resourceFile = await readTextFile(resourcePath);
-
-		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
-		const defaultColumns = systemColumns.filter((col) => col.default);
-
-		const key = "lume_v4:columns";
-		const query = await commands.getLumeStore(key);
-
-		try {
-			if (query.status === "ok") {
-				const columns: LumeColumn[] = JSON.parse(query.data);
-
-				if (!columns?.length) {
-					return defaultColumns;
-				}
-
-				return columns;
-			} else {
-				return defaultColumns;
-			}
-		} catch {
-			return defaultColumns;
 		}
 	},
 	setColumns: async (columns: LumeColumn[]) => {

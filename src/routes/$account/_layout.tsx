@@ -1,14 +1,17 @@
-import { NostrAccount, NostrQuery } from "@/system";
+import { NostrQuery } from "@/system";
+import type { LumeColumn } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
+import { resolveResource } from "@tauri-apps/api/path";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 
 export const Route = createFileRoute("/$account/_layout")({
-	beforeLoad: async ({ params }) => {
+	beforeLoad: async () => {
 		const settings = await NostrQuery.getUserSettings();
-		const accounts = await NostrAccount.getAccounts();
-		const otherAccounts = accounts.filter(
-			(account) => account !== params.account,
-		);
+		const systemPath = "resources/columns.json";
+		const resourcePath = await resolveResource(systemPath);
+		const resourceFile = await readTextFile(resourcePath);
+		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
 
-		return { otherAccounts, settings };
+		return { systemColumns, settings };
 	},
 });

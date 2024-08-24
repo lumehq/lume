@@ -1,9 +1,11 @@
+import { Spinner } from "@/components";
 import { Column } from "@/components/column";
-import { NostrQuery } from "@/system";
+import { LumeWindow, NostrQuery } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
-import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Plus, StackPlus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
+import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
@@ -22,7 +24,6 @@ export const Route = createLazyFileRoute("/$account/_layout/home")({
 });
 
 function Screen() {
-	const { account } = Route.useParams();
 	const initialColumnList = Route.useLoaderData();
 
 	const [columns, setColumns] = useState<LumeColumn[]>([]);
@@ -45,17 +46,6 @@ function Screen() {
 
 	const emitResizeEvent = useCallback(() => {
 		getCurrentWindow().emit("child_webview", { resize: true, direction: "x" });
-	}, []);
-
-	const openGallery = useCallback(async () => {
-		await getCurrentWindow().emit("columns", {
-			type: "add",
-			column: {
-				label: "columns_gallery",
-				name: "Columns Gallery",
-				content: "/gallery",
-			},
-		});
 	}, []);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
@@ -169,18 +159,20 @@ function Screen() {
 		<div className="size-full">
 			<div ref={emblaRef} className="overflow-hidden size-full">
 				<div className="flex size-full">
-					{columns?.map((column) => (
-						<Column
-							key={account + column.label}
-							column={column}
-							account={account}
-						/>
-					))}
+					{!columns ? (
+						<div className="size-full flex items-center justify-center">
+							<Spinner />
+						</div>
+					) : (
+						columns.map((column) => (
+							<Column key={column.label} column={column} />
+						))
+					)}
 					<div className="shrink-0 p-2 h-full w-[450px]">
 						<div className="size-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center justify-center">
 							<button
 								type="button"
-								onClick={() => openGallery()}
+								onClick={() => LumeWindow.openColumnsGallery()}
 								className="inline-flex items-center justify-center gap-1 rounded-full text-sm font-medium h-8 w-max pl-2 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
 							>
 								<Plus className="size-4" />
@@ -191,6 +183,7 @@ function Screen() {
 				</div>
 			</div>
 			<Toolbar>
+				<ManageButton />
 				<button
 					type="button"
 					onClick={() => scrollPrev()}
@@ -207,6 +200,49 @@ function Screen() {
 				</button>
 			</Toolbar>
 		</div>
+	);
+}
+
+function ManageButton() {
+	const { systemColumns } = Route.useRouteContext();
+
+	const showContextMenu = useCallback(
+		async (e: React.MouseEvent) => {
+			e.preventDefault();
+
+			const menuItems = await Promise.all([
+				MenuItem.new({
+					text: "Open Columns Gallery",
+					action: () => LumeWindow.openColumnsGallery(),
+				}),
+				PredefinedMenuItem.new({ item: "Separator" }),
+				MenuItem.new({
+					text: "Add local feeds",
+					action: () => LumeWindow.openLocalFeeds(),
+				}),
+				MenuItem.new({
+					text: "Add notification",
+					action: () => LumeWindow.openNotification(),
+				}),
+			]);
+
+			const menu = await Menu.new({
+				items: menuItems,
+			});
+
+			await menu.popup().catch((e) => console.error(e));
+		},
+		[systemColumns],
+	);
+
+	return (
+		<button
+			type="button"
+			onClick={(e) => showContextMenu(e)}
+			className="inline-flex items-center justify-center rounded-full size-7 hover:bg-black/5 dark:hover:bg-white/5"
+		>
+			<StackPlus className="size-4" />
+		</button>
 	);
 }
 

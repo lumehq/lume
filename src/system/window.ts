@@ -10,6 +10,36 @@ export const LumeWindow = {
 			column,
 		});
 	},
+	openColumnsGallery: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "columns_gallery",
+				name: "Columns Gallery",
+				url: "/columns/gallery",
+			},
+		});
+	},
+	openLocalFeeds: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "local_feeds",
+				name: "Local Feeds",
+				url: "/columns/newsfeed",
+			},
+		});
+	},
+	openNotification: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "notification",
+				name: "Notification",
+				url: "/columns/notification",
+			},
+		});
+	},
 	openEvent: async (event: NostrEvent | LumeEvent) => {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
 		const root: string =

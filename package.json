@@ -34,6 +34,7 @@
 		"@tauri-apps/plugin-upload": "2.0.0-rc.0",
 		"@tauri-apps/plugin-window-state": "2.0.0-rc.0",
 		"bitcoin-units": "^1.0.0",
+		"boring-avatars": "^1.10.2",
 		"dayjs": "^1.11.12",
 		"embla-carousel-react": "^8.1.8",
 		"i18next": "^23.13.0",

@@ -80,6 +80,9 @@ importers:
       bitcoin-units:
         specifier: ^1.0.0
         version: 1.0.0
+      boring-avatars:
+        specifier: ^1.10.2
+        version: 1.10.2
       dayjs:
         specifier: ^1.11.12
         version: 1.11.12
@@ -1342,6 +1345,9 @@ packages:
 
   bitcoin-units@1.0.0:
     resolution: {integrity: sha512-brac+Ttz7ovf/8D0jQHSWHnN2hmdjxDRBStxhjO752URLJlQIFpfZxzUteSZ81UYnRNiMkvsW9WsYPDuxHfnYA==}
+
+  boring-avatars@1.10.2:
+    resolution: {integrity: sha512-uQyvmNeW6loz4Yytj7aDo0IhhuByW/YyOHtqwb3kQ/x48hum22hROA2Wn3qzrLR5JsoZ+FHjPO6z6LrXrWjegg==}
 
   brace-expansion@2.0.1:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
@@ -3309,6 +3315,8 @@ snapshots:
   bitcoin-units@1.0.0:
     dependencies:
       big.js: 6.2.1
+
+  boring-avatars@1.10.2: {}
 
   brace-expansion@2.0.1:
     dependencies:

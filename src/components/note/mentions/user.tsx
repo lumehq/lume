@@ -1,7 +1,8 @@
+import { displayNpub } from "@/commons";
 import { LumeWindow, useProfile } from "@/system";
 
 export function MentionUser({ pubkey }: { pubkey: string }) {
-	const { isLoading, profile } = useProfile(pubkey);
+	const { isLoading, isError, profile } = useProfile(pubkey);
 
 	return (
 		<button
@@ -11,7 +12,9 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 		>
 			{isLoading
 				? "@anon"
-				: `@${profile?.name || profile?.display_name || pubkey}`}
+				: isError
+					? displayNpub(pubkey, 16)
+					: `@${profile?.name || profile?.display_name || displayNpub(pubkey, 16)}`}
 		</button>
 	);
 }

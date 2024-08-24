@@ -1,30 +1,29 @@
 import { commands } from "@/commands.gen";
 import type { LumeColumn } from "@/types";
 import { Check, DotsThree } from "@phosphor-icons/react";
+import { useParams } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { Spinner } from "./spinner";
 
 type WindowEvent = {
 	scroll: boolean;
 	resize: boolean;
 };
 
-export const Column = memo(function Column({
-	column,
-	account,
-}: {
-	column: LumeColumn;
-	account: string;
-}) {
+export const Column = memo(function Column({ column }: { column: LumeColumn }) {
+	const params = useParams({ strict: false });
 	const container = useRef<HTMLDivElement>(null);
-	const webviewLabel = `column-${account}_${column.label}`;
+	const webviewLabel = `column-${params.account}_${column.label}`;
 
 	const [isCreated, setIsCreated] = useState(false);
 
 	const repositionWebview = useCallback(async () => {
+		if (!container.current) return;
+
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("reposition_column", {
 			label: webviewLabel,
@@ -34,6 +33,8 @@ export const Column = memo(function Column({
 	}, []);
 
 	const resizeWebview = useCallback(async () => {
+		if (!container.current) return;
+
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("resize_column", {
 			label: webviewLabel,
@@ -56,10 +57,10 @@ export const Column = memo(function Column({
 	}, [isCreated]);
 
 	useEffect(() => {
-		if (!container?.current) return;
+		if (!container.current) return;
 
 		const rect = container.current.getBoundingClientRect();
-		const url = `${column.url}?account=${account}&label=${column.label}&name=${column.name}`;
+		const url = `${column.url}?account=${params.account}&label=${column.label}&name=${column.name}`;
 
 		const prop = {
 			label: webviewLabel,
@@ -82,27 +83,25 @@ export const Column = memo(function Column({
 				console.log("closed: ", webviewLabel);
 			});
 		};
-	}, [account]);
+	}, [params.account]);
 
 	return (
 		<div className="h-full w-[440px] shrink-0 p-2">
 			<div className="flex flex-col w-full h-full rounded-xl bg-black/5 dark:bg-white/10">
-				<Header
-					label={column.label}
-					webview={webviewLabel}
-					name={column.name}
-				/>
-				<div ref={container} className="flex-1 w-full h-full" />
+				<Header label={column.label} name={column.name} />
+				<div ref={container} className="flex-1 w-full h-full">
+					{!isCreated ? (
+						<div className="size-full flex items-center justify-center">
+							<Spinner />
+						</div>
+					) : null}
+				</div>
 			</div>
 		</div>
 	);
 });
 
-function Header({
-	label,
-	webview,
-	name,
-}: { label: string; webview: string; name: string }) {
+function Header({ label, name }: { label: string; name: string }) {
 	const [title, setTitle] = useState(name);
 	const [isChanged, setIsChanged] = useState(false);
 

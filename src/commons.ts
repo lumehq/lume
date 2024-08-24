@@ -150,6 +150,7 @@ export function displayNsec(key: string, len: number) {
 export function displayNpub(pubkey: string, len: number) {
 	if (pubkey.length <= len) return pubkey;
 
+	const str = pubkey.replace("nostr:", "");
 	const separator = " ... ";
 
 	const sepLen = separator.length;
@@ -158,9 +159,9 @@ export function displayNpub(pubkey: string, len: number) {
 	const backChars = Math.floor(charsToShow / 2);
 
 	return (
-		pubkey.substr(0, frontChars) +
+		str.substring(0, frontChars) +
 		separator +
-		pubkey.substr(pubkey.length - backChars)
+		str.substring(str.length - backChars)
 	);
 }
 

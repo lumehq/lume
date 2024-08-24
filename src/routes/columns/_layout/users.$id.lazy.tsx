@@ -10,9 +10,7 @@ import { Kind } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Await } from "@tanstack/react-router";
-import { Suspense, useCallback, useRef } from "react";
-import { WindowVirtualizer } from "virtua";
+import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/users/$id")({
@@ -21,12 +19,7 @@ export const Route = createLazyFileRoute("/columns/_layout/users/$id")({
 
 function Screen() {
 	const { id } = Route.useParams();
-	const {
-		isLoading,
-		isError,
-		error,
-		data: events,
-	} = useQuery({
+	const { isLoading, data: events } = useQuery({
 		queryKey: ["stories", id],
 		queryFn: async () => {
 			const res = await commands.getEventsBy(id, 20);

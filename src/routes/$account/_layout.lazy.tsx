@@ -1,16 +1,10 @@
 import { cn } from "@/commons";
 import { User } from "@/components/user";
-import { LumeWindow, NostrAccount } from "@/system";
+import { LumeWindow } from "@/system";
 import { CaretDown, Feather, MagnifyingGlass } from "@phosphor-icons/react";
-import {
-	Outlet,
-	createLazyFileRoute,
-	useNavigate,
-} from "@tanstack/react-router";
+import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { message } from "@tauri-apps/plugin-dialog";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback } from "react";
 
 export const Route = createLazyFileRoute("/$account/_layout")({
 	component: Screen,
