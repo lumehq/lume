@@ -83,6 +83,7 @@ fn main() {
             import_account,
             connect_account,
             delete_account,
+            reset_password,
             login,
             get_profile,
             set_profile,

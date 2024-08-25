@@ -44,6 +44,7 @@ import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/
 
 const ColumnsImport = createFileRoute('/columns')()
 const AccountImport = createFileRoute('/$account')()
+const ResetLazyImport = createFileRoute('/reset')()
 const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
@@ -81,6 +82,11 @@ const AccountRoute = AccountImport.update({
   path: '/$account',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ResetLazyRoute = ResetLazyImport.update({
+  path: '/reset',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/reset.lazy').then((d) => d.Route))
 
 const NewLazyRoute = NewLazyImport.update({
   path: '/new',
@@ -334,6 +340,13 @@ declare module '@tanstack/react-router' {
       path: '/new'
       fullPath: '/new'
       preLoaderRoute: typeof NewLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/reset': {
+      id: '/reset'
+      path: '/reset'
+      fullPath: '/reset'
+      preLoaderRoute: typeof ResetLazyImport
       parentRoute: typeof rootRoute
     }
     '/$account': {
@@ -598,6 +611,7 @@ export const routeTree = rootRoute.addChildren({
     SettingsWalletRoute,
   }),
   NewLazyRoute,
+  ResetLazyRoute,
   AccountRoute: AccountRoute.addChildren({
     AccountLayoutRoute: AccountLayoutRoute.addChildren({
       AccountLayoutBackupRoute,
@@ -647,6 +661,7 @@ export const routeTree = rootRoute.addChildren({
         "/bootstrap-relays",
         "/settings",
         "/new",
+        "/reset",
         "/$account",
         "/columns",
         "/zap/$id",
@@ -675,6 +690,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/new": {
       "filePath": "new.lazy.tsx"
+    },
+    "/reset": {
+      "filePath": "reset.lazy.tsx"
     },
     "/$account": {
       "filePath": "$account",

@@ -164,6 +164,28 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
 
 #[tauri::command]
 #[specta::specta]
+pub async fn reset_password(key: String, password: String) -> Result<(), String> {
+    let secret_key = SecretKey::from_bech32(key).map_err(|err| err.to_string())?;
+    let keys = Keys::new(secret_key.clone());
+    let npub = keys.public_key().to_bech32().unwrap();
+
+    let enc = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium)
+        .map_err(|err| err.to_string())?;
+    let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
+
+    let keyring = Entry::new("Lume Secret Storage", &npub).map_err(|e| e.to_string())?;
+    let account = Account {
+        password: enc_bech32,
+        nostr_connect: None,
+    };
+    let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
+    let _ = keyring.set_password(&j);
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn delete_account(id: String) -> Result<(), String> {
     let keyring = Entry::new("Lume Secret Storage", &id).map_err(|e| e.to_string())?;
     let _ = keyring.delete_credential();

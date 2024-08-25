@@ -76,6 +76,11 @@ function Screen() {
 
 			const menuItems = await Promise.all([
 				MenuItem.new({
+					text: "Reset password",
+					enabled: !account.includes("_nostrconnect"),
+					action: () => navigate({ to: "/reset", search: { account } }),
+				}),
+				MenuItem.new({
 					text: "Delete account",
 					action: async () => await deleteAccount(account),
 				}),
