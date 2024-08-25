@@ -435,6 +435,11 @@ async quit() : Promise<void> {
 /** user-defined events **/
 
 
+export const events = __makeEvents__<{
+subscription: Subscription
+}>({
+subscription: "subscription"
+})
 
 /** user-defined constants **/
 
@@ -448,6 +453,8 @@ export type Profile = { name: string; display_name: string; about: string | null
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; vibrancy: boolean }
+export type SubKind = "Subscribe" | "Unsubscribe"
+export type Subscription = { label: string; kind: SubKind; event_id: string | null }
 export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean }
 
 /** tauri-specta globals **/

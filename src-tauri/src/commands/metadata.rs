@@ -205,17 +205,10 @@ pub async fn set_lume_store(
         .nip44_encrypt(public_key, content)
         .await
         .map_err(|e| e.to_string())?;
-
     let tag = Tag::identifier(key);
     let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
-    let unsigned = builder.to_unsigned_event(public_key);
-    let event = signer
-        .sign_event(unsigned)
-        .await
-        .map_err(|e| e.to_string())?;
-
-    match client.database().save_event(&event).await {
+    match client.send_event_builder(builder).await {
         Ok(event_id) => Ok(event_id.to_string()),
         Err(err) => Err(err.to_string()),
     }
@@ -235,7 +228,10 @@ pub async fn get_lume_store(key: String, state: State<'_, Nostr>) -> Result<Stri
         .limit(1);
 
     match client
-        .get_events_of(vec![filter], EventSource::Database)
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(3))),
+        )
         .await
     {
         Ok(events) => {

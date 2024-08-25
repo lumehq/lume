@@ -17,10 +17,10 @@ use std::{
     str::FromStr,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Emitter, EventTarget, Listener, Manager};
+use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
-use tauri_specta::{collect_commands, Builder};
+use tauri_specta::{collect_commands, collect_events, Builder, Event as TauriEvent};
 use tokio::sync::Mutex;
 
 pub mod commands;
@@ -45,6 +45,19 @@ pub struct Settings {
     display_repost_button: bool,
     display_media: bool,
     vibrancy: bool,
+}
+
+#[derive(Serialize, Deserialize, Type)]
+enum SubKind {
+    Subscribe,
+    Unsubscribe,
+}
+
+#[derive(Serialize, Deserialize, Type, TauriEvent)]
+struct Subscription {
+    label: String,
+    kind: SubKind,
+    event_id: Option<String>,
 }
 
 impl Default for Settings {
@@ -128,7 +141,8 @@ fn main() {
             open_window,
             reopen_lume,
             quit
-        ]);
+        ])
+        .events(collect_events![Subscription]);
 
     builder
         .export(Typescript::default(), "../src/commands.gen.ts")
@@ -238,16 +252,45 @@ fn main() {
                 settings: Mutex::new(Settings::default()),
             });
 
-            app.listen_any("unsubscribe", move |event| {
+            Subscription::listen_any(app, move |event| {
                 let handle = handle_clone_child.to_owned();
-                let payload = event.payload().to_string();
+                let payload = event.payload;
 
                 tauri::async_runtime::spawn(async move {
-                    let subscription_id = SubscriptionId::new(payload);
                     let state = handle.state::<Nostr>();
                     let client = &state.client;
 
-                    client.unsubscribe(subscription_id).await
+                    match payload.kind {
+                        SubKind::Subscribe => {
+                            let subscription_id = SubscriptionId::new(payload.label);
+
+                            let filter = if let Some(id) = payload.event_id {
+                                let event_id = EventId::from_str(&id).unwrap();
+
+                                Filter::new().event(event_id).since(Timestamp::now())
+                            } else {
+                                let contact_list = state.contact_list.lock().await;
+                                let authors: Vec<PublicKey> =
+                                    contact_list.iter().map(|f| f.public_key).collect();
+
+                                Filter::new()
+                                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                                    .authors(authors)
+                                    .since(Timestamp::now())
+                            };
+
+                            if let Err(e) = client
+                                .subscribe_with_id(subscription_id, vec![filter], None)
+                                .await
+                            {
+                                println!("Subscription error: {}", e)
+                            }
+                        }
+                        SubKind::Unsubscribe => {
+                            let subscription_id = SubscriptionId::new(payload.label);
+                            client.unsubscribe(subscription_id).await
+                        }
+                    }
                 });
             });
 

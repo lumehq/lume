@@ -1,12 +1,6 @@
-import { commands } from "@/commands.gen";
+import { events, commands } from "@/commands.gen";
 import { toLumeEvents } from "@/commons";
-import {
-	Conversation,
-	Quote,
-	RepostNote,
-	Spinner,
-	TextNote,
-} from "@/components";
+import { Quote, RepostNote, Spinner, TextNote } from "@/components";
 import { LumeEvent } from "@/system";
 import { Kind, type Meta } from "@/types";
 import { ArrowCircleRight, ArrowUp } from "@phosphor-icons/react";
@@ -72,11 +66,7 @@ export function Screen() {
 				case Kind.Repost:
 					return <RepostNote key={event.id} event={event} className="mb-3" />;
 				default: {
-					if (event.isConversation) {
-						return (
-							<Conversation key={event.id} event={event} className="mb-3" />
-						);
-					} else if (event.isQuote) {
+					if (event.isQuote) {
 						return <Quote key={event.id} event={event} className="mb-3" />;
 					} else {
 						return <TextNote key={event.id} event={event} className="mb-3" />;
@@ -162,7 +152,7 @@ const Listerner = memo(function Listerner() {
 	const { queryClient } = Route.useRouteContext();
 	const { label, account } = Route.useSearch();
 
-	const [events, setEvents] = useState<LumeEvent[]>([]);
+	const [lumeEvents, setLumeEvents] = useState<LumeEvent[]>([]);
 	const [isPending, startTransition] = useTransition();
 
 	const queryStatus = queryClient.getQueryState([label, account]);
@@ -174,7 +164,7 @@ const Listerner = memo(function Listerner() {
 				(oldData: InfiniteData<LumeEvent[], number> | undefined) => {
 					if (oldData) {
 						const firstPage = oldData.pages[0];
-						const newPage = [...events, ...firstPage];
+						const newPage = [...lumeEvents, ...firstPage];
 
 						return {
 							...oldData,
@@ -185,27 +175,40 @@ const Listerner = memo(function Listerner() {
 			);
 
 			// Reset array
-			setEvents([]);
+			setLumeEvents([]);
 
 			return;
 		});
 	};
 
 	useEffect(() => {
-		const unlisten = getCurrentWindow().listen<Payload>(
-			"local_event",
-			(data) => {
-				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-				setEvents((prev) => [event, ...prev]);
-			},
-		);
+		events.subscription
+			.emit({ label, kind: "Subscribe", event_id: undefined })
+			.then(() => console.log("Subscribe: ", label));
+
+		return () => {
+			events.subscription
+				.emit({
+					label,
+					kind: "Unsubscribe",
+					event_id: undefined,
+				})
+				.then(() => console.log("Unsubscribe: ", label));
+		};
+	}, []);
+
+	useEffect(() => {
+		const unlisten = getCurrentWindow().listen<Payload>("event", (data) => {
+			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
+			setLumeEvents((prev) => [event, ...prev]);
+		});
 
 		return () => {
 			unlisten.then((f) => f());
 		};
 	}, []);
 
-	if (events.length && queryStatus.fetchStatus !== "fetching") {
+	if (lumeEvents.length && queryStatus.fetchStatus !== "fetching") {
 		return (
 			<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
 				<button
@@ -218,7 +221,7 @@ const Listerner = memo(function Listerner() {
 					) : (
 						<ArrowUp className="size-4" />
 					)}
-					{events.length} new notes
+					{lumeEvents.length} new notes
 				</button>
 			</div>
 		);

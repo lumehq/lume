@@ -1,4 +1,4 @@
-import { commands } from "@/commands.gen";
+import { events, commands } from "@/commands.gen";
 import { Note, ReplyNote, Spinner } from "@/components";
 import { LumeEvent, useEvent } from "@/system";
 import type { EventPayload } from "@/types";
@@ -92,6 +92,7 @@ function RootEvent() {
 }
 
 function ReplyList() {
+	const { label } = Route.useSearch();
 	const { id } = Route.useParams();
 	const { queryClient } = Route.useRouteContext();
 	const { data, isLoading } = useQuery({
@@ -178,6 +179,23 @@ function ReplyList() {
 		},
 		refetchOnWindowFocus: false,
 	});
+
+	useEffect(() => {
+		events.subscription
+			.emit({ label, kind: "Subscribe", event_id: id, local_only: undefined })
+			.then(() => console.log("Subscribe: ", label));
+
+		return () => {
+			events.subscription
+				.emit({
+					label,
+					kind: "Unsubscribe",
+					event_id: id,
+					local_only: undefined,
+				})
+				.then(() => console.log("Unsubscribe: ", label));
+		};
+	}, []);
 
 	useEffect(() => {
 		const unlisten = getCurrentWindow().listen<EventPayload>(
