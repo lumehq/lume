@@ -1,3 +1,5 @@
+import { GoBack } from "@/components";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/new")({
@@ -8,7 +10,7 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="size-full flex items-center justify-center"
+			className="relative size-full flex items-center justify-center"
 		>
 			<div className="w-[320px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">
@@ -40,6 +42,10 @@ function Screen() {
 					</div>
 				</div>
 			</div>
+			<GoBack className="fixed top-11 left-2 flex items-center gap-1.5 text-sm font-medium">
+				<ArrowLeft className="size-5" />
+				Back
+			</GoBack>
 		</div>
 	);
 }

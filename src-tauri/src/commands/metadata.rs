@@ -25,7 +25,7 @@ pub struct Profile {
 pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let public_key: PublicKey = match id {
-        Some(user_id) => PublicKey::from_str(&user_id).map_err(|e| e.to_string())?,
+        Some(user_id) => PublicKey::parse(&user_id).map_err(|e| e.to_string())?,
         None => client.signer().await.unwrap().public_key().await.unwrap(),
     };
 
@@ -143,7 +143,7 @@ pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> 
 pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let contact_list = state.contact_list.lock().await;
 
-    match PublicKey::from_str(&hex) {
+    match PublicKey::parse(&hex) {
         Ok(public_key) => match contact_list.iter().position(|x| x.public_key == public_key) {
             Some(_) => Ok(true),
             None => Ok(false),
@@ -318,7 +318,7 @@ pub async fn zap_profile(
     state: State<'_, Nostr>,
 ) -> Result<bool, String> {
     let client = &state.client;
-    let public_key: PublicKey = PublicKey::from_str(id).map_err(|e| e.to_string())?;
+    let public_key: PublicKey = PublicKey::parse(id).map_err(|e| e.to_string())?;
 
     let details = ZapDetails::new(ZapType::Private).message(message);
     let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
@@ -410,7 +410,7 @@ pub async fn get_following(
     public_key: &str,
 ) -> Result<Vec<String>, String> {
     let client = &state.client;
-    let public_key = PublicKey::from_str(public_key).map_err(|e| e.to_string())?;
+    let public_key = PublicKey::parse(public_key).map_err(|e| e.to_string())?;
 
     let filter = Filter::new().kind(Kind::ContactList).author(public_key);
     let events = match client
@@ -446,7 +446,7 @@ pub async fn get_followers(
     public_key: &str,
 ) -> Result<Vec<String>, String> {
     let client = &state.client;
-    let public_key = PublicKey::from_str(public_key).map_err(|e| e.to_string())?;
+    let public_key = PublicKey::parse(public_key).map_err(|e| e.to_string())?;
 
     let filter = Filter::new().kind(Kind::ContactList).custom_tag(
         SingleLetterTag::lowercase(Alphabet::P),

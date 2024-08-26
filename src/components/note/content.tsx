@@ -1,7 +1,7 @@
 import { appSettings, cn } from "@/commons";
 import { useStore } from "@tanstack/react-store";
 import { nanoid } from "nanoid";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, memo, useMemo, useState } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
@@ -21,9 +21,8 @@ export function NoteContent({
 	clean?: boolean;
 	className?: string;
 }) {
-	const visible = useStore(appSettings, (state) => state.display_media);
 	const event = useNoteContext();
-
+	const visible = useStore(appSettings, (state) => state.display_media);
 	const warning = useMemo(() => event.warning, [event]);
 	const content = useMemo(() => {
 		try {
@@ -90,35 +89,13 @@ export function NoteContent({
 		}
 	}, [event.content]);
 
-	const [blurred, setBlurred] = useState(() => warning?.length > 0);
-
 	return (
 		<div className="relative flex flex-col gap-2">
-			{blurred ? (
-				<div className="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black/80 backdrop-blur-lg">
-					<div className="flex flex-col items-center justify-center gap-2 text-center">
-						<p className="text-sm text-white/60">
-							The content is hidden because the author
-							<br />
-							marked it with a warning for a reason:
-						</p>
-						<p className="text-sm font-medium text-white">{warning}</p>
-						<button
-							type="button"
-							onClick={() => setBlurred(false)}
-							className="inline-flex items-center justify-center px-2 mt-4 text-sm font-medium border rounded-lg text-white/70 h-9 w-max bg-white/20 hover:bg-white/30 border-white/5"
-						>
-							View anyway
-						</button>
-					</div>
-				</div>
-			) : null}
+			<ContentWarning warning={warning} />
 			<div
 				className={cn(
 					"select-text text-pretty content-break overflow-hidden",
-					event.meta?.content.length > 500
-						? "max-h-[250px] gradient-mask-b-0"
-						: "",
+					event.content.length > 500 ? "max-h-[250px] gradient-mask-b-0" : "",
 					className,
 				)}
 			>
@@ -137,3 +114,31 @@ export function NoteContent({
 		</div>
 	);
 }
+
+const ContentWarning = memo(function ContentWarning({
+	warning,
+}: { warning: string }) {
+	const [blurred, setBlurred] = useState(() => warning?.length > 0);
+
+	if (!blurred) return null;
+
+	return (
+		<div className="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black/80 backdrop-blur-lg">
+			<div className="flex flex-col items-center justify-center gap-2 text-center">
+				<p className="text-sm text-white/60">
+					The content is hidden because the author
+					<br />
+					marked it with a warning for a reason:
+				</p>
+				<p className="text-sm font-medium text-white">{warning}</p>
+				<button
+					type="button"
+					onClick={() => setBlurred(false)}
+					className="inline-flex items-center justify-center px-2 mt-4 text-sm font-medium border rounded-lg text-white/70 h-9 w-max bg-white/20 hover:bg-white/30 border-white/5"
+				>
+					View anyway
+				</button>
+			</div>
+		</div>
+	);
+});

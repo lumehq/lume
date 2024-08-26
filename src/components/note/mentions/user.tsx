@@ -1,7 +1,10 @@
 import { displayNpub } from "@/commons";
 import { LumeWindow, useProfile } from "@/system";
+import { memo } from "react";
 
-export function MentionUser({ pubkey }: { pubkey: string }) {
+export const MentionUser = memo(function MentionUser({
+	pubkey,
+}: { pubkey: string }) {
 	const { isLoading, isError, profile } = useProfile(pubkey);
 
 	return (
@@ -17,4 +20,4 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 					: `@${profile?.name || profile?.display_name || displayNpub(pubkey, 16)}`}
 		</button>
 	);
-}
+});

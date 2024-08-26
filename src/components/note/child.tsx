@@ -11,7 +11,7 @@ export function NoteChild({
 	event: EventTag;
 	isRoot?: boolean;
 }) {
-	const { isLoading, isError, data } = useEvent(event.id, event.relayHint);
+	const { isLoading, isError, data } = useEvent(event.id);
 
 	if (isLoading) {
 		return (

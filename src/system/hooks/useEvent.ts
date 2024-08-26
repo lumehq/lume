@@ -4,23 +4,27 @@ import { useQuery } from "@tanstack/react-query";
 import { nip19 } from "nostr-tools";
 import { LumeEvent } from "../event";
 
-export function useEvent(id: string, hint?: string) {
+export function useEvent(id: string) {
 	const { isLoading, isError, error, data } = useQuery({
 		queryKey: ["event", id],
 		queryFn: async () => {
 			try {
 				// Validate ID
-				const normalizeId: string = id
+				let normalizeId: string = id
 					.replace("nostr:", "")
 					.replace(/[^\w\s]/gi, "");
 
 				// Define query
 				let query: Result<RichEvent, string>;
-				let relayHint: string = hint;
+				let relayHint: string;
 
 				if (normalizeId.startsWith("nevent1")) {
 					const decoded = nip19.decode(normalizeId);
-					if (decoded.type === "nevent") relayHint = decoded.data.relays[0];
+
+					if (decoded.type === "nevent") {
+						relayHint = decoded.data.relays[0];
+						normalizeId = decoded.data.id;
+					}
 				}
 
 				// Build query
@@ -37,15 +41,13 @@ export function useEvent(id: string, hint?: string) {
 
 				if (query.status === "ok") {
 					const data = query.data;
-					const raw = JSON.parse(data.raw) as NostrEvent;
+					const raw: NostrEvent = JSON.parse(data.raw);
 
-					if (data?.parsed) {
+					if (data.parsed) {
 						raw.meta = data.parsed;
 					}
 
-					const event = new LumeEvent(raw);
-
-					return event;
+					return new LumeEvent(raw);
 				} else {
 					throw new Error(query.error);
 				}
@@ -57,7 +59,7 @@ export function useEvent(id: string, hint?: string) {
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: 1,
+		retry: false,
 	});
 
 	return { isLoading, isError, error, data };
