@@ -44,7 +44,23 @@ pub struct Settings {
     display_zap_button: bool,
     display_repost_button: bool,
     display_media: bool,
-    vibrancy: bool,
+    transparent: bool,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            proxy: None,
+            image_resize_service: Some("https://wsrv.nl".to_string()),
+            use_relay_hint: true,
+            content_warning: true,
+            display_avatar: true,
+            display_zap_button: true,
+            display_repost_button: true,
+            display_media: true,
+            transparent: true,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Type)]
@@ -60,21 +76,8 @@ struct Subscription {
     event_id: Option<String>,
 }
 
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            proxy: None,
-            image_resize_service: None,
-            use_relay_hint: true,
-            content_warning: true,
-            display_avatar: true,
-            display_zap_button: true,
-            display_repost_button: true,
-            display_media: true,
-            vibrancy: true,
-        }
-    }
-}
+#[derive(Serialize, Deserialize, Type, Clone, TauriEvent)]
+struct NewSettings(Settings);
 
 pub const FETCH_LIMIT: usize = 44;
 pub const NEWSFEED_NEG_LIMIT: usize = 256;
@@ -95,6 +98,7 @@ fn main() {
             create_account,
             import_account,
             connect_account,
+            get_private_key,
             delete_account,
             reset_password,
             login,
@@ -115,7 +119,7 @@ fn main() {
             friend_to_friend,
             get_notifications,
             get_settings,
-            set_new_settings,
+            set_settings,
             verify_nip05,
             get_event_meta,
             get_event,
@@ -142,7 +146,7 @@ fn main() {
             reopen_lume,
             quit
         ])
-        .events(collect_events![Subscription]);
+        .events(collect_events![Subscription, NewSettings]);
 
     builder
         .export(Typescript::default(), "../src/commands.gen.ts")

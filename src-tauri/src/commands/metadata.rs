@@ -4,8 +4,9 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
+use tauri_specta::Event;
 
-use crate::{Nostr, Settings};
+use crate::{NewSettings, Nostr, Settings};
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Profile {
@@ -506,23 +507,47 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
 #[tauri::command]
 #[specta::specta]
 pub async fn get_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
-    Ok(state.settings.lock().await.to_owned())
+    Ok(state.settings.lock().await.clone())
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_new_settings(settings: &str, state: State<'_, Nostr>) -> Result<(), ()> {
-    let parsed: Settings =
-        serde_json::from_str(settings).expect("Could not parse settings payload");
-    *state.settings.lock().await = parsed;
+pub async fn set_settings(
+    settings: &str,
+    state: State<'_, Nostr>,
+    handle: tauri::AppHandle,
+) -> Result<(), String> {
+    let client = &state.client;
+    let ident = "lume_v4:settings";
+    let signer = client.signer().await.map_err(|e| e.to_string())?;
+    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
+    let encrypted = signer
+        .nip44_encrypt(public_key, settings)
+        .await
+        .map_err(|e| e.to_string())?;
+    let tag = Tag::identifier(ident);
+    let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
-    Ok(())
+    match client.send_event_builder(builder).await {
+        Ok(_) => {
+            let parsed: Settings = serde_json::from_str(settings).map_err(|e| e.to_string())?;
+
+            // Update state
+            state.settings.lock().await.clone_from(&parsed);
+
+            // Emit new changes to frontend
+            NewSettings(parsed).emit(&handle).unwrap();
+
+            Ok(())
+        }
+        Err(err) => Err(err.to_string()),
+    }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
-    match PublicKey::from_str(key) {
+pub async fn verify_nip05(id: String, nip05: &str) -> Result<bool, String> {
+    match PublicKey::from_str(&id) {
         Ok(public_key) => match nip05::verify(&public_key, nip05, None).await {
             Ok(status) => Ok(status),
             Err(e) => Err(e.to_string()),

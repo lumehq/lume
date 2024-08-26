@@ -1,16 +1,16 @@
-import { cn } from "@/commons";
+import { appSettings, cn } from "@/commons";
 import { Spinner } from "@/components";
 import { LumeWindow } from "@/system";
 import { Repeat } from "@phosphor-icons/react";
-import { useRouteContext } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useCallback, useState } from "react";
 import { useNoteContext } from "../provider";
 
 export function NoteRepost({ large = false }: { large?: boolean }) {
+	const visible = useStore(appSettings, (state) => state.display_repost_button);
 	const event = useNoteContext();
-	const { settings } = useRouteContext({ strict: false });
 
 	const [loading, setLoading] = useState(false);
 	const [isRepost, setIsRepost] = useState(false);
@@ -57,7 +57,7 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 		await menu.popup().catch((e) => console.error(e));
 	}, []);
 
-	if (!settings.display_repost_button) return null;
+	if (!visible) return null;
 
 	return (
 		<button

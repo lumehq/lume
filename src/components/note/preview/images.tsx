@@ -1,14 +1,12 @@
-import { cn } from "@/commons";
+import { appSettings, cn } from "@/commons";
 import { Spinner } from "@/components";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
-import { useRouteContext } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { open } from "@tauri-apps/plugin-shell";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export function Images({ urls }: { urls: string[] }) {
-	const { settings } = useRouteContext({ strict: false });
-
 	const [slidesInView, setSlidesInView] = useState([]);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		dragFree: true,
@@ -16,19 +14,19 @@ export function Images({ urls }: { urls: string[] }) {
 		watchSlides: false,
 	});
 
+	const service = useStore(appSettings, (state) => state.image_resize_service);
+
 	const imageUrls = useMemo(() => {
-		if (settings.image_resize_service?.length) {
+		if (service?.length) {
 			let newUrls: string[];
 
 			if (urls.length === 1) {
 				newUrls = urls.map(
-					(url) =>
-						`${settings.image_resize_service}?url=${url}&ll&af&default=1&n=-1`,
+					(url) => `${service}?url=${url}&ll&af&default=1&n=-1`,
 				);
 			} else {
 				newUrls = urls.map(
-					(url) =>
-						`${settings.image_resize_service}?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
+					(url) => `${service}?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
 				);
 			}
 
@@ -36,7 +34,7 @@ export function Images({ urls }: { urls: string[] }) {
 		} else {
 			return urls;
 		}
-	}, [settings.image_resize_service]);
+	}, [service]);
 
 	const scrollPrev = useCallback(() => {
 		if (emblaApi) emblaApi.scrollPrev();

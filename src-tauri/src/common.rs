@@ -304,7 +304,7 @@ pub async fn init_nip65(client: &Client) {
 }
 
 pub async fn get_user_settings(client: &Client) -> Result<Settings, String> {
-    let ident = "lume:settings";
+    let ident = "lume_v4:settings";
     let signer = client
         .signer()
         .await

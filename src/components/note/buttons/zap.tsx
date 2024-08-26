@@ -1,14 +1,14 @@
-import { cn } from "@/commons";
+import { appSettings, cn } from "@/commons";
 import { LumeWindow } from "@/system";
 import { Lightning } from "@phosphor-icons/react";
-import { useRouteContext } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { useNoteContext } from "../provider";
 
 export function NoteZap({ large = false }: { large?: boolean }) {
+	const visible = useStore(appSettings, (state) => state.display_zap_button);
 	const event = useNoteContext();
-	const { settings } = useRouteContext({ strict: false });
 
-	if (!settings.display_zap_button) return null;
+	if (!visible) return null;
 
 	return (
 		<button

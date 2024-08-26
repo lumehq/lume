@@ -1,4 +1,5 @@
-import { NostrQuery } from "@/system";
+import { commands } from "@/commands.gen";
+import { appSettings } from "@/commons";
 import type { ColumnRouteSearch } from "@/types";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
@@ -11,8 +12,15 @@ export const Route = createFileRoute("/columns/_layout")({
 		};
 	},
 	beforeLoad: async () => {
-		const settings = await NostrQuery.getUserSettings();
-		return { settings };
+		const res = await commands.getSettings();
+
+		if (res.status === "ok") {
+			appSettings.setState((state) => {
+				return { ...state, ...res.data };
+			});
+		} else {
+			throw new Error(res.error);
+		}
 	},
 	component: Layout,
 });

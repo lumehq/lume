@@ -1,31 +1,23 @@
-import { getBitcoinDisplayValues } from "@/commons";
 import { NostrAccount } from "@/system";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createLazyFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/settings/wallet")({
-	beforeLoad: async () => {
-		const wallet = await NostrAccount.loadWallet();
-		if (!wallet) {
-			throw redirect({ to: "/settings/bitcoin-connect" });
-		}
-		const balance = getBitcoinDisplayValues(wallet);
-		return { balance };
-	},
+export const Route = createLazyFileRoute("/$account/_settings/wallet")({
 	component: Screen,
 });
 
 function Screen() {
+	const { account } = Route.useParams();
 	const { balance } = Route.useRouteContext();
 
 	const disconnect = async () => {
 		window.localStorage.removeItem("bc:config");
 		await NostrAccount.removeWallet();
 
-		return redirect({ to: "/settings/bitcoin-connect" });
+		return redirect({ to: "/$account/bitcoin-connect", params: { account } });
 	};
 
 	return (
-		<div className="w-full max-w-xl mx-auto">
+		<div className="w-full px-3 pb-3">
 			<div className="flex flex-col w-full gap-3">
 				<div className="flex flex-col w-full px-3 bg-black/5 dark:bg-white/5 rounded-xl">
 					<div className="flex items-center justify-between w-full gap-4 py-3">

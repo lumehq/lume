@@ -1,5 +1,5 @@
-import { cn } from "@/commons";
-import { useRouteContext } from "@tanstack/react-router";
+import { appSettings, cn } from "@/commons";
+import { useStore } from "@tanstack/react-store";
 import { nanoid } from "nanoid";
 import { type ReactNode, useMemo, useState } from "react";
 import reactStringReplace from "react-string-replace";
@@ -21,7 +21,7 @@ export function NoteContent({
 	clean?: boolean;
 	className?: string;
 }) {
-	const { settings } = useRouteContext({ strict: false });
+	const visible = useStore(appSettings, (state) => state.display_media);
 	const event = useNoteContext();
 
 	const warning = useMemo(() => event.warning, [event]);
@@ -31,9 +31,7 @@ export function NoteContent({
 			const { content, hashtags, events, mentions } = event.meta;
 
 			// Define rich content
-			let richContent: ReactNode[] | string = settings.display_media
-				? content
-				: event.content;
+			let richContent: ReactNode[] | string = visible ? content : event.content;
 
 			for (const hashtag of hashtags) {
 				const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
@@ -126,7 +124,7 @@ export function NoteContent({
 			>
 				{content}
 			</div>
-			{settings.display_media ? (
+			{visible ? (
 				<>
 					{event.meta?.images.length ? (
 						<Images urls={event.meta.images} />

@@ -2,6 +2,7 @@ import type {
 	AsyncStorage,
 	PersistedQuery,
 } from "@tanstack/query-persist-client-core";
+import { Store } from "@tanstack/store";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check } from "@tauri-apps/plugin-updater";
@@ -15,7 +16,7 @@ import { decode } from "light-bolt11-decoder";
 import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
-import type { RichEvent } from "./commands.gen";
+import type { RichEvent, Settings } from "./commands.gen";
 import { LumeEvent } from "./system";
 import type { NostrEvent } from "./types";
 
@@ -130,21 +131,6 @@ export function replyTime(time: number) {
 	const formated = inputTime.format("MM-DD-YY HH:mm");
 
 	return formated;
-}
-
-export function displayNsec(key: string, len: number) {
-	if (key.length <= len) return key;
-
-	const separator = " ... ";
-
-	const sepLen = separator.length;
-	const charsToShow = len - sepLen;
-	const frontChars = Math.ceil(charsToShow / 2);
-	const backChars = Math.floor(charsToShow / 2);
-
-	return (
-		key.substr(0, frontChars) + separator + key.substr(key.length - backChars)
-	);
 }
 
 export function displayNpub(pubkey: string, len: number) {
@@ -281,3 +267,15 @@ export function newIdbStorage(
 		removeItem: async (key) => await del(key, idbStore),
 	};
 }
+
+export const appSettings = new Store<Settings>({
+	proxy: null,
+	image_resize_service: "https://wsrv.nl",
+	use_relay_hint: true,
+	content_warning: true,
+	display_avatar: true,
+	display_zap_button: true,
+	display_repost_button: true,
+	display_media: true,
+	transparent: true,
+});

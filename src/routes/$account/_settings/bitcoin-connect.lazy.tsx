@@ -1,18 +1,13 @@
-import { Button, init } from "@getalby/bitcoin-connect-react";
 import { NostrAccount } from "@/system";
-import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@getalby/bitcoin-connect-react";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
-export const Route = createFileRoute("/settings/bitcoin-connect")({
-	beforeLoad: () => {
-		init({
-			appName: "Lume",
-			filters: ["nwc"],
-			showBalance: true,
-		});
+export const Route = createLazyFileRoute("/$account/_settings/bitcoin-connect")(
+	{
+		component: Screen,
 	},
-	component: Screen,
-});
+);
 
 function Screen() {
 	const setNwcUri = async (uri: string) => {

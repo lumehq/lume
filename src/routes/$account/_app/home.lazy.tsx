@@ -19,7 +19,7 @@ import {
 import { createPortal } from "react-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-export const Route = createLazyFileRoute("/$account/_layout/home")({
+export const Route = createLazyFileRoute("/$account/_app/home")({
 	component: Screen,
 });
 
@@ -204,36 +204,31 @@ function Screen() {
 }
 
 function ManageButton() {
-	const { systemColumns } = Route.useRouteContext();
+	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
+		e.preventDefault();
 
-	const showContextMenu = useCallback(
-		async (e: React.MouseEvent) => {
-			e.preventDefault();
+		const menuItems = await Promise.all([
+			MenuItem.new({
+				text: "Open Columns Gallery",
+				action: () => LumeWindow.openColumnsGallery(),
+			}),
+			PredefinedMenuItem.new({ item: "Separator" }),
+			MenuItem.new({
+				text: "Add local feeds",
+				action: () => LumeWindow.openLocalFeeds(),
+			}),
+			MenuItem.new({
+				text: "Add notification",
+				action: () => LumeWindow.openNotification(),
+			}),
+		]);
 
-			const menuItems = await Promise.all([
-				MenuItem.new({
-					text: "Open Columns Gallery",
-					action: () => LumeWindow.openColumnsGallery(),
-				}),
-				PredefinedMenuItem.new({ item: "Separator" }),
-				MenuItem.new({
-					text: "Add local feeds",
-					action: () => LumeWindow.openLocalFeeds(),
-				}),
-				MenuItem.new({
-					text: "Add notification",
-					action: () => LumeWindow.openNotification(),
-				}),
-			]);
+		const menu = await Menu.new({
+			items: menuItems,
+		});
 
-			const menu = await Menu.new({
-				items: menuItems,
-			});
-
-			await menu.popup().catch((e) => console.error(e));
-		},
-		[systemColumns],
-	);
+		await menu.popup().catch((e) => console.error(e));
+	}, []);
 
 	return (
 		<button

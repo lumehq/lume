@@ -122,11 +122,10 @@ export const LumeWindow = {
 			await LumeWindow.openSettings("bitcoin-connect");
 		}
 	},
-	openSettings: async (path?: string) => {
-		const label = "settings";
+	openSettings: async (account: string, path?: string) => {
 		const query = await commands.openWindow({
-			label,
-			url: path ? `/settings/${path}` : "/settings/general",
+			label: "settings",
+			url: path ? `${account}/${path}` : `${account}/general`,
 			title: "Settings",
 			width: 800,
 			height: 500,

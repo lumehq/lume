@@ -1,17 +1,20 @@
-import { cn } from "@/commons";
+import { appSettings, cn } from "@/commons";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
 import { CaretDown, Feather, MagnifyingGlass } from "@phosphor-icons/react";
 import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { memo, useCallback } from "react";
 
-export const Route = createLazyFileRoute("/$account/_layout")({
+export const Route = createLazyFileRoute("/$account/_app")({
 	component: Screen,
 });
 
 function Screen() {
-	const { settings, platform } = Route.useRouteContext();
+	const context = Route.useRouteContext();
+	const transparent = useStore(appSettings, (state) => state.transparent);
 
 	return (
 		<div className="flex flex-col w-screen h-screen">
@@ -19,7 +22,7 @@ function Screen() {
 				data-tauri-drag-region
 				className={cn(
 					"flex h-10 shrink-0 items-center justify-between",
-					platform === "macos" ? "pl-[72px] pr-3" : "pr-[156px] pl-3",
+					context.platform === "macos" ? "pl-[72px] pr-3" : "pr-[156px] pl-3",
 				)}
 			>
 				<div
@@ -54,7 +57,7 @@ function Screen() {
 			<div
 				className={cn(
 					"flex-1",
-					settings.vibrancy
+					transparent
 						? ""
 						: "bg-white dark:bg-black border-t border-black/20 dark:border-white/20",
 				)}
@@ -66,8 +69,8 @@ function Screen() {
 }
 
 const Account = memo(function Account() {
+	const params = Route.useParams();
 	const navigate = Route.useNavigate();
-	const { account } = Route.useParams();
 
 	const showContextMenu = useCallback(
 		async (e: React.MouseEvent) => {
@@ -79,14 +82,18 @@ const Account = memo(function Account() {
 					action: () => LumeWindow.openEditor(),
 				}),
 				MenuItem.new({
-					text: "View Profile",
-					action: () => LumeWindow.openProfile(account),
+					text: "Profile",
+					action: () => LumeWindow.openProfile(params.account),
 				}),
 				MenuItem.new({
-					text: "Open Settings",
-					action: () => LumeWindow.openSettings(),
+					text: "Settings",
+					action: () => LumeWindow.openSettings(params.account),
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
+				MenuItem.new({
+					text: "Copy Public Key",
+					action: async () => await writeText(params.account),
+				}),
 				MenuItem.new({
 					text: "Logout",
 					action: () => navigate({ to: "/" }),
@@ -99,7 +106,7 @@ const Account = memo(function Account() {
 
 			await menu.popup().catch((e) => console.error(e));
 		},
-		[account],
+		[params.account],
 	);
 
 	return (
@@ -108,7 +115,7 @@ const Account = memo(function Account() {
 			onClick={(e) => showContextMenu(e)}
 			className="inline-flex items-center gap-1.5"
 		>
-			<User.Provider pubkey={account}>
+			<User.Provider pubkey={params.account}>
 				<User.Root className="shrink-0 rounded-full">
 					<User.Avatar className="rounded-full size-7" />
 				</User.Root>

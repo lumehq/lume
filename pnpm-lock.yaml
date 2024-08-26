@@ -44,6 +44,12 @@ importers:
       '@tanstack/react-router':
         specifier: ^1.48.1
         version: 1.48.1(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)
+      '@tanstack/react-store':
+        specifier: ^0.5.5
+        version: 0.5.5(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)
+      '@tanstack/store':
+        specifier: ^0.5.5
+        version: 0.5.5
       '@tauri-apps/api':
         specifier: 2.0.0-rc.1
         version: 2.0.0-rc.1

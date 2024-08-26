@@ -2,7 +2,6 @@ export * from "./frame";
 export * from "./back";
 export * from "./spinner";
 export * from "./column";
-export * from "./avatarUploader";
 
 // Newsfeed
 export * from "./repost";

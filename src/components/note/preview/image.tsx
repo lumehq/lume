@@ -1,19 +1,23 @@
-import { useRouteContext } from "@tanstack/react-router";
+import { appSettings } from "@/commons";
+import { useStore } from "@tanstack/react-store";
 import { useMemo } from "react";
 
 export function ImagePreview({ url }: { url: string }) {
-	const { settings } = useRouteContext({ strict: false });
+	const [service, visible] = useStore(appSettings, (state) => [
+		state.image_resize_service,
+		state.display_media,
+	]);
 
 	const imageUrl = useMemo(() => {
-		if (settings.image_resize_service?.length) {
-			const newUrl = `${settings.image_resize_service}?url=${url}&ll&af&default=1&n=-1`;
+		if (service?.length) {
+			const newUrl = `${service}?url=${url}&ll&af&default=1&n=-1`;
 			return newUrl;
 		} else {
 			return url;
 		}
-	}, [settings.image_resize_service]);
+	}, [service]);
 
-	if (!settings.display_media) {
+	if (!visible) {
 		return (
 			<a
 				href={url}

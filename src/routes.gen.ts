@@ -13,19 +13,13 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SettingsImport } from './routes/settings'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
-import { Route as SettingsWalletImport } from './routes/settings/wallet'
-import { Route as SettingsUserImport } from './routes/settings/user'
-import { Route as SettingsRelayImport } from './routes/settings/relay'
-import { Route as SettingsGeneralImport } from './routes/settings/general'
-import { Route as SettingsBitcoinConnectImport } from './routes/settings/bitcoin-connect'
-import { Route as SettingsBackupImport } from './routes/settings/backup'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
-import { Route as AccountLayoutImport } from './routes/$account/_layout'
+import { Route as AccountBackupImport } from './routes/$account/backup'
+import { Route as AccountAppImport } from './routes/$account/_app'
 import { Route as ColumnsLayoutTrendingImport } from './routes/columns/_layout/trending'
 import { Route as ColumnsLayoutTopicImport } from './routes/columns/_layout/topic'
 import { Route as ColumnsLayoutStoriesImport } from './routes/columns/_layout/stories'
@@ -35,8 +29,12 @@ import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/ga
 import { Route as ColumnsLayoutCreateTopicImport } from './routes/columns/_layout/create-topic'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
 import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
-import { Route as AccountLayoutHomeImport } from './routes/$account/_layout/home'
-import { Route as AccountLayoutBackupImport } from './routes/$account/_layout/backup'
+import { Route as AccountSettingsWalletImport } from './routes/$account/_settings/wallet'
+import { Route as AccountSettingsRelayImport } from './routes/$account/_settings/relay'
+import { Route as AccountSettingsProfileImport } from './routes/$account/_settings/profile'
+import { Route as AccountSettingsGeneralImport } from './routes/$account/_settings/general'
+import { Route as AccountSettingsBitcoinConnectImport } from './routes/$account/_settings/bitcoin-connect'
+import { Route as AccountAppHomeImport } from './routes/$account/_app/home'
 import { Route as ColumnsLayoutCreateNewsfeedUsersImport } from './routes/columns/_layout/create-newsfeed.users'
 import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/_layout/create-newsfeed.f2f'
 
@@ -49,6 +47,7 @@ const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthConnectLazyImport = createFileRoute('/auth/connect')()
+const AccountSettingsLazyImport = createFileRoute('/$account/_settings')()
 const ColumnsLayoutSearchLazyImport = createFileRoute(
   '/columns/_layout/search',
 )()
@@ -93,11 +92,6 @@ const NewLazyRoute = NewLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
 
-const SettingsRoute = SettingsImport.update({
-  path: '/settings',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   path: '/bootstrap-relays',
   getParentRoute: () => rootRoute,
@@ -130,52 +124,32 @@ const AuthConnectLazyRoute = AuthConnectLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/auth/connect.lazy').then((d) => d.Route))
 
+const AccountSettingsLazyRoute = AccountSettingsLazyImport.update({
+  id: '/_settings',
+  getParentRoute: () => AccountRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings.lazy').then((d) => d.Route),
+)
+
 const ZapIdRoute = ZapIdImport.update({
   path: '/zap/$id',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/zap.$id.lazy').then((d) => d.Route))
-
-const SettingsWalletRoute = SettingsWalletImport.update({
-  path: '/wallet',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsUserRoute = SettingsUserImport.update({
-  path: '/user',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsRelayRoute = SettingsRelayImport.update({
-  path: '/relay',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsGeneralRoute = SettingsGeneralImport.update({
-  path: '/general',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsBitcoinConnectRoute = SettingsBitcoinConnectImport.update({
-  path: '/bitcoin-connect',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsBackupRoute = SettingsBackupImport.update({
-  path: '/backup',
-  getParentRoute: () => SettingsRoute,
-} as any)
 
 const ColumnsLayoutRoute = ColumnsLayoutImport.update({
   id: '/_layout',
   getParentRoute: () => ColumnsRoute,
 } as any)
 
-const AccountLayoutRoute = AccountLayoutImport.update({
-  id: '/_layout',
+const AccountBackupRoute = AccountBackupImport.update({
+  path: '/backup',
   getParentRoute: () => AccountRoute,
-} as any).lazy(() =>
-  import('./routes/$account/_layout.lazy').then((d) => d.Route),
-)
+} as any)
+
+const AccountAppRoute = AccountAppImport.update({
+  id: '/_app',
+  getParentRoute: () => AccountRoute,
+} as any).lazy(() => import('./routes/$account/_app.lazy').then((d) => d.Route))
 
 const ColumnsLayoutSearchLazyRoute = ColumnsLayoutSearchLazyImport.update({
   path: '/search',
@@ -263,17 +237,50 @@ const ColumnsLayoutCreateGroupRoute = ColumnsLayoutCreateGroupImport.update({
   import('./routes/columns/_layout/create-group.lazy').then((d) => d.Route),
 )
 
-const AccountLayoutHomeRoute = AccountLayoutHomeImport.update({
-  path: '/home',
-  getParentRoute: () => AccountLayoutRoute,
+const AccountSettingsWalletRoute = AccountSettingsWalletImport.update({
+  path: '/wallet',
+  getParentRoute: () => AccountSettingsLazyRoute,
 } as any).lazy(() =>
-  import('./routes/$account/_layout/home.lazy').then((d) => d.Route),
+  import('./routes/$account/_settings/wallet.lazy').then((d) => d.Route),
 )
 
-const AccountLayoutBackupRoute = AccountLayoutBackupImport.update({
-  path: '/backup',
-  getParentRoute: () => AccountLayoutRoute,
-} as any)
+const AccountSettingsRelayRoute = AccountSettingsRelayImport.update({
+  path: '/relay',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/relay.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsProfileRoute = AccountSettingsProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/profile.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsGeneralRoute = AccountSettingsGeneralImport.update({
+  path: '/general',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/general.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsBitcoinConnectRoute =
+  AccountSettingsBitcoinConnectImport.update({
+    path: '/bitcoin-connect',
+    getParentRoute: () => AccountSettingsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/$account/_settings/bitcoin-connect.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AccountAppHomeRoute = AccountAppHomeImport.update({
+  path: '/home',
+  getParentRoute: () => AccountAppRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_app/home.lazy').then((d) => d.Route),
+)
 
 const ColumnsLayoutUsersIdLazyRoute = ColumnsLayoutUsersIdLazyImport.update({
   path: '/users/$id',
@@ -328,13 +335,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BootstrapRelaysImport
       parentRoute: typeof rootRoute
     }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsImport
-      parentRoute: typeof rootRoute
-    }
     '/new': {
       id: '/new'
       path: '/new'
@@ -356,12 +356,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountImport
       parentRoute: typeof rootRoute
     }
-    '/$account/_layout': {
-      id: '/$account/_layout'
+    '/$account/_app': {
+      id: '/$account/_app'
       path: '/$account'
       fullPath: '/$account'
-      preLoaderRoute: typeof AccountLayoutImport
+      preLoaderRoute: typeof AccountAppImport
       parentRoute: typeof AccountRoute
+    }
+    '/$account/backup': {
+      id: '/$account/backup'
+      path: '/backup'
+      fullPath: '/$account/backup'
+      preLoaderRoute: typeof AccountBackupImport
+      parentRoute: typeof AccountImport
     }
     '/columns': {
       id: '/columns'
@@ -377,54 +384,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutImport
       parentRoute: typeof ColumnsRoute
     }
-    '/settings/backup': {
-      id: '/settings/backup'
-      path: '/backup'
-      fullPath: '/settings/backup'
-      preLoaderRoute: typeof SettingsBackupImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/bitcoin-connect': {
-      id: '/settings/bitcoin-connect'
-      path: '/bitcoin-connect'
-      fullPath: '/settings/bitcoin-connect'
-      preLoaderRoute: typeof SettingsBitcoinConnectImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/general': {
-      id: '/settings/general'
-      path: '/general'
-      fullPath: '/settings/general'
-      preLoaderRoute: typeof SettingsGeneralImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/relay': {
-      id: '/settings/relay'
-      path: '/relay'
-      fullPath: '/settings/relay'
-      preLoaderRoute: typeof SettingsRelayImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/user': {
-      id: '/settings/user'
-      path: '/user'
-      fullPath: '/settings/user'
-      preLoaderRoute: typeof SettingsUserImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/wallet': {
-      id: '/settings/wallet'
-      path: '/wallet'
-      fullPath: '/settings/wallet'
-      preLoaderRoute: typeof SettingsWalletImport
-      parentRoute: typeof SettingsImport
-    }
     '/zap/$id': {
       id: '/zap/$id'
       path: '/zap/$id'
       fullPath: '/zap/$id'
       preLoaderRoute: typeof ZapIdImport
       parentRoute: typeof rootRoute
+    }
+    '/$account/_settings': {
+      id: '/$account/_settings'
+      path: ''
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountSettingsLazyImport
+      parentRoute: typeof AccountImport
     }
     '/auth/connect': {
       id: '/auth/connect'
@@ -454,19 +426,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorIndexImport
       parentRoute: typeof rootRoute
     }
-    '/$account/_layout/backup': {
-      id: '/$account/_layout/backup'
-      path: '/backup'
-      fullPath: '/$account/backup'
-      preLoaderRoute: typeof AccountLayoutBackupImport
-      parentRoute: typeof AccountLayoutImport
-    }
-    '/$account/_layout/home': {
-      id: '/$account/_layout/home'
+    '/$account/_app/home': {
+      id: '/$account/_app/home'
       path: '/home'
       fullPath: '/$account/home'
-      preLoaderRoute: typeof AccountLayoutHomeImport
-      parentRoute: typeof AccountLayoutImport
+      preLoaderRoute: typeof AccountAppHomeImport
+      parentRoute: typeof AccountAppImport
+    }
+    '/$account/_settings/bitcoin-connect': {
+      id: '/$account/_settings/bitcoin-connect'
+      path: '/bitcoin-connect'
+      fullPath: '/$account/bitcoin-connect'
+      preLoaderRoute: typeof AccountSettingsBitcoinConnectImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/general': {
+      id: '/$account/_settings/general'
+      path: '/general'
+      fullPath: '/$account/general'
+      preLoaderRoute: typeof AccountSettingsGeneralImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/profile': {
+      id: '/$account/_settings/profile'
+      path: '/profile'
+      fullPath: '/$account/profile'
+      preLoaderRoute: typeof AccountSettingsProfileImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/relay': {
+      id: '/$account/_settings/relay'
+      path: '/relay'
+      fullPath: '/$account/relay'
+      preLoaderRoute: typeof AccountSettingsRelayImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/wallet': {
+      id: '/$account/_settings/wallet'
+      path: '/wallet'
+      fullPath: '/$account/wallet'
+      preLoaderRoute: typeof AccountSettingsWalletImport
+      parentRoute: typeof AccountSettingsLazyImport
     }
     '/columns/_layout/create-group': {
       id: '/columns/_layout/create-group'
@@ -602,20 +602,17 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   BootstrapRelaysRoute,
-  SettingsRoute: SettingsRoute.addChildren({
-    SettingsBackupRoute,
-    SettingsBitcoinConnectRoute,
-    SettingsGeneralRoute,
-    SettingsRelayRoute,
-    SettingsUserRoute,
-    SettingsWalletRoute,
-  }),
   NewLazyRoute,
   ResetLazyRoute,
   AccountRoute: AccountRoute.addChildren({
-    AccountLayoutRoute: AccountLayoutRoute.addChildren({
-      AccountLayoutBackupRoute,
-      AccountLayoutHomeRoute,
+    AccountAppRoute: AccountAppRoute.addChildren({ AccountAppHomeRoute }),
+    AccountBackupRoute,
+    AccountSettingsLazyRoute: AccountSettingsLazyRoute.addChildren({
+      AccountSettingsBitcoinConnectRoute,
+      AccountSettingsGeneralRoute,
+      AccountSettingsProfileRoute,
+      AccountSettingsRelayRoute,
+      AccountSettingsWalletRoute,
     }),
   }),
   ColumnsRoute: ColumnsRoute.addChildren({
@@ -659,7 +656,6 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/bootstrap-relays",
-        "/settings",
         "/new",
         "/reset",
         "/$account",
@@ -677,17 +673,6 @@ export const routeTree = rootRoute.addChildren({
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
     },
-    "/settings": {
-      "filePath": "settings.tsx",
-      "children": [
-        "/settings/backup",
-        "/settings/bitcoin-connect",
-        "/settings/general",
-        "/settings/relay",
-        "/settings/user",
-        "/settings/wallet"
-      ]
-    },
     "/new": {
       "filePath": "new.lazy.tsx"
     },
@@ -697,16 +682,21 @@ export const routeTree = rootRoute.addChildren({
     "/$account": {
       "filePath": "$account",
       "children": [
-        "/$account/_layout"
+        "/$account/_app",
+        "/$account/backup",
+        "/$account/_settings"
       ]
     },
-    "/$account/_layout": {
-      "filePath": "$account/_layout.tsx",
+    "/$account/_app": {
+      "filePath": "$account/_app.tsx",
       "parent": "/$account",
       "children": [
-        "/$account/_layout/backup",
-        "/$account/_layout/home"
+        "/$account/_app/home"
       ]
+    },
+    "/$account/backup": {
+      "filePath": "$account/backup.tsx",
+      "parent": "/$account"
     },
     "/columns": {
       "filePath": "columns",
@@ -736,32 +726,19 @@ export const routeTree = rootRoute.addChildren({
         "/columns/_layout/users/$id"
       ]
     },
-    "/settings/backup": {
-      "filePath": "settings/backup.tsx",
-      "parent": "/settings"
-    },
-    "/settings/bitcoin-connect": {
-      "filePath": "settings/bitcoin-connect.tsx",
-      "parent": "/settings"
-    },
-    "/settings/general": {
-      "filePath": "settings/general.tsx",
-      "parent": "/settings"
-    },
-    "/settings/relay": {
-      "filePath": "settings/relay.tsx",
-      "parent": "/settings"
-    },
-    "/settings/user": {
-      "filePath": "settings/user.tsx",
-      "parent": "/settings"
-    },
-    "/settings/wallet": {
-      "filePath": "settings/wallet.tsx",
-      "parent": "/settings"
-    },
     "/zap/$id": {
       "filePath": "zap.$id.tsx"
+    },
+    "/$account/_settings": {
+      "filePath": "$account/_settings.lazy.tsx",
+      "parent": "/$account",
+      "children": [
+        "/$account/_settings/bitcoin-connect",
+        "/$account/_settings/general",
+        "/$account/_settings/profile",
+        "/$account/_settings/relay",
+        "/$account/_settings/wallet"
+      ]
     },
     "/auth/connect": {
       "filePath": "auth/connect.lazy.tsx"
@@ -775,13 +752,29 @@ export const routeTree = rootRoute.addChildren({
     "/editor/": {
       "filePath": "editor/index.tsx"
     },
-    "/$account/_layout/backup": {
-      "filePath": "$account/_layout/backup.tsx",
-      "parent": "/$account/_layout"
+    "/$account/_app/home": {
+      "filePath": "$account/_app/home.tsx",
+      "parent": "/$account/_app"
     },
-    "/$account/_layout/home": {
-      "filePath": "$account/_layout/home.tsx",
-      "parent": "/$account/_layout"
+    "/$account/_settings/bitcoin-connect": {
+      "filePath": "$account/_settings/bitcoin-connect.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/general": {
+      "filePath": "$account/_settings/general.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/profile": {
+      "filePath": "$account/_settings/profile.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/relay": {
+      "filePath": "$account/_settings/relay.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/wallet": {
+      "filePath": "$account/_settings/wallet.tsx",
+      "parent": "/$account/_settings"
     },
     "/columns/_layout/create-group": {
       "filePath": "columns/_layout/create-group.tsx",

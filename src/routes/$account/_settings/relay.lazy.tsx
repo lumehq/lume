@@ -1,40 +1,45 @@
+import { commands } from "@/commands.gen";
 import { NostrQuery } from "@/system";
 import { Plus, X } from "@phosphor-icons/react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState, useTransition } from "react";
 
-export const Route = createFileRoute("/settings/relay")({
-	loader: async () => {
-		const relays = await NostrQuery.getRelays();
-		return relays;
-	},
+export const Route = createLazyFileRoute("/$account/_settings/relay")({
 	component: Screen,
 });
 
 function Screen() {
-	const relayList = Route.useLoaderData();
-	const { register, reset, handleSubmit } = useForm();
+	const { relayList } = Route.useRouteContext();
 
 	const [relays, setRelays] = useState<string[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [newRelay, setNewRelay] = useState("");
+	const [isPending, startTransition] = useTransition();
 
-	const onSubmit = async (data: { url: string }) => {
-		try {
-			setIsLoading(true);
+	const addNewRelay = () => {
+		startTransition(async () => {
+			try {
+				let url = newRelay;
 
-			const add = await NostrQuery.connectRelay(data.url);
+				if (!url.startsWith("wss://")) {
+					url = `wss://${url}`;
+				}
 
-			if (add) {
-				setRelays((prev) => [...prev, data.url]);
-				setIsLoading(false);
-				reset();
+				const relay = new URL(url);
+				const res = await commands.connectRelay(relay.toString());
+
+				if (res.status === "ok") {
+					setRelays((prev) => [...prev, newRelay]);
+					setNewRelay("");
+				} else {
+					await message(res.error, { title: "Relay", kind: "error" });
+					return;
+				}
+			} catch {
+				await message("URL is not valid.", { kind: "error" });
+				return;
 			}
-		} catch (e) {
-			setIsLoading(false);
-			await message(String(e), { title: "Relay", kind: "error" });
-		}
+		});
 	};
 
 	useEffect(() => {
@@ -42,7 +47,7 @@ function Screen() {
 	}, [relayList]);
 
 	return (
-		<div className="w-full max-w-xl mx-auto">
+		<div className="w-full px-3 pb-3">
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
@@ -73,28 +78,24 @@ function Screen() {
 							</div>
 						))}
 						<div className="flex items-center h-14">
-							<form
-								onSubmit={handleSubmit(onSubmit)}
-								className="flex items-center w-full gap-2 mb-0"
-							>
+							<div className="flex items-center w-full gap-2 mb-0">
 								<input
-									{...register("url", {
-										required: true,
-										minLength: 1,
-									})}
+									value={newRelay}
+									onChange={(e) => setNewRelay(e.target.value)}
 									name="url"
 									placeholder="wss://..."
 									spellCheck={false}
 									className="flex-1 px-3 bg-transparent rounded-lg h-9 border-neutral-300 placeholder:text-neutral-500 focus:border-blue-500 focus:ring-0 dark:border-neutral-700 dark:placeholder:text-neutral-400"
 								/>
 								<button
-									type="submit"
-									disabled={isLoading}
+									type="button"
+									disabled={isPending}
+									onClick={() => addNewRelay()}
 									className="inline-flex items-center justify-center w-16 px-2 text-sm font-medium text-white rounded-lg shrink-0 h-9 bg-black/20 dark:bg-white/20 hover:bg-blue-500 disabled:opacity-50"
 								>
 									<Plus className="size-5" />
 								</button>
-							</form>
+							</div>
 						</div>
 					</div>
 				</div>

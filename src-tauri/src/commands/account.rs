@@ -186,6 +186,15 @@ pub async fn reset_password(key: String, password: String) -> Result<(), String>
 
 #[tauri::command]
 #[specta::specta]
+pub fn get_private_key(id: String) -> Result<String, String> {
+    let keyring = Entry::new("Lume Secret Storage", &id).map_err(|e| e.to_string())?;
+    let password = keyring.get_password().map_err(|e| e.to_string())?;
+
+    Ok(password)
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn delete_account(id: String) -> Result<(), String> {
     let keyring = Entry::new("Lume Secret Storage", &id).map_err(|e| e.to_string())?;
     let _ = keyring.delete_credential();
