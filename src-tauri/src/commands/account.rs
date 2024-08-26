@@ -8,7 +8,7 @@ use tauri::{Emitter, Manager, State};
 
 use crate::{
     common::{get_user_settings, init_nip65},
-    Nostr, LOCAL_SUB_ID, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT, NOTIFICATION_SUB_ID,
+    Nostr, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT, NOTIFICATION_SUB_ID,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -276,12 +276,10 @@ pub async fn login(
         let signer = client.signer().await.unwrap();
         let public_key = signer.public_key().await.unwrap();
 
-        let local_id = SubscriptionId::new(LOCAL_SUB_ID);
         let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
 
         if !contact_list.is_empty() {
             let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
-
             let sync = Filter::new()
                 .authors(authors.clone())
                 .kinds(vec![Kind::TextNote, Kind::Repost])
@@ -293,15 +291,6 @@ pub async fn login(
                 .is_ok()
             {
                 handle.emit("newsfeed_synchronized", ()).unwrap();
-            }
-
-            let local = Filter::new()
-                .kinds(vec![Kind::TextNote, Kind::Repost])
-                .authors(authors)
-                .since(Timestamp::now());
-
-            if let Err(e) = client.subscribe_with_id(local_id, vec![local], None).await {
-                println!("Error: {}", e)
             }
         };
 

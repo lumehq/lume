@@ -33,7 +33,6 @@
 		}
 	},
 	"bundle": {
-		"licenseFile": "../LICENSE",
 		"homepage": "https://lume.nu",
 		"longDescription": "nostr client for desktop",
 		"shortDescription": "nostr client",
@@ -61,21 +60,6 @@
 		"macOS": {
 			"minimumSystemVersion": "10.15"
 		},
-		"fileAssociations": [
-			{
-				"name": "bech32",
-				"description": "Nostr BECH32",
-				"ext": [
-					"npub",
-					"nsec",
-					"nprofile",
-					"nevent",
-					"naddr",
-					"nrelay"
-				],
-				"role": "Viewer"
-			}
-		],
 		"createUpdaterArtifacts": true
 	},
 	"plugins": {

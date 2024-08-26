@@ -25,8 +25,6 @@ use tokio::sync::Mutex;
 
 pub mod commands;
 pub mod common;
-#[cfg(target_os = "macos")]
-pub mod macos;
 
 pub struct Nostr {
     client: Client,
@@ -83,7 +81,6 @@ pub const FETCH_LIMIT: usize = 44;
 pub const NEWSFEED_NEG_LIMIT: usize = 256;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
-pub const LOCAL_SUB_ID: &str = "lume_local";
 
 fn main() {
     let builder = Builder::<tauri::Wry>::new()
@@ -148,6 +145,7 @@ fn main() {
         ])
         .events(collect_events![Subscription, NewSettings]);
 
+    #[cfg(debug_assertions)]
     builder
         .export(Typescript::default(), "../src/commands.gen.ts")
         .expect("Failed to export typescript bindings");
@@ -194,11 +192,14 @@ fn main() {
 
             let client = tauri::async_runtime::block_on(async move {
                 // Create data folder if not exist
-                let home_dir = handle.path().home_dir().expect("Home directory not found.");
-                let _ = fs::create_dir_all(home_dir.join("Lume/"));
+                let dir = handle
+                    .path()
+                    .app_config_dir()
+                    .expect("App config directory not found.");
+                let _ = fs::create_dir_all(dir.clone());
 
                 // Setup database
-                let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db"))
+                let database = SQLiteDatabase::open(dir.join("nostr.db"))
                     .await
                     .expect("Database error.");
 
