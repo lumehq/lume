@@ -1,17 +1,18 @@
 import type {
 	AsyncStorage,
+	MaybePromise,
 	PersistedQuery,
 } from "@tanstack/query-persist-client-core";
 import { Store } from "@tanstack/store";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
+import type { Store as TauriStore } from "@tauri-apps/plugin-store";
 import { check } from "@tauri-apps/plugin-updater";
 import { BitcoinUnit } from "bitcoin-units";
 import { type ClassValue, clsx } from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
-import { type UseStore, del, get, set } from "idb-keyval";
 import { decode } from "light-bolt11-decoder";
 import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
@@ -258,13 +259,14 @@ export function toLumeEvents(richEvents: RichEvent[]) {
 	return events;
 }
 
-export function newIdbStorage(
-	idbStore: UseStore,
+export function newQueryStorage(
+	store: TauriStore,
 ): AsyncStorage<PersistedQuery> {
 	return {
-		getItem: async (key) => await get(key, idbStore),
-		setItem: async (key, value) => await set(key, value, idbStore),
-		removeItem: async (key) => await del(key, idbStore),
+		getItem: async (key) => await store.get(key),
+		setItem: async (key, value) => await store.set(key, value),
+		removeItem: async (key) =>
+			(await store.delete(key)) as unknown as MaybePromise<void>,
 	};
 }
 

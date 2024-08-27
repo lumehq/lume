@@ -1,7 +1,7 @@
 import { replyTime } from "@/commons";
 import { Note, Spinner } from "@/components";
 import { User } from "@/components/user";
-import { useEvent } from "@/system";
+import { LumeWindow, useEvent } from "@/system";
 import { memo } from "react";
 
 export const MentionNote = memo(function MentionNote({
@@ -33,7 +33,16 @@ export const MentionNote = memo(function MentionNote({
 										/>
 									</User.Root>
 									<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
-										{event.content}
+										{event.content.length > 120
+											? `${event.content.substring(0, 120)}..`
+											: event.content}
+										<button
+											type="button"
+											onClick={() => LumeWindow.openEvent(event)}
+											className="pl-2 text-blue-400 hover:text-blue-500"
+										>
+											Show all
+										</button>
 									</div>
 								</div>
 								<div className="flex-1 flex items-center justify-between">
