@@ -1,10 +1,10 @@
 import { cn, insertImage, insertNostrEvent, isImageUrl } from "@/commons";
 import { Spinner } from "@/components";
-import { ComposeFilledIcon } from "@/components";
 import { Note } from "@/components/note";
 import { MentionNote } from "@/components/note/mentions/note";
 import { User } from "@/components/user";
 import { LumeEvent, useEvent } from "@/system";
+import { Feather } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
@@ -145,11 +145,11 @@ function Screen() {
 	return (
 		<div className="flex flex-col w-full h-full">
 			<Slate editor={editor} initialValue={editorValue}>
-				<div data-tauri-drag-region className="h-9 shrink-0" />
+				<div data-tauri-drag-region className="h-11 shrink-0" />
 				<div className="flex flex-col flex-1 overflow-y-auto">
 					{reply_to?.length ? (
-						<div className="flex items-center gap-3 px-2.5 pb-3 border-b border-black/5 dark:border-white/5">
-							<div className="text-sm font-semibold shrink-0">Reply to:</div>
+						<div className="flex flex-col gap-2 px-3.5 pb-3 border-b border-black/5 dark:border-white/5">
+							<span className="text-sm font-semibold">Reply to:</span>
 							<ChildNote id={reply_to} />
 						</div>
 					) : null}
@@ -219,7 +219,7 @@ function Screen() {
 						{loading ? (
 							<Spinner className="size-4" />
 						) : (
-							<ComposeFilledIcon className="size-4" />
+							<Feather className="size-4" weight="fill" />
 						)}
 						Publish
 					</button>
@@ -250,10 +250,10 @@ function ChildNote({ id }: { id: string }) {
 			<Note.Root className="flex items-center gap-2">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="shrink-0">
-						<User.Avatar className="rounded-full size-8" />
+						<User.Avatar className="rounded-full size-7" />
 					</User.Root>
 				</User.Provider>
-				<div className="content-break line-clamp-1">{data.content}</div>
+				<div className="content-break line-clamp-1 text-sm">{data.content}</div>
 			</Note.Root>
 		</Note.Provider>
 	);
@@ -373,7 +373,7 @@ const Event = ({ attributes, element, children }) => {
 				onClick={() => Transforms.removeNodes(editor, { at: path })}
 				onKeyDown={() => Transforms.removeNodes(editor, { at: path })}
 			>
-				<MentionNote eventId={element.eventId} openable={false} />
+				<MentionNote eventId={element.eventId} />
 			</div>
 		</div>
 	);

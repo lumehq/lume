@@ -1,2 +1,4 @@
 wss://relay.damus.io,
 wss://relay.nostr.net,
+wss://purplepag.es/,
+wss://directory.yabu.me/,

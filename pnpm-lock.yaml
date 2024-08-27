@@ -44,6 +44,12 @@ importers:
       '@tanstack/react-router':
         specifier: ^1.48.1
         version: 1.48.1(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)
+      '@tanstack/react-store':
+        specifier: ^0.5.5
+        version: 0.5.5(react-dom@19.0.0-rc-d025ddd3-20240722(react@19.0.0-rc-d025ddd3-20240722))(react@19.0.0-rc-d025ddd3-20240722)
+      '@tanstack/store':
+        specifier: ^0.5.5
+        version: 0.5.5
       '@tauri-apps/api':
         specifier: 2.0.0-rc.1
         version: 2.0.0-rc.1
@@ -68,6 +74,9 @@ importers:
       '@tauri-apps/plugin-shell':
         specifier: 2.0.0-rc.0
         version: 2.0.0-rc.0
+      '@tauri-apps/plugin-store':
+        specifier: 2.0.0-rc.0
+        version: 2.0.0-rc.0
       '@tauri-apps/plugin-updater':
         specifier: 2.0.0-rc.0
         version: 2.0.0-rc.0
@@ -80,6 +89,9 @@ importers:
       bitcoin-units:
         specifier: ^1.0.0
         version: 1.0.0
+      boring-avatars:
+        specifier: ^1.10.2
+        version: 1.10.2
       dayjs:
         specifier: ^1.11.12
         version: 1.11.12
@@ -1214,6 +1226,9 @@ packages:
   '@tauri-apps/plugin-shell@2.0.0-rc.0':
     resolution: {integrity: sha512-bhUcQcrqZoK8H1DFXapr5r1Z75oh6Kd5Tltz97XpZFLREEqp+KhN2Fvyh8r/fKAyenYsTYUIsDsyGdjdueuF9g==}
 
+  '@tauri-apps/plugin-store@2.0.0-rc.0':
+    resolution: {integrity: sha512-KqiEzq6EdRwxrl0/FwyNLwumDBM91xTchdu2a8vfkNub30GuP9z7RskP9ifVRI1gbxfa5TUDi0hKFk/SP7TANQ==}
+
   '@tauri-apps/plugin-updater@2.0.0-rc.0':
     resolution: {integrity: sha512-EKajf/sBpFif0cwXhTo3BmNvTZ2t2DDLRyhA8FFKugZNoOeqU97bHhPT5DIqMUPRE1tyDk9o7sXm8dKf7oz+EA==}
 
@@ -1339,6 +1354,9 @@ packages:
 
   bitcoin-units@1.0.0:
     resolution: {integrity: sha512-brac+Ttz7ovf/8D0jQHSWHnN2hmdjxDRBStxhjO752URLJlQIFpfZxzUteSZ81UYnRNiMkvsW9WsYPDuxHfnYA==}
+
+  boring-avatars@1.10.2:
+    resolution: {integrity: sha512-uQyvmNeW6loz4Yytj7aDo0IhhuByW/YyOHtqwb3kQ/x48hum22hROA2Wn3qzrLR5JsoZ+FHjPO6z6LrXrWjegg==}
 
   brace-expansion@2.0.1:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
@@ -3160,6 +3178,10 @@ snapshots:
     dependencies:
       '@tauri-apps/api': 2.0.0-rc.1
 
+  '@tauri-apps/plugin-store@2.0.0-rc.0':
+    dependencies:
+      '@tauri-apps/api': 2.0.0-rc.1
+
   '@tauri-apps/plugin-updater@2.0.0-rc.0':
     dependencies:
       '@tauri-apps/api': 2.0.0-rc.1
@@ -3303,6 +3325,8 @@ snapshots:
   bitcoin-units@1.0.0:
     dependencies:
       big.js: 6.2.1
+
+  boring-avatars@1.10.2: {}
 
   brace-expansion@2.0.1:
     dependencies:

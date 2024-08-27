@@ -1,5 +1,5 @@
 import { commands } from "@/commands.gen";
-import { displayNpub } from "@/commons";
+import { appSettings, displayNpub } from "@/commons";
 import { Frame, Spinner, User } from "@/components";
 import { ArrowRight, DotsThree, GearSix, Plus } from "@phosphor-icons/react";
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
@@ -58,6 +58,12 @@ function Screen() {
 			const res = await commands.login(value, password);
 
 			if (res.status === "ok") {
+				const settings = await commands.getSettings();
+
+				if (settings.status === "ok") {
+					appSettings.setState(() => settings.data);
+				}
+
 				navigate({
 					to: "/$account/home",
 					params: { account: res.data },
@@ -75,6 +81,11 @@ function Screen() {
 			e.stopPropagation();
 
 			const menuItems = await Promise.all([
+				MenuItem.new({
+					text: "Reset password",
+					enabled: !account.includes("_nostrconnect"),
+					action: () => navigate({ to: "/reset", search: { account } }),
+				}),
 				MenuItem.new({
 					text: "Delete account",
 					action: async () => await deleteAccount(account),

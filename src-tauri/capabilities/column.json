@@ -25,6 +25,9 @@
 		"core:menu:allow-popup",
 		"http:default",
 		"shell:allow-open",
+		"store:allow-get",
+		"store:allow-set",
+		"store:allow-delete",
 		{
 			"identifier": "http:default",
 			"allow": [

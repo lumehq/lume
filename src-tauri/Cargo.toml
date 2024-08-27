@@ -1,5 +1,5 @@
 [package]
-name = "lume"
+name = "Lume"
 version = "4.0.0"
 description = "nostr client"
 authors = ["npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445"]
@@ -34,9 +34,10 @@ tauri-plugin-process = "2.0.0-rc"
 tauri-plugin-shell = "2.0.0-rc"
 tauri-plugin-updater = "2.0.0-rc"
 tauri-plugin-upload = "2.0.0-rc"
+tauri-plugin-store = "2.0.0-rc"
 tauri-plugin-theme = "0.4.1"
 tauri-plugin-decorum = "1.0.0"
-tauri-plugin-prevent-default = "0.3"
+tauri-plugin-prevent-default = "0.4"
 tauri-specta = { version = "2.0.0-rc.15", features = ["derive", "typescript"] }
 specta = "^2.0.0-rc.20"
 specta-typescript = "0.0.7"

@@ -1,4 +1,4 @@
-import { HorizontalDotsIcon } from "@/components";
+import { DotsThree } from "@phosphor-icons/react";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useCallback } from "react";
@@ -56,7 +56,7 @@ export function NoteMenu() {
 			onClick={(e) => showContextMenu(e)}
 			className="inline-flex items-center justify-center group size-7 text-neutral-600 dark:text-neutral-400"
 		>
-			<HorizontalDotsIcon className="size-5" />
+			<DotsThree className="size-5" />
 		</button>
 	);
 }

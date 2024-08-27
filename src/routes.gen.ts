@@ -13,114 +13,87 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as TrendingImport } from './routes/trending'
-import { Route as TopicImport } from './routes/topic'
-import { Route as StoreImport } from './routes/store'
-import { Route as SettingsImport } from './routes/settings'
-import { Route as SearchImport } from './routes/search'
-import { Route as OnboardingImport } from './routes/onboarding'
-import { Route as NewsfeedImport } from './routes/newsfeed'
-import { Route as GroupImport } from './routes/group'
-import { Route as GlobalImport } from './routes/global'
-import { Route as CreateTopicImport } from './routes/create-topic'
-import { Route as CreateNewsfeedImport } from './routes/create-newsfeed'
-import { Route as CreateGroupImport } from './routes/create-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
-import { Route as AccountImport } from './routes/$account'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
-import { Route as UsersIdImport } from './routes/users.$id'
-import { Route as TrendingUsersImport } from './routes/trending.users'
-import { Route as TrendingNotesImport } from './routes/trending.notes'
-import { Route as SettingsWalletImport } from './routes/settings/wallet'
-import { Route as SettingsUserImport } from './routes/settings/user'
-import { Route as SettingsRelayImport } from './routes/settings/relay'
-import { Route as SettingsGeneralImport } from './routes/settings/general'
-import { Route as SettingsBitcoinConnectImport } from './routes/settings/bitcoin-connect'
-import { Route as SettingsBackupImport } from './routes/settings/backup'
-import { Route as SearchUsersImport } from './routes/search.users'
-import { Route as SearchNotesImport } from './routes/search.notes'
-import { Route as EventsIdImport } from './routes/events/$id'
-import { Route as CreateNewsfeedUsersImport } from './routes/create-newsfeed.users'
-import { Route as CreateNewsfeedF2fImport } from './routes/create-newsfeed.f2f'
-import { Route as AccountHomeImport } from './routes/$account/home'
+import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountBackupImport } from './routes/$account/backup'
+import { Route as AccountAppImport } from './routes/$account/_app'
+import { Route as ColumnsLayoutStoriesImport } from './routes/columns/_layout/stories'
+import { Route as ColumnsLayoutGroupImport } from './routes/columns/_layout/group'
+import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
+import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/gallery'
+import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
+import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
+import { Route as AccountSettingsWalletImport } from './routes/$account/_settings/wallet'
+import { Route as AccountSettingsRelayImport } from './routes/$account/_settings/relay'
+import { Route as AccountSettingsProfileImport } from './routes/$account/_settings/profile'
+import { Route as AccountSettingsGeneralImport } from './routes/$account/_settings/general'
+import { Route as AccountSettingsBitcoinConnectImport } from './routes/$account/_settings/bitcoin-connect'
+import { Route as AccountAppHomeImport } from './routes/$account/_app/home'
+import { Route as ColumnsLayoutCreateNewsfeedUsersImport } from './routes/columns/_layout/create-newsfeed.users'
+import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/_layout/create-newsfeed.f2f'
 
 // Create Virtual Routes
 
+const ColumnsImport = createFileRoute('/columns')()
+const AccountImport = createFileRoute('/$account')()
+const ResetLazyImport = createFileRoute('/reset')()
 const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthConnectLazyImport = createFileRoute('/auth/connect')()
-const AccountPanelLazyImport = createFileRoute('/$account/panel')()
+const AccountSettingsLazyImport = createFileRoute('/$account/_settings')()
+const ColumnsLayoutTrendingLazyImport = createFileRoute(
+  '/columns/_layout/trending',
+)()
+const ColumnsLayoutSearchLazyImport = createFileRoute(
+  '/columns/_layout/search',
+)()
+const ColumnsLayoutOnboardingLazyImport = createFileRoute(
+  '/columns/_layout/onboarding',
+)()
+const ColumnsLayoutNotificationLazyImport = createFileRoute(
+  '/columns/_layout/notification',
+)()
+const ColumnsLayoutNewsfeedLazyImport = createFileRoute(
+  '/columns/_layout/newsfeed',
+)()
+const ColumnsLayoutUsersIdLazyImport = createFileRoute(
+  '/columns/_layout/users/$id',
+)()
+const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
+  '/columns/_layout/replies/$id',
+)()
+const ColumnsLayoutHashtagsContentLazyImport = createFileRoute(
+  '/columns/_layout/hashtags/$content',
+)()
+const ColumnsLayoutEventsIdLazyImport = createFileRoute(
+  '/columns/_layout/events/$id',
+)()
 
 // Create/Update Routes
+
+const ColumnsRoute = ColumnsImport.update({
+  path: '/columns',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountRoute = AccountImport.update({
+  path: '/$account',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ResetLazyRoute = ResetLazyImport.update({
+  path: '/reset',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/reset.lazy').then((d) => d.Route))
 
 const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
-
-const TrendingRoute = TrendingImport.update({
-  path: '/trending',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const TopicRoute = TopicImport.update({
-  path: '/topic',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const StoreRoute = StoreImport.update({
-  path: '/store',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SettingsRoute = SettingsImport.update({
-  path: '/settings',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SearchRoute = SearchImport.update({
-  path: '/search',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const OnboardingRoute = OnboardingImport.update({
-  path: '/onboarding',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const NewsfeedRoute = NewsfeedImport.update({
-  path: '/newsfeed',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const GroupRoute = GroupImport.update({
-  path: '/group',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const GlobalRoute = GlobalImport.update({
-  path: '/global',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateTopicRoute = CreateTopicImport.update({
-  path: '/create-topic',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateNewsfeedRoute = CreateNewsfeedImport.update({
-  path: '/create-newsfeed',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateGroupRoute = CreateGroupImport.update({
-  path: '/create-group',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   path: '/bootstrap-relays',
@@ -128,11 +101,6 @@ const BootstrapRelaysRoute = BootstrapRelaysImport.update({
 } as any).lazy(() =>
   import('./routes/bootstrap-relays.lazy').then((d) => d.Route),
 )
-
-const AccountRoute = AccountImport.update({
-  path: '/$account',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/$account.lazy').then((d) => d.Route))
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -159,97 +127,198 @@ const AuthConnectLazyRoute = AuthConnectLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/auth/connect.lazy').then((d) => d.Route))
 
-const AccountPanelLazyRoute = AccountPanelLazyImport.update({
-  path: '/panel',
+const AccountSettingsLazyRoute = AccountSettingsLazyImport.update({
+  id: '/_settings',
   getParentRoute: () => AccountRoute,
 } as any).lazy(() =>
-  import('./routes/$account/panel.lazy').then((d) => d.Route),
+  import('./routes/$account/_settings.lazy').then((d) => d.Route),
 )
 
 const ZapIdRoute = ZapIdImport.update({
   path: '/zap/$id',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/zap.$id.lazy').then((d) => d.Route))
 
-const UsersIdRoute = UsersIdImport.update({
-  path: '/users/$id',
-  getParentRoute: () => rootRoute,
+const ColumnsLayoutRoute = ColumnsLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => ColumnsRoute,
 } as any)
-
-const TrendingUsersRoute = TrendingUsersImport.update({
-  path: '/users',
-  getParentRoute: () => TrendingRoute,
-} as any)
-
-const TrendingNotesRoute = TrendingNotesImport.update({
-  path: '/notes',
-  getParentRoute: () => TrendingRoute,
-} as any)
-
-const SettingsWalletRoute = SettingsWalletImport.update({
-  path: '/wallet',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsUserRoute = SettingsUserImport.update({
-  path: '/user',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsRelayRoute = SettingsRelayImport.update({
-  path: '/relay',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsGeneralRoute = SettingsGeneralImport.update({
-  path: '/general',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsBitcoinConnectRoute = SettingsBitcoinConnectImport.update({
-  path: '/bitcoin-connect',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SettingsBackupRoute = SettingsBackupImport.update({
-  path: '/backup',
-  getParentRoute: () => SettingsRoute,
-} as any)
-
-const SearchUsersRoute = SearchUsersImport.update({
-  path: '/users',
-  getParentRoute: () => SearchRoute,
-} as any)
-
-const SearchNotesRoute = SearchNotesImport.update({
-  path: '/notes',
-  getParentRoute: () => SearchRoute,
-} as any)
-
-const EventsIdRoute = EventsIdImport.update({
-  path: '/events/$id',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateNewsfeedUsersRoute = CreateNewsfeedUsersImport.update({
-  path: '/users',
-  getParentRoute: () => CreateNewsfeedRoute,
-} as any)
-
-const CreateNewsfeedF2fRoute = CreateNewsfeedF2fImport.update({
-  path: '/f2f',
-  getParentRoute: () => CreateNewsfeedRoute,
-} as any)
-
-const AccountHomeRoute = AccountHomeImport.update({
-  path: '/home',
-  getParentRoute: () => AccountRoute,
-} as any).lazy(() => import('./routes/$account/home.lazy').then((d) => d.Route))
 
 const AccountBackupRoute = AccountBackupImport.update({
   path: '/backup',
   getParentRoute: () => AccountRoute,
 } as any)
+
+const AccountAppRoute = AccountAppImport.update({
+  id: '/_app',
+  getParentRoute: () => AccountRoute,
+} as any).lazy(() => import('./routes/$account/_app.lazy').then((d) => d.Route))
+
+const ColumnsLayoutTrendingLazyRoute = ColumnsLayoutTrendingLazyImport.update({
+  path: '/trending',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/trending.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutSearchLazyRoute = ColumnsLayoutSearchLazyImport.update({
+  path: '/search',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/search.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutOnboardingLazyRoute =
+  ColumnsLayoutOnboardingLazyImport.update({
+    path: '/onboarding',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/onboarding.lazy').then((d) => d.Route),
+  )
+
+const ColumnsLayoutNotificationLazyRoute =
+  ColumnsLayoutNotificationLazyImport.update({
+    path: '/notification',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/notification.lazy').then((d) => d.Route),
+  )
+
+const ColumnsLayoutNewsfeedLazyRoute = ColumnsLayoutNewsfeedLazyImport.update({
+  path: '/newsfeed',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/newsfeed.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
+  path: '/stories',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/stories.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutGroupRoute = ColumnsLayoutGroupImport.update({
+  path: '/group',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/group.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutGlobalRoute = ColumnsLayoutGlobalImport.update({
+  path: '/global',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any)
+
+const ColumnsLayoutGalleryRoute = ColumnsLayoutGalleryImport.update({
+  path: '/gallery',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/gallery.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutCreateNewsfeedRoute =
+  ColumnsLayoutCreateNewsfeedImport.update({
+    path: '/create-newsfeed',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any)
+
+const ColumnsLayoutCreateGroupRoute = ColumnsLayoutCreateGroupImport.update({
+  path: '/create-group',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/create-group.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsWalletRoute = AccountSettingsWalletImport.update({
+  path: '/wallet',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/wallet.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsRelayRoute = AccountSettingsRelayImport.update({
+  path: '/relay',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/relay.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsProfileRoute = AccountSettingsProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/profile.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsGeneralRoute = AccountSettingsGeneralImport.update({
+  path: '/general',
+  getParentRoute: () => AccountSettingsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_settings/general.lazy').then((d) => d.Route),
+)
+
+const AccountSettingsBitcoinConnectRoute =
+  AccountSettingsBitcoinConnectImport.update({
+    path: '/bitcoin-connect',
+    getParentRoute: () => AccountSettingsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/$account/_settings/bitcoin-connect.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AccountAppHomeRoute = AccountAppHomeImport.update({
+  path: '/home',
+  getParentRoute: () => AccountAppRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_app/home.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutUsersIdLazyRoute = ColumnsLayoutUsersIdLazyImport.update({
+  path: '/users/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/users.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
+  {
+    path: '/replies/$id',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/columns/_layout/replies.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutHashtagsContentLazyRoute =
+  ColumnsLayoutHashtagsContentLazyImport.update({
+    path: '/hashtags/$content',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/hashtags.$content.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
+  path: '/events/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/events.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutCreateNewsfeedUsersRoute =
+  ColumnsLayoutCreateNewsfeedUsersImport.update({
+    path: '/users',
+    getParentRoute: () => ColumnsLayoutCreateNewsfeedRoute,
+  } as any)
+
+const ColumnsLayoutCreateNewsfeedF2fRoute =
+  ColumnsLayoutCreateNewsfeedF2fImport.update({
+    path: '/f2f',
+    getParentRoute: () => ColumnsLayoutCreateNewsfeedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -262,102 +331,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/$account': {
-      id: '/$account'
-      path: '/$account'
-      fullPath: '/$account'
-      preLoaderRoute: typeof AccountImport
-      parentRoute: typeof rootRoute
-    }
     '/bootstrap-relays': {
       id: '/bootstrap-relays'
       path: '/bootstrap-relays'
       fullPath: '/bootstrap-relays'
       preLoaderRoute: typeof BootstrapRelaysImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-group': {
-      id: '/create-group'
-      path: '/create-group'
-      fullPath: '/create-group'
-      preLoaderRoute: typeof CreateGroupImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-newsfeed': {
-      id: '/create-newsfeed'
-      path: '/create-newsfeed'
-      fullPath: '/create-newsfeed'
-      preLoaderRoute: typeof CreateNewsfeedImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-topic': {
-      id: '/create-topic'
-      path: '/create-topic'
-      fullPath: '/create-topic'
-      preLoaderRoute: typeof CreateTopicImport
-      parentRoute: typeof rootRoute
-    }
-    '/global': {
-      id: '/global'
-      path: '/global'
-      fullPath: '/global'
-      preLoaderRoute: typeof GlobalImport
-      parentRoute: typeof rootRoute
-    }
-    '/group': {
-      id: '/group'
-      path: '/group'
-      fullPath: '/group'
-      preLoaderRoute: typeof GroupImport
-      parentRoute: typeof rootRoute
-    }
-    '/newsfeed': {
-      id: '/newsfeed'
-      path: '/newsfeed'
-      fullPath: '/newsfeed'
-      preLoaderRoute: typeof NewsfeedImport
-      parentRoute: typeof rootRoute
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingImport
-      parentRoute: typeof rootRoute
-    }
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchImport
-      parentRoute: typeof rootRoute
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsImport
-      parentRoute: typeof rootRoute
-    }
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreImport
-      parentRoute: typeof rootRoute
-    }
-    '/topic': {
-      id: '/topic'
-      path: '/topic'
-      fullPath: '/topic'
-      preLoaderRoute: typeof TopicImport
-      parentRoute: typeof rootRoute
-    }
-    '/trending': {
-      id: '/trending'
-      path: '/trending'
-      fullPath: '/trending'
-      preLoaderRoute: typeof TrendingImport
       parentRoute: typeof rootRoute
     }
     '/new': {
@@ -367,6 +345,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewLazyImport
       parentRoute: typeof rootRoute
     }
+    '/reset': {
+      id: '/reset'
+      path: '/reset'
+      fullPath: '/reset'
+      preLoaderRoute: typeof ResetLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/$account': {
+      id: '/$account'
+      path: '/$account'
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountImport
+      parentRoute: typeof rootRoute
+    }
+    '/$account/_app': {
+      id: '/$account/_app'
+      path: '/$account'
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountAppImport
+      parentRoute: typeof AccountRoute
+    }
     '/$account/backup': {
       id: '/$account/backup'
       path: '/backup'
@@ -374,110 +373,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountBackupImport
       parentRoute: typeof AccountImport
     }
-    '/$account/home': {
-      id: '/$account/home'
-      path: '/home'
-      fullPath: '/$account/home'
-      preLoaderRoute: typeof AccountHomeImport
-      parentRoute: typeof AccountImport
-    }
-    '/create-newsfeed/f2f': {
-      id: '/create-newsfeed/f2f'
-      path: '/f2f'
-      fullPath: '/create-newsfeed/f2f'
-      preLoaderRoute: typeof CreateNewsfeedF2fImport
-      parentRoute: typeof CreateNewsfeedImport
-    }
-    '/create-newsfeed/users': {
-      id: '/create-newsfeed/users'
-      path: '/users'
-      fullPath: '/create-newsfeed/users'
-      preLoaderRoute: typeof CreateNewsfeedUsersImport
-      parentRoute: typeof CreateNewsfeedImport
-    }
-    '/events/$id': {
-      id: '/events/$id'
-      path: '/events/$id'
-      fullPath: '/events/$id'
-      preLoaderRoute: typeof EventsIdImport
+    '/columns': {
+      id: '/columns'
+      path: '/columns'
+      fullPath: '/columns'
+      preLoaderRoute: typeof ColumnsImport
       parentRoute: typeof rootRoute
     }
-    '/search/notes': {
-      id: '/search/notes'
-      path: '/notes'
-      fullPath: '/search/notes'
-      preLoaderRoute: typeof SearchNotesImport
-      parentRoute: typeof SearchImport
-    }
-    '/search/users': {
-      id: '/search/users'
-      path: '/users'
-      fullPath: '/search/users'
-      preLoaderRoute: typeof SearchUsersImport
-      parentRoute: typeof SearchImport
-    }
-    '/settings/backup': {
-      id: '/settings/backup'
-      path: '/backup'
-      fullPath: '/settings/backup'
-      preLoaderRoute: typeof SettingsBackupImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/bitcoin-connect': {
-      id: '/settings/bitcoin-connect'
-      path: '/bitcoin-connect'
-      fullPath: '/settings/bitcoin-connect'
-      preLoaderRoute: typeof SettingsBitcoinConnectImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/general': {
-      id: '/settings/general'
-      path: '/general'
-      fullPath: '/settings/general'
-      preLoaderRoute: typeof SettingsGeneralImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/relay': {
-      id: '/settings/relay'
-      path: '/relay'
-      fullPath: '/settings/relay'
-      preLoaderRoute: typeof SettingsRelayImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/user': {
-      id: '/settings/user'
-      path: '/user'
-      fullPath: '/settings/user'
-      preLoaderRoute: typeof SettingsUserImport
-      parentRoute: typeof SettingsImport
-    }
-    '/settings/wallet': {
-      id: '/settings/wallet'
-      path: '/wallet'
-      fullPath: '/settings/wallet'
-      preLoaderRoute: typeof SettingsWalletImport
-      parentRoute: typeof SettingsImport
-    }
-    '/trending/notes': {
-      id: '/trending/notes'
-      path: '/notes'
-      fullPath: '/trending/notes'
-      preLoaderRoute: typeof TrendingNotesImport
-      parentRoute: typeof TrendingImport
-    }
-    '/trending/users': {
-      id: '/trending/users'
-      path: '/users'
-      fullPath: '/trending/users'
-      preLoaderRoute: typeof TrendingUsersImport
-      parentRoute: typeof TrendingImport
-    }
-    '/users/$id': {
-      id: '/users/$id'
-      path: '/users/$id'
-      fullPath: '/users/$id'
-      preLoaderRoute: typeof UsersIdImport
-      parentRoute: typeof rootRoute
+    '/columns/_layout': {
+      id: '/columns/_layout'
+      path: '/columns'
+      fullPath: '/columns'
+      preLoaderRoute: typeof ColumnsLayoutImport
+      parentRoute: typeof ColumnsRoute
     }
     '/zap/$id': {
       id: '/zap/$id'
@@ -486,11 +394,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ZapIdImport
       parentRoute: typeof rootRoute
     }
-    '/$account/panel': {
-      id: '/$account/panel'
-      path: '/panel'
-      fullPath: '/$account/panel'
-      preLoaderRoute: typeof AccountPanelLazyImport
+    '/$account/_settings': {
+      id: '/$account/_settings'
+      path: ''
+      fullPath: '/$account'
+      preLoaderRoute: typeof AccountSettingsLazyImport
       parentRoute: typeof AccountImport
     }
     '/auth/connect': {
@@ -521,6 +429,167 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorIndexImport
       parentRoute: typeof rootRoute
     }
+    '/$account/_app/home': {
+      id: '/$account/_app/home'
+      path: '/home'
+      fullPath: '/$account/home'
+      preLoaderRoute: typeof AccountAppHomeImport
+      parentRoute: typeof AccountAppImport
+    }
+    '/$account/_settings/bitcoin-connect': {
+      id: '/$account/_settings/bitcoin-connect'
+      path: '/bitcoin-connect'
+      fullPath: '/$account/bitcoin-connect'
+      preLoaderRoute: typeof AccountSettingsBitcoinConnectImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/general': {
+      id: '/$account/_settings/general'
+      path: '/general'
+      fullPath: '/$account/general'
+      preLoaderRoute: typeof AccountSettingsGeneralImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/profile': {
+      id: '/$account/_settings/profile'
+      path: '/profile'
+      fullPath: '/$account/profile'
+      preLoaderRoute: typeof AccountSettingsProfileImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/relay': {
+      id: '/$account/_settings/relay'
+      path: '/relay'
+      fullPath: '/$account/relay'
+      preLoaderRoute: typeof AccountSettingsRelayImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/$account/_settings/wallet': {
+      id: '/$account/_settings/wallet'
+      path: '/wallet'
+      fullPath: '/$account/wallet'
+      preLoaderRoute: typeof AccountSettingsWalletImport
+      parentRoute: typeof AccountSettingsLazyImport
+    }
+    '/columns/_layout/create-group': {
+      id: '/columns/_layout/create-group'
+      path: '/create-group'
+      fullPath: '/columns/create-group'
+      preLoaderRoute: typeof ColumnsLayoutCreateGroupImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/create-newsfeed': {
+      id: '/columns/_layout/create-newsfeed'
+      path: '/create-newsfeed'
+      fullPath: '/columns/create-newsfeed'
+      preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/gallery': {
+      id: '/columns/_layout/gallery'
+      path: '/gallery'
+      fullPath: '/columns/gallery'
+      preLoaderRoute: typeof ColumnsLayoutGalleryImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/global': {
+      id: '/columns/_layout/global'
+      path: '/global'
+      fullPath: '/columns/global'
+      preLoaderRoute: typeof ColumnsLayoutGlobalImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/group': {
+      id: '/columns/_layout/group'
+      path: '/group'
+      fullPath: '/columns/group'
+      preLoaderRoute: typeof ColumnsLayoutGroupImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/stories': {
+      id: '/columns/_layout/stories'
+      path: '/stories'
+      fullPath: '/columns/stories'
+      preLoaderRoute: typeof ColumnsLayoutStoriesImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/newsfeed': {
+      id: '/columns/_layout/newsfeed'
+      path: '/newsfeed'
+      fullPath: '/columns/newsfeed'
+      preLoaderRoute: typeof ColumnsLayoutNewsfeedLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/notification': {
+      id: '/columns/_layout/notification'
+      path: '/notification'
+      fullPath: '/columns/notification'
+      preLoaderRoute: typeof ColumnsLayoutNotificationLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/onboarding': {
+      id: '/columns/_layout/onboarding'
+      path: '/onboarding'
+      fullPath: '/columns/onboarding'
+      preLoaderRoute: typeof ColumnsLayoutOnboardingLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/search': {
+      id: '/columns/_layout/search'
+      path: '/search'
+      fullPath: '/columns/search'
+      preLoaderRoute: typeof ColumnsLayoutSearchLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/trending': {
+      id: '/columns/_layout/trending'
+      path: '/trending'
+      fullPath: '/columns/trending'
+      preLoaderRoute: typeof ColumnsLayoutTrendingLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/create-newsfeed/f2f': {
+      id: '/columns/_layout/create-newsfeed/f2f'
+      path: '/f2f'
+      fullPath: '/columns/create-newsfeed/f2f'
+      preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedF2fImport
+      parentRoute: typeof ColumnsLayoutCreateNewsfeedImport
+    }
+    '/columns/_layout/create-newsfeed/users': {
+      id: '/columns/_layout/create-newsfeed/users'
+      path: '/users'
+      fullPath: '/columns/create-newsfeed/users'
+      preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedUsersImport
+      parentRoute: typeof ColumnsLayoutCreateNewsfeedImport
+    }
+    '/columns/_layout/events/$id': {
+      id: '/columns/_layout/events/$id'
+      path: '/events/$id'
+      fullPath: '/columns/events/$id'
+      preLoaderRoute: typeof ColumnsLayoutEventsIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/hashtags/$content': {
+      id: '/columns/_layout/hashtags/$content'
+      path: '/hashtags/$content'
+      fullPath: '/columns/hashtags/$content'
+      preLoaderRoute: typeof ColumnsLayoutHashtagsContentLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/replies/$id': {
+      id: '/columns/_layout/replies/$id'
+      path: '/replies/$id'
+      fullPath: '/columns/replies/$id'
+      preLoaderRoute: typeof ColumnsLayoutRepliesIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/users/$id': {
+      id: '/columns/_layout/users/$id'
+      path: '/users/$id'
+      fullPath: '/columns/users/$id'
+      preLoaderRoute: typeof ColumnsLayoutUsersIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
   }
 }
 
@@ -528,40 +597,43 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  AccountRoute: AccountRoute.addChildren({
-    AccountBackupRoute,
-    AccountHomeRoute,
-    AccountPanelLazyRoute,
-  }),
   BootstrapRelaysRoute,
-  CreateGroupRoute,
-  CreateNewsfeedRoute: CreateNewsfeedRoute.addChildren({
-    CreateNewsfeedF2fRoute,
-    CreateNewsfeedUsersRoute,
-  }),
-  CreateTopicRoute,
-  GlobalRoute,
-  GroupRoute,
-  NewsfeedRoute,
-  OnboardingRoute,
-  SearchRoute: SearchRoute.addChildren({ SearchNotesRoute, SearchUsersRoute }),
-  SettingsRoute: SettingsRoute.addChildren({
-    SettingsBackupRoute,
-    SettingsBitcoinConnectRoute,
-    SettingsGeneralRoute,
-    SettingsRelayRoute,
-    SettingsUserRoute,
-    SettingsWalletRoute,
-  }),
-  StoreRoute,
-  TopicRoute,
-  TrendingRoute: TrendingRoute.addChildren({
-    TrendingNotesRoute,
-    TrendingUsersRoute,
-  }),
   NewLazyRoute,
-  EventsIdRoute,
-  UsersIdRoute,
+  ResetLazyRoute,
+  AccountRoute: AccountRoute.addChildren({
+    AccountAppRoute: AccountAppRoute.addChildren({ AccountAppHomeRoute }),
+    AccountBackupRoute,
+    AccountSettingsLazyRoute: AccountSettingsLazyRoute.addChildren({
+      AccountSettingsBitcoinConnectRoute,
+      AccountSettingsGeneralRoute,
+      AccountSettingsProfileRoute,
+      AccountSettingsRelayRoute,
+      AccountSettingsWalletRoute,
+    }),
+  }),
+  ColumnsRoute: ColumnsRoute.addChildren({
+    ColumnsLayoutRoute: ColumnsLayoutRoute.addChildren({
+      ColumnsLayoutCreateGroupRoute,
+      ColumnsLayoutCreateNewsfeedRoute:
+        ColumnsLayoutCreateNewsfeedRoute.addChildren({
+          ColumnsLayoutCreateNewsfeedF2fRoute,
+          ColumnsLayoutCreateNewsfeedUsersRoute,
+        }),
+      ColumnsLayoutGalleryRoute,
+      ColumnsLayoutGlobalRoute,
+      ColumnsLayoutGroupRoute,
+      ColumnsLayoutStoriesRoute,
+      ColumnsLayoutNewsfeedLazyRoute,
+      ColumnsLayoutNotificationLazyRoute,
+      ColumnsLayoutOnboardingLazyRoute,
+      ColumnsLayoutSearchLazyRoute,
+      ColumnsLayoutTrendingLazyRoute,
+      ColumnsLayoutEventsIdLazyRoute,
+      ColumnsLayoutHashtagsContentLazyRoute,
+      ColumnsLayoutRepliesIdLazyRoute,
+      ColumnsLayoutUsersIdLazyRoute,
+    }),
+  }),
   ZapIdRoute,
   AuthConnectLazyRoute,
   AuthImportLazyRoute,
@@ -578,23 +650,11 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/$account",
         "/bootstrap-relays",
-        "/create-group",
-        "/create-newsfeed",
-        "/create-topic",
-        "/global",
-        "/group",
-        "/newsfeed",
-        "/onboarding",
-        "/search",
-        "/settings",
-        "/store",
-        "/topic",
-        "/trending",
         "/new",
-        "/events/$id",
-        "/users/$id",
+        "/reset",
+        "/$account",
+        "/columns",
         "/zap/$id",
         "/auth/connect",
         "/auth/import",
@@ -605,144 +665,74 @@ export const routeTree = rootRoute.addChildren({
     "/": {
       "filePath": "index.tsx"
     },
-    "/$account": {
-      "filePath": "$account.tsx",
-      "children": [
-        "/$account/backup",
-        "/$account/home",
-        "/$account/panel"
-      ]
-    },
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
     },
-    "/create-group": {
-      "filePath": "create-group.tsx"
-    },
-    "/create-newsfeed": {
-      "filePath": "create-newsfeed.tsx",
-      "children": [
-        "/create-newsfeed/f2f",
-        "/create-newsfeed/users"
-      ]
-    },
-    "/create-topic": {
-      "filePath": "create-topic.tsx"
-    },
-    "/global": {
-      "filePath": "global.tsx"
-    },
-    "/group": {
-      "filePath": "group.tsx"
-    },
-    "/newsfeed": {
-      "filePath": "newsfeed.tsx"
-    },
-    "/onboarding": {
-      "filePath": "onboarding.tsx"
-    },
-    "/search": {
-      "filePath": "search.tsx",
-      "children": [
-        "/search/notes",
-        "/search/users"
-      ]
-    },
-    "/settings": {
-      "filePath": "settings.tsx",
-      "children": [
-        "/settings/backup",
-        "/settings/bitcoin-connect",
-        "/settings/general",
-        "/settings/relay",
-        "/settings/user",
-        "/settings/wallet"
-      ]
-    },
-    "/store": {
-      "filePath": "store.tsx"
-    },
-    "/topic": {
-      "filePath": "topic.tsx"
-    },
-    "/trending": {
-      "filePath": "trending.tsx",
-      "children": [
-        "/trending/notes",
-        "/trending/users"
-      ]
-    },
     "/new": {
       "filePath": "new.lazy.tsx"
+    },
+    "/reset": {
+      "filePath": "reset.lazy.tsx"
+    },
+    "/$account": {
+      "filePath": "$account",
+      "children": [
+        "/$account/_app",
+        "/$account/backup",
+        "/$account/_settings"
+      ]
+    },
+    "/$account/_app": {
+      "filePath": "$account/_app.tsx",
+      "parent": "/$account",
+      "children": [
+        "/$account/_app/home"
+      ]
     },
     "/$account/backup": {
       "filePath": "$account/backup.tsx",
       "parent": "/$account"
     },
-    "/$account/home": {
-      "filePath": "$account/home.tsx",
-      "parent": "/$account"
+    "/columns": {
+      "filePath": "columns",
+      "children": [
+        "/columns/_layout"
+      ]
     },
-    "/create-newsfeed/f2f": {
-      "filePath": "create-newsfeed.f2f.tsx",
-      "parent": "/create-newsfeed"
-    },
-    "/create-newsfeed/users": {
-      "filePath": "create-newsfeed.users.tsx",
-      "parent": "/create-newsfeed"
-    },
-    "/events/$id": {
-      "filePath": "events/$id.tsx"
-    },
-    "/search/notes": {
-      "filePath": "search.notes.tsx",
-      "parent": "/search"
-    },
-    "/search/users": {
-      "filePath": "search.users.tsx",
-      "parent": "/search"
-    },
-    "/settings/backup": {
-      "filePath": "settings/backup.tsx",
-      "parent": "/settings"
-    },
-    "/settings/bitcoin-connect": {
-      "filePath": "settings/bitcoin-connect.tsx",
-      "parent": "/settings"
-    },
-    "/settings/general": {
-      "filePath": "settings/general.tsx",
-      "parent": "/settings"
-    },
-    "/settings/relay": {
-      "filePath": "settings/relay.tsx",
-      "parent": "/settings"
-    },
-    "/settings/user": {
-      "filePath": "settings/user.tsx",
-      "parent": "/settings"
-    },
-    "/settings/wallet": {
-      "filePath": "settings/wallet.tsx",
-      "parent": "/settings"
-    },
-    "/trending/notes": {
-      "filePath": "trending.notes.tsx",
-      "parent": "/trending"
-    },
-    "/trending/users": {
-      "filePath": "trending.users.tsx",
-      "parent": "/trending"
-    },
-    "/users/$id": {
-      "filePath": "users.$id.tsx"
+    "/columns/_layout": {
+      "filePath": "columns/_layout.tsx",
+      "parent": "/columns",
+      "children": [
+        "/columns/_layout/create-group",
+        "/columns/_layout/create-newsfeed",
+        "/columns/_layout/gallery",
+        "/columns/_layout/global",
+        "/columns/_layout/group",
+        "/columns/_layout/stories",
+        "/columns/_layout/newsfeed",
+        "/columns/_layout/notification",
+        "/columns/_layout/onboarding",
+        "/columns/_layout/search",
+        "/columns/_layout/trending",
+        "/columns/_layout/events/$id",
+        "/columns/_layout/hashtags/$content",
+        "/columns/_layout/replies/$id",
+        "/columns/_layout/users/$id"
+      ]
     },
     "/zap/$id": {
       "filePath": "zap.$id.tsx"
     },
-    "/$account/panel": {
-      "filePath": "$account/panel.lazy.tsx",
-      "parent": "/$account"
+    "/$account/_settings": {
+      "filePath": "$account/_settings.lazy.tsx",
+      "parent": "/$account",
+      "children": [
+        "/$account/_settings/bitcoin-connect",
+        "/$account/_settings/general",
+        "/$account/_settings/profile",
+        "/$account/_settings/relay",
+        "/$account/_settings/wallet"
+      ]
     },
     "/auth/connect": {
       "filePath": "auth/connect.lazy.tsx"
@@ -755,6 +745,102 @@ export const routeTree = rootRoute.addChildren({
     },
     "/editor/": {
       "filePath": "editor/index.tsx"
+    },
+    "/$account/_app/home": {
+      "filePath": "$account/_app/home.tsx",
+      "parent": "/$account/_app"
+    },
+    "/$account/_settings/bitcoin-connect": {
+      "filePath": "$account/_settings/bitcoin-connect.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/general": {
+      "filePath": "$account/_settings/general.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/profile": {
+      "filePath": "$account/_settings/profile.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/relay": {
+      "filePath": "$account/_settings/relay.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/$account/_settings/wallet": {
+      "filePath": "$account/_settings/wallet.tsx",
+      "parent": "/$account/_settings"
+    },
+    "/columns/_layout/create-group": {
+      "filePath": "columns/_layout/create-group.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/create-newsfeed": {
+      "filePath": "columns/_layout/create-newsfeed.tsx",
+      "parent": "/columns/_layout",
+      "children": [
+        "/columns/_layout/create-newsfeed/f2f",
+        "/columns/_layout/create-newsfeed/users"
+      ]
+    },
+    "/columns/_layout/gallery": {
+      "filePath": "columns/_layout/gallery.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/global": {
+      "filePath": "columns/_layout/global.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/group": {
+      "filePath": "columns/_layout/group.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/stories": {
+      "filePath": "columns/_layout/stories.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/newsfeed": {
+      "filePath": "columns/_layout/newsfeed.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/notification": {
+      "filePath": "columns/_layout/notification.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/onboarding": {
+      "filePath": "columns/_layout/onboarding.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/search": {
+      "filePath": "columns/_layout/search.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/trending": {
+      "filePath": "columns/_layout/trending.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/create-newsfeed/f2f": {
+      "filePath": "columns/_layout/create-newsfeed.f2f.tsx",
+      "parent": "/columns/_layout/create-newsfeed"
+    },
+    "/columns/_layout/create-newsfeed/users": {
+      "filePath": "columns/_layout/create-newsfeed.users.tsx",
+      "parent": "/columns/_layout/create-newsfeed"
+    },
+    "/columns/_layout/events/$id": {
+      "filePath": "columns/_layout/events.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/hashtags/$content": {
+      "filePath": "columns/_layout/hashtags.$content.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/replies/$id": {
+      "filePath": "columns/_layout/replies.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/users/$id": {
+      "filePath": "columns/_layout/users.$id.lazy.tsx",
+      "parent": "/columns/_layout"
     }
   }
 }

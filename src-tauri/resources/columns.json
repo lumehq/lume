@@ -1,0 +1,83 @@
+[
+	{
+		"default": true,
+		"official": true,
+		"label": "onboarding",
+		"name": "Onboarding",
+		"description": "Tips for Mastering Lume.",
+		"url": "/columns/onboarding",
+		"picture": ""
+	},
+	{
+		"default": true,
+		"official": true,
+		"label": "columns_gallery",
+		"name": "Columns Gallery",
+		"description": "Expand your experiences.",
+		"url": "/columns/gallery",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "local_feeds",
+		"name": "Local Feeds",
+		"description": "All notes from your follows.",
+		"url": "/columns/newsfeed",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "notification",
+		"name": "Notification",
+		"description": "All things around you.",
+		"url": "/columns/notification",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "search",
+		"name": "Search",
+		"description": "Find anything.",
+		"url": "/columns/search",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "stories",
+		"name": "Stories",
+		"description": "Keep up to date with your follows.",
+		"url": "/columns/stories",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "global_feeds",
+		"name": "Global Feeds",
+		"description": "Discover all global notes.",
+		"url": "/columns/global",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "group_feeds",
+		"name": "Group",
+		"description": "Custom feeds for group of people.",
+		"url": "/columns/group",
+		"picture": ""
+	},
+	{
+		"default": false,
+		"official": true,
+		"label": "trending",
+		"name": "Trending",
+		"description": "Discover all trending notes.",
+		"url": "/columns/trending",
+		"picture": ""
+	}
+]

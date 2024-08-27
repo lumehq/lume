@@ -1,8 +1,7 @@
 import { displayLongHandle, displayNpub } from "@/commons";
-import { VerifiedIcon } from "@/components";
 import { NostrQuery } from "@/system";
+import { SealCheck } from "@phosphor-icons/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "./provider";
 
@@ -20,16 +19,12 @@ export function UserNip05() {
 
 			return verify;
 		},
-		enabled: !!user.profile?.nip05,
+		enabled: !!user.profile?.nip05?.length,
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
 		retry: false,
-		persister: experimental_createPersister({
-			storage: localStorage,
-			maxAge: 1000 * 60 * 60 * 72, // 72 hours
-		}),
 	});
 
 	if (!user.profile?.nip05?.length) return;
@@ -39,7 +34,7 @@ export function UserNip05() {
 			<Tooltip.Root delayDuration={150}>
 				<Tooltip.Trigger>
 					{!isLoading && verified ? (
-						<VerifiedIcon className="text-teal-500 size-4" />
+						<SealCheck className="text-green-500 size-4" weight="fill" />
 					) : null}
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

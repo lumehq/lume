@@ -1,9 +1,10 @@
-import { useRouteContext } from "@tanstack/react-router";
+import { appSettings } from "@/commons";
+import { useStore } from "@tanstack/react-store";
 
 export function VideoPreview({ url }: { url: string }) {
-	const { settings } = useRouteContext({ strict: false });
+	const visible = useStore(appSettings, (state) => state.display_media);
 
-	if (settings.display_media) {
+	if (!visible) {
 		return (
 			<a
 				href={url}

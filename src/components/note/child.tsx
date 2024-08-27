@@ -1,7 +1,7 @@
 import { cn } from "@/commons";
-import { InfoIcon } from "@/components";
 import { useEvent } from "@/system";
 import type { EventTag } from "@/types";
+import { Info } from "@phosphor-icons/react";
 import { Note } from ".";
 
 export function NoteChild({
@@ -11,7 +11,7 @@ export function NoteChild({
 	event: EventTag;
 	isRoot?: boolean;
 }) {
-	const { isLoading, isError, data } = useEvent(event.id, event.relayHint);
+	const { isLoading, isError, data } = useEvent(event.id);
 
 	if (isLoading) {
 		return (
@@ -26,7 +26,7 @@ export function NoteChild({
 		return (
 			<div className="flex items-center gap-2 px-3 pt-3">
 				<div className="inline-flex items-center justify-center text-white bg-red-500 rounded-full size-8 shrink-0">
-					<InfoIcon className="size-5" />
+					<Info className="size-5" />
 				</div>
 				<p className="text-sm text-red-500">
 					Event not found with your current relay set

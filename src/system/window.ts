@@ -1,11 +1,54 @@
 import { commands } from "@/commands.gen";
-import type { NostrEvent } from "@/types";
+import type { LumeColumn, NostrEvent } from "@/types";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { LumeEvent } from "./event";
 
 export const LumeWindow = {
-	openMainWindow: async () => {
-		const query = await commands.openMainWindow();
-		return query;
+	openColumn: async (column: LumeColumn) => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column,
+		});
+	},
+	openColumnsGallery: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "columns_gallery",
+				name: "Columns Gallery",
+				url: "/columns/gallery",
+			},
+		});
+	},
+	openLocalFeeds: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "local_feeds",
+				name: "Local Feeds",
+				url: "/columns/newsfeed",
+			},
+		});
+	},
+	openNotification: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "notification",
+				name: "Notification",
+				url: "/columns/notification",
+			},
+		});
+	},
+	openSearch: async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "search",
+				name: "Search",
+				url: "/columns/search",
+			},
+		});
 	},
 	openEvent: async (event: NostrEvent | LumeEvent) => {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
@@ -14,44 +57,29 @@ export const LumeWindow = {
 		const reply: string =
 			eTags.find((el) => el[3] === "reply")?.[1] ?? eTags[1]?.[1];
 
-		const url = `/events/${root ?? reply ?? event.id}`;
+		const url = `/columns/events/${root ?? reply ?? event.id}`;
 		const label = `event-${root ?? reply ?? event.id}`;
 
-		const query = await commands.openWindow({
-			label,
-			url,
-			title: "Thread",
-			width: 500,
-			height: 800,
-			maximizable: true,
-			minimizable: true,
-			hidden_title: false,
-		});
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
+		LumeWindow.openColumn({ label, url, name: "Thread" });
 	},
 	openProfile: async (pubkey: string) => {
 		const label = `user-${pubkey}`;
-		const query = await commands.openWindow({
-			label,
-			url: `/users/${pubkey}`,
-			title: "Profile",
-			width: 500,
-			height: 800,
-			maximizable: true,
-			minimizable: true,
-			hidden_title: true,
-		});
 
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
+		LumeWindow.openColumn({
+			label,
+			url: `/columns/users/${pubkey}`,
+			name: "Profile",
+		});
+	},
+	openHashtag: async (hashtag: string) => {
+		const content = hashtag.replace("#", "");
+		const label = `hashtag-${content}`;
+
+		LumeWindow.openColumn({
+			label,
+			url: `/columns/hashtags/${content}`,
+			name: hashtag,
+		});
 	},
 	openEditor: async (reply_to?: string, quote?: string) => {
 		let url: string;
@@ -104,11 +132,10 @@ export const LumeWindow = {
 			await LumeWindow.openSettings("bitcoin-connect");
 		}
 	},
-	openSettings: async (path?: string) => {
-		const label = "settings";
+	openSettings: async (account: string, path?: string) => {
 		const query = await commands.openWindow({
-			label,
-			url: path ? `/settings/${path}` : "/settings/general",
+			label: "settings",
+			url: path ? `${account}/${path}` : `${account}/general`,
 			title: "Settings",
 			width: 800,
 			height: 500,
@@ -123,29 +150,8 @@ export const LumeWindow = {
 			throw new Error(query.error);
 		}
 	},
-	openSearch: async (searchType: "notes" | "users", searchQuery: string) => {
-		const url = `/search/${searchType}?query=${searchQuery}`;
-		const label = `search-${searchQuery
-			.toLowerCase()
-			.replace(/[^\w ]+/g, "")
-			.replace(/ +/g, "_")
-			.replace(/_+/g, "_")}`;
-
-		const query = await commands.openWindow({
-			label,
-			url,
-			title: "Search",
-			width: 400,
-			height: 600,
-			maximizable: false,
-			minimizable: false,
-			hidden_title: true,
-		});
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
+	openMainWindow: async () => {
+		const query = await commands.reopenLume();
+		return query;
 	},
 };

@@ -78,7 +78,7 @@ function Screen() {
 						className="flex flex-col gap-3 p-3 rounded-xl overflow-hidden"
 						shadow
 					>
-						<div className="self-center relative rounded-full size-20 bg-neutral-100 dark:bg-neutral-900 my-3">
+						<div className="self-center relative rounded-full size-20 bg-neutral-100 dark:bg-white/10 my-3">
 							{picture.length ? (
 								<img
 									src={picture}
@@ -110,7 +110,7 @@ function Screen() {
 								onChange={(e) => setName(e.target.value)}
 								placeholder="e.g. Alice"
 								spellCheck={false}
-								className="px-3 rounded-lg h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:text-neutral-600"
+								className="px-3 rounded-lg h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:ring-0 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:text-neutral-600"
 							/>
 						</div>
 						<div className="flex flex-col gap-1">
@@ -126,7 +126,7 @@ function Screen() {
 								onChange={(e) => setAbout(e.target.value)}
 								placeholder="e.g. Artist, anime-lover, and k-pop fan"
 								spellCheck={false}
-								className="px-3 py-1.5 rounded-lg min-h-16 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:text-neutral-600"
+								className="px-3 py-1.5 rounded-lg min-h-16 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:ring-0 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:text-neutral-600"
 							/>
 						</div>
 						<div className="h-px w-full mt-2 bg-neutral-100 dark:bg-neutral-900" />
@@ -142,7 +142,7 @@ function Screen() {
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								className="px-3 rounded-lg h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:text-neutral-600"
+								className="px-3 rounded-lg h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:ring-0 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:text-neutral-600"
 							/>
 						</div>
 					</Frame>

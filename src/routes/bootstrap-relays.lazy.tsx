@@ -1,7 +1,8 @@
 import { commands } from "@/commands.gen";
+import { GoBack } from "@/components";
 import { Frame } from "@/components/frame";
 import { Spinner } from "@/components/spinner";
-import { Plus, X } from "@phosphor-icons/react";
+import { ArrowLeft, Plus, X } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
@@ -71,7 +72,10 @@ function Screen() {
 	}, [bootstrapRelays]);
 
 	return (
-		<div className="size-full flex items-center justify-center">
+		<div
+			data-tauri-drag-region
+			className="relative size-full flex items-center justify-center"
+		>
 			<div className="w-[320px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">
 					<h1 className="leading-tight text-xl font-semibold">Manage Relays</h1>
@@ -139,6 +143,10 @@ function Screen() {
 					</div>
 				</div>
 			</div>
+			<GoBack className="fixed top-11 left-2 flex items-center gap-1.5 text-sm font-medium">
+				<ArrowLeft className="size-5" />
+				Back
+			</GoBack>
 		</div>
 	);
 }

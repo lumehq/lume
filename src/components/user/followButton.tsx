@@ -1,7 +1,9 @@
+import { commands } from "@/commands.gen";
 import { cn } from "@/commons";
 import { Spinner } from "@/components";
 import { NostrAccount } from "@/system";
-import { useEffect, useState } from "react";
+import { message } from "@tauri-apps/plugin-dialog";
+import { useEffect, useState, useTransition } from "react";
 import { useUserContext } from "./provider";
 
 export function UserFollowButton({
@@ -13,18 +15,20 @@ export function UserFollowButton({
 }) {
 	const user = useUserContext();
 
-	const [loading, setLoading] = useState(false);
 	const [followed, setFollowed] = useState(false);
+	const [isPending, startTransition] = useTransition();
 
-	const toggleFollow = async () => {
-		setLoading(true);
+	const toggleFollow = () => {
+		startTransition(async () => {
+			const res = await commands.toggleContact(user.pubkey, null);
 
-		const toggle = await NostrAccount.toggleContact(user.pubkey);
-
-		if (toggle) {
-			setFollowed((prev) => !prev);
-			setLoading(false);
-		}
+			if (res.status === "ok") {
+				setFollowed((prev) => !prev);
+			} else {
+				await message(res.error, { kind: "error" });
+				return;
+			}
+		});
 	};
 
 	useEffect(() => {
@@ -42,11 +46,11 @@ export function UserFollowButton({
 	return (
 		<button
 			type="button"
-			disabled={loading}
+			disabled={isPending}
 			onClick={() => toggleFollow()}
 			className={cn("w-max", className)}
 		>
-			{loading ? (
+			{isPending ? (
 				<Spinner className="size-4" />
 			) : followed ? (
 				!simple ? (

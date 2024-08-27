@@ -1,4 +1,4 @@
-import { PowIcon } from "@/components";
+import { Nut } from "@phosphor-icons/react";
 import type { Dispatch, SetStateAction } from "react";
 
 export function PowButton({
@@ -14,7 +14,7 @@ export function PowButton({
 			}
 			className="inline-flex items-center h-8 gap-2 px-2.5 text-sm rounded-lg text-black/70 dark:text-white/70 w-max hover:bg-black/10 dark:hover:bg-white/10"
 		>
-			<PowIcon className="size-4" />
+			<Nut className="size-4" />
 			PoW
 		</button>
 	);

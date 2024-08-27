@@ -9,6 +9,49 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fe438c63458706e03479442743baae6c88256498e6431708f6dfc520a26515d3"
 
 [[package]]
+name = "Lume"
+version = "4.0.0"
+dependencies = [
+ "border",
+ "cocoa 0.25.0",
+ "futures",
+ "keyring",
+ "keyring-search",
+ "linkify",
+ "monitor",
+ "nostr-sdk",
+ "objc",
+ "rand 0.8.5",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "specta",
+ "specta-typescript",
+ "tauri",
+ "tauri-build",
+ "tauri-nspanel",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-decorum",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-http",
+ "tauri-plugin-notification",
+ "tauri-plugin-os",
+ "tauri-plugin-prevent-default",
+ "tauri-plugin-process",
+ "tauri-plugin-shell",
+ "tauri-plugin-store",
+ "tauri-plugin-theme",
+ "tauri-plugin-updater",
+ "tauri-plugin-upload",
+ "tauri-plugin-window-state",
+ "tauri-specta",
+ "tokio",
+ "url",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2937,48 +2980,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "lume"
-version = "4.0.0"
-dependencies = [
- "border",
- "cocoa 0.25.0",
- "futures",
- "keyring",
- "keyring-search",
- "linkify",
- "monitor",
- "nostr-sdk",
- "objc",
- "rand 0.8.5",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "specta",
- "specta-typescript",
- "tauri",
- "tauri-build",
- "tauri-nspanel",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-decorum",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-http",
- "tauri-plugin-notification",
- "tauri-plugin-os",
- "tauri-plugin-prevent-default",
- "tauri-plugin-process",
- "tauri-plugin-shell",
- "tauri-plugin-theme",
- "tauri-plugin-updater",
- "tauri-plugin-upload",
- "tauri-plugin-window-state",
- "tauri-specta",
- "tokio",
- "url",
-]
-
-[[package]]
 name = "mac"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5678,9 +5679,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-prevent-default"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23ee986aa5872bfa37762e06d86e60325f721d602a436165f4be34a16ff8ae3e"
+checksum = "02858534169f6f6276ba723a00b6a4582b6606c4da47451406fc01f212423aec"
 dependencies = [
  "bitflags 2.6.0",
  "itertools",
@@ -5720,6 +5721,21 @@ dependencies = [
  "tauri-plugin",
  "thiserror",
  "tokio",
+]
+
+[[package]]
+name = "tauri-plugin-store"
+version = "2.0.0-rc.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bfc658c2fe037e25e8af70d72ce2a757203be3fd8db13893fe872fa9847f9cac"
+dependencies = [
+ "dunce",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin",
+ "thiserror",
 ]
 
 [[package]]

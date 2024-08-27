@@ -72,9 +72,25 @@ async connectAccount(uri: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getPrivateKey(id: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_private_key", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async deleteAccount(id: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("delete_account", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async resetPassword(key: string, password: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("reset_password", { key, password }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -96,6 +112,14 @@ async getProfile(id: string | null) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async setProfile(profile: Profile) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("set_profile", { profile }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getContactList() : Promise<Result<string[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_contact_list") };
@@ -107,14 +131,6 @@ async getContactList() : Promise<Result<string[], string>> {
 async setContactList(publicKeys: string[]) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_contact_list", { publicKeys }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async createProfile(name: string, displayName: string, about: string, picture: string, banner: string, nip05: string, lud16: string, website: string) : Promise<Result<string, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("create_profile", { name, displayName, about, picture, banner, nip05, lud16, website }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -136,25 +152,25 @@ async checkContact(hex: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async toggleContact(hex: string, alias: string | null) : Promise<Result<string, string>> {
+async toggleContact(id: string, alias: string | null) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("toggle_contact", { hex, alias }) };
+    return { status: "ok", data: await TAURI_INVOKE("toggle_contact", { id, alias }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getNstore(key: string) : Promise<Result<string, string>> {
+async getLumeStore(key: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_nstore", { key }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_lume_store", { key }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async setNstore(key: string, content: string) : Promise<Result<string, string>> {
+async setLumeStore(key: string, content: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_nstore", { key, content }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_lume_store", { key, content }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -200,9 +216,9 @@ async zapEvent(id: string, amount: string, message: string) : Promise<Result<boo
     else return { status: "error", error: e  as any };
 }
 },
-async friendToFriend(npub: string) : Promise<Result<boolean, string>> {
+async copyFriend(npub: string) : Promise<Result<boolean, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("friend_to_friend", { npub }) };
+    return { status: "ok", data: await TAURI_INVOKE("copy_friend", { npub }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -224,17 +240,17 @@ async getSettings() : Promise<Result<Settings, null>> {
     else return { status: "error", error: e  as any };
 }
 },
-async setNewSettings(settings: string) : Promise<Result<null, null>> {
+async setSettings(settings: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_new_settings", { settings }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_settings", { settings }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async verifyNip05(key: string, nip05: string) : Promise<Result<boolean, string>> {
+async verifyNip05(id: string, nip05: string) : Promise<Result<boolean, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("verify_nip05", { key, nip05 }) };
+    return { status: "ok", data: await TAURI_INVOKE("verify_nip05", { id, nip05 }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -272,33 +288,25 @@ async getReplies(id: string) : Promise<Result<RichEvent[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async listenEventReply(id: string) : Promise<Result<null, string>> {
+async subscribeTo(id: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("listen_event_reply", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("subscribe_to", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getEventsBy(publicKey: string, asOf: string | null) : Promise<Result<RichEvent[], string>> {
+async getEventsBy(publicKey: string, limit: number) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_events_by", { publicKey, asOf }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_events_by", { publicKey, limit }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
+async getEventsFromContacts(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async listenLocalEvent(label: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("listen_local_event", { label }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_events_from_contacts", { until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -323,6 +331,14 @@ async getGlobalEvents(until: string | null) : Promise<Result<RichEvent[], string
 async getHashtagEvents(hashtags: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_hashtag_events", { hashtags, until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async search(query: string, until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("search", { query, until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -368,14 +384,6 @@ async userToBech32(user: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async unlisten(id: string) : Promise<Result<null, null>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("unlisten", { id }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async createColumn(column: Column) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("create_column", { column }) };
@@ -392,7 +400,7 @@ async closeColumn(label: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async repositionColumn(label: string, x: number, y: number) : Promise<Result<null, string>> {
+async repositionColumn(label: string, x: number, y: number) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reposition_column", { label, x, y }) };
 } catch (e) {
@@ -400,7 +408,7 @@ async repositionColumn(label: string, x: number, y: number) : Promise<Result<nul
     else return { status: "error", error: e  as any };
 }
 },
-async resizeColumn(label: string, width: number, height: number) : Promise<Result<null, string>> {
+async resizeColumn(label: string, width: number, height: number) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("resize_column", { label, width, height }) };
 } catch (e) {
@@ -408,7 +416,7 @@ async resizeColumn(label: string, width: number, height: number) : Promise<Resul
     else return { status: "error", error: e  as any };
 }
 },
-async reloadColumn(label: string) : Promise<Result<null, string>> {
+async reloadColumn(label: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reload_column", { label }) };
 } catch (e) {
@@ -424,17 +432,24 @@ async openWindow(window: Window) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async openMainWindow() : Promise<void> {
-    await TAURI_INVOKE("open_main_window");
+async reopenLume() : Promise<void> {
+    await TAURI_INVOKE("reopen_lume");
 },
-async forceQuit() : Promise<void> {
-    await TAURI_INVOKE("force_quit");
+async quit() : Promise<void> {
+    await TAURI_INVOKE("quit");
 }
 }
 
 /** user-defined events **/
 
 
+export const events = __makeEvents__<{
+newSettings: NewSettings,
+subscription: Subscription
+}>({
+newSettings: "new-settings",
+subscription: "subscription"
+})
 
 /** user-defined constants **/
 
@@ -444,9 +459,13 @@ async forceQuit() : Promise<void> {
 
 export type Column = { label: string; url: string; x: number; y: number; width: number; height: number }
 export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
+export type NewSettings = Settings
+export type Profile = { name: string; display_name: string; about: string | null; picture: string; banner: string | null; nip05: string | null; lud16: string | null; website: string | null }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
-export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; vibrancy: boolean }
+export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; transparent: boolean }
+export type SubKind = "Subscribe" | "Unsubscribe"
+export type Subscription = { label: string; kind: SubKind; event_id: string | null }
 export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean }
 
 /** tauri-specta globals **/

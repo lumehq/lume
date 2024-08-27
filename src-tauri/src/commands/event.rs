@@ -5,7 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::common::{create_event_tags, dedup_event, parse_event, Meta};
+use crate::common::{create_event_tags, filter_converstation, parse_event, Meta};
 use crate::{Nostr, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
@@ -16,31 +16,21 @@ pub struct RichEvent {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_event_meta(content: &str) -> Result<Meta, ()> {
-    let meta = parse_event(content).await;
+pub async fn get_event_meta(content: String) -> Result<Meta, ()> {
+    let meta = parse_event(&content).await;
     Ok(meta)
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, String> {
+pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent, String> {
     let client = &state.client;
-
-    let event_id = match Nip19::from_bech32(id) {
-        Ok(val) => match val {
-            Nip19::EventId(id) => id,
-            Nip19::Event(event) => event.event_id,
-            _ => return Err("Event ID is not valid.".into()),
-        },
-        Err(_) => match EventId::from_hex(id) {
-            Ok(id) => id,
-            Err(_) => return Err("Event ID is not valid.".into()),
-        },
-    };
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
+    let filter = Filter::new().id(event_id);
 
     match client
         .get_events_of(
-            vec![Filter::new().id(event_id)],
+            vec![filter],
             EventSource::both(Some(Duration::from_secs(5))),
         )
         .await
@@ -66,30 +56,49 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, S
 #[tauri::command]
 #[specta::specta]
 pub async fn get_event_from(
-    id: &str,
-    relay_hint: &str,
+    id: String,
+    relay_hint: String,
     state: State<'_, Nostr>,
 ) -> Result<RichEvent, String> {
     let client = &state.client;
-    let settings = state
-        .settings
-        .lock()
-        .map_err(|err| err.to_string())?
-        .clone();
-
-    let event_id = match Nip19::from_bech32(id) {
-        Ok(val) => match val {
-            Nip19::EventId(id) => id,
-            Nip19::Event(event) => event.event_id,
-            _ => return Err("Event ID is not valid.".into()),
-        },
-        Err(_) => match EventId::from_hex(id) {
-            Ok(id) => id,
-            Err(_) => return Err("Event ID is not valid.".into()),
-        },
-    };
+    let settings = state.settings.lock().await;
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
+    let filter = Filter::new().id(event_id);
 
     if !settings.use_relay_hint {
+        match client
+            .get_events_of(
+                vec![filter],
+                EventSource::both(Some(Duration::from_secs(5))),
+            )
+            .await
+        {
+            Ok(events) => {
+                if let Some(event) = events.first() {
+                    let raw = event.as_json();
+                    let parsed = if event.kind == Kind::TextNote {
+                        Some(parse_event(&event.content).await)
+                    } else {
+                        None
+                    };
+
+                    Ok(RichEvent { raw, parsed })
+                } else {
+                    Err("Cannot found this event with current relay list".into())
+                }
+            }
+            Err(err) => Err(err.to_string()),
+        }
+    } else {
+        // Add relay hint to relay pool
+        if let Err(e) = client.add_relay(&relay_hint).await {
+            return Err(e.to_string());
+        }
+
+        if let Err(e) = client.connect_relay(&relay_hint).await {
+            return Err(e.to_string());
+        }
+
         match client
             .get_events_of(
                 vec![Filter::new().id(event_id)],
@@ -113,49 +122,14 @@ pub async fn get_event_from(
             }
             Err(err) => Err(err.to_string()),
         }
-    } else {
-        // Add relay hint to relay pool
-        if let Err(err) = client.add_relay(relay_hint).await {
-            return Err(err.to_string());
-        }
-
-        if client.connect_relay(relay_hint).await.is_ok() {
-            match client
-                .get_events_from(vec![relay_hint], vec![Filter::new().id(event_id)], None)
-                .await
-            {
-                Ok(events) => {
-                    if let Some(event) = events.first() {
-                        let raw = event.as_json();
-                        let parsed = if event.kind == Kind::TextNote {
-                            Some(parse_event(&event.content).await)
-                        } else {
-                            None
-                        };
-
-                        Ok(RichEvent { raw, parsed })
-                    } else {
-                        Err("Cannot found this event with current relay list".into())
-                    }
-                }
-                Err(err) => Err(err.to_string()),
-            }
-        } else {
-            Err("Relay connection failed.".into())
-        }
     }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
+pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-
-    let event_id = match EventId::from_hex(id) {
-        Ok(id) => id,
-        Err(err) => return Err(err.to_string()),
-    };
-
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
     let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
     match client
@@ -166,7 +140,7 @@ pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEv
         .await
     {
         Ok(events) => {
-            let futures = events.into_iter().map(|ev| async move {
+            let futures = events.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -186,73 +160,63 @@ pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEv
 
 #[tauri::command]
 #[specta::specta]
-pub async fn listen_event_reply(id: &str, state: State<'_, Nostr>) -> Result<(), String> {
+pub async fn subscribe_to(id: String, state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
 
-    let mut label = "event-".to_owned();
-    label.push_str(id);
+    let subscription_id = SubscriptionId::new(&id);
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
 
-    let sub_id = SubscriptionId::new(label);
-    let event_id = match EventId::from_hex(id) {
-        Ok(id) => id,
-        Err(err) => return Err(err.to_string()),
-    };
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote])
         .event(event_id)
         .since(Timestamp::now());
 
-    // Subscribe
-    let _ = client.subscribe_with_id(sub_id, vec![filter], None).await;
-
-    Ok(())
+    match client
+        .subscribe_with_id(subscription_id, vec![filter], None)
+        .await
+    {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn get_events_by(
-    public_key: &str,
-    as_of: Option<&str>,
+    public_key: String,
+    limit: i32,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
+    let author = PublicKey::parse(&public_key).map_err(|err| err.to_string())?;
 
-    match PublicKey::from_str(public_key) {
-        Ok(author) => {
-            let until = match as_of {
-                Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
-                None => Timestamp::now(),
-            };
-            let filter = Filter::new()
-                .kinds(vec![Kind::TextNote, Kind::Repost])
-                .author(author)
-                .limit(FETCH_LIMIT)
-                .until(until);
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote])
+        .author(author)
+        .limit(limit as usize);
 
-            match client
-                .get_events_of(
-                    vec![filter],
-                    EventSource::both(Some(Duration::from_secs(5))),
-                )
-                .await
-            {
-                Ok(events) => {
-                    let futures = events.into_iter().map(|ev| async move {
-                        let raw = ev.as_json();
-                        let parsed = if ev.kind == Kind::TextNote {
-                            Some(parse_event(&ev.content).await)
-                        } else {
-                            None
-                        };
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
+                let raw = ev.as_json();
+                let parsed = if ev.kind == Kind::TextNote {
+                    Some(parse_event(&ev.content).await)
+                } else {
+                    None
+                };
 
-                        RichEvent { raw, parsed }
-                    });
-                    let rich_events = join_all(futures).await;
+                RichEvent { raw, parsed }
+            });
+            let rich_events = join_all(futures).await;
 
-                    Ok(rich_events)
-                }
-                Err(err) => Err(err.to_string()),
-            }
+            Ok(rich_events)
         }
         Err(err) => Err(err.to_string()),
     }
@@ -260,34 +224,33 @@ pub async fn get_events_by(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_local_events(
+pub async fn get_events_from_contacts(
     until: Option<&str>,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let contact_list = state
-        .contact_list
-        .lock()
-        .map_err(|err| err.to_string())?
-        .clone();
+    let contact_list = state.contact_list.lock().await;
+    let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
+
+    if authors.is_empty() {
+        return Err("Contact List is empty.".into());
+    }
 
     let as_of = match until {
         Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),
     };
 
-    let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
-
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(64)
+        .limit(FETCH_LIMIT)
         .until(as_of)
         .authors(authors);
 
     match client.database().query(vec![filter], Order::Desc).await {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-            let futures = dedup.into_iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -303,31 +266,6 @@ pub async fn get_local_events(
         }
         Err(err) => Err(err.to_string()),
     }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn listen_local_event(label: &str, state: State<'_, Nostr>) -> Result<(), String> {
-    let client = &state.client;
-
-    let contact_list = state
-        .contact_list
-        .lock()
-        .map_err(|err| err.to_string())?
-        .clone();
-
-    let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
-    let sub_id = SubscriptionId::new(label);
-
-    let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Repost])
-        .authors(authors)
-        .since(Timestamp::now());
-
-    // Subscribe
-    let _ = client.subscribe_with_id(sub_id, vec![filter], None).await;
-
-    Ok(())
 }
 
 #[tauri::command]
@@ -345,7 +283,7 @@ pub async fn get_group_events(
     };
 
     let authors: Vec<PublicKey> = public_keys
-        .into_iter()
+        .iter()
         .map(|p| {
             if p.starts_with("npub1") {
                 PublicKey::from_bech32(p).map_err(|err| err.to_string())
@@ -369,9 +307,8 @@ pub async fn get_group_events(
         .await
     {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-
-            let futures = dedup.into_iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -415,8 +352,8 @@ pub async fn get_global_events(
         .await
     {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-            let futures = dedup.into_iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -460,8 +397,8 @@ pub async fn get_hashtag_events(
         .await
     {
         Ok(events) => {
-            let dedup = dedup_event(&events);
-            let futures = dedup.into_iter().map(|ev| async move {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
                 let raw = ev.as_json();
                 let parsed = if ev.kind == Kind::TextNote {
                     Some(parse_event(&ev.content).await)
@@ -540,17 +477,14 @@ pub async fn reply(
     // Create tags from content
     let mut tags = create_event_tags(&content);
 
-    let reply_id = match EventId::from_hex(to) {
-        Ok(val) => val,
-        Err(_) => return Err("Event is not valid.".into()),
-    };
+    let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
 
     match database
         .query(vec![Filter::new().id(reply_id)], Order::Desc)
         .await
     {
         Ok(events) => {
-            if let Some(event) = events.into_iter().next() {
+            if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
                     .event_seen_on_relays(event.id)
                     .await
@@ -585,7 +519,7 @@ pub async fn reply(
             .query(vec![Filter::new().id(root_id)], Order::Desc)
             .await
         {
-            if let Some(event) = events.into_iter().next() {
+            if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
                     .event_seen_on_relays(event.id)
                     .await
@@ -627,13 +561,21 @@ pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<String, String
 
 #[tauri::command]
 #[specta::specta]
-pub async fn event_to_bech32(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn delete(id: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
 
-    let event_id = match EventId::from_hex(id) {
-        Ok(id) => id,
-        Err(_) => return Err("ID is not valid.".into()),
-    };
+    match client.delete_event(event_id).await {
+        Ok(event_id) => Ok(event_id.to_string()),
+        Err(err) => Err(err.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn event_to_bech32(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+    let client = &state.client;
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
 
     let seens = client
         .database()
@@ -662,11 +604,7 @@ pub async fn event_to_bech32(id: &str, state: State<'_, Nostr>) -> Result<String
 #[specta::specta]
 pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
-
-    let public_key = match PublicKey::from_str(user) {
-        Ok(pk) => pk,
-        Err(_) => return Err("Public Key is not valid.".into()),
-    };
+    let public_key = PublicKey::parse(user).map_err(|err| err.to_string())?;
 
     match client
         .get_events_of(
@@ -704,12 +642,48 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
 
 #[tauri::command]
 #[specta::specta]
-pub async fn unlisten(id: &str, state: State<'_, Nostr>) -> Result<(), ()> {
+pub async fn search(
+    query: String,
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let sub_id = SubscriptionId::new(id);
 
-    // Remove subscription
-    client.unsubscribe(sub_id).await;
+    let timestamp = match until {
+        Some(str) => Timestamp::from_str(&str).map_err(|err| err.to_string())?,
+        None => Timestamp::now(),
+    };
 
-    Ok(())
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Metadata])
+        .search(query)
+        .until(timestamp)
+        .limit(FETCH_LIMIT);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
+                let raw = ev.as_json();
+                let parsed = if ev.kind == Kind::TextNote {
+                    Some(parse_event(&ev.content).await)
+                } else {
+                    None
+                };
+
+                RichEvent { raw, parsed }
+            });
+
+            let rich_events = join_all(futures).await;
+
+            Ok(rich_events)
+        }
+        Err(e) => Err(e.to_string()),
+    }
 }

@@ -1,28 +1,66 @@
+import { type Result, type RichEvent, commands } from "@/commands.gen";
+import type { NostrEvent } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { NostrQuery } from "../query";
-import { experimental_createPersister } from "@tanstack/query-persist-client-core";
+import { nip19 } from "nostr-tools";
+import { LumeEvent } from "../event";
 
-export function useEvent(id: string, relayHint?: string) {
-	const { isLoading, isError, data } = useQuery({
+export function useEvent(id: string) {
+	const { isLoading, isError, error, data } = useQuery({
 		queryKey: ["event", id],
 		queryFn: async () => {
 			try {
-				const event = await NostrQuery.getEvent(id, relayHint);
-				return event;
+				// Validate ID
+				let normalizeId: string = id
+					.replace("nostr:", "")
+					.replace(/[^\w\s]/gi, "");
+
+				// Define query
+				let query: Result<RichEvent, string>;
+				let relayHint: string;
+
+				if (normalizeId.startsWith("nevent1")) {
+					const decoded = nip19.decode(normalizeId);
+
+					if (decoded.type === "nevent") {
+						relayHint = decoded.data.relays[0];
+						normalizeId = decoded.data.id;
+					}
+				}
+
+				// Build query
+				if (relayHint) {
+					try {
+						const url = new URL(relayHint);
+						query = await commands.getEventFrom(normalizeId, url.toString());
+					} catch {
+						query = await commands.getEvent(normalizeId);
+					}
+				} else {
+					query = await commands.getEvent(normalizeId);
+				}
+
+				if (query.status === "ok") {
+					const data = query.data;
+					const raw: NostrEvent = JSON.parse(data.raw);
+
+					if (data.parsed) {
+						raw.meta = data.parsed;
+					}
+
+					return new LumeEvent(raw);
+				} else {
+					throw new Error(query.error);
+				}
 			} catch (e) {
-				throw new Error(e);
+				throw new Error(String(e));
 			}
 		},
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
-		persister: experimental_createPersister({
-			storage: localStorage,
-			maxAge: 1000 * 60 * 60 * 12, // 12 hours
-		}),
+		retry: false,
 	});
 
-	return { isLoading, isError, data };
+	return { isLoading, isError, error, data };
 }

@@ -1,6 +1,12 @@
-import type { Contact } from "@/types";
+import type {
+	AsyncStorage,
+	MaybePromise,
+	PersistedQuery,
+} from "@tanstack/query-persist-client-core";
+import { Store } from "@tanstack/store";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
+import type { Store as TauriStore } from "@tauri-apps/plugin-store";
 import { check } from "@tauri-apps/plugin-updater";
 import { BitcoinUnit } from "bitcoin-units";
 import { type ClassValue, clsx } from "clsx";
@@ -8,12 +14,12 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { decode } from "light-bolt11-decoder";
-import type { ReactNode } from "react";
-import ReactDOM from "react-dom";
 import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
-import { AUDIOS, IMAGES, VIDEOS } from "./constants";
+import type { RichEvent, Settings } from "./commands.gen";
+import { LumeEvent } from "./system";
+import type { NostrEvent } from "./types";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -34,12 +40,6 @@ dayjs.updateLocale("en", {
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
-
-export const Portal = ({ children }: { children?: ReactNode }) => {
-	return typeof document === "object"
-		? ReactDOM.createPortal(children, document.body)
-		: null;
-};
 
 export const isImagePath = (path: string) => {
 	for (const suffix of ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"]) {
@@ -127,24 +127,17 @@ export function formatCreatedAt(time: number, message = false) {
 	return formated;
 }
 
-export function displayNsec(key: string, len: number) {
-	if (key.length <= len) return key;
+export function replyTime(time: number) {
+	const inputTime = dayjs.unix(time);
+	const formated = inputTime.format("MM-DD-YY HH:mm");
 
-	const separator = " ... ";
-
-	const sepLen = separator.length;
-	const charsToShow = len - sepLen;
-	const frontChars = Math.ceil(charsToShow / 2);
-	const backChars = Math.floor(charsToShow / 2);
-
-	return (
-		key.substr(0, frontChars) + separator + key.substr(key.length - backChars)
-	);
+	return formated;
 }
 
 export function displayNpub(pubkey: string, len: number) {
 	if (pubkey.length <= len) return pubkey;
 
+	const str = pubkey.replace("nostr:", "");
 	const separator = " ... ";
 
 	const sepLen = separator.length;
@@ -153,9 +146,9 @@ export function displayNpub(pubkey: string, len: number) {
 	const backChars = Math.floor(charsToShow / 2);
 
 	return (
-		pubkey.substr(0, frontChars) +
+		str.substring(0, frontChars) +
 		separator +
-		pubkey.substr(pubkey.length - backChars)
+		str.substring(str.length - backChars)
 	);
 }
 
@@ -165,32 +158,6 @@ export function displayLongHandle(str: string) {
 	const service = split[1];
 
 	return `${handle.substring(0, 16)}...@${service}`;
-}
-
-// convert number to K, M, B, T, etc.
-export const compactNumber = Intl.NumberFormat("en", { notation: "compact" });
-
-// country name
-export const regionNames = new Intl.DisplayNames(["en"], { type: "language" });
-
-// verify link can be preview
-export function canPreview(text: string) {
-	const url = new URL(text);
-	const ext = url.pathname.split(".").pop();
-	const hostname = url.hostname;
-
-	if (VIDEOS.includes(ext)) return false;
-	if (IMAGES.includes(ext)) return false;
-	if (AUDIOS.includes(ext)) return false;
-
-	if (hostname === "youtube.com") return false;
-	if (hostname === "youtu.be") return false;
-	if (hostname === "x.com") return false;
-	if (hostname === "twitter.com") return false;
-	if (hostname === "facebook.com") return false;
-	if (hostname === "vimeo.com") return false;
-
-	return true;
 }
 
 // source: https://github.com/synonymdev/bitkit/blob/master/src/utils/displayValues/index.ts
@@ -273,3 +240,44 @@ export async function checkForAppUpdates(silent: boolean) {
 		return;
 	}
 }
+
+export function toLumeEvents(richEvents: RichEvent[]) {
+	const events = richEvents.map((item) => {
+		const nostrEvent: NostrEvent = JSON.parse(item.raw);
+
+		if (item.parsed) {
+			nostrEvent.meta = item.parsed;
+		} else {
+			nostrEvent.meta = null;
+		}
+
+		const lumeEvent = new LumeEvent(nostrEvent);
+
+		return lumeEvent;
+	});
+
+	return events;
+}
+
+export function newQueryStorage(
+	store: TauriStore,
+): AsyncStorage<PersistedQuery> {
+	return {
+		getItem: async (key) => await store.get(key),
+		setItem: async (key, value) => await store.set(key, value),
+		removeItem: async (key) =>
+			(await store.delete(key)) as unknown as MaybePromise<void>,
+	};
+}
+
+export const appSettings = new Store<Settings>({
+	proxy: null,
+	image_resize_service: "https://wsrv.nl",
+	use_relay_hint: true,
+	content_warning: true,
+	display_avatar: true,
+	display_zap_button: true,
+	display_repost_button: true,
+	display_media: true,
+	transparent: true,
+});

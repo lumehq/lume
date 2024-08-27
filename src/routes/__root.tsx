@@ -1,7 +1,10 @@
+import { events } from "@/commands.gen";
+import { appSettings } from "@/commons";
 import { Spinner } from "@/components";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { OsType } from "@tauri-apps/plugin-os";
+import { useEffect } from "react";
 
 interface RouterContext {
 	queryClient: QueryClient;
@@ -9,9 +12,25 @@ interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	component: () => <Outlet />,
+	component: Screen,
 	pendingComponent: Pending,
 });
+
+function Screen() {
+	useEffect(() => {
+		const unlisten = events.newSettings.listen((data) => {
+			appSettings.setState((state) => {
+				return { ...state, ...data.payload };
+			});
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
+
+	return <Outlet />;
+}
 
 function Pending() {
 	return (

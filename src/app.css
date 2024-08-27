@@ -50,11 +50,11 @@ input::-ms-clear {
 }
 
 div[data-tauri-decorum-tb] {
-	@apply h-11 !important;
+	@apply h-10 !important;
 }
 
 button.decorum-tb-btn {
-	@apply h-11 !important;
+	@apply h-10 !important;
 }
 
 .spinner-leaf {

@@ -45,10 +45,7 @@ export function NoteUser({ className }: { className?: string }) {
 						<User.Avatar className="rounded-full size-8" />
 					</button>
 					<div className="flex items-center w-full gap-3">
-						<div className="flex items-center gap-1">
-							<User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
-							<User.NIP05 />
-						</div>
+						<User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
 						<div className="text-neutral-600 dark:text-neutral-400">·</div>
 						<User.Time
 							time={event.created_at}

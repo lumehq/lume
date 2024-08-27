@@ -1,6 +1,6 @@
 import { displayNsec } from "@/commons";
 import { Spinner } from "@/components";
-import { CheckIcon } from "@/components";
+import { Check } from "@phosphor-icons/react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
@@ -101,7 +101,7 @@ function Screen() {
 								<input
 									name="nsec"
 									type="text"
-									value={displayNsec(key, 36)}
+									value={key}
 									readOnly
 									className="w-full px-3 border-transparent rounded-lg h-11 bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 								/>
@@ -127,7 +127,7 @@ function Screen() {
 										id="confirm1"
 									>
 										<Checkbox.Indicator className="text-blue-500">
-											<CheckIcon className="size-4" />
+											<Check className="size-4" />
 										</Checkbox.Indicator>
 									</Checkbox.Root>
 									<label
@@ -147,7 +147,7 @@ function Screen() {
 										id="confirm2"
 									>
 										<Checkbox.Indicator className="text-blue-500">
-											<CheckIcon className="size-4" />
+											<Check className="size-4" />
 										</Checkbox.Indicator>
 									</Checkbox.Root>
 									<label

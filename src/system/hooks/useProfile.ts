@@ -1,7 +1,7 @@
 import { commands } from "@/commands.gen";
 import type { Metadata } from "@/types";
-import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 import { useQuery } from "@tanstack/react-query";
+import { nip19 } from "nostr-tools";
 
 export function useProfile(pubkey: string, embed?: string) {
 	const {
@@ -11,30 +11,37 @@ export function useProfile(pubkey: string, embed?: string) {
 	} = useQuery({
 		queryKey: ["profile", pubkey],
 		queryFn: async () => {
-			try {
-				if (embed) return JSON.parse(embed) as Metadata;
+			if (embed) {
+				const metadata: Metadata = JSON.parse(embed);
+				return metadata;
+			}
 
-				const normalize = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
-				const query = await commands.getProfile(normalize);
+			let normalizeId = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
+			let relayHint: string;
 
-				if (query.status === "ok") {
-					return JSON.parse(query.data) as Metadata;
-				} else {
-					throw new Error(query.error);
+			if (normalizeId.startsWith("nprofile")) {
+				const decoded = nip19.decode(normalizeId);
+
+				if (decoded.type === "nprofile") {
+					relayHint = decoded.data.relays[0];
+					normalizeId = decoded.data.pubkey;
 				}
-			} catch (e) {
-				throw new Error(e);
+			}
+
+			console.log(relayHint);
+			const query = await commands.getProfile(normalizeId);
+
+			if (query.status === "ok") {
+				return JSON.parse(query.data) as Metadata;
+			} else {
+				throw new Error(query.error);
 			}
 		},
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
-		persister: experimental_createPersister({
-			storage: localStorage,
-			maxAge: 1000 * 60 * 60 * 24, // 24 hours
-		}),
+		retry: false,
 	});
 
 	return { isLoading, isError, profile };

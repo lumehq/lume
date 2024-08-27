@@ -1,9 +1,7 @@
 import { type Result, type RichEvent, commands } from "@/commands.gen";
 import type { LumeColumn, Metadata, NostrEvent, Relay } from "@/types";
-import { resolveResource } from "@tauri-apps/api/path";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
-import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { nip19 } from "nostr-tools";
 import { LumeEvent } from "./event";
@@ -178,38 +176,6 @@ export const NostrQuery = {
 			}
 		}
 	},
-	getUserEvents: async (pubkey: string, asOf?: number) => {
-		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.getEventsBy(pubkey, until);
-
-		if (query.status === "ok") {
-			const data = toLumeEvents(query.data);
-			return data;
-		} else {
-			return [];
-		}
-	},
-	getLocalEvents: async (asOf?: number) => {
-		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.getLocalEvents(until);
-
-		if (query.status === "ok") {
-			const data = toLumeEvents(query.data);
-			return data;
-		} else {
-			return [];
-		}
-	},
-	listenLocalEvent: async () => {
-		const label = getCurrentWindow().label;
-		const query = await commands.listenLocalEvent(label);
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
-	},
 	getGroupEvents: async (pubkeys: string[], asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getGroupEvents(pubkeys, until);
@@ -254,7 +220,7 @@ export const NostrQuery = {
 		}
 	},
 	getNstore: async (key: string) => {
-		const query = await commands.getNstore(key);
+		const query = await commands.getLumeStore(key);
 
 		if (query.status === "ok") {
 			const data = query.data ? JSON.parse(query.data) : null;
@@ -264,7 +230,7 @@ export const NostrQuery = {
 		}
 	},
 	setNstore: async (key: string, value: string) => {
-		const query = await commands.setNstore(key, value);
+		const query = await commands.setLumeStore(key, value);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -290,36 +256,10 @@ export const NostrQuery = {
 			return query.error;
 		}
 	},
-	getColumns: async () => {
-		const key = "lume:columns";
-		const systemPath = "resources/system_columns.json";
-		const resourcePath = await resolveResource(systemPath);
-		const resourceFile = await readTextFile(resourcePath);
-		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
-		const query = await commands.getNstore(key);
-
-		try {
-			if (query.status === "ok") {
-				const columns: LumeColumn[] = JSON.parse(query.data);
-
-				if (!columns?.length) {
-					return systemColumns;
-				}
-
-				// Filter "open" column
-				// Reason: deprecated
-				return columns.filter((col) => col.label !== "open");
-			} else {
-				return systemColumns;
-			}
-		} catch {
-			return systemColumns;
-		}
-	},
 	setColumns: async (columns: LumeColumn[]) => {
-		const key = "lume:columns";
+		const key = "lume_v4:columns";
 		const content = JSON.stringify(columns);
-		const query = await commands.setNstore(key, content);
+		const query = await commands.setLumeStore(key, content);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -389,16 +329,6 @@ export const NostrQuery = {
 
 		if (query.status === "ok") {
 			return await relaunch();
-		} else {
-			throw new Error(query.error);
-		}
-	},
-	unlisten: async (id?: string) => {
-		const label = id ? id : getCurrentWindow().label;
-		const query = await commands.unlisten(label);
-
-		if (query.status === "ok") {
-			return query.data;
 		} else {
 			throw new Error(query.error);
 		}
