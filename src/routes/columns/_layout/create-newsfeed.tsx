@@ -16,6 +16,7 @@ export const Route = createFileRoute("/columns/_layout/create-newsfeed")({
 
 function Screen() {
 	const search = Route.useSearch();
+
 	return (
 		<div className="flex flex-col items-center justify-center w-full h-full gap-4">
 			<div className="flex flex-col items-center justify-center text-center">
@@ -58,7 +59,7 @@ function Screen() {
 									isActive ? "bg-white dark:bg-white/20" : "bg-transparent",
 								)}
 							>
-								Friend to Friend
+								CopyFriend
 							</div>
 						)}
 					</Link>

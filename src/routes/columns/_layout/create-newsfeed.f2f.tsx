@@ -1,51 +1,45 @@
+import { commands } from "@/commands.gen";
 import { Spinner } from "@/components";
-import { NostrAccount } from "@/system";
-import type { ColumnRouteSearch } from "@/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 export const Route = createFileRoute("/columns/_layout/create-newsfeed/f2f")({
-	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
-		return {
-			account: search.account,
-			label: search.label,
-			name: search.name,
-		};
-	},
 	component: Screen,
 });
 
 function Screen() {
-	const navigate = Route.useNavigate();
-	const { redirect } = Route.useSearch();
+	const { queryClient } = Route.useRouteContext();
+	const { redirect, label, account } = Route.useSearch();
 
 	const [npub, setNpub] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+	const [isPending, startTransition] = useTransition();
+
+	const navigate = Route.useNavigate();
 
 	const submit = async () => {
-		if (!npub.startsWith("npub1")) {
-			return await message("You must enter a valid npub.", {
-				title: "Create Newsfeed",
-				kind: "info",
-			});
-		}
-
-		try {
-			setIsLoading(true);
-
-			const sync = await NostrAccount.f2f(npub);
-
-			if (sync) {
-				return navigate({ to: redirect });
+		startTransition(async () => {
+			if (!npub.startsWith("npub1")) {
+				await message("You must enter a valid npub.", {
+					title: "Create Newsfeed",
+					kind: "info",
+				});
+				return;
 			}
-		} catch (e) {
-			setIsLoading(false);
-			await message(String(e), {
-				title: "Create Newsfeed",
-				kind: "error",
-			});
-		}
+
+			const res = await commands.copyFriend(npub);
+
+			if (res.status === "ok") {
+				await queryClient.invalidateQueries({ queryKey: [label, account] });
+				navigate({ to: redirect });
+			} else {
+				await message(res.error, {
+					title: "Create Newsfeed",
+					kind: "error",
+				});
+				return;
+			}
+		});
 	};
 
 	return (
@@ -84,7 +78,7 @@ function Screen() {
 						onClick={() => submit()}
 						className="inline-flex items-center justify-center w-full text-sm font-medium text-white bg-blue-500 rounded-lg h-9 hover:bg-blue-600"
 					>
-						{isLoading ? <Spinner /> : "Confirm"}
+						{isPending ? <Spinner /> : "Confirm"}
 					</button>
 				</div>
 			</div>

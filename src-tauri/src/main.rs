@@ -113,7 +113,7 @@ fn main() {
             remove_wallet,
             zap_profile,
             zap_event,
-            friend_to_friend,
+            copy_friend,
             get_notifications,
             get_settings,
             set_settings,

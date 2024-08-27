@@ -156,7 +156,7 @@ export const NostrAccount = {
 		}
 	},
 	f2f: async (npub: string) => {
-		const query = await commands.friendToFriend(npub);
+		const query = await commands.copyFriend(npub);
 
 		if (query.status === "ok") {
 			return query.data;

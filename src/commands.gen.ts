@@ -152,9 +152,9 @@ async checkContact(hex: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async toggleContact(hex: string, alias: string | null) : Promise<Result<string, string>> {
+async toggleContact(id: string, alias: string | null) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("toggle_contact", { hex, alias }) };
+    return { status: "ok", data: await TAURI_INVOKE("toggle_contact", { id, alias }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -216,9 +216,9 @@ async zapEvent(id: string, amount: string, message: string) : Promise<Result<boo
     else return { status: "error", error: e  as any };
 }
 },
-async friendToFriend(npub: string) : Promise<Result<boolean, string>> {
+async copyFriend(npub: string) : Promise<Result<boolean, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("friend_to_friend", { npub }) };
+    return { status: "ok", data: await TAURI_INVOKE("copy_friend", { npub }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

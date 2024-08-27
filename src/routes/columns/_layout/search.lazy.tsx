@@ -44,13 +44,16 @@ function Screen() {
 												<User.NIP05 />
 											</div>
 										</div>
-										<button
-											type="button"
-											onClick={() => LumeWindow.openProfile(event.pubkey)}
-											className="inline-flex items-center justify-center w-16 text-sm font-medium rounded-md h-7 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
-										>
-											View
-										</button>
+										<div className="flex items-center gap-3">
+											<button
+												type="button"
+												onClick={() => LumeWindow.openProfile(event.pubkey)}
+												className="text-blue-500 text-sm font-medium h-7 inline-flex items-center justify-center"
+											>
+												View profile
+											</button>
+											<User.Button className="inline-flex items-center justify-center w-20 text-sm font-medium rounded-md h-7 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20" />
+										</div>
 									</div>
 									<User.About className="select-text line-clamp-3 max-w-none text-neutral-800 dark:text-neutral-400" />
 								</User.Root>

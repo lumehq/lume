@@ -2,11 +2,12 @@ import { Spinner } from "@/components";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import type { LumeEvent } from "@/system";
-import { Kind } from "@/types";
+import { LumeEvent } from "@/system";
+import { Kind, type NostrEvent } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { Await, createLazyFileRoute } from "@tanstack/react-router";
-import { Suspense, useCallback, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/trending")({
@@ -14,23 +15,49 @@ export const Route = createLazyFileRoute("/columns/_layout/trending")({
 });
 
 export function Screen() {
-	const { data } = Route.useLoaderData();
+	const { isLoading, isError, data } = useQuery({
+		queryKey: ["trending-notes"],
+		queryFn: async ({ signal }) => {
+			const res = await fetch("https://api.nostr.band/v0/trending/notes", {
+				signal,
+			});
+
+			if (res.status !== 200) {
+				throw new Error("Error.");
+			}
+
+			const data: { notes: Array<{ event: NostrEvent }> } = await res.json();
+			const events: NostrEvent[] = data.notes.map(
+				(item: { event: NostrEvent }) => item.event,
+			);
+			const lumeEvents = Promise.all(
+				events.map(async (ev) => await LumeEvent.build(ev)),
+			);
+
+			return lumeEvents;
+		},
+		refetchOnWindowFocus: false,
+	});
 
 	const ref = useRef<HTMLDivElement>(null);
-	const renderItem = useCallback((event: LumeEvent) => {
-		if (!event) return;
-		switch (event.kind) {
-			case Kind.Repost:
-				return <RepostNote key={event.id} event={event} className="mb-3" />;
-			default: {
-				if (event.isQuote) {
-					return <Quote key={event.id} event={event} className="mb-3" />;
-				} else {
-					return <TextNote key={event.id} event={event} className="mb-3" />;
+
+	const renderItem = useCallback(
+		(event: LumeEvent) => {
+			if (!event) return;
+			switch (event.kind) {
+				case Kind.Repost:
+					return <RepostNote key={event.id} event={event} className="mb-3" />;
+				default: {
+					if (event.isQuote) {
+						return <Quote key={event.id} event={event} className="mb-3" />;
+					} else {
+						return <TextNote key={event.id} event={event} className="mb-3" />;
+					}
 				}
 			}
-		}
-	}, []);
+		},
+		[data],
+	);
 
 	return (
 		<ScrollArea.Root
@@ -38,26 +65,24 @@ export function Screen() {
 			scrollHideDelay={300}
 			className="overflow-hidden size-full"
 		>
-			<ScrollArea.Viewport ref={ref} className="h-full px-3 pb-3">
-				<Virtualizer scrollRef={ref}>
-					<Suspense
-						fallback={
-							<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
-								<button
-									type="button"
-									className="inline-flex items-center gap-2 text-sm font-medium"
-									disabled
-								>
-									<Spinner className="size-5" />
-									Loading...
-								</button>
+			<ScrollArea.Viewport ref={ref} className="h-full px-3">
+				<Virtualizer scrollRef={ref} overscan={1}>
+					{isLoading ? (
+						<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
+							<div className="inline-flex items-center gap-2 text-sm font-medium">
+								<Spinner className="size-5" />
+								Loading...
 							</div>
-						}
-					>
-						<Await promise={data}>
-							{(notes) => notes.map((event) => renderItem(event))}
-						</Await>
-					</Suspense>
+						</div>
+					) : isError ? (
+						<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
+							<div className="inline-flex items-center gap-2 text-sm font-medium">
+								Error.
+							</div>
+						</div>
+					) : (
+						data.map((item) => renderItem(item))
+					)}
 				</Virtualizer>
 			</ScrollArea.Viewport>
 			<ScrollArea.Scrollbar

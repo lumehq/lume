@@ -64,8 +64,8 @@ function Screen() {
 					<User.Provider pubkey={id}>
 						<User.Root className="relative">
 							<User.Cover className="object-cover w-full h-44 rounded-lg" />
-							<User.Button className="absolute top-4 right-4 inline-flex items-center justify-center w-20 text-xs font-medium text-white shadow-md shadow-blue-500/20 bg-blue-500 hover:bg-blue-600 rounded-full h-7" />
-							<div className="flex flex-col items-center gap-3 -mt-8">
+							<User.Button className="z-10 absolute top-4 right-4 inline-flex items-center justify-center w-20 text-xs font-medium text-white shadow-md bg-black hover:bg-black/80 rounded-full h-7" />
+							<div className="z-10 relative flex flex-col items-center gap-1.5 -mt-16">
 								<User.Avatar className="rounded-full size-14" />
 								<div className="flex items-center gap-1">
 									<User.Name className="text-lg font-semibold leading-tight" />

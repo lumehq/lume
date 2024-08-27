@@ -59,17 +59,20 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
 #[tauri::command]
 #[specta::specta]
 pub async fn set_contact_list(
-    public_keys: Vec<&str>,
+    public_keys: Vec<String>,
     state: State<'_, Nostr>,
 ) -> Result<bool, String> {
     let client = &state.client;
     let contact_list: Vec<Contact> = public_keys
         .into_iter()
-        .filter_map(|p| match PublicKey::from_hex(p) {
+        .filter_map(|p| match PublicKey::parse(p) {
             Ok(pk) => Some(Contact::new(pk, None, Some(""))),
             Err(_) => None,
         })
         .collect();
+
+    // Update local state
+    state.contact_list.lock().await.clone_from(&contact_list);
 
     match client.set_contact_list(contact_list).await {
         Ok(_) => Ok(true),
@@ -155,15 +158,15 @@ pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool,
 #[tauri::command]
 #[specta::specta]
 pub async fn toggle_contact(
-    hex: String,
+    id: String,
     alias: Option<String>,
     state: State<'_, Nostr>,
 ) -> Result<String, String> {
     let client = &state.client;
 
-    match client.get_contact_list(None).await {
+    match client.get_contact_list(Some(Duration::from_secs(5))).await {
         Ok(mut contact_list) => {
-            let public_key = PublicKey::from_str(&hex).unwrap();
+            let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
             match contact_list.iter().position(|x| x.public_key == public_key) {
                 Some(index) => {
@@ -363,7 +366,7 @@ pub async fn zap_event(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
 
     match PublicKey::from_bech32(npub) {

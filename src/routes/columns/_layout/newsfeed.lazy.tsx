@@ -6,7 +6,11 @@ import { Kind, type Meta } from "@/types";
 import { ArrowCircleRight, ArrowUp } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import {
+	Navigate,
+	createLazyFileRoute,
+	useLocation,
+} from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
@@ -34,6 +38,7 @@ export function Screen() {
 	const {
 		data,
 		isLoading,
+		isError,
 		isFetching,
 		isFetchingNextPage,
 		hasNextPage,
@@ -42,21 +47,20 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const until: string =
-				pageParam && pageParam > 0 ? pageParam.toString() : undefined;
+			const until = pageParam > 0 ? pageParam.toString() : undefined;
 			const res = await commands.getEventsFromContacts(until);
 
-			if (res.status === "ok") {
-				const data = toLumeEvents(res.data);
-				return data;
-			} else {
+			if (res.status === "error") {
 				throw new Error(res.error);
 			}
+
+			return toLumeEvents(res.data);
 		},
 		getNextPageParam: (lastPage) => lastPage?.at?.(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
 	});
 
+	const location = useLocation();
 	const ref = useRef<HTMLDivElement>(null);
 
 	const renderItem = useCallback(
@@ -87,6 +91,15 @@ export function Screen() {
 		};
 	}, []);
 
+	if (isError) {
+		return (
+			<Navigate
+				to="/columns/create-newsfeed/users"
+				search={{ label, account, redirect: location.href }}
+			/>
+		);
+	}
+
 	return (
 		<ScrollArea.Root
 			type={"scroll"}
@@ -110,13 +123,13 @@ export function Screen() {
 							<span className="text-sm font-medium">Loading...</span>
 						</div>
 					) : !data.length ? (
-						<div className="flex items-center justify-center">
-							Yo. You're catching up on all the things happening around you.
+						<div className="mb-3 flex items-center justify-center h-20 text-sm rounded-xl bg-black/5 dark:bg-white/5">
+							🎉 Yo. You're catching up on all latest notes.
 						</div>
 					) : (
 						data.map((item) => renderItem(item))
 					)}
-					{data?.length && hasNextPage ? (
+					{hasNextPage ? (
 						<div>
 							<button
 								type="button"
