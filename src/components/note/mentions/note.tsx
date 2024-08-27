@@ -34,15 +34,8 @@ export const MentionNote = memo(function MentionNote({
 									</User.Root>
 									<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
 										{event.content.length > 120
-											? `${event.content.substring(0, 120)}..`
+											? `${event.content.substring(0, 120)}...`
 											: event.content}
-										<button
-											type="button"
-											onClick={() => LumeWindow.openEvent(event)}
-											className="pl-2 text-blue-400 hover:text-blue-500"
-										>
-											Show all
-										</button>
 									</div>
 								</div>
 								<div className="flex-1 flex items-center justify-between">
@@ -50,6 +43,13 @@ export const MentionNote = memo(function MentionNote({
 										{replyTime(event.created_at)}
 									</span>
 									<div className="invisible group-hover:visible flex items-center justify-end gap-3">
+										<button
+											type="button"
+											onClick={() => LumeWindow.openEvent(event)}
+											className="text-sm font-medium text-blue-500 hover:text-blue-600"
+										>
+											Show all
+										</button>
 										<Note.Reply />
 										<Note.Repost />
 										<Note.Zap />

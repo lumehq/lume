@@ -1,7 +1,4 @@
-import { Spinner } from "@/components";
-import { Quote } from "@/components/quote";
-import { RepostNote } from "@/components/repost";
-import { TextNote } from "@/components/text";
+import { Quote, RepostNote, Spinner, TextNote } from "@/components";
 import { LumeEvent } from "@/system";
 import { Kind, type NostrEvent } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";

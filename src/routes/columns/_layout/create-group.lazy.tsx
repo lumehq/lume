@@ -10,17 +10,19 @@ export const Route = createLazyFileRoute("/columns/_layout/create-group")({
 	component: Screen,
 });
 
-function Screen() {
-	const [title, setTitle] = useState("");
-	const [npub, setNpub] = useState("");
-	const [users, setUsers] = useState<string[]>([
-		"npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445", // reya
-	]);
-	const [isPending, startTransition] = useTransition();
+const REYA_NPUB =
+	"npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445";
 
+function Screen() {
 	const contacts = Route.useLoaderData();
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
+	const { queryClient } = Route.useRouteContext();
+
+	const [title, setTitle] = useState("");
+	const [npub, setNpub] = useState("");
+	const [users, setUsers] = useState<string[]>([REYA_NPUB]);
+	const [isPending, startTransition] = useTransition();
 
 	const toggleUser = (pubkey: string) => {
 		setUsers((prev) =>
@@ -40,11 +42,14 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			const key = `lume_group_${search.label}`;
+			const key = `lume_v4:group:${search.label}`;
 			const res = await commands.setLumeStore(key, JSON.stringify(users));
 
 			if (res.status === "ok") {
-				return navigate({ to: search.redirect, search: { ...search } });
+				await queryClient.invalidateQueries({
+					queryKey: [search.label, search.account],
+				});
+				navigate({ to: search.redirect, search: { ...search, name: title } });
 			} else {
 				await message(res.error, {
 					title: "Create Group",
@@ -58,11 +63,9 @@ function Screen() {
 	return (
 		<div className="flex flex-col items-center justify-center w-full h-full gap-4">
 			<div className="flex flex-col items-center justify-center text-center">
-				<h1 className="font-serif text-2xl font-medium">
-					Focus feeds for people you like
-				</h1>
+				<h1 className="font-serif text-2xl font-medium">Create a group</h1>
 				<p className="leading-tight text-neutral-700 dark:text-neutral-300">
-					Add some people for custom feeds.
+					For the people that you want to keep up.
 				</p>
 			</div>
 			<div className="flex flex-col w-4/5 max-w-full gap-3">
@@ -118,9 +121,7 @@ function Screen() {
 													</div>
 												</User.Root>
 											</User.Provider>
-											<div>
-												<X className="size-4" />
-											</div>
+											<X className="size-4" />
 										</button>
 									))
 								) : (

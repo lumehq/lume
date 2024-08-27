@@ -94,12 +94,12 @@ function Screen() {
 					onKeyDown={(event) => {
 						if (event.key === "Enter") search();
 					}}
-					className="h-9 px-5 flex-1 rounded-full border-none bg-black/5 dark:bg-white/5 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:bg-black/10 dark:focus:bg-white/10	 focus:outline-none focus:ring-0"
+					className="h-9 px-5 flex-1 rounded-full border-none bg-black/5 dark:bg-white/10 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:bg-black/10 dark:focus:bg-white/10	 focus:outline-none focus:ring-0"
 				/>
 				<button
 					type="button"
 					disabled={!query.length || isPending}
-					className="size-9 shrink-0 inline-flex items-center justify-center rounded-full bg-black/5 dark:bg-white/5"
+					className="size-9 shrink-0 inline-flex items-center justify-center rounded-full bg-black/5 dark:bg-white/10"
 				>
 					{isPending ? (
 						<Spinner className="size-4" />

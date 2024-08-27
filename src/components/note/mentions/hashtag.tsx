@@ -1,7 +1,13 @@
+import { LumeWindow } from "@/system";
+
 export function Hashtag({ tag }: { tag: string }) {
 	return (
-		<span className="leading-normal cursor-default text-blue-500 font-normal">
+		<button
+			type="button"
+			onClick={() => LumeWindow.openHashtag(tag)}
+			className="leading-normal cursor-default text-blue-500 hover:text-blue-600 font-normal"
+		>
 			{tag}
-		</span>
+		</button>
 	);
 }

@@ -66,8 +66,8 @@
 		"default": false,
 		"official": true,
 		"label": "group_feeds",
-		"name": "Group Feeds",
-		"description": "Keep up with specific people.",
+		"name": "Group",
+		"description": "Custom feeds for group of people.",
 		"url": "/columns/group",
 		"picture": ""
 	},

@@ -1,51 +1,22 @@
-import { Spinner } from "@/components";
-import { Conversation } from "@/components/conversation";
-import { Quote } from "@/components/quote";
-import { RepostNote } from "@/components/repost";
-import { TextNote } from "@/components/text";
-import { type LumeEvent, NostrQuery } from "@/system";
-import { type ColumnRouteSearch, Kind } from "@/types";
+import { commands } from "@/commands.gen";
+import { toLumeEvents } from "@/commons";
+import { Quote, RepostNote, Spinner, TextNote } from "@/components";
+import type { LumeEvent } from "@/system";
+import { Kind } from "@/types";
 import { ArrowCircleRight } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-type Topic = {
-	content: string[];
-};
-
-export const Route = createFileRoute("/columns/_layout/topic")({
-	beforeLoad: async ({ search }) => {
-		const key = `lume:topic:${search.label}`;
-		const topics: Topic[] = await NostrQuery.getNstore(key);
-		const settings = await NostrQuery.getUserSettings();
-
-		if (!topics?.length) {
-			throw redirect({
-				to: "/columns/create-topic",
-				search: {
-					...search,
-					redirect: "/topic",
-				},
-			});
-		}
-
-		const hashtags: string[] = [];
-
-		for (const topic of topics) {
-			hashtags.push(...topic.content);
-		}
-
-		return { settings, hashtags };
-	},
+export const Route = createLazyFileRoute("/columns/_layout/hashtags/$content")({
 	component: Screen,
 });
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { hashtags } = Route.useRouteContext();
+	const { content } = Route.useParams();
 	const {
 		data,
 		isLoading,
@@ -57,8 +28,15 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = NostrQuery.getHashtagEvents(hashtags, pageParam);
-			return events;
+			const hashtags = content.split("_");
+			const until = pageParam > 0 ? pageParam.toString() : undefined;
+			const res = await commands.getHashtagEvents(hashtags, until);
+
+			if (res.status === "error") {
+				throw new Error(res.error);
+			}
+
+			return toLumeEvents(res.data);
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
@@ -74,15 +52,11 @@ export function Screen() {
 				case Kind.Repost:
 					return <RepostNote key={event.id} event={event} className="mb-3" />;
 				default: {
-					if (event.isConversation) {
-						return (
-							<Conversation key={event.id} className="mb-3" event={event} />
-						);
-					}
 					if (event.isQuote) {
 						return <Quote key={event.id} event={event} className="mb-3" />;
+					} else {
+						return <TextNote key={event.id} event={event} className="mb-3" />;
 					}
-					return <TextNote key={event.id} event={event} className="mb-3" />;
 				}
 			}
 		},
@@ -98,12 +72,10 @@ export function Screen() {
 			<ScrollArea.Viewport ref={ref} className="h-full px-3 pb-3">
 				<Virtualizer scrollRef={ref}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
-						<div className="flex items-center justify-center w-full mb-3 h-12 bg-black/5 dark:bg-white/5 rounded-xl">
-							<div className="flex items-center justify-center gap-2">
-								<Spinner className="size-5" />
-								<span className="text-sm font-medium">
-									Getting new notes...
-								</span>
+						<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
+							<div className="w-max h-8 pl-2 pr-3 inline-flex items-center justify-center gap-1.5 rounded-full shadow-lg text-sm font-medium text-white bg-black dark:text-black dark:bg-white">
+								<Spinner className="size-4" />
+								Getting new notes...
 							</div>
 						</div>
 					) : null}
@@ -113,13 +85,13 @@ export function Screen() {
 							<span className="text-sm font-medium">Loading...</span>
 						</div>
 					) : !data.length ? (
-						<div className="flex items-center justify-center">
-							Yo. You're catching up on all the things happening around you.
+						<div className="mb-3 flex items-center justify-center h-20 text-sm rounded-xl bg-black/5 dark:bg-white/5">
+							🎉 Yo. You're catching up on all latest notes.
 						</div>
 					) : (
 						data.map((item) => renderItem(item))
 					)}
-					{data?.length && hasNextPage ? (
+					{hasNextPage ? (
 						<div>
 							<button
 								type="button"

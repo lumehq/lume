@@ -169,7 +169,7 @@ function Screen() {
 						))
 					)}
 					<div className="shrink-0 p-2 h-full w-[450px]">
-						<div className="size-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center justify-center">
+						<div className="size-full bg-black/5 dark:bg-white/15 rounded-xl flex items-center justify-center">
 							<button
 								type="button"
 								onClick={() => LumeWindow.openColumnsGallery()}

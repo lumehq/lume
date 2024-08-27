@@ -87,7 +87,7 @@ export const Column = memo(function Column({ column }: { column: LumeColumn }) {
 
 	return (
 		<div className="h-full w-[440px] shrink-0 p-2">
-			<div className="flex flex-col w-full h-full rounded-xl bg-black/5 dark:bg-white/10">
+			<div className="flex flex-col w-full h-full rounded-xl bg-black/5 dark:bg-white/15">
 				<Header label={column.label} name={column.name} />
 				<div ref={container} className="flex-1 w-full h-full">
 					{!isCreated ? (

@@ -232,10 +232,7 @@ pub async fn get_lume_store(key: String, state: State<'_, Nostr>) -> Result<Stri
         .limit(1);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(3))),
-        )
+        .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {

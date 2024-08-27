@@ -63,7 +63,7 @@ function Screen() {
 				<Virtualizer scrollRef={ref} overscan={0}>
 					<User.Provider pubkey={id}>
 						<User.Root className="relative">
-							<User.Cover className="object-cover w-full h-44 rounded-lg" />
+							<User.Cover className="object-cover w-full h-44 rounded-t-lg gradient-mask-b-0" />
 							<User.Button className="z-10 absolute top-4 right-4 inline-flex items-center justify-center w-20 text-xs font-medium text-white shadow-md bg-black hover:bg-black/80 rounded-full h-7" />
 							<div className="z-10 relative flex flex-col items-center gap-1.5 -mt-16">
 								<User.Avatar className="rounded-full size-14" />

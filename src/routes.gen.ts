@@ -20,12 +20,10 @@ import { Route as ZapIdImport } from './routes/zap.$id'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountBackupImport } from './routes/$account/backup'
 import { Route as AccountAppImport } from './routes/$account/_app'
-import { Route as ColumnsLayoutTopicImport } from './routes/columns/_layout/topic'
 import { Route as ColumnsLayoutStoriesImport } from './routes/columns/_layout/stories'
 import { Route as ColumnsLayoutGroupImport } from './routes/columns/_layout/group'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
 import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/gallery'
-import { Route as ColumnsLayoutCreateTopicImport } from './routes/columns/_layout/create-topic'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
 import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
 import { Route as AccountSettingsWalletImport } from './routes/$account/_settings/wallet'
@@ -67,6 +65,9 @@ const ColumnsLayoutUsersIdLazyImport = createFileRoute(
 )()
 const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
   '/columns/_layout/replies/$id',
+)()
+const ColumnsLayoutHashtagsContentLazyImport = createFileRoute(
+  '/columns/_layout/hashtags/$content',
 )()
 const ColumnsLayoutEventsIdLazyImport = createFileRoute(
   '/columns/_layout/events/$id',
@@ -190,11 +191,6 @@ const ColumnsLayoutNewsfeedLazyRoute = ColumnsLayoutNewsfeedLazyImport.update({
   import('./routes/columns/_layout/newsfeed.lazy').then((d) => d.Route),
 )
 
-const ColumnsLayoutTopicRoute = ColumnsLayoutTopicImport.update({
-  path: '/topic',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any)
-
 const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
   path: '/stories',
   getParentRoute: () => ColumnsLayoutRoute,
@@ -220,11 +216,6 @@ const ColumnsLayoutGalleryRoute = ColumnsLayoutGalleryImport.update({
 } as any).lazy(() =>
   import('./routes/columns/_layout/gallery.lazy').then((d) => d.Route),
 )
-
-const ColumnsLayoutCreateTopicRoute = ColumnsLayoutCreateTopicImport.update({
-  path: '/create-topic',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any)
 
 const ColumnsLayoutCreateNewsfeedRoute =
   ColumnsLayoutCreateNewsfeedImport.update({
@@ -299,6 +290,16 @@ const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
 ).lazy(() =>
   import('./routes/columns/_layout/replies.$id.lazy').then((d) => d.Route),
 )
+
+const ColumnsLayoutHashtagsContentLazyRoute =
+  ColumnsLayoutHashtagsContentLazyImport.update({
+    path: '/hashtags/$content',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/hashtags.$content.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
   path: '/events/$id',
@@ -484,13 +485,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedImport
       parentRoute: typeof ColumnsLayoutImport
     }
-    '/columns/_layout/create-topic': {
-      id: '/columns/_layout/create-topic'
-      path: '/create-topic'
-      fullPath: '/columns/create-topic'
-      preLoaderRoute: typeof ColumnsLayoutCreateTopicImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
     '/columns/_layout/gallery': {
       id: '/columns/_layout/gallery'
       path: '/gallery'
@@ -517,13 +511,6 @@ declare module '@tanstack/react-router' {
       path: '/stories'
       fullPath: '/columns/stories'
       preLoaderRoute: typeof ColumnsLayoutStoriesImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
-    '/columns/_layout/topic': {
-      id: '/columns/_layout/topic'
-      path: '/topic'
-      fullPath: '/columns/topic'
-      preLoaderRoute: typeof ColumnsLayoutTopicImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/newsfeed': {
@@ -582,6 +569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutEventsIdLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/hashtags/$content': {
+      id: '/columns/_layout/hashtags/$content'
+      path: '/hashtags/$content'
+      fullPath: '/columns/hashtags/$content'
+      preLoaderRoute: typeof ColumnsLayoutHashtagsContentLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/replies/$id': {
       id: '/columns/_layout/replies/$id'
       path: '/replies/$id'
@@ -625,18 +619,17 @@ export const routeTree = rootRoute.addChildren({
           ColumnsLayoutCreateNewsfeedF2fRoute,
           ColumnsLayoutCreateNewsfeedUsersRoute,
         }),
-      ColumnsLayoutCreateTopicRoute,
       ColumnsLayoutGalleryRoute,
       ColumnsLayoutGlobalRoute,
       ColumnsLayoutGroupRoute,
       ColumnsLayoutStoriesRoute,
-      ColumnsLayoutTopicRoute,
       ColumnsLayoutNewsfeedLazyRoute,
       ColumnsLayoutNotificationLazyRoute,
       ColumnsLayoutOnboardingLazyRoute,
       ColumnsLayoutSearchLazyRoute,
       ColumnsLayoutTrendingLazyRoute,
       ColumnsLayoutEventsIdLazyRoute,
+      ColumnsLayoutHashtagsContentLazyRoute,
       ColumnsLayoutRepliesIdLazyRoute,
       ColumnsLayoutUsersIdLazyRoute,
     }),
@@ -712,18 +705,17 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/columns/_layout/create-group",
         "/columns/_layout/create-newsfeed",
-        "/columns/_layout/create-topic",
         "/columns/_layout/gallery",
         "/columns/_layout/global",
         "/columns/_layout/group",
         "/columns/_layout/stories",
-        "/columns/_layout/topic",
         "/columns/_layout/newsfeed",
         "/columns/_layout/notification",
         "/columns/_layout/onboarding",
         "/columns/_layout/search",
         "/columns/_layout/trending",
         "/columns/_layout/events/$id",
+        "/columns/_layout/hashtags/$content",
         "/columns/_layout/replies/$id",
         "/columns/_layout/users/$id"
       ]
@@ -790,10 +782,6 @@ export const routeTree = rootRoute.addChildren({
         "/columns/_layout/create-newsfeed/users"
       ]
     },
-    "/columns/_layout/create-topic": {
-      "filePath": "columns/_layout/create-topic.tsx",
-      "parent": "/columns/_layout"
-    },
     "/columns/_layout/gallery": {
       "filePath": "columns/_layout/gallery.tsx",
       "parent": "/columns/_layout"
@@ -808,10 +796,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/columns/_layout/stories": {
       "filePath": "columns/_layout/stories.tsx",
-      "parent": "/columns/_layout"
-    },
-    "/columns/_layout/topic": {
-      "filePath": "columns/_layout/topic.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/newsfeed": {
@@ -844,6 +828,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/columns/_layout/events/$id": {
       "filePath": "columns/_layout/events.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/hashtags/$content": {
+      "filePath": "columns/_layout/hashtags.$content.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/replies/$id": {

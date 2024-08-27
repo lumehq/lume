@@ -71,6 +71,16 @@ export const LumeWindow = {
 			name: "Profile",
 		});
 	},
+	openHashtag: async (hashtag: string) => {
+		const content = hashtag.replace("#", "");
+		const label = `hashtag-${content}`;
+
+		LumeWindow.openColumn({
+			label,
+			url: `/columns/hashtags/${content}`,
+			name: hashtag,
+		});
+	},
 	openEditor: async (reply_to?: string, quote?: string) => {
 		let url: string;
 

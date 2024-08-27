@@ -1,8 +1,7 @@
-import { Spinner } from "@/components";
-import { Quote } from "@/components/quote";
-import { RepostNote } from "@/components/repost";
-import { TextNote } from "@/components/text";
-import { type LumeEvent, NostrQuery } from "@/system";
+import { commands } from "@/commands.gen";
+import { toLumeEvents } from "@/commons";
+import { Quote, RepostNote, Spinner, TextNote } from "@/components";
+import type { LumeEvent } from "@/system";
 import { Kind } from "@/types";
 import { ArrowCircleRight } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -29,8 +28,14 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await NostrQuery.getGroupEvents(groups, pageParam);
-			return events;
+			const until = pageParam > 0 ? pageParam.toString() : undefined;
+			const res = await commands.getGroupEvents(groups, until);
+
+			if (res.status === "error") {
+				throw new Error(res.error);
+			}
+
+			return toLumeEvents(res.data);
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
@@ -79,13 +84,13 @@ export function Screen() {
 							<span className="text-sm font-medium">Loading...</span>
 						</div>
 					) : !data.length ? (
-						<div className="flex items-center justify-center">
-							Yo. You're catching up on all the things happening around you.
+						<div className="mb-3 flex items-center justify-center h-20 text-sm rounded-xl bg-black/5 dark:bg-white/5">
+							🎉 Yo. You're catching up on all latest notes.
 						</div>
 					) : (
 						data.map((item) => renderItem(item))
 					)}
-					{data?.length && hasNextPage ? (
+					{hasNextPage ? (
 						<div>
 							<button
 								type="button"

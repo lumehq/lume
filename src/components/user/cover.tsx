@@ -18,10 +18,7 @@ export function UserCover({ className }: { className?: string }) {
 	if (user && !user.profile?.banner) {
 		return (
 			<div
-				className={cn(
-					"bg-gradient-to-b from-blue-200 to-teal-100 gradient-mask-b-0",
-					className,
-				)}
+				className={cn("bg-gradient-to-b from-blue-200 to-teal-200", className)}
 			/>
 		);
 	}
