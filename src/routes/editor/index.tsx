@@ -219,7 +219,7 @@ function Screen() {
 						{loading ? (
 							<Spinner className="size-4" />
 						) : (
-							<Feather className="size-4" />
+							<Feather className="size-4" weight="fill" />
 						)}
 						Publish
 					</button>
@@ -373,7 +373,7 @@ const Event = ({ attributes, element, children }) => {
 				onClick={() => Transforms.removeNodes(editor, { at: path })}
 				onKeyDown={() => Transforms.removeNodes(editor, { at: path })}
 			>
-				<MentionNote eventId={element.eventId} openable={false} />
+				<MentionNote eventId={element.eventId} />
 			</div>
 		</div>
 	);

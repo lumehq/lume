@@ -43,7 +43,7 @@ function Screen() {
 							onClick={() => LumeWindow.openEditor()}
 							className="inline-flex items-center justify-center h-7 gap-1.5 px-2 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
 						>
-							<Feather className="size-4" />
+							<Feather className="size-4" weight="fill" />
 							New Post
 						</button>
 					</div>
