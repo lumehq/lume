@@ -1,3 +1,4 @@
+import { commands } from "@/commands.gen";
 import { NostrAccount } from "@/system";
 import { Button } from "@getalby/bitcoin-connect-react";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -11,8 +12,13 @@ export const Route = createLazyFileRoute("/$account/_settings/bitcoin-connect")(
 
 function Screen() {
 	const setNwcUri = async (uri: string) => {
-		const cmd = await NostrAccount.setWallet(uri);
-		if (cmd) getCurrentWebviewWindow().close();
+		const res = await commands.setWallet(uri);
+
+		if (res.status === "ok") {
+			await getCurrentWebviewWindow().close();
+		} else {
+			throw new Error(res.error);
+		}
 	};
 
 	return (

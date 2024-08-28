@@ -1,10 +1,12 @@
 import { appSettings, cn } from "@/commons";
 import { LumeWindow } from "@/system";
 import { Lightning } from "@phosphor-icons/react";
+import { useSearch } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
 import { useNoteContext } from "../provider";
 
 export function NoteZap({ large = false }: { large?: boolean }) {
+	const search = useSearch({ strict: false });
 	const visible = useStore(appSettings, (state) => state.display_zap_button);
 	const event = useNoteContext();
 
@@ -13,7 +15,7 @@ export function NoteZap({ large = false }: { large?: boolean }) {
 	return (
 		<button
 			type="button"
-			onClick={() => LumeWindow.openZap(event.id)}
+			onClick={() => LumeWindow.openZap(event.id, search.account)}
 			className={cn(
 				"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
 				large

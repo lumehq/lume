@@ -1,5 +1,5 @@
+import { commands } from "@/commands.gen";
 import { checkForAppUpdates } from "@/commons";
-import { NostrAccount } from "@/system";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
 		await checkForAppUpdates(true);
 
 		// Get all accounts
-		const accounts = await NostrAccount.getAccounts();
+		const accounts = await commands.getAccounts();
 
 		if (accounts.length < 1) {
 			throw redirect({

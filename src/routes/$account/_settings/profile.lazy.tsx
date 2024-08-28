@@ -1,8 +1,6 @@
-import { commands } from "@/commands.gen";
-import { cn } from "@/commons";
+import { type Profile, commands } from "@/commands.gen";
+import { cn, upload } from "@/commons";
 import { Spinner } from "@/components";
-import { NostrAccount, NostrQuery } from "@/system";
-import type { Metadata } from "@/types";
 import { Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -27,15 +25,16 @@ function Screen() {
 	const [isPending, startTransition] = useTransition();
 	const [picture, setPicture] = useState<string>("");
 
-	const onSubmit = (data: Metadata) => {
+	const onSubmit = (data: Profile) => {
 		startTransition(async () => {
-			try {
-				const newProfile: Metadata = { ...profile, ...data, picture };
-				await NostrAccount.createProfile(newProfile);
-			} catch (e) {
-				await message(String(e), { title: "Profile", kind: "error" });
-				return;
+			const newProfile: Profile = { ...profile, ...data, picture };
+			const res = await commands.setProfile(newProfile);
+
+			if (res.status === "error") {
+				await message(res.error, { title: "Profile", kind: "error" });
 			}
+
+			return;
 		});
 	};
 
@@ -220,17 +219,18 @@ function AvatarUploader({
 	children: ReactNode;
 	className?: string;
 }) {
-	const [loading, setLoading] = useState(false);
+	const [isPending, startTransition] = useTransition();
 
-	const uploadAvatar = async () => {
-		try {
-			setLoading(true);
-			const image = await NostrQuery.upload();
-			setPicture(image);
-		} catch (e) {
-			setLoading(false);
-			await message(String(e), { title: "Lume", kind: "error" });
-		}
+	const uploadAvatar = () => {
+		startTransition(async () => {
+			try {
+				const image = await upload();
+				setPicture(image);
+			} catch (e) {
+				await message(String(e));
+				return;
+			}
+		});
 	};
 
 	return (
@@ -239,7 +239,7 @@ function AvatarUploader({
 			onClick={() => uploadAvatar()}
 			className={cn("size-4", className)}
 		>
-			{loading ? <Spinner className="size-4" /> : children}
+			{isPending ? <Spinner className="size-4" /> : children}
 		</button>
 	);
 }

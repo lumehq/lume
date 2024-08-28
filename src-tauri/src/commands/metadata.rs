@@ -6,7 +6,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::State;
 use tauri_specta::Event;
 
-use crate::{NewSettings, Nostr, Settings};
+use crate::{common::get_latest_event, NewSettings, Nostr, Settings};
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Profile {
@@ -229,14 +229,14 @@ pub async fn get_lume_store(key: String, state: State<'_, Nostr>) -> Result<Stri
         .author(public_key)
         .kind(Kind::ApplicationSpecificData)
         .identifier(key)
-        .limit(1);
+        .limit(10);
 
     match client
         .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {
-            if let Some(event) = events.first() {
+            if let Some(event) = get_latest_event(&events) {
                 match signer.nip44_decrypt(public_key, event.content()).await {
                     Ok(decrypted) => Ok(decrypted),
                     Err(_) => Err(event.content.to_string()),

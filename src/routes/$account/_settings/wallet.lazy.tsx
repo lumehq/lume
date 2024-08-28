@@ -1,4 +1,4 @@
-import { NostrAccount } from "@/system";
+import { commands } from "@/commands.gen";
 import { createLazyFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/$account/_settings/wallet")({
@@ -10,10 +10,14 @@ function Screen() {
 	const { balance } = Route.useRouteContext();
 
 	const disconnect = async () => {
-		window.localStorage.removeItem("bc:config");
-		await NostrAccount.removeWallet();
+		const res = await commands.removeWallet();
 
-		return redirect({ to: "/$account/bitcoin-connect", params: { account } });
+		if (res.status === "ok") {
+			window.localStorage.removeItem("bc:config");
+			return redirect({ to: "/$account/bitcoin-connect", params: { account } });
+		} else {
+			throw new Error(res.error);
+		}
 	};
 
 	return (

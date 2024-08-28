@@ -1,5 +1,5 @@
+import { commands } from "@/commands.gen";
 import { displayLongHandle, displayNpub } from "@/commons";
-import { NostrQuery } from "@/system";
 import { SealCheck } from "@phosphor-icons/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useQuery } from "@tanstack/react-query";
@@ -10,14 +10,13 @@ export function UserNip05() {
 	const { isLoading, data: verified } = useQuery({
 		queryKey: ["nip05", user?.pubkey],
 		queryFn: async () => {
-			if (!user.profile?.nip05?.length) return false;
+			const res = await commands.verifyNip05(user.pubkey, user.profile?.nip05);
 
-			const verify = await NostrQuery.verifyNip05(
-				user.pubkey,
-				user.profile?.nip05,
-			);
-
-			return verify;
+			if (res.status === "ok") {
+				return res.data;
+			} else {
+				throw new Error(res.error);
+			}
 		},
 		enabled: !!user.profile?.nip05?.length,
 		refetchOnMount: false,

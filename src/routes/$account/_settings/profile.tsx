@@ -1,5 +1,4 @@
-import { commands } from "@/commands.gen";
-import type { Metadata } from "@/types";
+import { type Profile, commands } from "@/commands.gen";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$account/_settings/profile")({
@@ -7,7 +6,7 @@ export const Route = createFileRoute("/$account/_settings/profile")({
 		const res = await commands.getProfile(params.account);
 
 		if (res.status === "ok") {
-			const profile: Metadata = JSON.parse(res.data);
+			const profile: Profile = JSON.parse(res.data);
 			return { profile };
 		} else {
 			throw new Error(res.error);

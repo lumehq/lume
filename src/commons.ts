@@ -4,7 +4,8 @@ import type {
 	PersistedQuery,
 } from "@tanstack/query-persist-client-core";
 import { Store } from "@tanstack/store";
-import { ask, message } from "@tauri-apps/plugin-dialog";
+import { ask, message, open } from "@tauri-apps/plugin-dialog";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
 import type { Store as TauriStore } from "@tauri-apps/plugin-store";
 import { check } from "@tauri-apps/plugin-updater";
@@ -238,6 +239,61 @@ export async function checkForAppUpdates(silent: boolean) {
 		}
 
 		return;
+	}
+}
+
+export async function upload(filePath?: string) {
+	const allowExts = [
+		"png",
+		"jpeg",
+		"jpg",
+		"gif",
+		"mp4",
+		"mp3",
+		"webm",
+		"mkv",
+		"avi",
+		"mov",
+	];
+
+	const selected =
+		filePath ||
+		(
+			await open({
+				multiple: false,
+				filters: [
+					{
+						name: "Media",
+						extensions: allowExts,
+					},
+				],
+			})
+		).path;
+
+	// User cancelled action
+	if (!selected) return null;
+
+	try {
+		const file = await readFile(selected);
+		const blob = new Blob([file]);
+
+		const data = new FormData();
+		data.append("fileToUpload", blob);
+		data.append("submit", "Upload Image");
+
+		const res = await fetch("https://nostr.build/api/v2/upload/files", {
+			method: "POST",
+			body: data,
+		});
+
+		if (!res.ok) return null;
+
+		const json = await res.json();
+		const content = json.data[0];
+
+		return content.url as string;
+	} catch (e) {
+		throw new Error(String(e));
 	}
 }
 

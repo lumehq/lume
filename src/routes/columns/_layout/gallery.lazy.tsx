@@ -56,9 +56,9 @@ function Screen() {
 						<button
 							type="button"
 							onClick={() => install(column)}
-							className="text-xs uppercase font-semibold w-max h-7 pl-2.5 pr-2 hidden group-hover:inline-flex items-center justify-center rounded-full bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-black/10"
+							className="text-xs uppercase font-semibold w-16 h-7 hidden group-hover:inline-flex items-center justify-center rounded-full bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-black/10"
 						>
-							Install
+							Open
 						</button>
 					</div>
 				))}

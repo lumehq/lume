@@ -1,6 +1,6 @@
 import { commands } from "@/commands.gen";
+import { upload } from "@/commons";
 import { Frame, GoBack, Spinner } from "@/components";
-import { NostrQuery } from "@/system";
 import { Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -20,7 +20,7 @@ function Screen() {
 	const [isPending, startTransition] = useTransition();
 
 	const uploadAvatar = async () => {
-		const file = await NostrQuery.upload();
+		const file = await upload();
 
 		if (file) {
 			setPicture(file);

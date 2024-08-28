@@ -1,9 +1,8 @@
+import { commands } from "@/commands.gen";
 import { decodeZapInvoice, formatCreatedAt } from "@/commons";
-import { Spinner } from "@/components";
-import { Note } from "@/components/note";
-import { User } from "@/components/user";
-import { type LumeEvent, NostrQuery, useEvent } from "@/system";
-import { Kind } from "@/types";
+import { Note, Spinner, User } from "@/components";
+import { LumeEvent, useEvent } from "@/system";
+import { Kind, type NostrEvent } from "@/types";
 import { Info, Repeat } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -24,7 +23,15 @@ function Screen() {
 	const { isLoading, data } = useQuery({
 		queryKey: ["notification", account],
 		queryFn: async () => {
-			const events = await NostrQuery.getNotifications();
+			const res = await commands.getNotifications();
+
+			if (res.status === "error") {
+				throw new Error(res.error);
+			}
+
+			const data: NostrEvent[] = res.data.map((item) => JSON.parse(item));
+			const events = data.map((ev) => new LumeEvent(ev));
+
 			return events;
 		},
 		select: (events) => {

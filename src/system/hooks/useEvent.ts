@@ -16,7 +16,7 @@ export function useEvent(id: string) {
 
 				// Define query
 				let query: Result<RichEvent, string>;
-				let relayHint: string;
+				let relayHint: string = null;
 
 				if (normalizeId.startsWith("nevent1")) {
 					const decoded = nip19.decode(normalizeId);
@@ -27,14 +27,11 @@ export function useEvent(id: string) {
 					}
 				}
 
+				console.log(relayHint);
+
 				// Build query
-				if (relayHint) {
-					try {
-						const url = new URL(relayHint);
-						query = await commands.getEventFrom(normalizeId, url.toString());
-					} catch {
-						query = await commands.getEvent(normalizeId);
-					}
+				if (relayHint?.length) {
+					query = await commands.getEventFrom(normalizeId, relayHint);
 				} else {
 					query = await commands.getEvent(normalizeId);
 				}

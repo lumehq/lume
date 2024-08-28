@@ -114,7 +114,7 @@ export const LumeWindow = {
 			throw new Error(query.error);
 		}
 	},
-	openZap: async (id: string) => {
+	openZap: async (id: string, account?: string) => {
 		const wallet = await commands.loadWallet();
 
 		if (wallet.status === "ok") {
@@ -129,7 +129,7 @@ export const LumeWindow = {
 				hidden_title: true,
 			});
 		} else {
-			await LumeWindow.openSettings("bitcoin-connect");
+			await LumeWindow.openSettings(account, "bitcoin-connect");
 		}
 	},
 	openSettings: async (account: string, path?: string) => {

@@ -2,7 +2,7 @@ import { User } from "@/components/user";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { message } from "@tauri-apps/plugin-dialog";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 const DEFAULT_VALUES = [21, 50, 100, 200];
@@ -17,28 +17,26 @@ function Screen() {
 	const [amount, setAmount] = useState(21);
 	const [content, setContent] = useState("");
 	const [isCompleted, setIsCompleted] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isPending, startTransition] = useTransition();
 
-	const submit = async () => {
-		try {
-			// start loading
-			setIsLoading(true);
+	const submit = () => {
+		startTransition(async () => {
+			try {
+				const val = await event.zap(amount, content);
 
-			// Zap
-			const val = await event.zap(amount, content);
-
-			if (val) {
-				setIsCompleted(true);
-				// close current window
-				await getCurrentWebviewWindow().close();
+				if (val) {
+					setIsCompleted(true);
+					// close current window
+					await getCurrentWebviewWindow().close();
+				}
+			} catch (e) {
+				await message(String(e), {
+					title: "Zap",
+					kind: "error",
+				});
+				return;
 			}
-		} catch (e) {
-			setIsLoading(false);
-			await message(String(e), {
-				title: "Zap",
-				kind: "error",
-			});
-		}
+		});
 	};
 
 	return (
@@ -104,7 +102,7 @@ function Screen() {
 							onClick={() => submit()}
 							className="inline-flex items-center justify-center w-full h-10 font-medium rounded-xl bg-neutral-950 text-neutral-50 hover:bg-neutral-900 dark:bg-white/20 dark:hover:bg-white/30"
 						>
-							{isCompleted ? "Zapped" : isLoading ? "Processing..." : "Zap"}
+							{isCompleted ? "Zapped" : isPending ? "Processing..." : "Zap"}
 						</button>
 					</div>
 				</div>

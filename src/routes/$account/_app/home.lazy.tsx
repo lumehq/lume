@@ -1,6 +1,7 @@
+import { commands } from "@/commands.gen";
 import { Spinner } from "@/components";
 import { Column } from "@/components/column";
-import { LumeWindow, NostrQuery } from "@/system";
+import { LumeWindow } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
 import { ArrowLeft, ArrowRight, Plus, StackPlus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -24,7 +25,7 @@ export const Route = createLazyFileRoute("/$account/_app/home")({
 });
 
 function Screen() {
-	const initialColumnList = Route.useLoaderData();
+	const { initialColumns } = Route.useRouteContext();
 
 	const [columns, setColumns] = useState<LumeColumn[]>([]);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -105,6 +106,18 @@ function Screen() {
 		event.preventDefault();
 	}, 150);
 
+	const saveAllColumns = useDebouncedCallback(async () => {
+		const key = "lume_v4:columns";
+		const content = JSON.stringify(columns);
+		const res = await commands.setLumeStore(key, content);
+
+		if (res.status === "ok") {
+			return res.data;
+		} else {
+			console.log(res.error);
+		}
+	}, 200);
+
 	useEffect(() => {
 		if (emblaApi) {
 			emblaApi.on("scroll", emitScrollEvent);
@@ -120,14 +133,12 @@ function Screen() {
 	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
 
 	useEffect(() => {
-		if (columns) {
-			NostrQuery.setColumns(columns).then(() => console.log("saved"));
-		}
+		if (columns) saveAllColumns();
 	}, [columns]);
 
 	useEffect(() => {
-		setColumns(initialColumnList);
-	}, [initialColumnList]);
+		setColumns(initialColumns);
+	}, [initialColumns]);
 
 	// Listen for keyboard event
 	useEffect(() => {

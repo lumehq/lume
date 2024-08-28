@@ -1,5 +1,4 @@
 import { commands } from "@/commands.gen";
-import { NostrQuery } from "@/system";
 import { Plus, X } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -15,6 +14,16 @@ function Screen() {
 	const [relays, setRelays] = useState<string[]>([]);
 	const [newRelay, setNewRelay] = useState("");
 	const [isPending, startTransition] = useTransition();
+
+	const removeRelay = async (relay: string) => {
+		const res = await commands.removeRelay(relay);
+
+		if (res.status === "ok") {
+			return res.data;
+		} else {
+			throw new Error(res.error);
+		}
+	};
 
 	const addNewRelay = () => {
 		startTransition(async () => {
@@ -69,7 +78,7 @@ function Screen() {
 								<div>
 									<button
 										type="button"
-										onClick={() => NostrQuery.removeRelay(relay)}
+										onClick={() => removeRelay(relay)}
 										className="inline-flex items-center justify-center rounded-md size-7 hover:bg-black/10 dark:hover:bg-white/10"
 									>
 										<X className="size-4" />

@@ -2,8 +2,7 @@ import { cn } from "@/commons";
 import { Spinner } from "@/components";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { type LumeEvent, NostrQuery } from "@/system";
-import { useQuery } from "@tanstack/react-query";
+import { type LumeEvent, useEvent } from "@/system";
 import { memo } from "react";
 
 export const RepostNote = memo(function RepostNote({
@@ -13,22 +12,7 @@ export const RepostNote = memo(function RepostNote({
 	event: LumeEvent;
 	className?: string;
 }) {
-	const { isLoading, isError, data } = useQuery({
-		queryKey: ["event", event.repostId],
-		queryFn: async () => {
-			try {
-				const data = await NostrQuery.getRepostEvent(event);
-				return data;
-			} catch (e) {
-				throw new Error(e);
-			}
-		},
-		refetchOnWindowFocus: false,
-		refetchOnMount: false,
-		refetchOnReconnect: false,
-		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
-	});
+	const { isLoading, isError, data } = useEvent(event.repostId);
 
 	return (
 		<Note.Root
