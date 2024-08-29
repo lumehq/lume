@@ -80,38 +80,40 @@ pub async fn create_account(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn import_account(
-    key: String,
-    password: Option<String>,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
-    let client = &state.client;
-    let secret_key = SecretKey::from_bech32(key).map_err(|err| err.to_string())?;
-    let keys = Keys::new(secret_key.clone());
-    let npub = keys.public_key().to_bech32().unwrap();
+pub async fn import_account(key: String, password: String) -> Result<String, String> {
+    let (npub, enc_bech32) = match key.starts_with("ncryptsec") {
+        true => {
+            let enc = EncryptedSecretKey::from_bech32(key).map_err(|err| err.to_string())?;
+            let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
+            let secret_key = enc.to_secret_key(password).map_err(|err| err.to_string())?;
+            let keys = Keys::new(secret_key);
+            let npub = keys.public_key().to_bech32().unwrap();
 
-    let enc_bech32 = match password {
-        Some(pw) => {
-            let enc = EncryptedSecretKey::new(&secret_key, pw, 16, KeySecurity::Medium)
+            (npub, enc_bech32)
+        }
+        false => {
+            let secret_key = SecretKey::from_bech32(key).map_err(|err| err.to_string())?;
+            let keys = Keys::new(secret_key.clone());
+            let npub = keys.public_key().to_bech32().unwrap();
+
+            let enc = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium)
                 .map_err(|err| err.to_string())?;
 
-            enc.to_bech32().map_err(|err| err.to_string())?
+            let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
+
+            (npub, enc_bech32)
         }
-        None => secret_key.to_bech32().map_err(|err| err.to_string())?,
     };
 
     let keyring = Entry::new("Lume Secret Storage", &npub).map_err(|e| e.to_string())?;
+
     let account = Account {
         password: enc_bech32,
         nostr_connect: None,
     };
-    let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
-    let _ = keyring.set_password(&j);
 
-    let signer = NostrSigner::Keys(keys);
-
-    // Update client's signer
-    client.set_signer(Some(signer)).await;
+    let pwd = serde_json::to_string(&account).map_err(|e| e.to_string())?;
+    keyring.set_password(&pwd).map_err(|e| e.to_string())?;
 
     Ok(npub)
 }

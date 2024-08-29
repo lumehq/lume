@@ -95,13 +95,15 @@ function Screen() {
 								</button>
 							</div>
 						</div>
-						{key.length && !key.startsWith("ncryptsec") ? (
+						{key.length ? (
 							<div className="flex flex-col gap-1">
 								<label
 									htmlFor="password"
 									className="text-sm font-medium text-neutral-800 dark:text-neutral-200"
 								>
-									Set password to secure your key
+									{!key.startsWith("ncryptsec")
+										? "Set password to secure your key"
+										: "Enter password to decrypt your key"}
 								</label>
 								<input
 									name="password"

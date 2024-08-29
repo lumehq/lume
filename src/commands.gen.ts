@@ -56,7 +56,7 @@ async createAccount(name: string, about: string, picture: string, password: stri
     else return { status: "error", error: e  as any };
 }
 },
-async importAccount(key: string, password: string | null) : Promise<Result<string, string>> {
+async importAccount(key: string, password: string) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("import_account", { key, password }) };
 } catch (e) {
