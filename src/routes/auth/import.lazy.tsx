@@ -84,12 +84,12 @@ function Screen() {
 									placeholder="nsec or ncryptsec..."
 									value={key}
 									onChange={(e) => setKey(e.target.value)}
-									className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
+									className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 								/>
 								<button
 									type="button"
 									onClick={() => pasteFromClipboard()}
-									className="absolute uppercase top-1/2 right-2 transform -translate-y-1/2 text-xs font-semibold text-blue-500"
+									className="absolute top-1/2 right-2 transform -translate-y-1/2 text-xs font-semibold text-blue-500 dark:text-blue-300"
 								>
 									Paste
 								</button>
