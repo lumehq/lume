@@ -156,8 +156,6 @@ fn main() {
     #[cfg(not(target_os = "macos"))]
     let tauri_builder = tauri::Builder::default();
 
-    let mut ctx = tauri::generate_context!();
-
     tauri_builder
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
@@ -364,7 +362,6 @@ fn main() {
             Ok(())
         })
         .plugin(prevent_default())
-        .plugin(tauri_plugin_theme::init(ctx.config_mut()))
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -377,7 +374,7 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .run(ctx)
+        .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 

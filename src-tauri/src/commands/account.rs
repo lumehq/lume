@@ -44,7 +44,7 @@ pub async fn create_account(
     let client = &state.client;
     let keys = Keys::generate();
     let npub = keys.public_key().to_bech32().map_err(|e| e.to_string())?;
-    let secret_key = keys.secret_key().map_err(|e| e.to_string())?;
+    let secret_key = keys.secret_key();
     let enc = EncryptedSecretKey::new(secret_key, password, 16, KeySecurity::Medium)
         .map_err(|err| err.to_string())?;
     let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
@@ -127,7 +127,7 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
         Ok(bunker_uri) => {
             // Local user
             let app_keys = Keys::generate();
-            let app_secret = app_keys.secret_key().unwrap().to_string();
+            let app_secret = app_keys.secret_key().to_string();
 
             // Get remote user
             let remote_user = bunker_uri.signer_public_key().unwrap();

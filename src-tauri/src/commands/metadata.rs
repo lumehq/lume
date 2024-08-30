@@ -206,7 +206,7 @@ pub async fn set_lume_store(
     let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
 
     let encrypted = signer
-        .nip44_encrypt(public_key, content)
+        .nip44_encrypt(&public_key, content)
         .await
         .map_err(|e| e.to_string())?;
     let tag = Tag::identifier(key);
@@ -237,7 +237,7 @@ pub async fn get_lume_store(key: String, state: State<'_, Nostr>) -> Result<Stri
     {
         Ok(events) => {
             if let Some(event) = get_latest_event(&events) {
-                match signer.nip44_decrypt(public_key, event.content()).await {
+                match signer.nip44_decrypt(&public_key, &event.content).await {
                     Ok(decrypted) => Ok(decrypted),
                     Err(_) => Err(event.content.to_string()),
                 }
@@ -522,7 +522,7 @@ pub async fn set_settings(
     let signer = client.signer().await.map_err(|e| e.to_string())?;
     let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
     let encrypted = signer
-        .nip44_encrypt(public_key, settings)
+        .nip44_encrypt(&public_key, settings)
         .await
         .map_err(|e| e.to_string())?;
     let tag = Tag::identifier(ident);

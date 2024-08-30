@@ -329,8 +329,7 @@ pub async fn get_user_settings(client: &Client) -> Result<Settings, String> {
     {
         Ok(events) => {
             if let Some(event) = events.first() {
-                let content = event.content();
-                match signer.nip44_decrypt(public_key, content).await {
+                match signer.nip44_decrypt(&public_key, &event.content).await {
                     Ok(decrypted) => match serde_json::from_str(&decrypted) {
                         Ok(parsed) => Ok(parsed),
                         Err(_) => Err("Could not parse settings payload".into()),
