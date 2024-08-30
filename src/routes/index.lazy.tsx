@@ -148,7 +148,7 @@ function Screen() {
 													if (e.key === "Enter") loginWith();
 												}}
 												placeholder="Password"
-												className="px-3 rounded-full w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
+												className="px-3 rounded-full w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 											/>
 										</div>
 									) : (
