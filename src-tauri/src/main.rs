@@ -233,7 +233,7 @@ fn main() {
                                     } else {
                                         RelayOptions::new().write(true).read(false)
                                     };
-                                    let _ = client.add_relay_with_opts(relay, opts).await;
+                                    let _ = client.pool().add_relay(relay, opts).await;
                                 }
                                 Err(_) => {
                                     let _ = client.add_relay(relay).await;
@@ -244,11 +244,11 @@ fn main() {
                 }
 
                 if let Err(e) = client.add_discovery_relay("wss://purplepag.es/").await {
-                	println!("Add discovery relay failed: {}", e)
+                    println!("Add discovery relay failed: {}", e)
                 }
 
                 if let Err(e) = client.add_discovery_relay("wss://directory.yabu.me/").await {
-                	println!("Add discovery relay failed: {}", e)
+                    println!("Add discovery relay failed: {}", e)
                 }
 
                 // Connect
@@ -336,7 +336,10 @@ fn main() {
                                     // Send native notification
                                     if allow_notification {
                                         let author = client
-                                            .metadata(event.pubkey)
+                                            .fetch_metadata(
+                                                event.pubkey,
+                                                Some(Duration::from_secs(5)),
+                                            )
                                             .await
                                             .unwrap_or_else(|_| Metadata::new());
 
@@ -402,7 +405,7 @@ fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
 }
 
 fn send_notification(event: &Event, author: Metadata, handle: &tauri::AppHandle) {
-    match event.kind() {
+    match event.kind {
         Kind::TextNote => {
             if let Err(e) = handle
                 .notification()

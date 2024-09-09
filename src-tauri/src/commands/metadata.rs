@@ -382,7 +382,7 @@ pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, St
                 .await
             {
                 for event in contact_list_events.into_iter() {
-                    for tag in event.into_iter_tags() {
+                    for tag in event.tags {
                         if let Some(TagStandard::PublicKey {
                             public_key,
                             relay_url,
@@ -403,74 +403,6 @@ pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, St
         }
         Err(err) => Err(err.to_string()),
     }
-}
-
-pub async fn get_following(
-    state: State<'_, Nostr>,
-    public_key: &str,
-) -> Result<Vec<String>, String> {
-    let client = &state.client;
-    let public_key = PublicKey::parse(public_key).map_err(|e| e.to_string())?;
-
-    let filter = Filter::new().kind(Kind::ContactList).author(public_key);
-    let events = match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
-        Ok(events) => events,
-        Err(err) => return Err(err.to_string()),
-    };
-
-    let mut ret: Vec<String> = vec![];
-    if let Some(latest_event) = events.iter().max_by_key(|event| event.created_at()) {
-        ret.extend(latest_event.tags().iter().filter_map(|tag| {
-            if let Some(TagStandard::PublicKey {
-                uppercase: false, ..
-            }) = <nostr_sdk::Tag as Clone>::clone(tag).to_standardized()
-            {
-                tag.content().map(String::from)
-            } else {
-                None
-            }
-        }));
-    }
-
-    Ok(ret)
-}
-
-pub async fn get_followers(
-    state: State<'_, Nostr>,
-    public_key: &str,
-) -> Result<Vec<String>, String> {
-    let client = &state.client;
-    let public_key = PublicKey::parse(public_key).map_err(|e| e.to_string())?;
-
-    let filter = Filter::new().kind(Kind::ContactList).custom_tag(
-        SingleLetterTag::lowercase(Alphabet::P),
-        vec![public_key.to_hex()],
-    );
-
-    let events = match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
-        Ok(events) => events,
-        Err(err) => return Err(err.to_string()),
-    };
-
-    let ret: Vec<String> = events
-        .into_iter()
-        .map(|event| event.author().to_hex())
-        .collect();
-
-    Ok(ret)
-    // TODO: get more than 500 events
 }
 
 #[tauri::command]
