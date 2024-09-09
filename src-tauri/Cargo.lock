@@ -363,9 +363,9 @@ dependencies = [
 
 [[package]]
 name = "async-wsocket"
-version = "0.7.1"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1eee6fcc818b89848df37050215603de0e2e072734e4730c03060feb2d0abebb"
+checksum = "c917625d498803b60135e0b409c3635b4bafc659da5c55a362d93f68412d1ebe"
 dependencies = [
  "async-utility",
  "futures",
@@ -3086,7 +3086,7 @@ checksum = "72ef4a56884ca558e5ddb05a1d1e7e1bfd9a68d9ed024c21704cc98872dae1bb"
 [[package]]
 name = "nostr"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "aes",
  "base64 0.22.1",
@@ -3105,7 +3105,6 @@ dependencies = [
  "scrypt",
  "serde",
  "serde_json",
- "tracing",
  "unicode-normalization",
  "url",
  "wasm-bindgen",
@@ -3116,7 +3115,7 @@ dependencies = [
 [[package]]
 name = "nostr-database"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-trait",
  "flatbuffers",
@@ -3130,7 +3129,7 @@ dependencies = [
 [[package]]
 name = "nostr-relay-pool"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-utility",
  "async-wsocket",
@@ -3146,7 +3145,7 @@ dependencies = [
 [[package]]
 name = "nostr-sdk"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-utility",
  "atomic-destructor",
@@ -3166,7 +3165,7 @@ dependencies = [
 [[package]]
 name = "nostr-signer"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-utility",
  "nostr",
@@ -3179,7 +3178,7 @@ dependencies = [
 [[package]]
 name = "nostr-sqlite"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-trait",
  "nostr",
@@ -3193,7 +3192,7 @@ dependencies = [
 [[package]]
 name = "nostr-zapper"
 version = "0.34.0"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-trait",
  "nostr",
@@ -3326,7 +3325,7 @@ dependencies = [
 [[package]]
 name = "nwc"
 version = "0.34.1"
-source = "git+https://github.com/rust-nostr/nostr#2a429da9131fec7d61b5518596b432b06e16facd"
+source = "git+https://github.com/rust-nostr/nostr?branch=gossip#bb3f940badf4614cd14f5590392b238f5152a3a6"
 dependencies = [
  "async-utility",
  "nostr",

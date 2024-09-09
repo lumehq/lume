@@ -203,6 +203,7 @@ fn main() {
 
                 // Config
                 let opts = Options::new()
+                    .gossip(true)
                     .max_avg_latency(Duration::from_millis(500))
                     .automatic_authentication(true)
                     .connection_timeout(Some(Duration::from_secs(5)))
@@ -240,6 +241,14 @@ fn main() {
                             }
                         }
                     }
+                }
+
+                if let Err(e) = client.add_discovery_relay("wss://purplepag.es/").await {
+                	println!("Add discovery relay failed: {}", e)
+                }
+
+                if let Err(e) = client.add_discovery_relay("wss://directory.yabu.me/").await {
+                	println!("Add discovery relay failed: {}", e)
                 }
 
                 // Connect

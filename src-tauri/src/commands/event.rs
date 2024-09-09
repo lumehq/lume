@@ -486,7 +486,7 @@ pub async fn reply(
         Ok(events) => {
             if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
-                    .event_seen_on_relays(event.id)
+                    .event_seen_on_relays(&event.id)
                     .await
                     .map_err(|err| err.to_string())?
                 {
@@ -521,7 +521,7 @@ pub async fn reply(
         {
             if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
-                    .event_seen_on_relays(event.id)
+                    .event_seen_on_relays(&event.id)
                     .await
                     .map_err(|err| err.to_string())?
                 {
@@ -579,7 +579,7 @@ pub async fn event_to_bech32(id: String, state: State<'_, Nostr>) -> Result<Stri
 
     let seens = client
         .database()
-        .event_seen_on_relays(event_id)
+        .event_seen_on_relays(&event_id)
         .await
         .map_err(|err| err.to_string())?;
 
