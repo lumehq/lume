@@ -17,6 +17,6 @@ export const Route = createFileRoute("/")({
 			});
 		}
 
-		return { accounts };
+		return { accounts: accounts.filter((account) => !account.endsWith("Lume")) };
 	},
 });

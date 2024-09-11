@@ -127,7 +127,7 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
         Ok(bunker_uri) => {
             // Local user
             let app_keys = Keys::generate();
-            let app_secret = app_keys.secret_key().to_string();
+            let app_secret = app_keys.secret_key().to_secret_hex();
 
             // Get remote user
             let remote_user = bunker_uri.signer_public_key().unwrap();

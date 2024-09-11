@@ -247,7 +247,7 @@ pub async fn get_events_from_contacts(
         .until(as_of)
         .authors(authors);
 
-    match client.database().query(vec![filter], Order::Desc).await {
+    match client.database().query(vec![filter]).await {
         Ok(events) => {
             let fils = filter_converstation(events);
             let futures = fils.iter().map(|ev| async move {
@@ -449,7 +449,9 @@ pub async fn publish(
 
     // Create unsigned event
     let unsigned_event = match difficulty {
-        Some(num) => EventBuilder::text_note(content, tags).to_unsigned_pow_event(public_key, num),
+        Some(num) => EventBuilder::text_note(content, tags)
+            .pow(num)
+            .to_unsigned_event(public_key),
         None => EventBuilder::text_note(content, tags).to_unsigned_event(public_key),
     };
 
@@ -479,14 +481,11 @@ pub async fn reply(
 
     let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
 
-    match database
-        .query(vec![Filter::new().id(reply_id)], Order::Desc)
-        .await
-    {
+    match database.query(vec![Filter::new().id(reply_id)]).await {
         Ok(events) => {
             if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
-                    .event_seen_on_relays(event.id)
+                    .event_seen_on_relays(&event.id)
                     .await
                     .map_err(|err| err.to_string())?
                 {
@@ -515,13 +514,10 @@ pub async fn reply(
             Err(_) => return Err("Event is not valid.".into()),
         };
 
-        if let Ok(events) = database
-            .query(vec![Filter::new().id(root_id)], Order::Desc)
-            .await
-        {
+        if let Ok(events) = database.query(vec![Filter::new().id(root_id)]).await {
             if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
-                    .event_seen_on_relays(event.id)
+                    .event_seen_on_relays(&event.id)
                     .await
                     .map_err(|err| err.to_string())?
                 {
@@ -579,7 +575,7 @@ pub async fn event_to_bech32(id: String, state: State<'_, Nostr>) -> Result<Stri
 
     let seens = client
         .database()
-        .event_seen_on_relays(event_id)
+        .event_seen_on_relays(&event_id)
         .await
         .map_err(|err| err.to_string())?;
 

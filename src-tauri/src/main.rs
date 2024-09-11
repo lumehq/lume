@@ -193,16 +193,16 @@ fn main() {
                 let dir = handle
                     .path()
                     .app_config_dir()
-                    .expect("App config directory not found.");
-                let _ = fs::create_dir_all(dir.clone());
+                    .expect("Error: app config directory not found.");
+                let _ = fs::create_dir_all(&dir);
 
                 // Setup database
-                let database = SQLiteDatabase::open(dir.join("nostr.db"))
-                    .await
-                    .expect("Database error.");
+                let database = NostrLMDB::open(dir.join("nostr-lmdb"))
+                    .expect("Error: cannot create database.");
 
                 // Config
                 let opts = Options::new()
+                    .gossip(true)
                     .max_avg_latency(Duration::from_millis(500))
                     .automatic_authentication(true)
                     .connection_timeout(Some(Duration::from_secs(5)))
@@ -232,7 +232,7 @@ fn main() {
                                     } else {
                                         RelayOptions::new().write(true).read(false)
                                     };
-                                    let _ = client.add_relay_with_opts(relay, opts).await;
+                                    let _ = client.pool().add_relay(relay, opts).await;
                                 }
                                 Err(_) => {
                                     let _ = client.add_relay(relay).await;
@@ -240,6 +240,14 @@ fn main() {
                             }
                         }
                     }
+                }
+
+                if let Err(e) = client.add_discovery_relay("wss://purplepag.es/").await {
+                    println!("Add discovery relay failed: {}", e)
+                }
+
+                if let Err(e) = client.add_discovery_relay("wss://directory.yabu.me/").await {
+                    println!("Add discovery relay failed: {}", e)
                 }
 
                 // Connect
@@ -327,7 +335,10 @@ fn main() {
                                     // Send native notification
                                     if allow_notification {
                                         let author = client
-                                            .metadata(event.pubkey)
+                                            .fetch_metadata(
+                                                event.pubkey,
+                                                Some(Duration::from_secs(5)),
+                                            )
                                             .await
                                             .unwrap_or_else(|_| Metadata::new());
 
@@ -393,7 +404,7 @@ fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
 }
 
 fn send_notification(event: &Event, author: Metadata, handle: &tauri::AppHandle) {
-    match event.kind() {
+    match event.kind {
         Kind::TextNote => {
             if let Err(e) = handle
                 .notification()

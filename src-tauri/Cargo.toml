@@ -11,12 +11,6 @@ rust-version = "1.70"
 tauri-build = { version = "2.0.0-rc", features = [] }
 
 [dependencies]
-nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = [
-	"sqlite",
-] }
-tokio = { version = "1", features = ["full"] }
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.0.0-rc", features = [
 	"unstable",
 	"tray-icon",
@@ -38,8 +32,14 @@ tauri-plugin-store = "2.0.0-rc"
 tauri-plugin-decorum = "1.0.0"
 tauri-plugin-prevent-default = "0.4"
 tauri-specta = { version = "2.0.0-rc.15", features = ["derive", "typescript"] }
+
+nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = ["lmdb"] }
+
 specta = "^2.0.0-rc.20"
 specta-typescript = "0.0.7"
+tokio = { version = "1", features = ["full"] }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 reqwest = "0.12.4"
 url = "2.5.0"
 futures = "0.3.30"

@@ -288,7 +288,7 @@ pub async fn init_nip65(client: &Client) {
                     Some(_) => RelayOptions::new().write(true).read(false),
                     None => RelayOptions::default(),
                 };
-                if let Err(e) = client.add_relay_with_opts(&url.to_string(), opts).await {
+                if let Err(e) = client.pool().add_relay(&url.to_string(), opts).await {
                     eprintln!("Failed to add relay {}: {:?}", url, e);
                 }
                 if let Err(e) = client.connect_relay(url.to_string()).await {
