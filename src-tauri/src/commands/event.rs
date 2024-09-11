@@ -247,7 +247,7 @@ pub async fn get_events_from_contacts(
         .until(as_of)
         .authors(authors);
 
-    match client.database().query(vec![filter], Order::Desc).await {
+    match client.database().query(vec![filter]).await {
         Ok(events) => {
             let fils = filter_converstation(events);
             let futures = fils.iter().map(|ev| async move {
@@ -480,10 +480,7 @@ pub async fn reply(
 
     let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
 
-    match database
-        .query(vec![Filter::new().id(reply_id)], Order::Desc)
-        .await
-    {
+    match database.query(vec![Filter::new().id(reply_id)]).await {
         Ok(events) => {
             if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
@@ -516,10 +513,7 @@ pub async fn reply(
             Err(_) => return Err("Event is not valid.".into()),
         };
 
-        if let Ok(events) = database
-            .query(vec![Filter::new().id(root_id)], Order::Desc)
-            .await
-        {
+        if let Ok(events) = database.query(vec![Filter::new().id(root_id)]).await {
             if let Some(event) = events.first() {
                 let relay_hint = if let Some(relays) = database
                     .event_seen_on_relays(&event.id)

@@ -193,13 +193,12 @@ fn main() {
                 let dir = handle
                     .path()
                     .app_config_dir()
-                    .expect("App config directory not found.");
-                let _ = fs::create_dir_all(dir.clone());
+                    .expect("Error: app config directory not found.");
+                let _ = fs::create_dir_all(&dir);
 
                 // Setup database
-                let database = SQLiteDatabase::open(dir.join("nostr.db"))
-                    .await
-                    .expect("Database error.");
+                let database = NostrLMDB::open(dir.join("nostr-lmdb"))
+                    .expect("Error: cannot create database.");
 
                 // Config
                 let opts = Options::new()

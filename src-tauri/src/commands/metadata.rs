@@ -423,11 +423,7 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
                 ])
                 .limit(200);
 
-            match client
-                .database()
-                .query(vec![filter], Order::default())
-                .await
-            {
+            match client.database().query(vec![filter]).await {
                 Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
                 Err(err) => Err(err.to_string()),
             }
