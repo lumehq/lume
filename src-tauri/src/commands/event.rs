@@ -449,7 +449,8 @@ pub async fn publish(
 
     // Create unsigned event
     let unsigned_event = match difficulty {
-        Some(num) => EventBuilder::pow(EventBuilder::text_note(content, tags), num)
+        Some(num) => EventBuilder::text_note(content, tags)
+            .pow(num)
             .to_unsigned_event(public_key),
         None => EventBuilder::text_note(content, tags).to_unsigned_event(public_key),
     };

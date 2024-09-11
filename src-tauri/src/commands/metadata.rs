@@ -382,7 +382,7 @@ pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, St
                 .await
             {
                 for event in contact_list_events.into_iter() {
-                    for tag in event.tags {
+                    for tag in event.tags.into_iter() {
                         if let Some(TagStandard::PublicKey {
                             public_key,
                             relay_url,
