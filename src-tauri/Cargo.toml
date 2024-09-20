@@ -29,7 +29,7 @@ tauri-plugin-shell = "2.0.0-rc"
 tauri-plugin-updater = "2.0.0-rc"
 tauri-plugin-upload = "2.0.0-rc"
 tauri-plugin-store = "2.0.0-rc"
-tauri-plugin-decorum = "1.0.0"
+tauri-plugin-decorum = { git = "https://github.com/reyamir/tauri-plugin-decorum", branch = "fix/tauri-latest" }
 tauri-plugin-prevent-default = "0.4"
 tauri-specta = { version = "2.0.0-rc.15", features = ["derive", "typescript"] }
 

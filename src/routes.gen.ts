@@ -595,51 +595,388 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  BootstrapRelaysRoute,
-  NewLazyRoute,
-  ResetLazyRoute,
-  AccountRoute: AccountRoute.addChildren({
-    AccountAppRoute: AccountAppRoute.addChildren({ AccountAppHomeRoute }),
-    AccountBackupRoute,
-    AccountSettingsLazyRoute: AccountSettingsLazyRoute.addChildren({
-      AccountSettingsBitcoinConnectRoute,
-      AccountSettingsGeneralRoute,
-      AccountSettingsProfileRoute,
-      AccountSettingsRelayRoute,
-      AccountSettingsWalletRoute,
-    }),
-  }),
-  ColumnsRoute: ColumnsRoute.addChildren({
-    ColumnsLayoutRoute: ColumnsLayoutRoute.addChildren({
-      ColumnsLayoutCreateGroupRoute,
-      ColumnsLayoutCreateNewsfeedRoute:
-        ColumnsLayoutCreateNewsfeedRoute.addChildren({
-          ColumnsLayoutCreateNewsfeedF2fRoute,
-          ColumnsLayoutCreateNewsfeedUsersRoute,
-        }),
-      ColumnsLayoutGalleryRoute,
-      ColumnsLayoutGlobalRoute,
-      ColumnsLayoutGroupRoute,
-      ColumnsLayoutStoriesRoute,
-      ColumnsLayoutNewsfeedLazyRoute,
-      ColumnsLayoutNotificationLazyRoute,
-      ColumnsLayoutOnboardingLazyRoute,
-      ColumnsLayoutSearchLazyRoute,
-      ColumnsLayoutTrendingLazyRoute,
-      ColumnsLayoutEventsIdLazyRoute,
-      ColumnsLayoutHashtagsContentLazyRoute,
-      ColumnsLayoutRepliesIdLazyRoute,
-      ColumnsLayoutUsersIdLazyRoute,
-    }),
-  }),
-  ZapIdRoute,
-  AuthConnectLazyRoute,
-  AuthImportLazyRoute,
-  AuthNewLazyRoute,
-  EditorIndexRoute,
-})
+interface AccountAppRouteChildren {
+  AccountAppHomeRoute: typeof AccountAppHomeRoute
+}
+
+const AccountAppRouteChildren: AccountAppRouteChildren = {
+  AccountAppHomeRoute: AccountAppHomeRoute,
+}
+
+const AccountAppRouteWithChildren = AccountAppRoute._addFileChildren(
+  AccountAppRouteChildren,
+)
+
+interface AccountSettingsLazyRouteChildren {
+  AccountSettingsBitcoinConnectRoute: typeof AccountSettingsBitcoinConnectRoute
+  AccountSettingsGeneralRoute: typeof AccountSettingsGeneralRoute
+  AccountSettingsProfileRoute: typeof AccountSettingsProfileRoute
+  AccountSettingsRelayRoute: typeof AccountSettingsRelayRoute
+  AccountSettingsWalletRoute: typeof AccountSettingsWalletRoute
+}
+
+const AccountSettingsLazyRouteChildren: AccountSettingsLazyRouteChildren = {
+  AccountSettingsBitcoinConnectRoute: AccountSettingsBitcoinConnectRoute,
+  AccountSettingsGeneralRoute: AccountSettingsGeneralRoute,
+  AccountSettingsProfileRoute: AccountSettingsProfileRoute,
+  AccountSettingsRelayRoute: AccountSettingsRelayRoute,
+  AccountSettingsWalletRoute: AccountSettingsWalletRoute,
+}
+
+const AccountSettingsLazyRouteWithChildren =
+  AccountSettingsLazyRoute._addFileChildren(AccountSettingsLazyRouteChildren)
+
+interface AccountRouteChildren {
+  AccountAppRoute: typeof AccountAppRouteWithChildren
+  AccountBackupRoute: typeof AccountBackupRoute
+  AccountSettingsLazyRoute: typeof AccountSettingsLazyRouteWithChildren
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountAppRoute: AccountAppRouteWithChildren,
+  AccountBackupRoute: AccountBackupRoute,
+  AccountSettingsLazyRoute: AccountSettingsLazyRouteWithChildren,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
+
+interface ColumnsLayoutCreateNewsfeedRouteChildren {
+  ColumnsLayoutCreateNewsfeedF2fRoute: typeof ColumnsLayoutCreateNewsfeedF2fRoute
+  ColumnsLayoutCreateNewsfeedUsersRoute: typeof ColumnsLayoutCreateNewsfeedUsersRoute
+}
+
+const ColumnsLayoutCreateNewsfeedRouteChildren: ColumnsLayoutCreateNewsfeedRouteChildren =
+  {
+    ColumnsLayoutCreateNewsfeedF2fRoute: ColumnsLayoutCreateNewsfeedF2fRoute,
+    ColumnsLayoutCreateNewsfeedUsersRoute:
+      ColumnsLayoutCreateNewsfeedUsersRoute,
+  }
+
+const ColumnsLayoutCreateNewsfeedRouteWithChildren =
+  ColumnsLayoutCreateNewsfeedRoute._addFileChildren(
+    ColumnsLayoutCreateNewsfeedRouteChildren,
+  )
+
+interface ColumnsLayoutRouteChildren {
+  ColumnsLayoutCreateGroupRoute: typeof ColumnsLayoutCreateGroupRoute
+  ColumnsLayoutCreateNewsfeedRoute: typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
+  ColumnsLayoutGalleryRoute: typeof ColumnsLayoutGalleryRoute
+  ColumnsLayoutGlobalRoute: typeof ColumnsLayoutGlobalRoute
+  ColumnsLayoutGroupRoute: typeof ColumnsLayoutGroupRoute
+  ColumnsLayoutStoriesRoute: typeof ColumnsLayoutStoriesRoute
+  ColumnsLayoutNewsfeedLazyRoute: typeof ColumnsLayoutNewsfeedLazyRoute
+  ColumnsLayoutNotificationLazyRoute: typeof ColumnsLayoutNotificationLazyRoute
+  ColumnsLayoutOnboardingLazyRoute: typeof ColumnsLayoutOnboardingLazyRoute
+  ColumnsLayoutSearchLazyRoute: typeof ColumnsLayoutSearchLazyRoute
+  ColumnsLayoutTrendingLazyRoute: typeof ColumnsLayoutTrendingLazyRoute
+  ColumnsLayoutEventsIdLazyRoute: typeof ColumnsLayoutEventsIdLazyRoute
+  ColumnsLayoutHashtagsContentLazyRoute: typeof ColumnsLayoutHashtagsContentLazyRoute
+  ColumnsLayoutRepliesIdLazyRoute: typeof ColumnsLayoutRepliesIdLazyRoute
+  ColumnsLayoutUsersIdLazyRoute: typeof ColumnsLayoutUsersIdLazyRoute
+}
+
+const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
+  ColumnsLayoutCreateGroupRoute: ColumnsLayoutCreateGroupRoute,
+  ColumnsLayoutCreateNewsfeedRoute:
+    ColumnsLayoutCreateNewsfeedRouteWithChildren,
+  ColumnsLayoutGalleryRoute: ColumnsLayoutGalleryRoute,
+  ColumnsLayoutGlobalRoute: ColumnsLayoutGlobalRoute,
+  ColumnsLayoutGroupRoute: ColumnsLayoutGroupRoute,
+  ColumnsLayoutStoriesRoute: ColumnsLayoutStoriesRoute,
+  ColumnsLayoutNewsfeedLazyRoute: ColumnsLayoutNewsfeedLazyRoute,
+  ColumnsLayoutNotificationLazyRoute: ColumnsLayoutNotificationLazyRoute,
+  ColumnsLayoutOnboardingLazyRoute: ColumnsLayoutOnboardingLazyRoute,
+  ColumnsLayoutSearchLazyRoute: ColumnsLayoutSearchLazyRoute,
+  ColumnsLayoutTrendingLazyRoute: ColumnsLayoutTrendingLazyRoute,
+  ColumnsLayoutEventsIdLazyRoute: ColumnsLayoutEventsIdLazyRoute,
+  ColumnsLayoutHashtagsContentLazyRoute: ColumnsLayoutHashtagsContentLazyRoute,
+  ColumnsLayoutRepliesIdLazyRoute: ColumnsLayoutRepliesIdLazyRoute,
+  ColumnsLayoutUsersIdLazyRoute: ColumnsLayoutUsersIdLazyRoute,
+}
+
+const ColumnsLayoutRouteWithChildren = ColumnsLayoutRoute._addFileChildren(
+  ColumnsLayoutRouteChildren,
+)
+
+interface ColumnsRouteChildren {
+  ColumnsLayoutRoute: typeof ColumnsLayoutRouteWithChildren
+}
+
+const ColumnsRouteChildren: ColumnsRouteChildren = {
+  ColumnsLayoutRoute: ColumnsLayoutRouteWithChildren,
+}
+
+const ColumnsRouteWithChildren =
+  ColumnsRoute._addFileChildren(ColumnsRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/bootstrap-relays': typeof BootstrapRelaysRoute
+  '/new': typeof NewLazyRoute
+  '/reset': typeof ResetLazyRoute
+  '/$account': typeof AccountSettingsLazyRouteWithChildren
+  '/$account/backup': typeof AccountBackupRoute
+  '/columns': typeof ColumnsLayoutRouteWithChildren
+  '/zap/$id': typeof ZapIdRoute
+  '/auth/connect': typeof AuthConnectLazyRoute
+  '/auth/import': typeof AuthImportLazyRoute
+  '/auth/new': typeof AuthNewLazyRoute
+  '/editor': typeof EditorIndexRoute
+  '/$account/home': typeof AccountAppHomeRoute
+  '/$account/bitcoin-connect': typeof AccountSettingsBitcoinConnectRoute
+  '/$account/general': typeof AccountSettingsGeneralRoute
+  '/$account/profile': typeof AccountSettingsProfileRoute
+  '/$account/relay': typeof AccountSettingsRelayRoute
+  '/$account/wallet': typeof AccountSettingsWalletRoute
+  '/columns/create-group': typeof ColumnsLayoutCreateGroupRoute
+  '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
+  '/columns/gallery': typeof ColumnsLayoutGalleryRoute
+  '/columns/global': typeof ColumnsLayoutGlobalRoute
+  '/columns/group': typeof ColumnsLayoutGroupRoute
+  '/columns/stories': typeof ColumnsLayoutStoriesRoute
+  '/columns/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
+  '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
+  '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
+  '/columns/search': typeof ColumnsLayoutSearchLazyRoute
+  '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
+  '/columns/create-newsfeed/f2f': typeof ColumnsLayoutCreateNewsfeedF2fRoute
+  '/columns/create-newsfeed/users': typeof ColumnsLayoutCreateNewsfeedUsersRoute
+  '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
+  '/columns/hashtags/$content': typeof ColumnsLayoutHashtagsContentLazyRoute
+  '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
+  '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/bootstrap-relays': typeof BootstrapRelaysRoute
+  '/new': typeof NewLazyRoute
+  '/reset': typeof ResetLazyRoute
+  '/$account': typeof AccountSettingsLazyRouteWithChildren
+  '/$account/backup': typeof AccountBackupRoute
+  '/columns': typeof ColumnsLayoutRouteWithChildren
+  '/zap/$id': typeof ZapIdRoute
+  '/auth/connect': typeof AuthConnectLazyRoute
+  '/auth/import': typeof AuthImportLazyRoute
+  '/auth/new': typeof AuthNewLazyRoute
+  '/editor': typeof EditorIndexRoute
+  '/$account/home': typeof AccountAppHomeRoute
+  '/$account/bitcoin-connect': typeof AccountSettingsBitcoinConnectRoute
+  '/$account/general': typeof AccountSettingsGeneralRoute
+  '/$account/profile': typeof AccountSettingsProfileRoute
+  '/$account/relay': typeof AccountSettingsRelayRoute
+  '/$account/wallet': typeof AccountSettingsWalletRoute
+  '/columns/create-group': typeof ColumnsLayoutCreateGroupRoute
+  '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
+  '/columns/gallery': typeof ColumnsLayoutGalleryRoute
+  '/columns/global': typeof ColumnsLayoutGlobalRoute
+  '/columns/group': typeof ColumnsLayoutGroupRoute
+  '/columns/stories': typeof ColumnsLayoutStoriesRoute
+  '/columns/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
+  '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
+  '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
+  '/columns/search': typeof ColumnsLayoutSearchLazyRoute
+  '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
+  '/columns/create-newsfeed/f2f': typeof ColumnsLayoutCreateNewsfeedF2fRoute
+  '/columns/create-newsfeed/users': typeof ColumnsLayoutCreateNewsfeedUsersRoute
+  '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
+  '/columns/hashtags/$content': typeof ColumnsLayoutHashtagsContentLazyRoute
+  '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
+  '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/bootstrap-relays': typeof BootstrapRelaysRoute
+  '/new': typeof NewLazyRoute
+  '/reset': typeof ResetLazyRoute
+  '/$account': typeof AccountRouteWithChildren
+  '/$account/_app': typeof AccountAppRouteWithChildren
+  '/$account/backup': typeof AccountBackupRoute
+  '/columns': typeof ColumnsRouteWithChildren
+  '/columns/_layout': typeof ColumnsLayoutRouteWithChildren
+  '/zap/$id': typeof ZapIdRoute
+  '/$account/_settings': typeof AccountSettingsLazyRouteWithChildren
+  '/auth/connect': typeof AuthConnectLazyRoute
+  '/auth/import': typeof AuthImportLazyRoute
+  '/auth/new': typeof AuthNewLazyRoute
+  '/editor/': typeof EditorIndexRoute
+  '/$account/_app/home': typeof AccountAppHomeRoute
+  '/$account/_settings/bitcoin-connect': typeof AccountSettingsBitcoinConnectRoute
+  '/$account/_settings/general': typeof AccountSettingsGeneralRoute
+  '/$account/_settings/profile': typeof AccountSettingsProfileRoute
+  '/$account/_settings/relay': typeof AccountSettingsRelayRoute
+  '/$account/_settings/wallet': typeof AccountSettingsWalletRoute
+  '/columns/_layout/create-group': typeof ColumnsLayoutCreateGroupRoute
+  '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
+  '/columns/_layout/gallery': typeof ColumnsLayoutGalleryRoute
+  '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
+  '/columns/_layout/group': typeof ColumnsLayoutGroupRoute
+  '/columns/_layout/stories': typeof ColumnsLayoutStoriesRoute
+  '/columns/_layout/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
+  '/columns/_layout/notification': typeof ColumnsLayoutNotificationLazyRoute
+  '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
+  '/columns/_layout/search': typeof ColumnsLayoutSearchLazyRoute
+  '/columns/_layout/trending': typeof ColumnsLayoutTrendingLazyRoute
+  '/columns/_layout/create-newsfeed/f2f': typeof ColumnsLayoutCreateNewsfeedF2fRoute
+  '/columns/_layout/create-newsfeed/users': typeof ColumnsLayoutCreateNewsfeedUsersRoute
+  '/columns/_layout/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
+  '/columns/_layout/hashtags/$content': typeof ColumnsLayoutHashtagsContentLazyRoute
+  '/columns/_layout/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
+  '/columns/_layout/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/bootstrap-relays'
+    | '/new'
+    | '/reset'
+    | '/$account'
+    | '/$account/backup'
+    | '/columns'
+    | '/zap/$id'
+    | '/auth/connect'
+    | '/auth/import'
+    | '/auth/new'
+    | '/editor'
+    | '/$account/home'
+    | '/$account/bitcoin-connect'
+    | '/$account/general'
+    | '/$account/profile'
+    | '/$account/relay'
+    | '/$account/wallet'
+    | '/columns/create-group'
+    | '/columns/create-newsfeed'
+    | '/columns/gallery'
+    | '/columns/global'
+    | '/columns/group'
+    | '/columns/stories'
+    | '/columns/newsfeed'
+    | '/columns/notification'
+    | '/columns/onboarding'
+    | '/columns/search'
+    | '/columns/trending'
+    | '/columns/create-newsfeed/f2f'
+    | '/columns/create-newsfeed/users'
+    | '/columns/events/$id'
+    | '/columns/hashtags/$content'
+    | '/columns/replies/$id'
+    | '/columns/users/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/bootstrap-relays'
+    | '/new'
+    | '/reset'
+    | '/$account'
+    | '/$account/backup'
+    | '/columns'
+    | '/zap/$id'
+    | '/auth/connect'
+    | '/auth/import'
+    | '/auth/new'
+    | '/editor'
+    | '/$account/home'
+    | '/$account/bitcoin-connect'
+    | '/$account/general'
+    | '/$account/profile'
+    | '/$account/relay'
+    | '/$account/wallet'
+    | '/columns/create-group'
+    | '/columns/create-newsfeed'
+    | '/columns/gallery'
+    | '/columns/global'
+    | '/columns/group'
+    | '/columns/stories'
+    | '/columns/newsfeed'
+    | '/columns/notification'
+    | '/columns/onboarding'
+    | '/columns/search'
+    | '/columns/trending'
+    | '/columns/create-newsfeed/f2f'
+    | '/columns/create-newsfeed/users'
+    | '/columns/events/$id'
+    | '/columns/hashtags/$content'
+    | '/columns/replies/$id'
+    | '/columns/users/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/bootstrap-relays'
+    | '/new'
+    | '/reset'
+    | '/$account'
+    | '/$account/_app'
+    | '/$account/backup'
+    | '/columns'
+    | '/columns/_layout'
+    | '/zap/$id'
+    | '/$account/_settings'
+    | '/auth/connect'
+    | '/auth/import'
+    | '/auth/new'
+    | '/editor/'
+    | '/$account/_app/home'
+    | '/$account/_settings/bitcoin-connect'
+    | '/$account/_settings/general'
+    | '/$account/_settings/profile'
+    | '/$account/_settings/relay'
+    | '/$account/_settings/wallet'
+    | '/columns/_layout/create-group'
+    | '/columns/_layout/create-newsfeed'
+    | '/columns/_layout/gallery'
+    | '/columns/_layout/global'
+    | '/columns/_layout/group'
+    | '/columns/_layout/stories'
+    | '/columns/_layout/newsfeed'
+    | '/columns/_layout/notification'
+    | '/columns/_layout/onboarding'
+    | '/columns/_layout/search'
+    | '/columns/_layout/trending'
+    | '/columns/_layout/create-newsfeed/f2f'
+    | '/columns/_layout/create-newsfeed/users'
+    | '/columns/_layout/events/$id'
+    | '/columns/_layout/hashtags/$content'
+    | '/columns/_layout/replies/$id'
+    | '/columns/_layout/users/$id'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  BootstrapRelaysRoute: typeof BootstrapRelaysRoute
+  NewLazyRoute: typeof NewLazyRoute
+  ResetLazyRoute: typeof ResetLazyRoute
+  AccountRoute: typeof AccountRouteWithChildren
+  ColumnsRoute: typeof ColumnsRouteWithChildren
+  ZapIdRoute: typeof ZapIdRoute
+  AuthConnectLazyRoute: typeof AuthConnectLazyRoute
+  AuthImportLazyRoute: typeof AuthImportLazyRoute
+  AuthNewLazyRoute: typeof AuthNewLazyRoute
+  EditorIndexRoute: typeof EditorIndexRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  BootstrapRelaysRoute: BootstrapRelaysRoute,
+  NewLazyRoute: NewLazyRoute,
+  ResetLazyRoute: ResetLazyRoute,
+  AccountRoute: AccountRouteWithChildren,
+  ColumnsRoute: ColumnsRouteWithChildren,
+  ZapIdRoute: ZapIdRoute,
+  AuthConnectLazyRoute: AuthConnectLazyRoute,
+  AuthImportLazyRoute: AuthImportLazyRoute,
+  AuthNewLazyRoute: AuthNewLazyRoute,
+  EditorIndexRoute: EditorIndexRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 

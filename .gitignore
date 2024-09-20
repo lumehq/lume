@@ -23,4 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-src/router.gen.ts
+src/routes.gen.ts
+src/commands.gen.ts
