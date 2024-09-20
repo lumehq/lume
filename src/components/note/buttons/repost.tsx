@@ -41,11 +41,11 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 
 		const menuItems = await Promise.all([
 			MenuItem.new({
-				text: "Quote",
+				text: "Repost",
 				action: async () => repost(),
 			}),
 			MenuItem.new({
-				text: "Repost",
+				text: "Quote",
 				action: () => LumeWindow.openEditor(null, event.id),
 			}),
 		]);
