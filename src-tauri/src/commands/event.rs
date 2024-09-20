@@ -429,22 +429,20 @@ pub async fn publish(
     // Create tags from content
     let mut tags = create_event_tags(&content);
 
+    // Add client tag
+    // TODO: allow user config this setting
+    tags.push(Tag::custom(TagKind::custom("client"), vec!["Lume"]));
+
     // Add content-warning tag if present
     if let Some(reason) = warning {
         let t = TagStandard::ContentWarning {
             reason: Some(reason),
         };
-        let tag = Tag::from(t);
+        let tag = Tag::from_standardized(t);
         tags.push(tag)
     };
 
-    // Get signer
-    let signer = match client.signer().await {
-        Ok(signer) => signer,
-        Err(_) => return Err("Signer is required.".into()),
-    };
-
-    // Get public key
+    let signer = client.signer().await.map_err(|err| err.to_string())?;
     let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
 
     // Create unsigned event
