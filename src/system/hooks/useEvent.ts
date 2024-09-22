@@ -27,8 +27,6 @@ export function useEvent(id: string) {
 					}
 				}
 
-				console.log(relayHint);
-
 				// Build query
 				if (relayHint?.length) {
 					query = await commands.getEventFrom(normalizeId, relayHint);

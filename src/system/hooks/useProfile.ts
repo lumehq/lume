@@ -17,18 +17,15 @@ export function useProfile(pubkey: string, embed?: string) {
 			}
 
 			let normalizeId = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
-			let relayHint: string;
 
 			if (normalizeId.startsWith("nprofile")) {
 				const decoded = nip19.decode(normalizeId);
 
 				if (decoded.type === "nprofile") {
-					relayHint = decoded.data.relays[0];
 					normalizeId = decoded.data.pubkey;
 				}
 			}
 
-			console.log(relayHint);
 			const query = await commands.getProfile(normalizeId);
 
 			if (query.status === "ok") {

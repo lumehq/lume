@@ -47,6 +47,7 @@ dependencies = [
  "tauri-plugin-window-state",
  "tauri-specta",
  "tokio",
+ "tracing-subscriber",
  "url",
 ]
 

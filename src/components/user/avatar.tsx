@@ -1,11 +1,8 @@
 import { appSettings, cn } from "@/commons";
-import { LumeWindow } from "@/system";
 import * as Avatar from "@radix-ui/react-avatar";
 import { useStore } from "@tanstack/react-store";
-import { Menu, MenuItem } from "@tauri-apps/api/menu";
-import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { minidenticon } from "minidenticons";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useUserContext } from "./provider";
 
 export function UserAvatar({ className }: { className?: string }) {
@@ -33,32 +30,8 @@ export function UserAvatar({ className }: { className?: string }) {
 		[user.pubkey],
 	);
 
-	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
-		e.preventDefault();
-
-		const menuItems = await Promise.all([
-			MenuItem.new({
-				text: "View Profile",
-				action: () => LumeWindow.openProfile(user.pubkey),
-			}),
-			MenuItem.new({
-				text: "Copy Public Key",
-				action: async () => {
-					await writeText(user.pubkey);
-				},
-			}),
-		]);
-
-		const menu = await Menu.new({
-			items: menuItems,
-		});
-
-		await menu.popup().catch((e) => console.error(e));
-	}, []);
-
 	return (
 		<Avatar.Root
-			onClick={(e) => showContextMenu(e)}
 			className={cn(
 				"shrink-0 block overflow-hidden bg-neutral-200 dark:bg-neutral-800",
 				className,

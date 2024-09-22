@@ -182,7 +182,7 @@ function ReplyList() {
 
 	useEffect(() => {
 		events.subscription
-			.emit({ label, kind: "Subscribe", event_id: id, local_only: undefined })
+			.emit({ label, kind: "Subscribe", event_id: id })
 			.then(() => console.log("Subscribe: ", label));
 
 		return () => {
@@ -191,7 +191,6 @@ function ReplyList() {
 					label,
 					kind: "Unsubscribe",
 					event_id: id,
-					local_only: undefined,
 				})
 				.then(() => console.log("Unsubscribe: ", label));
 		};

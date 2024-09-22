@@ -77,12 +77,15 @@ struct Subscription {
 #[derive(Serialize, Deserialize, Type, Clone, TauriEvent)]
 struct NewSettings(Settings);
 
-pub const FETCH_LIMIT: usize = 44;
+pub const FETCH_LIMIT: usize = 20;
 pub const NEWSFEED_NEG_LIMIT: usize = 256;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
+    #[cfg(debug_assertions)]
+    tracing_subscriber::fmt::init();
+
     let builder = Builder::<tauri::Wry>::new()
         // Then register them (separated by a comma)
         .commands(collect_commands![
@@ -204,9 +207,10 @@ fn main() {
                 let opts = Options::new()
                     .gossip(true)
                     .max_avg_latency(Duration::from_millis(500))
-                    .automatic_authentication(true)
+                    .automatic_authentication(false)
                     .connection_timeout(Some(Duration::from_secs(5)))
-                    .timeout(Duration::from_secs(20));
+                    .send_timeout(Some(Duration::from_secs(5)))
+                    .timeout(Duration::from_secs(5));
 
                 // Setup nostr client
                 let client = ClientBuilder::default()
@@ -321,11 +325,52 @@ fn main() {
                 };
 
                 let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
+                let mut notifications = client.pool().notifications();
 
-                client
-                    .handle_notifications(|notification| async {
-                        if let RelayPoolNotification::Message { message, .. } = notification {
-                            if let RelayMessage::Event {
+                while let Ok(notification) = notifications.recv().await {
+                    match notification {
+                        RelayPoolNotification::Message { relay_url, message } => {
+                            if let RelayMessage::Auth { challenge } = message {
+                                match client.auth(challenge, relay_url.clone()).await {
+                                    Ok(..) => {
+                                        if let Ok(relay) = client.relay(&relay_url).await {
+                                            let msg =
+                                                format!("Authenticated to {} relay.", relay_url);
+                                            let opts = RelaySendOptions::new()
+                                                .skip_send_confirmation(true);
+
+                                            if let Err(e) = relay.resubscribe(opts).await {
+                                                println!("Error: {}", e);
+                                            }
+
+                                            if allow_notification {
+                                                if let Err(e) = &handle_clone
+                                                    .notification()
+                                                    .builder()
+                                                    .body(&msg)
+                                                    .title("Lume")
+                                                    .show()
+                                                {
+                                                    println!("Error: {}", e);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Err(e) => {
+                                        if allow_notification {
+                                            if let Err(e) = &handle_clone
+                                                .notification()
+                                                .builder()
+                                                .body(e.to_string())
+                                                .title("Lume")
+                                                .show()
+                                            {
+                                                println!("Error: {}", e);
+                                            }
+                                        }
+                                    }
+                                }
+                            } else if let RelayMessage::Event {
                                 subscription_id,
                                 event,
                             } = message
@@ -337,12 +382,12 @@ fn main() {
                                         let author = client
                                             .fetch_metadata(
                                                 event.pubkey,
-                                                Some(Duration::from_secs(5)),
+                                                Some(Duration::from_secs(3)),
                                             )
                                             .await
                                             .unwrap_or_else(|_| Metadata::new());
 
-                                        send_notification(&event, author, &handle_clone);
+                                        send_event_notification(&event, author, &handle_clone);
                                     }
                                 }
 
@@ -361,13 +406,12 @@ fn main() {
                                         RichEvent { raw, parsed },
                                     )
                                     .unwrap();
-                            } else {
-                                println!("new message: {}", message.as_json())
-                            }
+                            };
                         }
-                        Ok(false)
-                    })
-                    .await
+                        RelayPoolNotification::Shutdown => break,
+                        _ => (),
+                    }
+                }
             });
 
             Ok(())
@@ -403,7 +447,7 @@ fn prevent_default() -> tauri::plugin::TauriPlugin<tauri::Wry> {
     tauri_plugin_prevent_default::Builder::new().build()
 }
 
-fn send_notification(event: &Event, author: Metadata, handle: &tauri::AppHandle) {
+fn send_event_notification(event: &Event, author: Metadata, handle: &tauri::AppHandle) {
     match event.kind {
         Kind::TextNote => {
             if let Err(e) = handle

@@ -1,9 +1,11 @@
 import { cn, replyTime } from "@/commons";
 import { Note } from "@/components/note";
-import type { LumeEvent } from "@/system";
+import { type LumeEvent, LumeWindow } from "@/system";
 import { CaretDown } from "@phosphor-icons/react";
 import { Link, useSearch } from "@tanstack/react-router";
-import { memo } from "react";
+import { Menu, MenuItem } from "@tauri-apps/api/menu";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { memo, useCallback } from "react";
 import { User } from "./user";
 
 export const ReplyNote = memo(function ReplyNote({
@@ -15,12 +17,38 @@ export const ReplyNote = memo(function ReplyNote({
 }) {
 	const search = useSearch({ strict: false });
 
+	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		const menuItems = await Promise.all([
+			MenuItem.new({
+				text: "View Profile",
+				action: () => LumeWindow.openProfile(event.pubkey),
+			}),
+			MenuItem.new({
+				text: "Copy Public Key",
+				action: async () => {
+					const pubkey = await event.pubkeyAsBech32();
+					await writeText(pubkey);
+				},
+			}),
+		]);
+
+		const menu = await Menu.new({
+			items: menuItems,
+		});
+
+		await menu.popup().catch((e) => console.error(e));
+	}, []);
+
 	return (
 		<Note.Provider event={event}>
 			<User.Provider pubkey={event.pubkey}>
 				<Note.Root className={cn("flex gap-2.5", className)}>
 					<User.Root className="shrink-0">
-						<User.Avatar className="size-8 rounded-full" />
+						<button type="button" onClick={(e) => showContextMenu(e)}>
+							<User.Avatar className="size-8 rounded-full" />
+						</button>
 					</User.Root>
 					<div className="flex-1 flex flex-col gap-1">
 						<div>
@@ -74,13 +102,39 @@ export const ReplyNote = memo(function ReplyNote({
 function ChildReply({ event }: { event: LumeEvent }) {
 	const search = useSearch({ strict: false });
 
+	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		const menuItems = await Promise.all([
+			MenuItem.new({
+				text: "View Profile",
+				action: () => LumeWindow.openProfile(event.pubkey),
+			}),
+			MenuItem.new({
+				text: "Copy Public Key",
+				action: async () => {
+					const pubkey = await event.pubkeyAsBech32();
+					await writeText(pubkey);
+				},
+			}),
+		]);
+
+		const menu = await Menu.new({
+			items: menuItems,
+		});
+
+		await menu.popup().catch((e) => console.error(e));
+	}, []);
+
 	return (
 		<Note.Provider event={event}>
 			<User.Provider pubkey={event.pubkey}>
 				<div className="group flex flex-col gap-1">
 					<div>
 						<User.Root className="inline">
-							<User.Name className="font-medium text-blue-500" suffix=":" />
+							<button type="button" onClick={(e) => showContextMenu(e)}>
+								<User.Name className="font-medium text-blue-500" suffix=":" />
+							</button>
 						</User.Root>
 						<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
 							{event.content}

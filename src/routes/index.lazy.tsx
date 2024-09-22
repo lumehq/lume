@@ -147,6 +147,7 @@ function Screen() {
 												onKeyDown={(e) => {
 													if (e.key === "Enter") loginWith();
 												}}
+												disabled={isPending}
 												placeholder="Password"
 												className="px-3 rounded-full w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 											/>
