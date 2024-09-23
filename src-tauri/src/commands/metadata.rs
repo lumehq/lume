@@ -24,9 +24,13 @@ pub struct Profile {
 #[specta::specta]
 pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
+
     let public_key: PublicKey = match id {
         Some(user_id) => PublicKey::parse(&user_id).map_err(|e| e.to_string())?,
-        None => client.signer().await.unwrap().public_key().await.unwrap(),
+        None => {
+            let signer = client.signer().await.map_err(|e| e.to_string())?;
+            signer.public_key().await.map_err(|e| e.to_string())?
+        }
     };
 
     let filter = Filter::new()
@@ -35,10 +39,7 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
         .limit(1);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(3))),
-        )
+        .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {

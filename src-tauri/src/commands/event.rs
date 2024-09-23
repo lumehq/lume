@@ -6,7 +6,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 use crate::common::{create_event_tags, filter_converstation, parse_event, Meta};
-use crate::{Nostr, FETCH_LIMIT};
+use crate::{Nostr, DEFAULT_DIFFICULTY, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct RichEvent {
@@ -442,23 +442,13 @@ pub async fn publish(
         tags.push(tag)
     };
 
-    let signer = client.signer().await.map_err(|err| err.to_string())?;
-    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
-
     // Create unsigned event
-    let unsigned_event = match difficulty {
-        Some(num) => EventBuilder::text_note(content, tags)
-            .pow(num)
-            .to_unsigned_event(public_key),
-        None => EventBuilder::text_note(content, tags).to_unsigned_event(public_key),
-    };
+    let builder =
+        EventBuilder::text_note(content, tags).pow(difficulty.unwrap_or(DEFAULT_DIFFICULTY));
 
     // Publish
-    match signer.sign_event(unsigned_event).await {
-        Ok(event) => match client.send_event(event).await {
-            Ok(event_id) => Ok(event_id.to_bech32().map_err(|err| err.to_string())?),
-            Err(err) => Err(err.to_string()),
-        },
+    match client.send_event_builder(builder).await {
+        Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
         Err(err) => Err(err.to_string()),
     }
 }

@@ -81,6 +81,7 @@ struct Subscription {
 #[derive(Serialize, Deserialize, Type, Clone, TauriEvent)]
 struct NewSettings(Settings);
 
+pub const DEFAULT_DIFFICULTY: u8 = 21;
 pub const FETCH_LIMIT: usize = 20;
 pub const NEWSFEED_NEG_LIMIT: usize = 256;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
