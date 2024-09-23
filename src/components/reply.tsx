@@ -1,3 +1,4 @@
+import { commands } from "@/commands.gen";
 import { cn, replyTime } from "@/commons";
 import { Note } from "@/components/note";
 import { type LumeEvent, LumeWindow } from "@/system";
@@ -5,7 +6,7 @@ import { CaretDown } from "@phosphor-icons/react";
 import { Link, useSearch } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { User } from "./user";
 
 export const ReplyNote = memo(function ReplyNote({
@@ -16,6 +17,7 @@ export const ReplyNote = memo(function ReplyNote({
 	className?: string;
 }) {
 	const search = useSearch({ strict: false });
+	const [isTrusted, setIsTrusted] = useState<boolean>(null);
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -40,6 +42,22 @@ export const ReplyNote = memo(function ReplyNote({
 
 		await menu.popup().catch((e) => console.error(e));
 	}, []);
+
+	useEffect(() => {
+		async function check() {
+			const res = await commands.isTrustedUser(event.pubkey);
+
+			if (res.status === "ok") {
+				setIsTrusted(res.data);
+			}
+		}
+
+		check();
+	}, []);
+
+	if (isTrusted !== null && isTrusted === false) {
+		return <div>Not trusted</div>;
+	}
 
 	return (
 		<Note.Provider event={event}>

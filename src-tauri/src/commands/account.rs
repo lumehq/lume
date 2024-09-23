@@ -258,82 +258,105 @@ pub async fn login(
     // Connect to user's relay (NIP-65)
     init_nip65(client).await;
 
-    // Get user's contact list
-    if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
-        let mut contacts_state = state.contact_list.lock().await;
-        *contacts_state = contacts;
-    };
-
-    // Get user's settings
-    if let Ok(settings) = get_user_settings(client).await {
-        let mut settings_state = state.settings.lock().await;
-        *settings_state = settings;
-    };
-
     tauri::async_runtime::spawn(async move {
         let state = handle.state::<Nostr>();
         let client = &state.client;
-        let contact_list = state.contact_list.lock().await;
 
         let signer = client.signer().await.unwrap();
         let public_key = signer.public_key().await.unwrap();
 
         let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
-
-        if !contact_list.is_empty() {
-            let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
-            let sync = Filter::new()
-                .authors(authors.clone())
-                .kinds(vec![Kind::TextNote, Kind::Repost])
-                .limit(NEWSFEED_NEG_LIMIT);
-
-            if client
-                .reconcile(sync, NegentropyOptions::default())
-                .await
-                .is_ok()
-            {
-                handle.emit("newsfeed_synchronized", ()).unwrap();
-            }
-        };
-
-        drop(contact_list);
-
-        let sync = Filter::new()
-            .pubkey(public_key)
-            .kinds(vec![
-                Kind::TextNote,
-                Kind::Repost,
-                Kind::Reaction,
-                Kind::ZapReceipt,
-            ])
-            .limit(NOTIFICATION_NEG_LIMIT);
+        let notification = Filter::new().pubkey(public_key).kinds(vec![
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Reaction,
+            Kind::ZapReceipt,
+        ]);
 
         // Sync notification with negentropy
-        if client
-            .reconcile(sync, NegentropyOptions::default())
-            .await
-            .is_ok()
-        {
-            handle.emit("notification_synchronized", ()).unwrap();
-        }
-
-        let notification = Filter::new()
-            .pubkey(public_key)
-            .kinds(vec![
-                Kind::TextNote,
-                Kind::Repost,
-                Kind::Reaction,
-                Kind::ZapReceipt,
-            ])
-            .since(Timestamp::now());
+        let _ = client
+            .reconcile(
+                notification.clone().limit(NOTIFICATION_NEG_LIMIT),
+                NegentropyOptions::default(),
+            )
+            .await;
 
         // Subscribing for new notification...
         if let Err(e) = client
-            .subscribe_with_id(notification_id, vec![notification], None)
+            .subscribe_with_id(
+                notification_id,
+                vec![notification.since(Timestamp::now())],
+                None,
+            )
             .await
         {
             println!("Error: {}", e)
         }
+
+        // Get user's settings
+        if let Ok(settings) = get_user_settings(client).await {
+            state.settings.lock().await.clone_from(&settings);
+        };
+
+        // Get user's contact list
+        if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
+            state.contact_list.lock().await.clone_from(&contacts);
+
+            if !contacts.is_empty() {
+                let pubkeys: Vec<PublicKey> = contacts.iter().map(|f| f.public_key).collect();
+
+                let newsfeed = Filter::new()
+                    .authors(pubkeys.clone())
+                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                    .limit(NEWSFEED_NEG_LIMIT);
+
+                if client
+                    .reconcile(newsfeed, NegentropyOptions::default())
+                    .await
+                    .is_ok()
+                {
+                    handle.emit("synchronized", ()).unwrap();
+                }
+
+                let filter = Filter::new()
+                    .authors(pubkeys.clone())
+                    .kind(Kind::ContactList)
+                    .limit(4000);
+
+                if client
+                    .reconcile(filter, NegentropyOptions::default())
+                    .await
+                    .is_ok()
+                {
+                    for pubkey in pubkeys.into_iter() {
+                        let mut list: Vec<PublicKey> = Vec::new();
+                        let f = Filter::new()
+                            .author(pubkey)
+                            .kind(Kind::ContactList)
+                            .limit(1);
+
+                        if let Ok(events) = client.database().query(vec![f]).await {
+                            if let Some(event) = events.into_iter().next() {
+                                for tag in event.tags.into_iter() {
+                                    if let Some(TagStandard::PublicKey {
+                                        public_key,
+                                        uppercase: false,
+                                        ..
+                                    }) = tag.to_standardized()
+                                    {
+                                        list.push(public_key)
+                                    }
+                                }
+
+                                if !list.is_empty() {
+                                    state.circles.lock().await.insert(pubkey, list);
+                                };
+                            }
+                        }
+                    }
+                }
+            };
+        };
     });
 
     Ok(public_key)

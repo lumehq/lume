@@ -256,6 +256,14 @@ async verifyNip05(id: string, nip05: string) : Promise<Result<boolean, string>> 
     else return { status: "error", error: e  as any };
 }
 },
+async isTrustedUser(id: string) : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_trusted_user", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getEventMeta(content: string) : Promise<Result<Meta, null>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_event_meta", { content }) };
@@ -463,7 +471,7 @@ export type NewSettings = Settings
 export type Profile = { name: string; display_name: string; about: string | null; picture: string; banner: string | null; nip05: string | null; lud16: string | null; website: string | null }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
-export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; transparent: boolean }
+export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; trusted_only: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; transparent: boolean }
 export type SubKind = "Subscribe" | "Unsubscribe"
 export type Subscription = { label: string; kind: SubKind; event_id: string | null }
 export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean }

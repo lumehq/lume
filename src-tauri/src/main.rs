@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
+    collections::HashMap,
     fs,
     io::{self, BufRead},
     str::FromStr,
@@ -30,6 +31,7 @@ pub struct Nostr {
     client: Client,
     contact_list: Mutex<Vec<Contact>>,
     settings: Mutex<Settings>,
+    circles: Mutex<HashMap<PublicKey, Vec<PublicKey>>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -38,6 +40,7 @@ pub struct Settings {
     image_resize_service: Option<String>,
     use_relay_hint: bool,
     content_warning: bool,
+    trusted_only: bool,
     display_avatar: bool,
     display_zap_button: bool,
     display_repost_button: bool,
@@ -52,6 +55,7 @@ impl Default for Settings {
             image_resize_service: Some("https://wsrv.nl".to_string()),
             use_relay_hint: true,
             content_warning: true,
+            trusted_only: true,
             display_avatar: true,
             display_zap_button: true,
             display_repost_button: true,
@@ -121,6 +125,7 @@ fn main() {
             get_settings,
             set_settings,
             verify_nip05,
+            is_trusted_user,
             get_event_meta,
             get_event,
             get_event_from,
@@ -265,6 +270,7 @@ fn main() {
                 client,
                 contact_list: Mutex::new(vec![]),
                 settings: Mutex::new(Settings::default()),
+                circles: Mutex::new(HashMap::new()),
             });
 
             Subscription::listen_any(app, move |event| {

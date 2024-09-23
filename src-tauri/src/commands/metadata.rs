@@ -483,3 +483,13 @@ pub async fn verify_nip05(id: String, nip05: &str) -> Result<bool, String> {
         Err(e) => Err(e.to_string()),
     }
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn is_trusted_user(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let circles = &state.circles.lock().await;
+    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
+    let trusted = circles.values().any(|v| v.contains(&public_key));
+
+    Ok(trusted)
+}

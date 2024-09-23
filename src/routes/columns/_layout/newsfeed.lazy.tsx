@@ -82,7 +82,7 @@ export function Screen() {
 	);
 
 	useEffect(() => {
-		const unlisten = listen("newsfeed_synchronized", async () => {
+		const unlisten = listen("synchronized", async () => {
 			await queryClient.invalidateQueries({ queryKey: [label, account] });
 		});
 
