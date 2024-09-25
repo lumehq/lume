@@ -256,7 +256,7 @@ pub async fn login(
     };
 
     // Connect to user's relay (NIP-65)
-    init_nip65(client).await;
+    init_nip65(client, &public_key).await;
 
     tauri::async_runtime::spawn(async move {
         let state = handle.state::<Nostr>();

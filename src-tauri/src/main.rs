@@ -7,6 +7,7 @@
 use border::WebviewWindowExt as BorderWebviewWindowExt;
 use commands::{account::*, event::*, metadata::*, relay::*, window::*};
 use common::parse_event;
+use nostr_relay_builder::prelude::*;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -175,6 +176,19 @@ fn main() {
             let handle_clone_child = handle_clone.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
+            let config_dir = handle
+                .path()
+                .app_config_dir()
+                .expect("Error: app config directory not found.");
+
+            let data_dir = handle
+                .path()
+                .app_data_dir()
+                .expect("Error: app data directory not found.");
+
+            let _ = fs::create_dir_all(&config_dir);
+            let _ = fs::create_dir_all(&data_dir);
+
             // Set custom decoration for Windows
             #[cfg(target_os = "windows")]
             main_window.create_overlay_titlebar().unwrap();
@@ -198,15 +212,8 @@ fn main() {
             });
 
             let client = tauri::async_runtime::block_on(async move {
-                // Create data folder if not exist
-                let dir = handle
-                    .path()
-                    .app_config_dir()
-                    .expect("Error: app config directory not found.");
-                let _ = fs::create_dir_all(&dir);
-
                 // Setup database
-                let database = NostrLMDB::open(dir.join("nostr-lmdb"))
+                let database = NostrLMDB::open(config_dir.join("nostr-lmdb"))
                     .expect("Error: cannot create database.");
 
                 // Config
@@ -286,27 +293,39 @@ fn main() {
                         SubKind::Subscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
 
-                            let filter = if let Some(id) = payload.event_id {
-                                let event_id = EventId::from_str(&id).unwrap();
+                            match payload.event_id {
+                                Some(id) => {
+                                    let event_id = EventId::from_str(&id).unwrap();
+                                    let filter =
+                                        Filter::new().event(event_id).since(Timestamp::now());
 
-                                Filter::new().event(event_id).since(Timestamp::now())
-                            } else {
-                                let contact_list = state.contact_list.lock().await;
-                                let authors: Vec<PublicKey> =
-                                    contact_list.iter().map(|f| f.public_key).collect();
+                                    if let Err(e) = client
+                                        .subscribe_with_id(subscription_id, vec![filter], None)
+                                        .await
+                                    {
+                                        println!("Subscription error: {}", e)
+                                    }
+                                }
+                                None => {
+                                    let contact_list = state.contact_list.lock().await;
+                                    if !contact_list.is_empty() {
+                                        let authors: Vec<PublicKey> =
+                                            contact_list.iter().map(|f| f.public_key).collect();
 
-                                Filter::new()
-                                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                                    .authors(authors)
-                                    .since(Timestamp::now())
+                                        let filter = Filter::new()
+                                            .kinds(vec![Kind::TextNote, Kind::Repost])
+                                            .authors(authors)
+                                            .since(Timestamp::now());
+
+                                        if let Err(e) = client
+                                            .subscribe_with_id(subscription_id, vec![filter], None)
+                                            .await
+                                        {
+                                            println!("Subscription error: {}", e)
+                                        }
+                                    }
+                                }
                             };
-
-                            if let Err(e) = client
-                                .subscribe_with_id(subscription_id, vec![filter], None)
-                                .await
-                            {
-                                println!("Subscription error: {}", e)
-                            }
                         }
                         SubKind::Unsubscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
@@ -316,6 +335,22 @@ fn main() {
                 });
             });
 
+            // Run local relay thread
+            tauri::async_runtime::spawn(async move {
+                let database = NostrLMDB::open(data_dir.join("local-relay"))
+                    .expect("Error: cannot create database.");
+                let builder = RelayBuilder::default().database(database).port(1984);
+
+                if let Ok(relay) = LocalRelay::run(builder).await {
+                    println!("Running local relay: {}", relay.url())
+                }
+
+                loop {
+                    tokio::time::sleep(Duration::from_secs(60)).await;
+                }
+            });
+
+            // Run notification thread
             tauri::async_runtime::spawn(async move {
                 let state = handle_clone.state::<Nostr>();
                 let client = &state.client;

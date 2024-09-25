@@ -29,11 +29,12 @@ tauri-plugin-shell = "2.0.0-rc"
 tauri-plugin-updater = "2.0.0-rc"
 tauri-plugin-upload = "2.0.0-rc"
 tauri-plugin-store = "2.0.0-rc"
-tauri-plugin-decorum = { git = "https://github.com/reyamir/tauri-plugin-decorum", branch = "fix/tauri-latest" }
+tauri-plugin-decorum = { git = "https://github.com/clearlysid/tauri-plugin-decorum.git" }
 tauri-plugin-prevent-default = "0.4"
 tauri-specta = { version = "2.0.0-rc.15", features = ["derive", "typescript"] }
 
 nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = ["lmdb"] }
+nostr-relay-builder = { git = "https://github.com/rust-nostr/nostr" }
 
 specta = "^2.0.0-rc.20"
 specta-typescript = "0.0.7"

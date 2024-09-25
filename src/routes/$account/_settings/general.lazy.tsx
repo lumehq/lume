@@ -128,11 +128,12 @@ function Screen() {
 					</div>
 				</div>
 			</div>
-			<div className="sticky bottom-0 left-0 w-full h-11 flex items-center justify-end px-3 bg-white/20 dark:bg-black-20 backdrop-blur-md border-t border-black/5 dark:border-white/5">
+			<div className="sticky bottom-0 left-0 w-full h-16 flex items-center justify-end px-3">
+				<div className="absolute left-0 bottom-0 w-full h-11 gradient-mask-t-20 bg-white dark:bg-black" />
 				<button
 					type="button"
 					onClick={() => updateSettings()}
-					className="inline-flex items-center justify-center w-20 rounded-md shadow h-7 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium"
+					className="relative z-10 inline-flex items-center justify-center w-20 rounded-md shadow h-8 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium"
 				>
 					{isPending ? <Spinner className="size-4" /> : "Update"}
 				</button>

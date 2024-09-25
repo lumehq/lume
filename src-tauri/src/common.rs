@@ -252,26 +252,12 @@ pub fn create_event_tags(content: &str) -> Vec<Tag> {
     tags
 }
 
-pub async fn init_nip65(client: &Client) {
-    let signer = match client.signer().await {
-        Ok(signer) => signer,
-        Err(e) => {
-            eprintln!("Failed to get signer: {:?}", e);
-            return;
-        }
-    };
-    let public_key = match signer.public_key().await {
-        Ok(public_key) => public_key,
-        Err(e) => {
-            eprintln!("Failed to get public key: {:?}", e);
-            return;
-        }
-    };
+pub async fn init_nip65(client: &Client, public_key: &str) {
+    let author = PublicKey::from_str(public_key).unwrap();
+    let filter = Filter::new().author(author).kind(Kind::RelayList).limit(1);
 
-    let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::RelayList)
-        .limit(1);
+    // client.add_relay("ws://127.0.0.1:1984").await.unwrap();
+    // client.connect_relay("ws://127.0.0.1:1984").await.unwrap();
 
     if let Ok(events) = client
         .get_events_of(
