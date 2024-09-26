@@ -20,6 +20,14 @@ pub struct Profile {
     website: Option<String>,
 }
 
+#[derive(Clone, Serialize, Deserialize, Type)]
+pub struct Mention {
+    pubkey: String,
+    avatar: String,
+    display_name: String,
+    name: String,
+}
+
 #[tauri::command]
 #[specta::specta]
 pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<String, String> {
@@ -193,6 +201,36 @@ pub async fn toggle_contact(
         }
         Err(err) => Err(err.to_string()),
     }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_mention_list(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
+    let client = &state.client;
+    let filter = Filter::new().kind(Kind::Metadata);
+
+    let events = client
+        .database()
+        .query(vec![filter])
+        .await
+        .map_err(|e| e.to_string())?;
+
+    let data: Vec<Mention> = events
+        .iter()
+        .map(|event| {
+            let pubkey = event.pubkey.to_bech32().unwrap();
+            let metadata = Metadata::from_json(&event.content).unwrap_or(Metadata::new());
+
+            Mention {
+                pubkey,
+                avatar: metadata.picture.unwrap_or_else(|| "".to_string()),
+                display_name: metadata.display_name.unwrap_or_else(|| "".to_string()),
+                name: metadata.name.unwrap_or_else(|| "".to_string()),
+            }
+        })
+        .collect();
+
+    Ok(data)
 }
 
 #[tauri::command]

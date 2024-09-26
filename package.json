@@ -52,8 +52,7 @@
 		"react-hook-form": "^7.53.0",
 		"react-i18next": "^15.0.2",
 		"react-string-replace": "^1.1.1",
-		"slate": "^0.103.0",
-		"slate-react": "^0.107.1",
+		"rich-textarea": "^0.26.3",
 		"use-debounce": "^10.0.3",
 		"virtua": "^0.33.7"
 	},

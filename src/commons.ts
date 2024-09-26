@@ -15,8 +15,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { decode } from "light-bolt11-decoder";
-import { type BaseEditor, Transforms } from "slate";
-import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import type { RichEvent, Settings } from "./commands.gen";
 import { LumeEvent } from "./system";
@@ -57,51 +55,6 @@ export const isImageUrl = (url: string) => {
 	} catch {
 		return false;
 	}
-};
-
-export const insertImage = (editor: ReactEditor | BaseEditor, url: string) => {
-	const text = { text: "" };
-	const image = [
-		{
-			type: "image",
-			url,
-			children: [text],
-		},
-	];
-	const extraText = [
-		{
-			type: "paragraph",
-			children: [text],
-		},
-	];
-
-	// @ts-ignore, idk
-	ReactEditor.focus(editor);
-	Transforms.insertNodes(editor, image);
-	Transforms.insertNodes(editor, extraText);
-};
-
-export const insertNostrEvent = (
-	editor: ReactEditor | BaseEditor,
-	eventId: string,
-) => {
-	const text = { text: "" };
-	const event = [
-		{
-			type: "event",
-			eventId: `nostr:${eventId}`,
-			children: [text],
-		},
-	];
-	const extraText = [
-		{
-			type: "paragraph",
-			children: [text],
-		},
-	];
-
-	Transforms.insertNodes(editor, event);
-	Transforms.insertNodes(editor, extraText);
 };
 
 export function formatCreatedAt(time: number, message = false) {
@@ -257,18 +210,16 @@ export async function upload(filePath?: string) {
 	];
 
 	const selected =
-		filePath ||
-		(
-			await open({
-				multiple: false,
-				filters: [
-					{
-						name: "Media",
-						extensions: allowExts,
-					},
-				],
-			})
-		).path;
+		filePath ??
+		(await open({
+			multiple: false,
+			filters: [
+				{
+					name: "Media",
+					extensions: allowExts,
+				},
+			],
+		}));
 
 	// User cancelled action
 	if (!selected) return null;
@@ -331,6 +282,7 @@ export const appSettings = new Store<Settings>({
 	image_resize_service: "https://wsrv.nl",
 	use_relay_hint: true,
 	content_warning: true,
+	trusted_only: true,
 	display_avatar: true,
 	display_zap_button: true,
 	display_repost_button: true,

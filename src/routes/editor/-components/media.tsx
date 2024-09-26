@@ -1,20 +1,31 @@
-import { insertImage, isImagePath, upload } from "@/commons";
+import { isImagePath, upload } from "@/commons";
 import { Spinner } from "@/components";
 import { Images } from "@phosphor-icons/react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
-import { useEffect, useTransition } from "react";
-import { useSlateStatic } from "slate-react";
+import {
+	type Dispatch,
+	type SetStateAction,
+	useEffect,
+	useTransition,
+} from "react";
 
-export function MediaButton() {
-	const editor = useSlateStatic();
+export function MediaButton({
+	setText,
+	setAttaches,
+}: {
+	setText: Dispatch<SetStateAction<string>>;
+	setAttaches: Dispatch<SetStateAction<string[]>>;
+}) {
 	const [isPending, startTransition] = useTransition();
 
 	const uploadMedia = () => {
 		startTransition(async () => {
 			try {
 				const image = await upload();
-				return insertImage(editor, image);
+				setText((prev) => `${prev}\n${image}`);
+				setAttaches((prev) => [...prev, image]);
+				return;
 			} catch (e) {
 				await message(String(e), { title: "Upload", kind: "error" });
 				return;
@@ -32,7 +43,8 @@ export function MediaButton() {
 				for (const item of items) {
 					if (isImagePath(item)) {
 						const image = await upload(item);
-						insertImage(editor, image);
+						setText((prev) => `${prev}\n${image}`);
+						setAttaches((prev) => [...prev, image]);
 					}
 				}
 

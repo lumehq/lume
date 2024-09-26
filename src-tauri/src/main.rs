@@ -115,6 +115,7 @@ fn main() {
             is_contact_list_empty,
             check_contact,
             toggle_contact,
+            get_mention_list,
             get_lume_store,
             set_lume_store,
             set_wallet,
