@@ -337,19 +337,19 @@ fn main() {
             });
 
             // Run local relay thread
-            tauri::async_runtime::spawn(async move {
-                let database = NostrLMDB::open(data_dir.join("local-relay"))
-                    .expect("Error: cannot create database.");
-                let builder = RelayBuilder::default().database(database).port(1984);
-
-                if let Ok(relay) = LocalRelay::run(builder).await {
-                    println!("Running local relay: {}", relay.url())
-                }
-
-                loop {
-                    tokio::time::sleep(Duration::from_secs(60)).await;
-                }
-            });
+            //tauri::async_runtime::spawn(async move {
+            //    let database = NostrLMDB::open(data_dir.join("local-relay"))
+            //        .expect("Error: cannot create database.");
+            //    let builder = RelayBuilder::default().database(database).port(1984);
+            //
+            //    if let Ok(relay) = LocalRelay::run(builder).await {
+            //        println!("Running local relay: {}", relay.url())
+            //    }
+            //
+            //    loop {
+            //        tokio::time::sleep(Duration::from_secs(60)).await;
+            //    }
+            //});
 
             // Run notification thread
             tauri::async_runtime::spawn(async move {

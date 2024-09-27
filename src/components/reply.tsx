@@ -1,9 +1,10 @@
 import { commands } from "@/commands.gen";
-import { cn, replyTime } from "@/commons";
+import { appSettings, cn, replyTime } from "@/commons";
 import { Note } from "@/components/note";
 import { type LumeEvent, LumeWindow } from "@/system";
 import { CaretDown } from "@phosphor-icons/react";
 import { Link, useSearch } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { memo, useCallback, useEffect, useState } from "react";
@@ -16,6 +17,7 @@ export const ReplyNote = memo(function ReplyNote({
 	event: LumeEvent;
 	className?: string;
 }) {
+	const trustedOnly = useStore(appSettings, (state) => state.trusted_only);
 	const search = useSearch({ strict: false });
 	const [isTrusted, setIsTrusted] = useState<boolean>(null);
 
@@ -52,11 +54,13 @@ export const ReplyNote = memo(function ReplyNote({
 			}
 		}
 
-		check();
+		if (trustedOnly) {
+			check();
+		}
 	}, []);
 
 	if (isTrusted !== null && isTrusted === false) {
-		return <div>Not trusted</div>;
+		return null;
 	}
 
 	return (

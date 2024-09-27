@@ -61,6 +61,11 @@ function Screen() {
 							description="Shows a warning for notes that have a content warning."
 							label="content_warning"
 						/>
+						<Setting
+							name="Trusted Only"
+							description="Only shows note's replies from your inner circle."
+							label="trusted_only"
+						/>
 					</div>
 				</div>
 				<div className="flex flex-col gap-2">
@@ -129,7 +134,7 @@ function Screen() {
 				</div>
 			</div>
 			<div className="sticky bottom-0 left-0 w-full h-16 flex items-center justify-end px-3">
-				<div className="absolute left-0 bottom-0 w-full h-11 gradient-mask-t-20 bg-white dark:bg-black" />
+				<div className="absolute left-0 bottom-0 w-full h-11 gradient-mask-t-0 bg-neutral-100 dark:bg-neutral-900" />
 				<button
 					type="button"
 					onClick={() => updateSettings()}

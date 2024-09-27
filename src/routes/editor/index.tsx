@@ -45,15 +45,9 @@ const renderer = createRegexRenderer([
 	[
 		/(?:^|\W)nostr:(\w+)(?!\w)/g,
 		({ children, key, value }) => (
-			<a
-				key={key}
-				href={value}
-				target="_blank"
-				rel="noreferrer"
-				className="text-blue-500"
-			>
+			<span key={key} className="text-blue-500">
 				{children}
-			</a>
+			</span>
 		),
 	],
 ]);
@@ -320,7 +314,7 @@ function Menu({
 				top: top,
 				left: left,
 			}}
-			className="fixed w-[200px] text-sm bg-white dark:bg-black shadow-lg shadow-neutral-500/20 rounded-lg overflow-hidden"
+			className="fixed w-[200px] text-sm bg-white dark:bg-black shadow-lg shadow-neutral-500/20 dark:shadow-none dark:ring-1 dark:ring-neutral-700 rounded-lg overflow-hidden"
 		>
 			{users.map((u, i) => (
 				<div
