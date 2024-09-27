@@ -7,7 +7,18 @@ import { Link, useSearch } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-import { memo, useCallback, useEffect, useState } from "react";
+import { nip19 } from "nostr-tools";
+import {
+	type ReactNode,
+	memo,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
+import reactStringReplace from "react-string-replace";
+import { Hashtag } from "./note/mentions/hashtag";
+import { MentionUser } from "./note/mentions/user";
 import { User } from "./user";
 
 export const ReplyNote = memo(function ReplyNote({
@@ -19,6 +30,7 @@ export const ReplyNote = memo(function ReplyNote({
 }) {
 	const trustedOnly = useStore(appSettings, (state) => state.trusted_only);
 	const search = useSearch({ strict: false });
+
 	const [isTrusted, setIsTrusted] = useState<boolean>(null);
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
@@ -75,12 +87,13 @@ export const ReplyNote = memo(function ReplyNote({
 					<div className="flex-1 flex flex-col gap-1">
 						<div>
 							<User.Name
-								className="shrink-0 inline font-medium text-blue-500"
+								className="mr-2 shrink-0 inline font-medium text-blue-500"
 								suffix=":"
 							/>
-							<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
-								{event.content}
-							</div>
+							<Content
+								text={event.content}
+								className="inline select-text text-balance content-break overflow-hidden"
+							/>
 						</div>
 						<div className="flex-1 flex items-center justify-between">
 							<span className="text-sm text-neutral-500">
@@ -153,14 +166,15 @@ function ChildReply({ event }: { event: LumeEvent }) {
 			<User.Provider pubkey={event.pubkey}>
 				<div className="group flex flex-col gap-1">
 					<div>
-						<User.Root className="inline">
+						<User.Root className="inline mr-2">
 							<button type="button" onClick={(e) => showContextMenu(e)}>
 								<User.Name className="font-medium text-blue-500" suffix=":" />
 							</button>
 						</User.Root>
-						<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
-							{event.content}
-						</div>
+						<Content
+							text={event.content}
+							className="inline select-text text-balance content-break overflow-hidden"
+						/>
 					</div>
 					<div className="flex-1 flex items-center justify-between">
 						<span className="text-sm text-neutral-500">
@@ -199,4 +213,65 @@ function ChildReply({ event }: { event: LumeEvent }) {
 			</User.Provider>
 		</Note.Provider>
 	);
+}
+
+function Content({ text, className }: { text: string; className?: string }) {
+	const content = useMemo(() => {
+		let replacedText: ReactNode[] | string = text.trim();
+
+		const nostr = replacedText
+			.split(/\s+/)
+			.filter((w) => w.startsWith("nostr:"));
+
+		replacedText = reactStringReplace(text, /(https?:\/\/\S+)/g, (match, i) => (
+			<a
+				key={match + i}
+				href={match}
+				target="_blank"
+				rel="noreferrer"
+				className="text-blue-600 dark:text-blue-400 !underline"
+			>
+				{match}
+			</a>
+		));
+
+		replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
+			<Hashtag key={match + i} tag={match} />
+		));
+
+		for (const word of nostr) {
+			const bech32 = word.replace("nostr:", "");
+			const data = nip19.decode(bech32);
+
+			switch (data.type) {
+				case "npub":
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<MentionUser key={match + i} pubkey={data.data} />
+					));
+					break;
+				case "nprofile":
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<MentionUser key={match + i} pubkey={data.data.pubkey} />
+					));
+					break;
+				default:
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<a
+							key={match + i}
+							href={`https://njump.me/${bech32}`}
+							target="_blank"
+							rel="noreferrer"
+							className="text-blue-600 dark:text-blue-400 !underline"
+						>
+							{match}
+						</a>
+					));
+					break;
+			}
+		}
+
+		return replacedText;
+	}, [text]);
+
+	return <div className={className}>{content}</div>;
 }
