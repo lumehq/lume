@@ -262,7 +262,7 @@ pub async fn init_nip65(client: &Client, public_key: &str) {
     if let Ok(events) = client
         .get_events_of(
             vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
+            EventSource::relays(Some(Duration::from_secs(5))),
         )
         .await
     {
@@ -284,8 +284,6 @@ pub async fn init_nip65(client: &Client, public_key: &str) {
                 }
             }
         }
-    } else {
-        eprintln!("Failed to get events for RelayList.");
     }
 }
 

@@ -224,17 +224,11 @@ pub async fn get_events_by(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_events_from_contacts(
+pub async fn get_local_events(
     until: Option<&str>,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let contact_list = state.contact_list.lock().await;
-    let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
-
-    if authors.is_empty() {
-        return Err("Contact List is empty.".into());
-    }
 
     let as_of = match until {
         Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
@@ -244,8 +238,7 @@ pub async fn get_events_from_contacts(
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
         .limit(FETCH_LIMIT)
-        .until(as_of)
-        .authors(authors);
+        .until(as_of);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => {

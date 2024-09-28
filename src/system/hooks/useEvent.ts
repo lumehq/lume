@@ -54,7 +54,7 @@ export function useEvent(id: string) {
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: false,
+		retry: 2,
 	});
 
 	return { isLoading, isError, error, data };

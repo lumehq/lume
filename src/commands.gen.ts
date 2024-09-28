@@ -96,6 +96,9 @@ async resetPassword(key: string, password: string) : Promise<Result<null, string
     else return { status: "error", error: e  as any };
 }
 },
+async isAccountSync(id: string) : Promise<boolean> {
+    return await TAURI_INVOKE("is_account_sync", { id });
+},
 async login(account: string, password: string) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("login", { account, password }) };
@@ -131,14 +134,6 @@ async getContactList() : Promise<Result<string[], string>> {
 async setContactList(publicKeys: string[]) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_contact_list", { publicKeys }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async isContactListEmpty() : Promise<Result<boolean, null>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("is_contact_list_empty") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -320,9 +315,9 @@ async getEventsBy(publicKey: string, limit: number) : Promise<Result<RichEvent[]
     else return { status: "error", error: e  as any };
 }
 },
-async getEventsFromContacts(until: string | null) : Promise<Result<RichEvent[], string>> {
+async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_events_from_contacts", { until }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

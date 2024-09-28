@@ -38,7 +38,7 @@ export function useProfile(pubkey: string, embed?: string) {
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: false,
+		retry: 2,
 	});
 
 	return { isLoading, isError, profile };

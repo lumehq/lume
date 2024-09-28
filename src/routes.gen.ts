@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoadingImport } from './routes/loading'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditorIndexImport } from './routes/editor/index'
@@ -94,6 +95,11 @@ const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
+
+const LoadingRoute = LoadingImport.update({
+  path: '/loading',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   path: '/bootstrap-relays',
@@ -336,6 +342,13 @@ declare module '@tanstack/react-router' {
       path: '/bootstrap-relays'
       fullPath: '/bootstrap-relays'
       preLoaderRoute: typeof BootstrapRelaysImport
+      parentRoute: typeof rootRoute
+    }
+    '/loading': {
+      id: '/loading'
+      path: '/loading'
+      fullPath: '/loading'
+      preLoaderRoute: typeof LoadingImport
       parentRoute: typeof rootRoute
     }
     '/new': {
@@ -713,6 +726,7 @@ const ColumnsRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bootstrap-relays': typeof BootstrapRelaysRoute
+  '/loading': typeof LoadingRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
   '/$account': typeof AccountSettingsLazyRouteWithChildren
@@ -751,6 +765,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bootstrap-relays': typeof BootstrapRelaysRoute
+  '/loading': typeof LoadingRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
   '/$account': typeof AccountSettingsLazyRouteWithChildren
@@ -790,6 +805,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/bootstrap-relays': typeof BootstrapRelaysRoute
+  '/loading': typeof LoadingRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
   '/$account': typeof AccountRouteWithChildren
@@ -833,6 +849,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bootstrap-relays'
+    | '/loading'
     | '/new'
     | '/reset'
     | '/$account'
@@ -870,6 +887,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/bootstrap-relays'
+    | '/loading'
     | '/new'
     | '/reset'
     | '/$account'
@@ -907,6 +925,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/bootstrap-relays'
+    | '/loading'
     | '/new'
     | '/reset'
     | '/$account'
@@ -949,6 +968,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BootstrapRelaysRoute: typeof BootstrapRelaysRoute
+  LoadingRoute: typeof LoadingRoute
   NewLazyRoute: typeof NewLazyRoute
   ResetLazyRoute: typeof ResetLazyRoute
   AccountRoute: typeof AccountRouteWithChildren
@@ -963,6 +983,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BootstrapRelaysRoute: BootstrapRelaysRoute,
+  LoadingRoute: LoadingRoute,
   NewLazyRoute: NewLazyRoute,
   ResetLazyRoute: ResetLazyRoute,
   AccountRoute: AccountRouteWithChildren,
@@ -988,6 +1009,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/bootstrap-relays",
+        "/loading",
         "/new",
         "/reset",
         "/$account",
@@ -1004,6 +1026,9 @@ export const routeTree = rootRoute
     },
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
+    },
+    "/loading": {
+      "filePath": "loading.tsx"
     },
     "/new": {
       "filePath": "new.lazy.tsx"

@@ -64,11 +64,21 @@ function Screen() {
 					appSettings.setState(() => settings.data);
 				}
 
-				navigate({
-					to: "/$account/home",
-					params: { account: res.data },
-					replace: true,
-				});
+				const status = await commands.isAccountSync(res.data);
+
+				if (status) {
+					navigate({
+						to: "/$account/home",
+						params: { account: res.data },
+						replace: true,
+					});
+				} else {
+					navigate({
+						to: "/loading",
+						search: { account: res.data },
+						replace: true,
+					});
+				}
 			} else {
 				await message(res.error, { title: "Login", kind: "error" });
 				return;

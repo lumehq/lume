@@ -47,7 +47,7 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
         .limit(1);
 
     match client
-        .get_events_of(vec![filter], EventSource::Database)
+        .get_events_of(vec![filter.clone()], EventSource::Database)
         .await
     {
         Ok(events) => {
@@ -58,7 +58,26 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
                     Err("Parse metadata failed".into())
                 }
             } else {
-                Ok(Metadata::new().as_json())
+                match client
+                    .get_events_of(
+                        vec![filter],
+                        EventSource::relays(Some(Duration::from_secs(5))),
+                    )
+                    .await
+                {
+                    Ok(events) => {
+                        if let Some(event) = events.first() {
+                            if let Ok(metadata) = Metadata::from_json(&event.content) {
+                                Ok(metadata.as_json())
+                            } else {
+                                Err("Parse metadata failed".into())
+                            }
+                        } else {
+                            Ok(Metadata::new().as_json())
+                        }
+                    }
+                    Err(e) => Err(e.to_string()),
+                }
             }
         }
         Err(e) => Err(e.to_string()),
@@ -80,9 +99,6 @@ pub async fn set_contact_list(
         })
         .collect();
 
-    // Update local state
-    state.contact_list.lock().await.clone_from(&contact_list);
-
     match client.set_contact_list(contact_list).await {
         Ok(_) => Ok(true),
         Err(err) => Err(err.to_string()),
@@ -94,18 +110,13 @@ pub async fn set_contact_list(
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
     let client = &state.client;
 
-    match client.get_contact_list(Some(Duration::from_secs(10))).await {
+    match client.get_contact_list(Some(Duration::from_secs(5))).await {
         Ok(contact_list) => {
-            if !contact_list.is_empty() {
-                let list = contact_list
-                    .into_iter()
-                    .map(|f| f.public_key.to_hex())
-                    .collect();
-
-                Ok(list)
-            } else {
-                Err("Empty.".into())
-            }
+            let list = contact_list
+                .into_iter()
+                .map(|f| f.public_key.to_hex())
+                .collect();
+            Ok(list)
         }
         Err(err) => Err(err.to_string()),
     }
@@ -146,14 +157,12 @@ pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> {
-    Ok(state.contact_list.lock().await.is_empty())
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let contact_list = state.contact_list.lock().await;
+    let client = &state.client;
+    let contact_list = client
+        .get_contact_list(Some(Duration::from_secs(5)))
+        .await
+        .map_err(|e| e.to_string())?;
 
     match PublicKey::parse(&hex) {
         Ok(public_key) => match contact_list.iter().position(|x| x.public_key == public_key) {
@@ -189,9 +198,6 @@ pub async fn toggle_contact(
                     contact_list.push(new_contact);
                 }
             }
-
-            // Update local state
-            state.contact_list.lock().await.clone_from(&contact_list);
 
             // Publish
             match client.set_contact_list(contact_list).await {

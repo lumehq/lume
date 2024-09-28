@@ -11,7 +11,7 @@ export const Route = createLazyFileRoute("/columns/_layout/trending")({
 	component: Screen,
 });
 
-export function Screen() {
+function Screen() {
 	const { isLoading, isError, data } = useQuery({
 		queryKey: ["trending-notes"],
 		queryFn: async ({ signal }) => {
