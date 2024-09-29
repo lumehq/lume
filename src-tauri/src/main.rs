@@ -55,7 +55,7 @@ impl Default for Settings {
             image_resize_service: Some("https://wsrv.nl".to_string()),
             use_relay_hint: true,
             content_warning: true,
-            trusted_only: true,
+            trusted_only: false,
             display_avatar: true,
             display_zap_button: true,
             display_repost_button: true,
@@ -82,7 +82,7 @@ struct Subscription {
 struct NewSettings(Settings);
 
 pub const DEFAULT_DIFFICULTY: u8 = 21;
-pub const FETCH_LIMIT: usize = 20;
+pub const FETCH_LIMIT: usize = 100;
 pub const NEWSFEED_NEG_LIMIT: usize = 512;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
@@ -460,6 +460,39 @@ fn main() {
             });
 
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::Focused(focused) = event {
+                if !focused {
+                    let handle = window.app_handle().to_owned();
+
+                    tauri::async_runtime::spawn(async move {
+                        let state = handle.state::<Nostr>();
+                        let client = &state.client;
+
+                        if client.signer().await.is_ok() {
+                            if let Ok(contact_list) =
+                                client.get_contact_list(Some(Duration::from_secs(5))).await
+                            {
+                                let authors: Vec<PublicKey> =
+                                    contact_list.iter().map(|f| f.public_key).collect();
+                                let newsfeed = Filter::new()
+                                    .authors(authors)
+                                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                                    .limit(NEWSFEED_NEG_LIMIT);
+
+                                if client
+                                    .reconcile(newsfeed, NegentropyOptions::default())
+                                    .await
+                                    .is_ok()
+                                {
+                                    handle.emit("synchronized", ()).unwrap();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         })
         .plugin(prevent_default())
         .plugin(tauri_plugin_decorum::init())

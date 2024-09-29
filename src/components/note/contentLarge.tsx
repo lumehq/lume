@@ -6,7 +6,6 @@ import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
 import { MentionUser } from "./mentions/user";
 import { ImagePreview } from "./preview/image";
-import { VideoPreview } from "./preview/video";
 import { useNoteContext } from "./provider";
 
 export function NoteContentLarge({
@@ -18,7 +17,7 @@ export function NoteContentLarge({
 	const content = useMemo(() => {
 		try {
 			// Get parsed meta
-			const { images, videos, hashtags, events, mentions } = event.meta;
+			const { images, hashtags, events, mentions } = event.meta;
 
 			// Define rich content
 			let richContent: ReactNode[] | string = event.content;
@@ -48,12 +47,6 @@ export function NoteContentLarge({
 				));
 			}
 
-			for (const video of videos) {
-				richContent = reactStringReplace(richContent, video, (match, i) => (
-					<VideoPreview key={match + i} url={match} />
-				));
-			}
-
 			richContent = reactStringReplace(
 				richContent,
 				/(https?:\/\/\S+)/gi,
@@ -75,8 +68,7 @@ export function NoteContentLarge({
 			));
 
 			return richContent;
-		} catch (e) {
-			console.log("[parser]: ", e);
+		} catch {
 			return event.content;
 		}
 	}, [event.content]);

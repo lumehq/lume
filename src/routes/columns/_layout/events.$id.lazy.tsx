@@ -224,7 +224,7 @@ function ReplyList() {
 			{isLoading ? (
 				<div className="flex items-center justify-center w-full mb-3 h-12 bg-black/5 dark:bg-white/5 rounded-xl">
 					<div className="flex items-center justify-center gap-2">
-						<Spinner className="size-5" />
+						<Spinner className="size-4" />
 						<span className="text-sm font-medium">Getting replies...</span>
 					</div>
 				</div>

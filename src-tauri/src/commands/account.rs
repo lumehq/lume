@@ -369,7 +369,11 @@ pub async fn login(
             }
 
             for author in authors.into_iter() {
-                let filter = Filter::new().author(author).kind(Kind::ContactList);
+                let filter = Filter::new()
+                    .author(author)
+                    .kind(Kind::ContactList)
+                    .limit(1);
+
                 let mut circles = state.circles.lock().await;
                 let mut list: Vec<PublicKey> = Vec::new();
 

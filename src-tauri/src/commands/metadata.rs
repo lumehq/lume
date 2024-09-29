@@ -46,10 +46,7 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
         .kind(Kind::Metadata)
         .limit(1);
 
-    match client
-        .get_events_of(vec![filter.clone()], EventSource::Database)
-        .await
-    {
+    match client.database().query(vec![filter.clone()]).await {
         Ok(events) => {
             if let Some(event) = events.first() {
                 if let Ok(metadata) = Metadata::from_json(&event.content) {

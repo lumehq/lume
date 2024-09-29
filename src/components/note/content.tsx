@@ -7,7 +7,6 @@ import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
 import { MentionUser } from "./mentions/user";
 import { Images } from "./preview/images";
-import { Videos } from "./preview/videos";
 import { useNoteContext } from "./provider";
 
 export function NoteContent({
@@ -102,14 +101,9 @@ export function NoteContent({
 				{content}
 			</div>
 			{visible ? (
-				<>
-					{event.meta?.images.length ? (
-						<Images urls={event.meta.images} />
-					) : null}
-					{event.meta?.videos.length ? (
-						<Videos urls={event.meta.videos} />
-					) : null}
-				</>
+				event.meta?.images.length ? (
+					<Images urls={event.meta.images} />
+				) : null
 			) : null}
 		</div>
 	);

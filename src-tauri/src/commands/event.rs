@@ -28,13 +28,7 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
     let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
     let filter = Filter::new().id(event_id);
 
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
+    match client.database().query(vec![filter.clone()]).await {
         Ok(events) => {
             if let Some(event) = events.first() {
                 let raw = event.as_json();
@@ -46,7 +40,29 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
                 Ok(RichEvent { raw, parsed })
             } else {
-                Err("Cannot found this event with current relay list".into())
+                match client
+                    .get_events_of(
+                        vec![filter],
+                        EventSource::relays(Some(Duration::from_secs(5))),
+                    )
+                    .await
+                {
+                    Ok(events) => {
+                        if let Some(event) = events.first() {
+                            let raw = event.as_json();
+                            let parsed = if event.kind == Kind::TextNote {
+                                Some(parse_event(&event.content).await)
+                            } else {
+                                None
+                            };
+
+                            Ok(RichEvent { raw, parsed })
+                        } else {
+                            Err("Cannot found this event with current relay list".into())
+                        }
+                    }
+                    Err(err) => Err(err.to_string()),
+                }
             }
         }
         Err(err) => Err(err.to_string()),
@@ -191,15 +207,12 @@ pub async fn get_events_by(
     let author = PublicKey::parse(&public_key).map_err(|err| err.to_string())?;
 
     let filter = Filter::new()
-        .kinds(vec![Kind::TextNote])
+        .kinds(vec![Kind::TextNote, Kind::Repost])
         .author(author)
         .limit(limit as usize);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {
@@ -288,7 +301,7 @@ pub async fn get_group_events(
 
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(FETCH_LIMIT)
+        .limit(20)
         .until(as_of)
         .authors(authors);
 
@@ -334,7 +347,7 @@ pub async fn get_global_events(
 
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(FETCH_LIMIT)
+        .limit(20)
         .until(as_of);
 
     match client
@@ -378,7 +391,7 @@ pub async fn get_hashtag_events(
     };
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(FETCH_LIMIT)
+        .limit(20)
         .until(as_of)
         .hashtags(hashtags);
 

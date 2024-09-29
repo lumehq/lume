@@ -6,12 +6,20 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routes.gen"; // auto generated file
 import type { LumeEvent } from "./system";
 import "./app.css";
+import { experimental_createPersister } from "@tanstack/query-persist-client-core";
+import { Store } from "@tauri-apps/plugin-store";
+import { newQueryStorage } from "./commons";
 
 const platform = type();
+const store = new Store(".cache");
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			gcTime: 1000 * 30,
+			persister: experimental_createPersister({
+				storage: newQueryStorage(store),
+				maxAge: 1000 * 60 * 60 * 12, // 12 hours
+			}),
 		},
 	},
 });

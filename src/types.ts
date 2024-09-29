@@ -13,7 +13,6 @@ export enum Kind {
 export interface Meta {
 	content: string;
 	images: string[];
-	videos: string[];
 	events: string[];
 	mentions: string[];
 	hashtags: string[];

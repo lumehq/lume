@@ -470,7 +470,7 @@ subscription: "subscription"
 
 export type Column = { label: string; url: string; x: number; y: number; width: number; height: number }
 export type Mention = { pubkey: string; avatar: string; display_name: string; name: string }
-export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
+export type Meta = { content: string; images: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type NewSettings = Settings
 export type Profile = { name: string; display_name: string; about: string | null; picture: string; banner: string | null; nip05: string | null; lud16: string | null; website: string | null }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }

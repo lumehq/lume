@@ -13,7 +13,6 @@ use crate::Settings;
 pub struct Meta {
     pub content: String,
     pub images: Vec<String>,
-    pub videos: Vec<String>,
     pub events: Vec<String>,
     pub mentions: Vec<String>,
     pub hashtags: Vec<String>,
@@ -44,7 +43,6 @@ const NOSTR_MENTIONS: [&str; 10] = [
     "Nostr:naddr1",
 ];
 const IMAGES: [&str; 7] = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
-const VIDEOS: [&str; 5] = ["mp4", "mov", "avi", "webm", "mkv"];
 
 pub fn get_latest_event(events: &[Event]) -> Option<&Event> {
     events.iter().next()
@@ -115,7 +113,6 @@ pub async fn parse_event(content: &str) -> Meta {
         .collect::<Vec<_>>();
 
     let mut images = Vec::new();
-    let mut videos = Vec::new();
     let mut text = content.to_string();
 
     if !urls.is_empty() {
@@ -132,12 +129,6 @@ pub async fn parse_event(content: &str) -> Meta {
                     if IMAGES.contains(&ext) {
                         text = text.replace(url_str, "");
                         images.push(url_str.to_string());
-                        // Process the next item.
-                        continue;
-                    }
-                    if VIDEOS.contains(&ext) {
-                        text = text.replace(url_str, "");
-                        videos.push(url_str.to_string());
                         // Process the next item.
                         continue;
                     }
@@ -167,7 +158,6 @@ pub async fn parse_event(content: &str) -> Meta {
         mentions,
         hashtags,
         images,
-        videos,
     }
 }
 
@@ -342,7 +332,6 @@ mod tests {
 
         assert_eq!(meta.content, "Check this image: #cool @npub1");
         assert_eq!(meta.images, vec!["https://example.com/image.jpg"]);
-        assert_eq!(meta.videos, Vec::<String>::new());
         assert_eq!(meta.hashtags, vec!["#cool"]);
         assert_eq!(meta.mentions, vec!["@npub1"]);
     }
@@ -354,7 +343,6 @@ mod tests {
 
         assert_eq!(meta.content, "Check this video: #cool @npub1");
         assert_eq!(meta.images, Vec::<String>::new());
-        assert_eq!(meta.videos, vec!["https://example.com/video.mp4"]);
         assert_eq!(meta.hashtags, vec!["#cool"]);
         assert_eq!(meta.mentions, vec!["@npub1"]);
     }
