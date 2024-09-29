@@ -59,10 +59,10 @@ export function UserFollowButton({ className }: { className?: string }) {
 			type="button"
 			disabled={isPending}
 			onClick={() => toggleFollow()}
-			className={cn("w-max", className)}
+			className={cn("w-max gap-1", className)}
 		>
 			{isError ? "Error" : null}
-			{isPending || isLoading ? <Spinner className="size-4" /> : null}
+			{isPending || isLoading ? <Spinner className="size-3" /> : null}
 			{isFollow ? "Unfollow" : "Follow"}
 		</button>
 	);

@@ -1,27 +1,24 @@
-import {
-	type PersistedQuery,
-	experimental_createPersister,
-} from "@tanstack/query-persist-client-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { type } from "@tauri-apps/plugin-os";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { newQueryStorage } from "./commons";
 import { routeTree } from "./routes.gen"; // auto generated file
 import type { LumeEvent } from "./system";
 import "./app.css";
+import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 import { Store } from "@tauri-apps/plugin-store";
+import { newQueryStorage } from "./commons";
 
 const platform = type();
-const tauriStore = new Store(".lume.dat");
+const store = new Store(".cache");
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			gcTime: 1000 * 30,
-			persister: experimental_createPersister<PersistedQuery>({
-				storage: newQueryStorage(tauriStore),
-				maxAge: 1000 * 60 * 60 * 24, // 24 hours,
+			persister: experimental_createPersister({
+				storage: newQueryStorage(store),
+				maxAge: 1000 * 60 * 60 * 12, // 12 hours
 			}),
 		},
 	},

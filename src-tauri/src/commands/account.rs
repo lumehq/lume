@@ -3,7 +3,12 @@ use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::{collections::HashSet, str::FromStr, time::Duration};
+use std::{
+    collections::HashSet,
+    fs::{self, File},
+    str::FromStr,
+    time::Duration,
+};
 use tauri::{Emitter, Manager, State};
 
 use crate::{
@@ -133,7 +138,7 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
             let remote_user = bunker_uri.signer_public_key().unwrap();
             let remote_npub = remote_user.to_bech32().unwrap();
 
-            match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None).await {
+            match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None) {
                 Ok(signer) => {
                     let mut url = Url::parse(&uri).unwrap();
                     let query: Vec<(String, String)> = url
@@ -206,6 +211,17 @@ pub fn delete_account(id: String) -> Result<(), String> {
 
 #[tauri::command]
 #[specta::specta]
+pub fn is_account_sync(id: String, handle: tauri::AppHandle) -> bool {
+    let config_dir = handle
+        .path()
+        .app_config_dir()
+        .expect("Error: app config directory not found.");
+
+    fs::metadata(config_dir.join(id)).is_ok()
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn login(
     account: String,
     password: String,
@@ -244,7 +260,7 @@ pub async fn login(
             let public_key = uri.signer_public_key().unwrap().to_bech32().unwrap();
             let app_keys = Keys::from_str(&account.password).map_err(|e| e.to_string())?;
 
-            match Nip46Signer::new(uri, app_keys, Duration::from_secs(120), None).await {
+            match Nip46Signer::new(uri, app_keys, Duration::from_secs(120), None) {
                 Ok(signer) => {
                     // Update signer
                     client.set_signer(Some(signer.into())).await;
@@ -259,6 +275,11 @@ pub async fn login(
     init_nip65(client, &public_key).await;
 
     tauri::async_runtime::spawn(async move {
+        let config_dir = handle
+            .path()
+            .app_config_dir()
+            .expect("Error: app config directory not found.");
+
         let state = handle.state::<Nostr>();
         let client = &state.client;
 
@@ -298,64 +319,85 @@ pub async fn login(
             state.settings.lock().await.clone_from(&settings);
         };
 
+        let contact_list = client
+            .get_contact_list(Some(Duration::from_secs(5)))
+            .await
+            .unwrap();
+
         // Get user's contact list
-        if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
-            state.contact_list.lock().await.clone_from(&contacts);
+        if !contact_list.is_empty() {
+            let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
 
-            if !contacts.is_empty() {
-                let pubkeys: Vec<PublicKey> = contacts.iter().map(|f| f.public_key).collect();
+            let metadata = Filter::new()
+                .authors(authors.clone())
+                .kind(Kind::Metadata)
+                .limit(authors.len());
 
-                let newsfeed = Filter::new()
-                    .authors(pubkeys.clone())
-                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                    .limit(NEWSFEED_NEG_LIMIT);
+            if let Ok(report) = client
+                .reconcile(metadata, NegentropyOptions::default())
+                .await
+            {
+                println!("received [metadata]: {}", report.received.len())
+            }
 
-                if client
-                    .reconcile(newsfeed, NegentropyOptions::default())
-                    .await
-                    .is_ok()
-                {
-                    handle.emit("synchronized", ()).unwrap();
-                }
+            let newsfeed = Filter::new()
+                .authors(authors.clone())
+                .kinds(vec![Kind::TextNote, Kind::Repost])
+                .limit(NEWSFEED_NEG_LIMIT);
 
+            if client
+                .reconcile(newsfeed, NegentropyOptions::default())
+                .await
+                .is_ok()
+            {
+                // Save state
+                let _ = File::create(config_dir.join(public_key.to_bech32().unwrap()));
+                // Update frontend
+                handle.emit("synchronized", ()).unwrap();
+            }
+
+            let contacts = Filter::new()
+                .authors(authors.clone())
+                .kind(Kind::ContactList)
+                .limit(authors.len() * 1000);
+
+            if let Ok(report) = client
+                .reconcile(contacts, NegentropyOptions::default())
+                .await
+            {
+                println!("received [contact list]: {}", report.received.len())
+            }
+
+            for author in authors.into_iter() {
                 let filter = Filter::new()
-                    .authors(pubkeys.clone())
+                    .author(author)
                     .kind(Kind::ContactList)
-                    .limit(4000);
+                    .limit(1);
 
-                if client
-                    .reconcile(filter, NegentropyOptions::default())
-                    .await
-                    .is_ok()
-                {
-                    for pubkey in pubkeys.into_iter() {
-                        let mut list: Vec<PublicKey> = Vec::new();
-                        let f = Filter::new()
-                            .author(pubkey)
-                            .kind(Kind::ContactList)
-                            .limit(1);
+                let mut circles = state.circles.lock().await;
+                let mut list: Vec<PublicKey> = Vec::new();
 
-                        if let Ok(events) = client.database().query(vec![f]).await {
-                            if let Some(event) = events.into_iter().next() {
-                                for tag in event.tags.into_iter() {
-                                    if let Some(TagStandard::PublicKey {
-                                        public_key,
-                                        uppercase: false,
-                                        ..
-                                    }) = tag.to_standardized()
-                                    {
-                                        list.push(public_key)
-                                    }
-                                }
-
-                                if !list.is_empty() {
-                                    state.circles.lock().await.insert(pubkey, list);
-                                };
+                if let Ok(events) = client.database().query(vec![filter]).await {
+                    if let Some(event) = events.into_iter().next() {
+                        for tag in event.tags.into_iter() {
+                            if let Some(TagStandard::PublicKey {
+                                public_key,
+                                uppercase: false,
+                                ..
+                            }) = tag.to_standardized()
+                            {
+                                list.push(public_key)
                             }
                         }
+
+                        if !list.is_empty() {
+                            circles.insert(author, list);
+                        };
                     }
                 }
-            };
+            }
+        } else {
+            handle.emit("synchronized", ()).unwrap();
         };
     });
 

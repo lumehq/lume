@@ -1,5 +1,5 @@
 import { LumeWindow } from "@/system";
-import { FrameCorners } from "@phosphor-icons/react";
+import { ListPlus } from "@phosphor-icons/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useNoteContext } from "../provider";
 
@@ -15,7 +15,7 @@ export function NoteOpenThread() {
 						onClick={() => LumeWindow.openEvent(event)}
 						className="group inline-flex h-7 w-14 bg-neutral-100 dark:bg-white/10 rounded-full items-center justify-center text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
 					>
-						<FrameCorners className="shrink-0 size-4" />
+						<ListPlus className="shrink-0 size-4" />
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

@@ -30,7 +30,6 @@ pub mod common;
 
 pub struct Nostr {
     client: Client,
-    contact_list: Mutex<Vec<Contact>>,
     settings: Mutex<Settings>,
     circles: Mutex<HashMap<PublicKey, Vec<PublicKey>>>,
 }
@@ -56,7 +55,7 @@ impl Default for Settings {
             image_resize_service: Some("https://wsrv.nl".to_string()),
             use_relay_hint: true,
             content_warning: true,
-            trusted_only: true,
+            trusted_only: false,
             display_avatar: true,
             display_zap_button: true,
             display_repost_button: true,
@@ -83,8 +82,8 @@ struct Subscription {
 struct NewSettings(Settings);
 
 pub const DEFAULT_DIFFICULTY: u8 = 21;
-pub const FETCH_LIMIT: usize = 20;
-pub const NEWSFEED_NEG_LIMIT: usize = 256;
+pub const FETCH_LIMIT: usize = 100;
+pub const NEWSFEED_NEG_LIMIT: usize = 512;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
@@ -107,12 +106,12 @@ fn main() {
             get_private_key,
             delete_account,
             reset_password,
+            is_account_sync,
             login,
             get_profile,
             set_profile,
             get_contact_list,
             set_contact_list,
-            is_contact_list_empty,
             check_contact,
             toggle_contact,
             get_mention_list,
@@ -135,7 +134,7 @@ fn main() {
             get_replies,
             subscribe_to,
             get_events_by,
-            get_events_from_contacts,
+            get_local_events,
             get_group_events,
             get_global_events,
             get_hashtag_events,
@@ -222,9 +221,9 @@ fn main() {
                     .gossip(true)
                     .max_avg_latency(Duration::from_millis(500))
                     .automatic_authentication(false)
-                    .connection_timeout(Some(Duration::from_secs(5)))
-                    .send_timeout(Some(Duration::from_secs(5)))
-                    .timeout(Duration::from_secs(5));
+                    .connection_timeout(Some(Duration::from_secs(20)))
+                    .send_timeout(Some(Duration::from_secs(10)))
+                    .timeout(Duration::from_secs(20));
 
                 // Setup nostr client
                 let client = ClientBuilder::default()
@@ -277,7 +276,6 @@ fn main() {
             // Create global state
             app.manage(Nostr {
                 client,
-                contact_list: Mutex::new(vec![]),
                 settings: Mutex::new(Settings::default()),
                 circles: Mutex::new(HashMap::new()),
             });
@@ -308,7 +306,11 @@ fn main() {
                                     }
                                 }
                                 None => {
-                                    let contact_list = state.contact_list.lock().await;
+                                    let contact_list = client
+                                        .get_contact_list(Some(Duration::from_secs(5)))
+                                        .await
+                                        .unwrap();
+
                                     if !contact_list.is_empty() {
                                         let authors: Vec<PublicKey> =
                                             contact_list.iter().map(|f| f.public_key).collect();
@@ -458,6 +460,39 @@ fn main() {
             });
 
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::Focused(focused) = event {
+                if !focused {
+                    let handle = window.app_handle().to_owned();
+
+                    tauri::async_runtime::spawn(async move {
+                        let state = handle.state::<Nostr>();
+                        let client = &state.client;
+
+                        if client.signer().await.is_ok() {
+                            if let Ok(contact_list) =
+                                client.get_contact_list(Some(Duration::from_secs(5))).await
+                            {
+                                let authors: Vec<PublicKey> =
+                                    contact_list.iter().map(|f| f.public_key).collect();
+                                let newsfeed = Filter::new()
+                                    .authors(authors)
+                                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                                    .limit(NEWSFEED_NEG_LIMIT);
+
+                                if client
+                                    .reconcile(newsfeed, NegentropyOptions::default())
+                                    .await
+                                    .is_ok()
+                                {
+                                    handle.emit("synchronized", ()).unwrap();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         })
         .plugin(prevent_default())
         .plugin(tauri_plugin_decorum::init())

@@ -58,7 +58,7 @@ export const LumeWindow = {
 			eTags.find((el) => el[3] === "reply")?.[1] ?? eTags[1]?.[1];
 
 		const url = `/columns/events/${root ?? reply ?? event.id}`;
-		const label = `event-${root ?? reply ?? event.id}`;
+		const label = `event-${root?.substring(0, 6) ?? reply?.substring(0, 6) ?? event.id.substring(0, 6)}`;
 
 		LumeWindow.openColumn({ label, url, name: "Thread" });
 	},
