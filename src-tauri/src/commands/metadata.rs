@@ -154,19 +154,13 @@ pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn check_contact(hex: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let client = &state.client;
-    let contact_list = client
-        .get_contact_list(Some(Duration::from_secs(5)))
-        .await
-        .map_err(|e| e.to_string())?;
+pub async fn check_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let contact_list = &state.contact_list.lock().await;
+    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
-    match PublicKey::parse(&hex) {
-        Ok(public_key) => match contact_list.iter().position(|x| x.public_key == public_key) {
-            Some(_) => Ok(true),
-            None => Ok(false),
-        },
-        Err(e) => Err(e.to_string()),
+    match contact_list.iter().position(|x| x.public_key == public_key) {
+        Some(_) => Ok(true),
+        None => Ok(false),
     }
 }
 

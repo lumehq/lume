@@ -139,9 +139,9 @@ async setContactList(publicKeys: string[]) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async checkContact(hex: string) : Promise<Result<boolean, string>> {
+async checkContact(id: string) : Promise<Result<boolean, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("check_contact", { hex }) };
+    return { status: "ok", data: await TAURI_INVOKE("check_contact", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

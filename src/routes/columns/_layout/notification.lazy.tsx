@@ -1,7 +1,7 @@
 import { commands } from "@/commands.gen";
 import { decodeZapInvoice, formatCreatedAt } from "@/commons";
 import { Note, Spinner, User } from "@/components";
-import { LumeEvent, useEvent } from "@/system";
+import { LumeEvent, LumeWindow, useEvent } from "@/system";
 import { Kind, type NostrEvent } from "@/types";
 import { Info, Repeat } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -264,40 +264,46 @@ function TextNote({ event }: { event: LumeEvent }) {
 		.slice(0, 3);
 
 	return (
-		<Note.Provider event={event}>
-			<Note.Root className="flex flex-col p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
-				<User.Provider pubkey={event.pubkey}>
-					<User.Root className="inline-flex items-center gap-2">
-						<User.Avatar className="rounded-full size-9" />
-						<div className="flex flex-col flex-1">
-							<div className="flex items-baseline justify-between w-full">
-								<User.Name className="text-sm font-semibold leading-tight" />
-								<span className="text-sm leading-tight text-black/50 dark:text-white/50">
-									{formatCreatedAt(event.created_at)}
-								</span>
-							</div>
-							<div className="inline-flex items-baseline gap-1 text-xs">
-								<span className="leading-tight text-black/50 dark:text-white/50">
-									Reply to:
-								</span>
-								<div className="inline-flex items-baseline gap-1">
-									{[...new Set(pTags)].map((replyTo) => (
-										<User.Provider key={replyTo} pubkey={replyTo}>
-											<User.Root>
-												<User.Name className="font-medium leading-tight" />
-											</User.Root>
-										</User.Provider>
-									))}
+		<button
+			type="button"
+			onClick={() => LumeWindow.openEvent(event)}
+			className="w-full rounded-xl hover:ring-1 ring-blue-500 mb-3"
+		>
+			<Note.Provider event={event}>
+				<Note.Root className="flex flex-col p-3 rounded-xl bg-white dark:bg-black/20 shadow-primary dark:ring-1 dark:ring-white/5">
+					<User.Provider pubkey={event.pubkey}>
+						<User.Root className="inline-flex items-center gap-2">
+							<User.Avatar className="rounded-full size-9" />
+							<div className="flex flex-col flex-1">
+								<div className="flex items-baseline justify-between w-full">
+									<User.Name className="text-sm font-semibold leading-tight" />
+									<span className="text-sm leading-tight text-black/50 dark:text-white/50">
+										{formatCreatedAt(event.created_at)}
+									</span>
+								</div>
+								<div className="inline-flex items-baseline gap-1 text-xs">
+									<span className="leading-tight text-black/50 dark:text-white/50">
+										Reply to:
+									</span>
+									<div className="inline-flex items-baseline gap-1">
+										{[...new Set(pTags)].map((replyTo) => (
+											<User.Provider key={replyTo} pubkey={replyTo}>
+												<User.Root>
+													<User.Name className="font-medium leading-tight" />
+												</User.Root>
+											</User.Provider>
+										))}
+									</div>
 								</div>
 							</div>
-						</div>
-					</User.Root>
-				</User.Provider>
-				<div className="flex gap-2">
-					<div className="w-9 shrink-0" />
-					<div className="line-clamp-1 text-start">{event.content}</div>
-				</div>
-			</Note.Root>
-		</Note.Provider>
+						</User.Root>
+					</User.Provider>
+					<div className="flex gap-2">
+						<div className="w-9 shrink-0" />
+						<div className="line-clamp-1 text-start">{event.content}</div>
+					</div>
+				</Note.Root>
+			</Note.Provider>
+		</button>
 	);
 }

@@ -324,6 +324,8 @@ pub async fn login(
             .await
             .unwrap();
 
+        state.contact_list.lock().await.clone_from(&contact_list);
+
         // Get user's contact list
         if !contact_list.is_empty() {
             let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();

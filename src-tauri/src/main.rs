@@ -31,6 +31,7 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
+    contact_list: Mutex<Vec<Contact>>,
     circles: Mutex<HashMap<PublicKey, Vec<PublicKey>>>,
 }
 
@@ -277,6 +278,7 @@ fn main() {
             app.manage(Nostr {
                 client,
                 settings: Mutex::new(Settings::default()),
+                contact_list: Mutex::new(Vec::new()),
                 circles: Mutex::new(HashMap::new()),
             });
 
