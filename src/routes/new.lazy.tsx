@@ -8,7 +8,7 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="bg-white/70 dark:bg-black/70 relative size-full flex items-center justify-center"
+			className="bg-white/50 dark:bg-black/50 relative size-full flex items-center justify-center"
 		>
 			<div className="w-[350px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">

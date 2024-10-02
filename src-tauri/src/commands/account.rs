@@ -11,10 +11,7 @@ use std::{
 };
 use tauri::{Emitter, Manager, State};
 
-use crate::{
-    common::{get_user_settings, init_nip65},
-    Nostr, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT, NOTIFICATION_SUB_ID,
-};
+use crate::{common::init_nip65, Nostr, NOTIFICATION_SUB_ID};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -271,104 +268,138 @@ pub async fn login(
         }
     };
 
-    // Connect to user's relay (NIP-65)
+    // NIP-65: Connect to user's relay list
     init_nip65(client, &public_key).await;
 
+    // Run seperate thread for syncing data
+    let pk = public_key.clone();
     tauri::async_runtime::spawn(async move {
-        let config_dir = handle
-            .path()
-            .app_config_dir()
-            .expect("Error: app config directory not found.");
-
+        let config_dir = handle.path().app_config_dir().unwrap();
         let state = handle.state::<Nostr>();
         let client = &state.client;
 
-        let signer = client.signer().await.unwrap();
-        let public_key = signer.public_key().await.unwrap();
+        // Convert current user to PublicKey
+        let author = PublicKey::from_str(&pk).unwrap();
 
-        let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
-        let notification = Filter::new().pubkey(public_key).kinds(vec![
-            Kind::TextNote,
-            Kind::Repost,
-            Kind::Reaction,
-            Kind::ZapReceipt,
-        ]);
-
-        // Sync notification with negentropy
-        let _ = client
+        // Fetching user's metadata
+        if let Ok(report) = client
             .reconcile(
-                notification.clone().limit(NOTIFICATION_NEG_LIMIT),
+                Filter::new()
+                    .author(author)
+                    .kinds(vec![
+                        Kind::Metadata,
+                        Kind::ContactList,
+                        Kind::MuteList,
+                        Kind::Bookmarks,
+                        Kind::Interests,
+                        Kind::PinList,
+                    ])
+                    .limit(1000),
                 NegentropyOptions::default(),
             )
-            .await;
+            .await
+        {
+            println!("Received: {}", report.received.len())
+        }
 
-        // Subscribing for new notification...
-        if let Err(e) = client
+        // Fetching user's events
+        if let Ok(report) = client
+            .reconcile(
+                Filter::new()
+                    .author(author)
+                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                    .limit(200),
+                NegentropyOptions::default(),
+            )
+            .await
+        {
+            println!("Received: {}", report.received.len())
+        }
+
+        // Fetching user's notification
+        if let Ok(report) = client
+            .reconcile(
+                Filter::new()
+                    .pubkey(author)
+                    .kinds(vec![
+                        Kind::TextNote,
+                        Kind::Repost,
+                        Kind::Reaction,
+                        Kind::ZapReceipt,
+                    ])
+                    .limit(200),
+                NegentropyOptions::default(),
+            )
+            .await
+        {
+            println!("Received: {}", report.received.len())
+        }
+
+        // Subscribe for new notification
+        if let Ok(e) = client
             .subscribe_with_id(
-                notification_id,
-                vec![notification.since(Timestamp::now())],
+                SubscriptionId::new(NOTIFICATION_SUB_ID),
+                vec![Filter::new()
+                    .pubkey(author)
+                    .kinds(vec![
+                        Kind::TextNote,
+                        Kind::Repost,
+                        Kind::Reaction,
+                        Kind::ZapReceipt,
+                    ])
+                    .since(Timestamp::now())],
                 None,
             )
             .await
         {
-            println!("Error: {}", e)
+            println!("Subscribed: {}", e.success.len())
         }
 
-        // Get user's settings
-        if let Ok(settings) = get_user_settings(client).await {
-            state.settings.lock().await.clone_from(&settings);
+        // Get user's contact list
+        let contact_list = {
+            let contacts = client.get_contact_list(None).await.unwrap();
+            // Update app's state
+            state.contact_list.lock().await.clone_from(&contacts);
+            // Return
+            contacts
         };
 
-        let contact_list = client
-            .get_contact_list(Some(Duration::from_secs(5)))
-            .await
-            .unwrap();
-
-        state.contact_list.lock().await.clone_from(&contact_list);
-
-        // Get user's contact list
+        // Get events from contact list
         if !contact_list.is_empty() {
             let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
 
-            let metadata = Filter::new()
-                .authors(authors.clone())
-                .kind(Kind::Metadata)
-                .limit(authors.len());
-
+            // Fetching contact's metadata
             if let Ok(report) = client
-                .reconcile(metadata, NegentropyOptions::default())
+                .reconcile(
+                    Filter::new()
+                        .authors(authors.clone())
+                        .kinds(vec![Kind::Metadata, Kind::ContactList, Kind::MuteList])
+                        .limit(3000),
+                    NegentropyOptions::default(),
+                )
                 .await
             {
-                println!("received [metadata]: {}", report.received.len())
+                println!("Received: {}", report.received.len())
             }
 
-            let newsfeed = Filter::new()
-                .authors(authors.clone())
-                .kinds(vec![Kind::TextNote, Kind::Repost])
-                .limit(NEWSFEED_NEG_LIMIT);
-
-            if client
-                .reconcile(newsfeed, NegentropyOptions::default())
+            // Fetching contact's events
+            if let Ok(report) = client
+                .reconcile(
+                    Filter::new()
+                        .authors(authors.clone())
+                        .kinds(vec![Kind::TextNote, Kind::Repost])
+                        .limit(1000),
+                    NegentropyOptions::default(),
+                )
                 .await
-                .is_ok()
             {
-                // Save state
-                let _ = File::create(config_dir.join(public_key.to_bech32().unwrap()));
+                println!("Received: {}", report.received.len());
+
+                // Save the process status
+                let _ = File::create(config_dir.join(author.to_bech32().unwrap()));
                 // Update frontend
                 handle.emit("synchronized", ()).unwrap();
-            }
-
-            let contacts = Filter::new()
-                .authors(authors.clone())
-                .kind(Kind::ContactList)
-                .limit(authors.len() * 1000);
-
-            if let Ok(report) = client
-                .reconcile(contacts, NegentropyOptions::default())
-                .await
-            {
-                println!("received [contact list]: {}", report.received.len())
-            }
+            };
 
             for author in authors.into_iter() {
                 let filter = Filter::new()
@@ -400,7 +431,7 @@ pub async fn login(
             }
         } else {
             handle.emit("synchronized", ()).unwrap();
-        };
+        }
     });
 
     Ok(public_key)

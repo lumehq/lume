@@ -478,13 +478,15 @@ fn main() {
                             {
                                 let authors: Vec<PublicKey> =
                                     contact_list.iter().map(|f| f.public_key).collect();
-                                let newsfeed = Filter::new()
-                                    .authors(authors)
-                                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                                    .limit(NEWSFEED_NEG_LIMIT);
 
                                 if client
-                                    .reconcile(newsfeed, NegentropyOptions::default())
+                                    .reconcile(
+                                        Filter::new()
+                                            .authors(authors)
+                                            .kinds(vec![Kind::TextNote, Kind::Repost])
+                                            .limit(NEWSFEED_NEG_LIMIT),
+                                        NegentropyOptions::default(),
+                                    )
                                     .await
                                     .is_ok()
                                 {
