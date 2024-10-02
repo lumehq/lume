@@ -1,4 +1,4 @@
-import { Spinner } from "@/components";
+import { Frame, Spinner } from "@/components";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { useEffect } from "react";
@@ -24,6 +24,7 @@ function Screen() {
 		const unlisten = listen("synchronized", () => {
 			navigate({
 				to: "/$account/home",
+				// @ts-ignore, this is tanstack router bug
 				params: { account: search.account },
 				replace: true,
 			});
@@ -36,12 +37,15 @@ function Screen() {
 
 	return (
 		<div className="size-full flex items-center justify-center">
-			<div className="flex flex-col gap-2 items-center justify-center text-center">
+			<Frame
+				className="p-6 h-36 flex flex-col gap-2 items-center justify-center text-center rounded-xl overflow-hidden"
+				shadow
+			>
 				<Spinner />
-				<p className="text-sm">
+				<p className="text-sm text-neutral-600 dark:text-neutral-40">
 					Fetching necessary data for the first time login...
 				</p>
-			</div>
+			</Frame>
 		</div>
 	);
 }

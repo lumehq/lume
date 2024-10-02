@@ -2,7 +2,7 @@ import { commands } from "@/commands.gen";
 import { appSettings, displayNpub } from "@/commons";
 import { Frame, Spinner, User } from "@/components";
 import { ArrowRight, DotsThree, GearSix, Plus } from "@phosphor-icons/react";
-import { Link, createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { message } from "@tauri-apps/plugin-dialog";
 import {
@@ -37,6 +37,32 @@ function Screen() {
 	const [password, setPassword] = useState("");
 	const [isPending, startTransition] = useTransition();
 
+	const showContextMenu = useCallback(
+		async (e: React.MouseEvent, account: string) => {
+			e.stopPropagation();
+
+			const menuItems = await Promise.all([
+				MenuItem.new({
+					text: "Reset password",
+					enabled: !account.includes("_nostrconnect"),
+					// @ts-ignore, this is tanstack router bug
+					action: () => navigate({ to: "/reset", search: { account } }),
+				}),
+				MenuItem.new({
+					text: "Delete account",
+					action: async () => await deleteAccount(account),
+				}),
+			]);
+
+			const menu = await Menu.new({
+				items: menuItems,
+			});
+
+			await menu.popup().catch((e) => console.error(e));
+		},
+		[],
+	);
+
 	const deleteAccount = async (account: string) => {
 		const res = await commands.deleteAccount(account);
 
@@ -69,12 +95,14 @@ function Screen() {
 				if (status) {
 					navigate({
 						to: "/$account/home",
+						// @ts-ignore, this is tanstack router bug
 						params: { account: res.data },
 						replace: true,
 					});
 				} else {
 					navigate({
 						to: "/loading",
+						// @ts-ignore, this is tanstack router bug
 						search: { account: res.data },
 						replace: true,
 					});
@@ -85,31 +113,6 @@ function Screen() {
 			}
 		});
 	};
-
-	const showContextMenu = useCallback(
-		async (e: React.MouseEvent, account: string) => {
-			e.stopPropagation();
-
-			const menuItems = await Promise.all([
-				MenuItem.new({
-					text: "Reset password",
-					enabled: !account.includes("_nostrconnect"),
-					action: () => navigate({ to: "/reset", search: { account } }),
-				}),
-				MenuItem.new({
-					text: "Delete account",
-					action: async () => await deleteAccount(account),
-				}),
-			]);
-
-			const menu = await Menu.new({
-				items: menuItems,
-			});
-
-			await menu.popup().catch((e) => console.error(e));
-		},
-		[],
-	);
 
 	useEffect(() => {
 		if (autoLogin) {
@@ -204,8 +207,8 @@ function Screen() {
 							</div>
 						</div>
 					))}
-					<Link
-						to="/new"
+					<a
+						href="/new"
 						className="flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5"
 					>
 						<div className="flex items-center gap-2.5 p-3">
@@ -216,17 +219,17 @@ function Screen() {
 								New account
 							</span>
 						</div>
-					</Link>
+					</a>
 				</Frame>
 			</div>
 			<div className="absolute bottom-2 right-2">
-				<Link
-					to="/bootstrap-relays"
+				<a
+					href="/bootstrap-relays"
 					className="h-8 w-max text-xs px-3 inline-flex items-center justify-center gap-1.5 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 rounded-full"
 				>
 					<GearSix className="size-4" />
 					Manage Relays
-				</Link>
+				</a>
 			</div>
 		</div>
 	);

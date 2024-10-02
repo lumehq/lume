@@ -15,6 +15,9 @@ export function UserAvatar({ className }: { className?: string }) {
 
 	const picture = useMemo(() => {
 		if (service?.length && user.profile?.picture?.length) {
+			if (user.profile?.picture.includes("_next/")) {
+				return user.profile?.picture;
+			}
 			return `${service}?url=${user.profile?.picture}&w=100&h=100&n=-1&default=${user.profile?.picture}`;
 		} else {
 			return user.profile?.picture;
