@@ -1,10 +1,13 @@
 import { cn } from "@/commons";
+import { ReplyIcon } from "@/components";
 import { LumeWindow } from "@/system";
-import { ShareFat } from "@phosphor-icons/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useNoteContext } from "../provider";
 
-export function NoteReply({ large = false }: { large?: boolean }) {
+export function NoteReply({
+	label = false,
+	smol = false,
+}: { label?: boolean; smol?: boolean }) {
 	const event = useNoteContext();
 
 	return (
@@ -16,13 +19,13 @@ export function NoteReply({ large = false }: { large?: boolean }) {
 						onClick={() => LumeWindow.openEditor(event.id)}
 						className={cn(
 							"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
-							large
+							label
 								? "rounded-full h-7 gap-1.5 w-20 text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10"
 								: "size-7",
 						)}
 					>
-						<ShareFat className="shrink-0 size-4" />
-						{large ? "Reply" : null}
+						<ReplyIcon className={cn("shrink-0", smol ? "size-4" : "size-5")} />
+						{label ? "Reply" : null}
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

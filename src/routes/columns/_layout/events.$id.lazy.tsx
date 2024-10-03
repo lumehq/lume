@@ -82,9 +82,9 @@ function RootEvent() {
 				</div>
 				<Note.ContentLarge className="px-3" />
 				<div className="flex items-center gap-2 px-3 mt-6 h-12 rounded-b-xl bg-neutral-50 dark:bg-white/5">
-					<Note.Reply large />
-					<Note.Repost large />
-					<Note.Zap large />
+					<Note.Reply label />
+					<Note.Repost label />
+					<Note.Zap label />
 				</div>
 			</Note.Root>
 		</Note.Provider>

@@ -99,10 +99,10 @@ export const ReplyNote = memo(function ReplyNote({
 							<span className="text-sm text-neutral-500">
 								{replyTime(event.created_at)}
 							</span>
-							<div className="flex items-center justify-end gap-3">
-								<Note.Reply />
-								<Note.Repost />
-								<Note.Zap />
+							<div className="flex items-center justify-end gap-5">
+								<Note.Reply smol />
+								<Note.Repost smol />
+								<Note.Zap smol />
 							</div>
 						</div>
 						{event.replies?.length ? (
@@ -180,10 +180,10 @@ function ChildReply({ event }: { event: LumeEvent }) {
 						<span className="text-sm text-neutral-500">
 							{replyTime(event.created_at)}
 						</span>
-						<div className="invisible group-hover:visible flex items-center justify-end gap-3">
-							<Note.Reply />
-							<Note.Repost />
-							<Note.Zap />
+						<div className="invisible group-hover:visible flex items-center justify-end gap-5">
+							<Note.Reply smol />
+							<Note.Repost smol />
+							<Note.Zap smol />
 						</div>
 					</div>
 					{event.replies?.length ? (

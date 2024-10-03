@@ -60,9 +60,7 @@
 		"core:menu:allow-new",
 		"core:menu:allow-popup",
 		"shell:allow-open",
-		"store:allow-get",
-		"store:allow-set",
-		"store:allow-delete",
+		"store:default",
 		"prevent-default:default",
 		{
 			"identifier": "http:default",

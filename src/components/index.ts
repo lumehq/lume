@@ -13,3 +13,8 @@ export * from "./reply";
 // Global components
 export * from "./note";
 export * from "./user";
+
+// Icons
+export * from "./icons/reply";
+export * from "./icons/repost";
+export * from "./icons/zap";
