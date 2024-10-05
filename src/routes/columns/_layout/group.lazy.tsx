@@ -3,7 +3,7 @@ import { toLumeEvents } from "@/commons";
 import { Quote, RepostNote, Spinner, TextNote } from "@/components";
 import type { LumeEvent } from "@/system";
 import { Kind } from "@/types";
-import { ArrowCircleRight } from "@phosphor-icons/react";
+import { ArrowDown } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -49,12 +49,30 @@ export function Screen() {
 			if (!event) return;
 			switch (event.kind) {
 				case Kind.Repost:
-					return <RepostNote key={event.id} event={event} className="mb-3" />;
+					return (
+						<RepostNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 				default: {
 					if (event.isQuote) {
-						return <Quote key={event.id} event={event} className="mb-3" />;
+						return (
+							<Quote
+								key={event.id}
+								event={event}
+								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+							/>
+						);
 					} else {
-						return <TextNote key={event.id} event={event} className="mb-3" />;
+						return (
+							<TextNote
+								key={event.id}
+								event={event}
+								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+							/>
+						);
 					}
 				}
 			}
@@ -66,9 +84,12 @@ export function Screen() {
 		<ScrollArea.Root
 			type={"scroll"}
 			scrollHideDelay={300}
-			className="overflow-hidden size-full"
+			className="overflow-hidden size-full px-3"
 		>
-			<ScrollArea.Viewport ref={ref} className="h-full px-3 pb-3">
+			<ScrollArea.Viewport
+				ref={ref}
+				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+			>
 				<Virtualizer scrollRef={ref}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
 						<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
@@ -80,11 +101,11 @@ export function Screen() {
 					) : null}
 					{isLoading ? (
 						<div className="flex items-center justify-center w-full h-16 gap-2">
-							<Spinner className="size-5" />
+							<Spinner className="size-4" />
 							<span className="text-sm font-medium">Loading...</span>
 						</div>
 					) : !data.length ? (
-						<div className="mb-3 flex items-center justify-center h-20 text-sm rounded-xl bg-black/5 dark:bg-white/5">
+						<div className="mb-3 flex items-center justify-center h-20 text-sm">
 							🎉 Yo. You're catching up on all latest notes.
 						</div>
 					) : (
@@ -96,13 +117,13 @@ export function Screen() {
 								type="button"
 								onClick={() => fetchNextPage()}
 								disabled={isFetchingNextPage || isLoading}
-								className="inline-flex items-center justify-center w-full gap-2 px-3 font-medium h-9 rounded-xl bg-black/5 hover:bg-black/10 focus:outline-none dark:bg-white/10 dark:hover:bg-white/20"
+								className="inline-flex items-center justify-center w-full gap-2 px-3 text-sm font-medium text-blue-500 h-11 focus:outline-none"
 							>
 								{isFetchingNextPage ? (
-									<Spinner className="size-5" />
+									<Spinner className="size-4" />
 								) : (
 									<>
-										<ArrowCircleRight className="size-5" />
+										<ArrowDown className="size-4" />
 										Load more
 									</>
 								)}

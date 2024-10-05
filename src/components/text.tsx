@@ -12,12 +12,7 @@ export const TextNote = memo(function TextNote({
 }) {
 	return (
 		<Note.Provider event={event}>
-			<Note.Root
-				className={cn(
-					"bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5",
-					className,
-				)}
-			>
+			<Note.Root className={cn("", className)}>
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />

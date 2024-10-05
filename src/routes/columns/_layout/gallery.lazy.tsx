@@ -2,7 +2,6 @@ import type { LumeColumn } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import Avatar from "boring-avatars";
 
 export const Route = createLazyFileRoute("/columns/_layout/gallery")({
 	component: Screen,
@@ -26,31 +25,14 @@ function Screen() {
 				{columns.map((column) => (
 					<div
 						key={column.label}
-						className="mb-3 group flex px-2 items-center justify-between h-16 rounded-xl bg-white dark:bg-white/20 shadow-sm shadow-neutral-500/10"
+						className="mb-3 group flex px-4 items-center justify-between h-16 rounded-xl bg-white dark:bg-black border-[.5px] border-neutral-300 dark:border-neutral-700"
 					>
-						<div className="inline-flex items-center gap-2">
-							<div className="size-11 bg-neutral-200 rounded-lg overflow-hidden">
-								<Avatar
-									name={column.name}
-									size={44}
-									square={true}
-									variant="pixel"
-									colors={[
-										"#84cc16",
-										"#22c55e",
-										"#0ea5e9",
-										"#3b82f6",
-										"#6366f1",
-									]}
-								/>
+						<div className="text-sm">
+							<div className="mb-px leading-tight font-semibold">
+								{column.name}
 							</div>
-							<div className="text-sm">
-								<div className="mb-px leading-tight font-semibold">
-									{column.name}
-								</div>
-								<div className="leading-tight text-neutral-500 dark:text-neutral-400">
-									{column.description}
-								</div>
+							<div className="leading-tight text-neutral-500 dark:text-neutral-400">
+								{column.description}
 							</div>
 						</div>
 						<button

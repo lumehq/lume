@@ -29,9 +29,12 @@ function Screen() {
 		<ScrollArea.Root
 			type={"scroll"}
 			scrollHideDelay={300}
-			className="overflow-hidden size-full flex-1"
+			className="overflow-hidden size-full px-3"
 		>
-			<ScrollArea.Viewport ref={ref} className="h-full pt-1 px-3 pb-3">
+			<ScrollArea.Viewport
+				ref={ref}
+				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+			>
 				<Virtualizer scrollRef={ref}>
 					<RootEvent />
 					<ReplyList />
@@ -54,28 +57,24 @@ function RootEvent() {
 
 	if (isLoading) {
 		return (
-			<div className="bg-white flex items-center justify-center h-32 dark:bg-black/10 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
-				<div className="flex items-center gap-2 text-sm">
-					<Spinner />
-					Loading...
-				</div>
+			<div className="flex items-center gap-2 text-sm">
+				<Spinner />
+				Loading...
 			</div>
 		);
 	}
 
 	if (isError) {
 		return (
-			<div className="bg-white flex items-center justify-center h-32 dark:bg-black/10 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
-				<div className="flex items-center gap-2 text-sm text-red-500">
-					{error.message}
-				</div>
+			<div className="flex items-center gap-2 text-sm text-red-500">
+				{error.message}
 			</div>
 		);
 	}
 
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className="bg-white dark:bg-white/10 rounded-xl shadow-primary dark:shadow-none">
+			<Note.Root className="border-b-[.5px] border-neutral-300 dark:border-neutral-700">
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />
@@ -217,7 +216,7 @@ function ReplyList() {
 	}, []);
 
 	return (
-		<div>
+		<div className="px-3">
 			<div className="flex items-center text-sm font-semibold h-14 text-neutral-600 dark:text-white/30">
 				All replies
 			</div>

@@ -15,12 +15,7 @@ export const RepostNote = memo(function RepostNote({
 	const { isLoading, isError, data } = useEvent(event.repostId);
 
 	return (
-		<Note.Root
-			className={cn(
-				"bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50",
-				className,
-			)}
-		>
+		<Note.Root className={cn("", className)}>
 			{isLoading ? (
 				<div className="flex items-center justify-center h-20 gap-2">
 					<Spinner />

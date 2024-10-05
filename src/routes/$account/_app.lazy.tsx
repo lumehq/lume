@@ -1,9 +1,8 @@
-import { appSettings, cn } from "@/commons";
+import { cn } from "@/commons";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
 import { CaretDown, Feather, MagnifyingGlass } from "@phosphor-icons/react";
 import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
-import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { memo, useCallback } from "react";
@@ -14,7 +13,6 @@ export const Route = createLazyFileRoute("/$account/_app")({
 
 function Screen() {
 	const context = Route.useRouteContext();
-	const transparent = useStore(appSettings, (state) => state.transparent);
 
 	return (
 		<div className="flex flex-col w-screen h-screen">
@@ -54,14 +52,7 @@ function Screen() {
 					className="relative z-[200] flex-1 flex items-center justify-end gap-1"
 				/>
 			</div>
-			<div
-				className={cn(
-					"flex-1",
-					transparent
-						? ""
-						: "bg-white dark:bg-black border-t border-black/20 dark:border-white/20",
-				)}
-			>
+			<div className="flex-1 bg-neutral-100 dark:bg-neutral-900 border-t-[.5px] border-black/20 dark:border-white/20">
 				<Outlet />
 			</div>
 		</div>

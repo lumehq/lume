@@ -65,7 +65,7 @@ function StoryItem({ contact }: { contact: string }) {
 	const ref = useRef<HTMLDivElement>(null);
 
 	return (
-		<div className="mb-3 flex flex-col w-full h-[300px] bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
+		<div className="mb-3 flex flex-col w-full h-[300px] bg-white dark:bg-black rounded-xl border-[.5px] border-neutral-300 dark:border-neutral-700">
 			<div className="h-12 shrink-0 px-2 flex items-center justify-between border-b border-neutral-100 dark:border-white/5">
 				<User.Provider pubkey={contact}>
 					<User.Root className="inline-flex items-center gap-2">

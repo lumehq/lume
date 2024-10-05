@@ -1,6 +1,6 @@
 import { commands } from "@/commands.gen";
 import type { LumeColumn } from "@/types";
-import { Check, DotsThree } from "@phosphor-icons/react";
+import { CaretDown, Check } from "@phosphor-icons/react";
 import { useParams } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -86,10 +86,10 @@ export const Column = memo(function Column({ column }: { column: LumeColumn }) {
 	}, [params.account]);
 
 	return (
-		<div className="h-full w-[440px] shrink-0 p-2">
-			<div className="flex flex-col w-full h-full rounded-xl bg-black/5 dark:bg-white/20">
+		<div className="h-full w-[440px] shrink-0 border-r border-black/5 dark:border-white/5">
+			<div className="flex flex-col gap-px size-full">
 				<Header label={column.label} name={column.name} />
-				<div ref={container} className="flex-1 w-full h-full">
+				<div ref={container} className="flex-1 size-full">
 					{!isCreated ? (
 						<div className="size-full flex items-center justify-center">
 							<Spinner />
@@ -102,7 +102,7 @@ export const Column = memo(function Column({ column }: { column: LumeColumn }) {
 });
 
 function Header({ label, name }: { label: string; name: string }) {
-	const [title, setTitle] = useState(name);
+	const [title, setTitle] = useState("");
 	const [isChanged, setIsChanged] = useState(false);
 
 	const saveNewTitle = async () => {
@@ -173,19 +173,18 @@ function Header({ label, name }: { label: string; name: string }) {
 	}, []);
 
 	useEffect(() => {
-		if (title.length !== name.length) setIsChanged(true);
-	}, [title]);
+		if (title.length > 0) setIsChanged(true);
+	}, [title.length]);
 
 	return (
-		<div className="flex items-center justify-between w-full px-1 h-9 shrink-0">
-			<div className="size-7" />
+		<div className="group flex items-center justify-center gap-2 w-full h-9 shrink-0">
 			<div className="flex items-center justify-center shrink-0 h-7">
 				<div className="relative flex items-center gap-2">
 					<div
 						contentEditable
 						suppressContentEditableWarning={true}
 						onBlur={(e) => setTitle(e.currentTarget.textContent)}
-						className="text-sm font-medium focus:outline-none"
+						className="text-[12px] font-semibold focus:outline-none"
 					>
 						{name}
 					</div>
@@ -193,9 +192,9 @@ function Header({ label, name }: { label: string; name: string }) {
 						<button
 							type="button"
 							onClick={() => saveNewTitle()}
-							className="text-teal-500 hover:text-teal-600"
+							className="text-teal-500 hover:text-teal-600 inline-flex items-center justify-center size-6 border-[.5px] border-neutral-200 dark:border-neutral-800 shadow shadow-neutral-200/50 dark:shadow-none rounded-full bg-white dark:bg-black"
 						>
-							<Check className="size-4" />
+							<Check className="size-3" weight="bold" />
 						</button>
 					) : null}
 				</div>
@@ -203,9 +202,9 @@ function Header({ label, name }: { label: string; name: string }) {
 			<button
 				type="button"
 				onClick={(e) => showContextMenu(e)}
-				className="inline-flex items-center justify-center rounded-lg size-7 hover:bg-black/10 dark:hover:bg-white/10"
+				className="hidden shrink-0 group-hover:inline-flex items-center justify-center size-6 border-[.5px] border-neutral-200 dark:border-neutral-800 shadow shadow-neutral-200/50 dark:shadow-none rounded-full bg-white dark:bg-black"
 			>
-				<DotsThree className="size-5" />
+				<CaretDown className="size-3" weight="bold" />
 			</button>
 		</div>
 	);

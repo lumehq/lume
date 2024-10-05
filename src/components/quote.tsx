@@ -13,12 +13,7 @@ export const Quote = memo(function Quote({
 }) {
 	return (
 		<Note.Provider event={event}>
-			<Note.Root
-				className={cn(
-					"bg-white dark:bg-black/20 rounded-xl flex flex-col gap-3 shadow-primary dark:ring-1 ring-neutral-800/50",
-					className,
-				)}
-			>
+			<Note.Root className={cn("", className)}>
 				<div className="flex flex-col gap-3">
 					<Note.Child event={event.quote} isRoot />
 					<div className="flex items-center gap-2 px-3">

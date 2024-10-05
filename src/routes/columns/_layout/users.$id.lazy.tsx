@@ -22,7 +22,7 @@ function Screen() {
 	const { isLoading, data: events } = useQuery({
 		queryKey: ["stories", id],
 		queryFn: async () => {
-			const res = await commands.getEventsBy(id, 20);
+			const res = await commands.getEventsBy(id, 100);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);
@@ -41,12 +41,30 @@ function Screen() {
 			if (!event) return;
 			switch (event.kind) {
 				case Kind.Repost:
-					return <RepostNote key={event.id} event={event} className="mb-3" />;
+					return (
+						<RepostNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 				default: {
 					if (event.isQuote) {
-						return <Quote key={event.id} event={event} className="mb-3" />;
+						return (
+							<Quote
+								key={event.id}
+								event={event}
+								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+							/>
+						);
 					}
-					return <TextNote key={event.id} event={event} className="mb-3" />;
+					return (
+						<TextNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 				}
 			}
 		},
@@ -57,21 +75,24 @@ function Screen() {
 		<ScrollArea.Root
 			type={"scroll"}
 			scrollHideDelay={300}
-			className="overflow-hidden size-full"
+			className="overflow-hidden size-full px-3"
 		>
-			<ScrollArea.Viewport ref={ref} className="relative h-full px-3 pb-3">
+			<ScrollArea.Viewport
+				ref={ref}
+				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+			>
 				<Virtualizer scrollRef={ref} overscan={0}>
 					<User.Provider pubkey={id}>
 						<User.Root className="relative">
 							<User.Cover className="object-cover w-full h-44 rounded-t-lg gradient-mask-b-0" />
 							<User.Button className="z-10 absolute top-4 right-4 inline-flex items-center justify-center w-20 text-xs font-medium text-white shadow-md bg-black hover:bg-black/80 rounded-full h-7" />
-							<div className="z-10 relative flex flex-col items-center gap-1.5 -mt-16">
+							<div className="z-10 relative flex flex-col gap-1.5 -mt-16 px-4">
 								<User.Avatar className="rounded-full size-14" />
-								<div className="flex items-center gap-1">
+								<div className="flex gap-1">
 									<User.Name className="text-lg font-semibold leading-tight" />
 									<User.NIP05 />
 								</div>
-								<User.About className="text-center" />
+								<User.About className="text-sm" />
 							</div>
 						</User.Root>
 					</User.Provider>

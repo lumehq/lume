@@ -12,7 +12,7 @@ export const Route = createLazyFileRoute("/columns/_layout/trending")({
 });
 
 function Screen() {
-	const { isLoading, isError, data } = useQuery({
+	const { isLoading, data } = useQuery({
 		queryKey: ["trending-notes"],
 		queryFn: async ({ signal }) => {
 			const res = await fetch("https://api.nostr.band/v0/trending/notes", {
@@ -43,12 +43,30 @@ function Screen() {
 			if (!event) return;
 			switch (event.kind) {
 				case Kind.Repost:
-					return <RepostNote key={event.id} event={event} className="mb-3" />;
+					return (
+						<RepostNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 				default: {
 					if (event.isQuote) {
-						return <Quote key={event.id} event={event} className="mb-3" />;
+						return (
+							<Quote
+								key={event.id}
+								event={event}
+								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+							/>
+						);
 					} else {
-						return <TextNote key={event.id} event={event} className="mb-3" />;
+						return (
+							<TextNote
+								key={event.id}
+								event={event}
+								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+							/>
+						);
 					}
 				}
 			}
@@ -60,22 +78,21 @@ function Screen() {
 		<ScrollArea.Root
 			type={"scroll"}
 			scrollHideDelay={300}
-			className="overflow-hidden size-full"
+			className="overflow-hidden size-full px-3"
 		>
-			<ScrollArea.Viewport ref={ref} className="h-full px-3">
+			<ScrollArea.Viewport
+				ref={ref}
+				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+			>
 				<Virtualizer scrollRef={ref} overscan={1}>
 					{isLoading ? (
-						<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
-							<div className="inline-flex items-center gap-2 text-sm font-medium">
-								<Spinner className="size-5" />
-								Loading...
-							</div>
+						<div className="flex items-center justify-center w-full h-16 gap-2">
+							<Spinner className="size-4" />
+							<span className="text-sm font-medium">Loading...</span>
 						</div>
-					) : isError ? (
-						<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
-							<div className="inline-flex items-center gap-2 text-sm font-medium">
-								Error.
-							</div>
+					) : !data.length ? (
+						<div className="mb-3 flex items-center justify-center h-20 text-sm">
+							🎉 Yo. You're catching up on all latest notes.
 						</div>
 					) : (
 						data.map((item) => renderItem(item))

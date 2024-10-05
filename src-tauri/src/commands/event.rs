@@ -290,13 +290,7 @@ pub async fn get_group_events(
 
     let authors: Vec<PublicKey> = public_keys
         .iter()
-        .map(|p| {
-            if p.starts_with("npub1") {
-                PublicKey::from_bech32(p).map_err(|err| err.to_string())
-            } else {
-                PublicKey::from_hex(p).map_err(|err| err.to_string())
-            }
-        })
+        .map(|p| PublicKey::from_str(p).map_err(|err| err.to_string()))
         .collect::<Result<Vec<_>, _>>()?;
 
     let filter = Filter::new()
@@ -340,6 +334,7 @@ pub async fn get_global_events(
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
+
     let as_of = match until {
         Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),

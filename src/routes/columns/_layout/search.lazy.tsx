@@ -84,59 +84,61 @@ function Screen() {
 	};
 
 	return (
-		<div className="flex flex-col gap-3 size-full overflow-hidden">
-			<div className="h-9 shrink-0 px-3 flex items-center gap-2">
-				<input
-					name="search"
-					placeholder="Search nostr ..."
-					value={query}
-					onChange={(e) => setQuery(e.target.value)}
-					onKeyDown={(event) => {
-						if (event.key === "Enter") search();
-					}}
-					className="h-9 px-5 flex-1 rounded-full border-none bg-black/5 dark:bg-white/10 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:bg-black/10 dark:focus:bg-white/10	 focus:outline-none focus:ring-0"
-				/>
-				<button
-					type="button"
-					disabled={!query.length || isPending}
-					className="size-9 shrink-0 inline-flex items-center justify-center rounded-full bg-black/5 dark:bg-white/10"
-				>
-					{isPending ? (
-						<Spinner className="size-4" />
-					) : (
-						<MagnifyingGlass className="size-4" />
-					)}
-				</button>
-			</div>
-			<ScrollArea.Root
-				type={"scroll"}
-				scrollHideDelay={300}
-				className="overflow-hidden size-full flex-1"
-			>
-				<ScrollArea.Viewport ref={ref} className="relative h-full px-3">
-					<Virtualizer scrollRef={ref}>
+		<div className="px-3 h-full">
+			<div className="flex flex-col gap-3 size-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700">
+				<div className="h-9 shrink-0 pt-6 px-3 flex items-center gap-2">
+					<input
+						name="search"
+						placeholder="Search nostr ..."
+						value={query}
+						onChange={(e) => setQuery(e.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") search();
+						}}
+						className="h-9 px-5 flex-1 rounded-full border-none bg-black/5 dark:bg-white/10 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:bg-black/10 dark:focus:bg-white/10	 focus:outline-none focus:ring-0"
+					/>
+					<button
+						type="button"
+						disabled={!query.length || isPending}
+						className="size-9 shrink-0 inline-flex items-center justify-center rounded-full bg-black/5 dark:bg-white/10"
+					>
 						{isPending ? (
-							<div className="w-full h-[200px] flex gap-2 items-center justify-center">
-								<Spinner />
-								Searching...
-							</div>
-						) : !events.length ? (
-							<div className="w-full h-[200px] flex gap-2 items-center justify-center">
-								Type somethings to search.
-							</div>
+							<Spinner className="size-4" />
 						) : (
-							events.map((event) => renderItem(event))
+							<MagnifyingGlass className="size-4" />
 						)}
-					</Virtualizer>
-				</ScrollArea.Viewport>
-				<ScrollArea.Scrollbar
-					className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
-					orientation="vertical"
+					</button>
+				</div>
+				<ScrollArea.Root
+					type={"scroll"}
+					scrollHideDelay={300}
+					className="overflow-hidden size-full flex-1"
 				>
-					<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
-				</ScrollArea.Scrollbar>
-				<ScrollArea.Corner className="bg-transparent" />
-			</ScrollArea.Root>
+					<ScrollArea.Viewport ref={ref} className="relative h-full px-3">
+						<Virtualizer scrollRef={ref}>
+							{isPending ? (
+								<div className="w-full h-[200px] flex gap-2 items-center justify-center">
+									<Spinner />
+									Searching...
+								</div>
+							) : !events.length ? (
+								<div className="w-full h-[200px] flex gap-2 items-center justify-center">
+									Type somethings to search.
+								</div>
+							) : (
+								events.map((event) => renderItem(event))
+							)}
+						</Virtualizer>
+					</ScrollArea.Viewport>
+					<ScrollArea.Scrollbar
+						className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
+						orientation="vertical"
+					>
+						<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+					</ScrollArea.Scrollbar>
+					<ScrollArea.Corner className="bg-transparent" />
+				</ScrollArea.Root>
+			</div>
 		</div>
 	);
 }

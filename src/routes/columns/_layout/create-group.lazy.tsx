@@ -49,6 +49,7 @@ function Screen() {
 				await queryClient.invalidateQueries({
 					queryKey: [search.label, search.account],
 				});
+				// @ts-ignore, tanstack router bug.
 				navigate({ to: search.redirect, search: { ...search, name: title } });
 			} else {
 				await message(res.error, {
@@ -69,10 +70,10 @@ function Screen() {
 				</p>
 			</div>
 			<div className="flex flex-col w-4/5 max-w-full gap-3">
-				<div className="flex items-center w-full rounded-lg h-9 shrink-0 bg-black/5 dark:bg-white/5">
+				<div className="flex items-center w-full rounded-lg h-9 shrink-0 bg-neutral-200 dark:bg-neutral-800">
 					<label
 						htmlFor="name"
-						className="w-16 text-sm font-semibold text-center border-r border-black/10 dark:border-white/10 shrink-0"
+						className="w-16 text-sm font-semibold text-center border-r border-neutral-300 dark:border-neutral-700 shrink-0"
 					>
 						Name
 					</label>
@@ -85,19 +86,19 @@ function Screen() {
 					/>
 				</div>
 				<div className="flex flex-col items-center w-full gap-3">
-					<div className="overflow-y-auto scrollbar-none p-2 w-full h-[450px] flex flex-col gap-3 bg-black/5 dark:bg-white/5 rounded-xl">
+					<div className="overflow-y-auto scrollbar-none p-2 w-full h-[450px] flex flex-col gap-3 bg-neutral-200 dark:bg-neutral-900 rounded-xl">
 						<div className="flex gap-2">
 							<input
 								name="npub"
 								value={npub}
 								onChange={(e) => setNpub(e.target.value)}
 								placeholder="npub1..."
-								className="w-full px-3 text-sm border-none rounded-lg h-9 bg-black/10 dark:bg-white/10 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
+								className="w-full px-3 text-sm border-none rounded-lg h-9 bg-neutral-300 dark:bg-neutral-700 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
 							/>
 							<button
 								type="button"
 								onClick={() => addUser()}
-								className="inline-flex items-center justify-center text-white rounded-lg size-9 bg-black/20 dark:bg-white/20 shrink-0 hover:bg-blue-500"
+								className="inline-flex items-center justify-center text-neutral-500 rounded-lg size-9 bg-neutral-300 dark:bg-neutral-700 shrink-0 hover:bg-blue-500 hover:text-white"
 							>
 								<Plus className="size-5" />
 							</button>
@@ -125,7 +126,7 @@ function Screen() {
 										</button>
 									))
 								) : (
-									<div className="flex items-center justify-center text-sm rounded-lg bg-black/5 dark:bg-white/5 h-14">
+									<div className="flex items-center justify-center text-sm rounded-lg bg-neutral-300 dark:bg-neutral-700 h-14">
 										Empty.
 									</div>
 								)}
