@@ -15,9 +15,9 @@ export const LumeWindow = {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
-				label: "columns_gallery",
-				name: "Columns Gallery",
-				url: "/columns/gallery",
+				label: "launchpad",
+				name: "Launchpad",
+				url: "/columns/launchpad",
 			},
 		});
 	},
@@ -25,8 +25,8 @@ export const LumeWindow = {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
-				label: "local_feeds",
-				name: "Local Feeds",
+				label: "newsfeed",
+				name: "Newsfeed",
 				url: "/columns/newsfeed",
 			},
 		});

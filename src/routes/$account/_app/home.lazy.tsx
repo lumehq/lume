@@ -217,16 +217,16 @@ function ManageButton() {
 
 		const menuItems = await Promise.all([
 			MenuItem.new({
-				text: "Open Columns Gallery",
+				text: "Open Launchpad",
 				action: () => LumeWindow.openColumnsGallery(),
 			}),
 			PredefinedMenuItem.new({ item: "Separator" }),
 			MenuItem.new({
-				text: "Add local feeds",
+				text: "Open Newsfeed",
 				action: () => LumeWindow.openLocalFeeds(),
 			}),
 			MenuItem.new({
-				text: "Add notification",
+				text: "Open Notification",
 				action: () => LumeWindow.openNotification(),
 			}),
 		]);

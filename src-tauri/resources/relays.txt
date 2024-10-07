@@ -1,2 +1,3 @@
 wss://relay.damus.io,
 wss://relay.nostr.net,
+wss://nos.lol,

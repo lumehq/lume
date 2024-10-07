@@ -10,7 +10,7 @@ import { useState, useTransition } from "react";
 
 const TOPICS = [
 	{
-		title: "Popular",
+		title: "Popular hashtags",
 		content: [
 			"#nostr",
 			"#introductions",
@@ -119,6 +119,24 @@ function Screen() {
 				<ScrollArea.Viewport className="bg-white dark:bg-black h-full p-3">
 					<div className="mb-3 flex flex-col gap-2">
 						<span className="text-sm font-semibold">Added</span>
+						<div className="flex gap-2">
+							<input
+								name="hashtag"
+								placeholder="#nostr"
+								onChange={(e) => setHashtag(e.target.value)}
+								onKeyDown={(event) => {
+									if (event.key === "Enter") addHashtag();
+								}}
+								className="w-full px-3 text-sm border-none rounded-lg h-9 bg-neutral-100 dark:bg-neutral-900 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
+							/>
+							<button
+								type="button"
+								onClick={() => addHashtag()}
+								className="inline-flex items-center justify-center text-neutral-500 rounded-lg size-9 bg-neutral-200 dark:bg-neutral-800 shrink-0 hover:bg-blue-500 hover:text-white"
+							>
+								<Plus className="size-5" />
+							</button>
+						</div>
 						<div className="flex flex-col gap-2">
 							{hashtags.length ? (
 								hashtags.map((item: string) => (
@@ -139,50 +157,29 @@ function Screen() {
 							)}
 						</div>
 					</div>
-					<div className="flex flex-col gap-2">
-						<span className="text-sm font-semibold">Hashtags</span>
-						<div className="flex gap-2">
-							<input
-								name="hashtag"
-								placeholder="#nostr"
-								onChange={(e) => setHashtag(e.target.value)}
-								onKeyDown={(event) => {
-									if (event.key === "Enter") addHashtag();
-								}}
-								className="w-full px-3 text-sm border-none rounded-lg h-9 bg-neutral-100 dark:bg-neutral-900 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
-							/>
-							<button
-								type="button"
-								onClick={() => addHashtag()}
-								className="inline-flex items-center justify-center text-neutral-500 rounded-lg size-9 bg-neutral-200 dark:bg-neutral-800 shrink-0 hover:bg-blue-500 hover:text-white"
-							>
-								<Plus className="size-5" />
-							</button>
-						</div>
-						<div className="mt-2 flex flex-col gap-4">
-							{TOPICS.map((topic) => (
-								<div key={topic.title} className="flex flex-col gap-2">
-									<div className="text-sm font-semibold">{topic.title}</div>
-									<div className="flex flex-wrap gap-2">
-										{topic.content.map((item) => (
-											<button
-												key={item}
-												type="button"
-												onClick={() => toggleHashtag(item)}
-												className={cn(
-													"text-sm p-2 rounded-full",
-													hashtags.includes(item)
-														? "bg-blue-500 text-white"
-														: "bg-neutral-100 dark:bg-neutral-900",
-												)}
-											>
-												{item}
-											</button>
-										))}
-									</div>
+					<div className="flex flex-col gap-4">
+						{TOPICS.map((topic) => (
+							<div key={topic.title} className="flex flex-col gap-2">
+								<div className="text-sm font-semibold">{topic.title}</div>
+								<div className="flex flex-wrap gap-2">
+									{topic.content.map((item) => (
+										<button
+											key={item}
+											type="button"
+											onClick={() => toggleHashtag(item)}
+											className={cn(
+												"text-sm p-2 rounded-full",
+												hashtags.includes(item)
+													? "bg-blue-500 text-white"
+													: "bg-neutral-100 dark:bg-neutral-900",
+											)}
+										>
+											{item}
+										</button>
+									))}
 								</div>
-							))}
-						</div>
+							</div>
+						))}
 					</div>
 				</ScrollArea.Viewport>
 				<ScrollArea.Scrollbar

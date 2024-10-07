@@ -60,8 +60,8 @@ const ColumnsLayoutOnboardingLazyImport = createFileRoute(
 const ColumnsLayoutNotificationLazyImport = createFileRoute(
   '/columns/_layout/notification',
 )()
-const ColumnsLayoutGalleryLazyImport = createFileRoute(
-  '/columns/_layout/gallery',
+const ColumnsLayoutLaunchpadLazyImport = createFileRoute(
+  '/columns/_layout/launchpad',
 )()
 const ColumnsLayoutUsersIdLazyImport = createFileRoute(
   '/columns/_layout/users/$id',
@@ -199,11 +199,13 @@ const ColumnsLayoutNotificationLazyRoute =
     import('./routes/columns/_layout/notification.lazy').then((d) => d.Route),
   )
 
-const ColumnsLayoutGalleryLazyRoute = ColumnsLayoutGalleryLazyImport.update({
-  path: '/gallery',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/gallery.lazy').then((d) => d.Route),
+const ColumnsLayoutLaunchpadLazyRoute = ColumnsLayoutLaunchpadLazyImport.update(
+  {
+    path: '/launchpad',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/columns/_layout/launchpad.lazy').then((d) => d.Route),
 )
 
 const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
@@ -525,11 +527,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutStoriesImport
       parentRoute: typeof ColumnsLayoutImport
     }
-    '/columns/_layout/gallery': {
-      id: '/columns/_layout/gallery'
-      path: '/gallery'
-      fullPath: '/columns/gallery'
-      preLoaderRoute: typeof ColumnsLayoutGalleryLazyImport
+    '/columns/_layout/launchpad': {
+      id: '/columns/_layout/launchpad'
+      path: '/launchpad'
+      fullPath: '/columns/launchpad'
+      preLoaderRoute: typeof ColumnsLayoutLaunchpadLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/notification': {
@@ -682,7 +684,7 @@ interface ColumnsLayoutRouteChildren {
   ColumnsLayoutGlobalRoute: typeof ColumnsLayoutGlobalRoute
   ColumnsLayoutNewsfeedRoute: typeof ColumnsLayoutNewsfeedRoute
   ColumnsLayoutStoriesRoute: typeof ColumnsLayoutStoriesRoute
-  ColumnsLayoutGalleryLazyRoute: typeof ColumnsLayoutGalleryLazyRoute
+  ColumnsLayoutLaunchpadLazyRoute: typeof ColumnsLayoutLaunchpadLazyRoute
   ColumnsLayoutNotificationLazyRoute: typeof ColumnsLayoutNotificationLazyRoute
   ColumnsLayoutOnboardingLazyRoute: typeof ColumnsLayoutOnboardingLazyRoute
   ColumnsLayoutSearchLazyRoute: typeof ColumnsLayoutSearchLazyRoute
@@ -700,7 +702,7 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
   ColumnsLayoutGlobalRoute: ColumnsLayoutGlobalRoute,
   ColumnsLayoutNewsfeedRoute: ColumnsLayoutNewsfeedRoute,
   ColumnsLayoutStoriesRoute: ColumnsLayoutStoriesRoute,
-  ColumnsLayoutGalleryLazyRoute: ColumnsLayoutGalleryLazyRoute,
+  ColumnsLayoutLaunchpadLazyRoute: ColumnsLayoutLaunchpadLazyRoute,
   ColumnsLayoutNotificationLazyRoute: ColumnsLayoutNotificationLazyRoute,
   ColumnsLayoutOnboardingLazyRoute: ColumnsLayoutOnboardingLazyRoute,
   ColumnsLayoutSearchLazyRoute: ColumnsLayoutSearchLazyRoute,
@@ -753,7 +755,7 @@ export interface FileRoutesByFullPath {
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/columns/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
-  '/columns/gallery': typeof ColumnsLayoutGalleryLazyRoute
+  '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
@@ -793,7 +795,7 @@ export interface FileRoutesByTo {
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/columns/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
-  '/columns/gallery': typeof ColumnsLayoutGalleryLazyRoute
+  '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
@@ -837,7 +839,7 @@ export interface FileRoutesById {
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
   '/columns/_layout/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/_layout/stories': typeof ColumnsLayoutStoriesRoute
-  '/columns/_layout/gallery': typeof ColumnsLayoutGalleryLazyRoute
+  '/columns/_layout/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/_layout/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/_layout/search': typeof ColumnsLayoutSearchLazyRoute
@@ -879,7 +881,7 @@ export interface FileRouteTypes {
     | '/columns/global'
     | '/columns/newsfeed'
     | '/columns/stories'
-    | '/columns/gallery'
+    | '/columns/launchpad'
     | '/columns/notification'
     | '/columns/onboarding'
     | '/columns/search'
@@ -918,7 +920,7 @@ export interface FileRouteTypes {
     | '/columns/global'
     | '/columns/newsfeed'
     | '/columns/stories'
-    | '/columns/gallery'
+    | '/columns/launchpad'
     | '/columns/notification'
     | '/columns/onboarding'
     | '/columns/search'
@@ -960,7 +962,7 @@ export interface FileRouteTypes {
     | '/columns/_layout/global'
     | '/columns/_layout/newsfeed'
     | '/columns/_layout/stories'
-    | '/columns/_layout/gallery'
+    | '/columns/_layout/launchpad'
     | '/columns/_layout/notification'
     | '/columns/_layout/onboarding'
     | '/columns/_layout/search'
@@ -1091,7 +1093,7 @@ export const routeTree = rootRoute
         "/columns/_layout/global",
         "/columns/_layout/newsfeed",
         "/columns/_layout/stories",
-        "/columns/_layout/gallery",
+        "/columns/_layout/launchpad",
         "/columns/_layout/notification",
         "/columns/_layout/onboarding",
         "/columns/_layout/search",
@@ -1173,8 +1175,8 @@ export const routeTree = rootRoute
       "filePath": "columns/_layout/stories.tsx",
       "parent": "/columns/_layout"
     },
-    "/columns/_layout/gallery": {
-      "filePath": "columns/_layout/gallery.lazy.tsx",
+    "/columns/_layout/launchpad": {
+      "filePath": "columns/_layout/launchpad.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/notification": {

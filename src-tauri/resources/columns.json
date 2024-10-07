@@ -11,10 +11,10 @@
 	{
 		"default": true,
 		"official": true,
-		"label": "columns_gallery",
-		"name": "Columns Gallery",
+		"label": "Launchpad",
+		"name": "Launchpad",
 		"description": "Expand your experiences.",
-		"url": "/columns/gallery",
+		"url": "/columns/launchpad",
 		"picture": ""
 	},
 	{

@@ -10,7 +10,7 @@ import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { useCallback } from "react";
 
-export const Route = createLazyFileRoute("/columns/_layout/gallery")({
+export const Route = createLazyFileRoute("/columns/_layout/launchpad")({
 	component: Screen,
 });
 
@@ -116,7 +116,8 @@ function MyGroups() {
 
 	const renderItem = useCallback(
 		(item: NostrEvent) => {
-			const name = item.tags.filter((tag) => tag[0] === "d")[0][1] ?? "unnamed";
+			const name =
+				item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
 
 			return (
 				<div
@@ -225,7 +226,8 @@ function MyInterests() {
 
 	const renderItem = useCallback(
 		(item: NostrEvent) => {
-			const name = item.tags.filter((tag) => tag[0] === "d")[0][1] ?? "unnamed";
+			const name =
+				item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
 
 			return (
 				<div
