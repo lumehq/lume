@@ -129,7 +129,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .title(&window.title)
         .min_inner_size(window.width, window.height)
         .inner_size(window.width, window.height)
-        .hidden_title(true)
+        .hidden_title(window.hidden_title)
         .title_bar_style(TitleBarStyle::Overlay)
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)

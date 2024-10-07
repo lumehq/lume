@@ -1,6 +1,7 @@
 import { commands } from "@/commands.gen";
 import type { LumeColumn, NostrEvent } from "@/types";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { nanoid } from "nanoid";
 import type { LumeEvent } from "./event";
 
 export const LumeWindow = {
@@ -150,8 +151,22 @@ export const LumeWindow = {
 			throw new Error(query.error);
 		}
 	},
-	openMainWindow: async () => {
-		const query = await commands.reopenLume();
-		return query;
+	openPopup: async (title: string, url: string) => {
+		const query = await commands.openWindow({
+			label: `popup-${nanoid()}`,
+			url,
+			title,
+			width: 400,
+			height: 500,
+			maximizable: false,
+			minimizable: false,
+			hidden_title: true,
+		});
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
+		}
 	},
 };

@@ -13,8 +13,8 @@ import { createStore } from "@tauri-apps/plugin-store";
 import { routeTree } from "./routes.gen"; // auto generated file
 
 const platform = type();
-// @ts-ignore, https://github.com/tauri-apps/plugins-workspace/pull/1860
-const store = await createStore(".cache", { autoSave: 100 });
+// @ts-expect-error, required: https://github.com/tauri-apps/plugins-workspace/pull/1860
+const store = await createStore(".cache", { autoSave: 250 });
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {

@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SetGroupImport } from './routes/set-group'
 import { Route as LoadingImport } from './routes/loading'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as IndexImport } from './routes/index'
@@ -22,17 +23,16 @@ import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountBackupImport } from './routes/$account/backup'
 import { Route as AccountAppImport } from './routes/$account/_app'
 import { Route as ColumnsLayoutStoriesImport } from './routes/columns/_layout/stories'
-import { Route as ColumnsLayoutGroupImport } from './routes/columns/_layout/group'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
-import { Route as ColumnsLayoutGalleryImport } from './routes/columns/_layout/gallery'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
-import { Route as ColumnsLayoutCreateGroupImport } from './routes/columns/_layout/create-group'
 import { Route as AccountSettingsWalletImport } from './routes/$account/_settings/wallet'
 import { Route as AccountSettingsRelayImport } from './routes/$account/_settings/relay'
 import { Route as AccountSettingsProfileImport } from './routes/$account/_settings/profile'
 import { Route as AccountSettingsGeneralImport } from './routes/$account/_settings/general'
 import { Route as AccountSettingsBitcoinConnectImport } from './routes/$account/_settings/bitcoin-connect'
 import { Route as AccountAppHomeImport } from './routes/$account/_app/home'
+import { Route as ColumnsLayoutInterestsIdImport } from './routes/columns/_layout/interests.$id'
+import { Route as ColumnsLayoutGroupsIdImport } from './routes/columns/_layout/groups.$id'
 import { Route as ColumnsLayoutCreateNewsfeedUsersImport } from './routes/columns/_layout/create-newsfeed.users'
 import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/_layout/create-newsfeed.f2f'
 
@@ -40,6 +40,7 @@ import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/
 
 const ColumnsImport = createFileRoute('/columns')()
 const AccountImport = createFileRoute('/$account')()
+const SetInterestLazyImport = createFileRoute('/set-interest')()
 const ResetLazyImport = createFileRoute('/reset')()
 const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
@@ -61,14 +62,14 @@ const ColumnsLayoutNotificationLazyImport = createFileRoute(
 const ColumnsLayoutNewsfeedLazyImport = createFileRoute(
   '/columns/_layout/newsfeed',
 )()
+const ColumnsLayoutGalleryLazyImport = createFileRoute(
+  '/columns/_layout/gallery',
+)()
 const ColumnsLayoutUsersIdLazyImport = createFileRoute(
   '/columns/_layout/users/$id',
 )()
 const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
   '/columns/_layout/replies/$id',
-)()
-const ColumnsLayoutHashtagsContentLazyImport = createFileRoute(
-  '/columns/_layout/hashtags/$content',
 )()
 const ColumnsLayoutEventsIdLazyImport = createFileRoute(
   '/columns/_layout/events/$id',
@@ -86,6 +87,11 @@ const AccountRoute = AccountImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const SetInterestLazyRoute = SetInterestLazyImport.update({
+  path: '/set-interest',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/set-interest.lazy').then((d) => d.Route))
+
 const ResetLazyRoute = ResetLazyImport.update({
   path: '/reset',
   getParentRoute: () => rootRoute,
@@ -95,6 +101,11 @@ const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
+
+const SetGroupRoute = SetGroupImport.update({
+  path: '/set-group',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/set-group.lazy').then((d) => d.Route))
 
 const LoadingRoute = LoadingImport.update({
   path: '/loading',
@@ -197,6 +208,13 @@ const ColumnsLayoutNewsfeedLazyRoute = ColumnsLayoutNewsfeedLazyImport.update({
   import('./routes/columns/_layout/newsfeed.lazy').then((d) => d.Route),
 )
 
+const ColumnsLayoutGalleryLazyRoute = ColumnsLayoutGalleryLazyImport.update({
+  path: '/gallery',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/gallery.lazy').then((d) => d.Route),
+)
+
 const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
   path: '/stories',
   getParentRoute: () => ColumnsLayoutRoute,
@@ -204,37 +222,16 @@ const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
   import('./routes/columns/_layout/stories.lazy').then((d) => d.Route),
 )
 
-const ColumnsLayoutGroupRoute = ColumnsLayoutGroupImport.update({
-  path: '/group',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/group.lazy').then((d) => d.Route),
-)
-
 const ColumnsLayoutGlobalRoute = ColumnsLayoutGlobalImport.update({
   path: '/global',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any)
-
-const ColumnsLayoutGalleryRoute = ColumnsLayoutGalleryImport.update({
-  path: '/gallery',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/gallery.lazy').then((d) => d.Route),
-)
 
 const ColumnsLayoutCreateNewsfeedRoute =
   ColumnsLayoutCreateNewsfeedImport.update({
     path: '/create-newsfeed',
     getParentRoute: () => ColumnsLayoutRoute,
   } as any)
-
-const ColumnsLayoutCreateGroupRoute = ColumnsLayoutCreateGroupImport.update({
-  path: '/create-group',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/create-group.lazy').then((d) => d.Route),
-)
 
 const AccountSettingsWalletRoute = AccountSettingsWalletImport.update({
   path: '/wallet',
@@ -297,21 +294,25 @@ const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
   import('./routes/columns/_layout/replies.$id.lazy').then((d) => d.Route),
 )
 
-const ColumnsLayoutHashtagsContentLazyRoute =
-  ColumnsLayoutHashtagsContentLazyImport.update({
-    path: '/hashtags/$content',
-    getParentRoute: () => ColumnsLayoutRoute,
-  } as any).lazy(() =>
-    import('./routes/columns/_layout/hashtags.$content.lazy').then(
-      (d) => d.Route,
-    ),
-  )
-
 const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
   path: '/events/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
   import('./routes/columns/_layout/events.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutInterestsIdRoute = ColumnsLayoutInterestsIdImport.update({
+  path: '/interests/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/interests.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutGroupsIdRoute = ColumnsLayoutGroupsIdImport.update({
+  path: '/groups/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/groups.$id.lazy').then((d) => d.Route),
 )
 
 const ColumnsLayoutCreateNewsfeedUsersRoute =
@@ -351,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoadingImport
       parentRoute: typeof rootRoute
     }
+    '/set-group': {
+      id: '/set-group'
+      path: '/set-group'
+      fullPath: '/set-group'
+      preLoaderRoute: typeof SetGroupImport
+      parentRoute: typeof rootRoute
+    }
     '/new': {
       id: '/new'
       path: '/new'
@@ -363,6 +371,13 @@ declare module '@tanstack/react-router' {
       path: '/reset'
       fullPath: '/reset'
       preLoaderRoute: typeof ResetLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/set-interest': {
+      id: '/set-interest'
+      path: '/set-interest'
+      fullPath: '/set-interest'
+      preLoaderRoute: typeof SetInterestLazyImport
       parentRoute: typeof rootRoute
     }
     '/$account': {
@@ -484,25 +499,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountSettingsWalletImport
       parentRoute: typeof AccountSettingsLazyImport
     }
-    '/columns/_layout/create-group': {
-      id: '/columns/_layout/create-group'
-      path: '/create-group'
-      fullPath: '/columns/create-group'
-      preLoaderRoute: typeof ColumnsLayoutCreateGroupImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
     '/columns/_layout/create-newsfeed': {
       id: '/columns/_layout/create-newsfeed'
       path: '/create-newsfeed'
       fullPath: '/columns/create-newsfeed'
       preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
-    '/columns/_layout/gallery': {
-      id: '/columns/_layout/gallery'
-      path: '/gallery'
-      fullPath: '/columns/gallery'
-      preLoaderRoute: typeof ColumnsLayoutGalleryImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/global': {
@@ -512,18 +513,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutGlobalImport
       parentRoute: typeof ColumnsLayoutImport
     }
-    '/columns/_layout/group': {
-      id: '/columns/_layout/group'
-      path: '/group'
-      fullPath: '/columns/group'
-      preLoaderRoute: typeof ColumnsLayoutGroupImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
     '/columns/_layout/stories': {
       id: '/columns/_layout/stories'
       path: '/stories'
       fullPath: '/columns/stories'
       preLoaderRoute: typeof ColumnsLayoutStoriesImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/gallery': {
+      id: '/columns/_layout/gallery'
+      path: '/gallery'
+      fullPath: '/columns/gallery'
+      preLoaderRoute: typeof ColumnsLayoutGalleryLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/newsfeed': {
@@ -575,18 +576,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutCreateNewsfeedUsersImport
       parentRoute: typeof ColumnsLayoutCreateNewsfeedImport
     }
+    '/columns/_layout/groups/$id': {
+      id: '/columns/_layout/groups/$id'
+      path: '/groups/$id'
+      fullPath: '/columns/groups/$id'
+      preLoaderRoute: typeof ColumnsLayoutGroupsIdImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
+    '/columns/_layout/interests/$id': {
+      id: '/columns/_layout/interests/$id'
+      path: '/interests/$id'
+      fullPath: '/columns/interests/$id'
+      preLoaderRoute: typeof ColumnsLayoutInterestsIdImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/events/$id': {
       id: '/columns/_layout/events/$id'
       path: '/events/$id'
       fullPath: '/columns/events/$id'
       preLoaderRoute: typeof ColumnsLayoutEventsIdLazyImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
-    '/columns/_layout/hashtags/$content': {
-      id: '/columns/_layout/hashtags/$content'
-      path: '/hashtags/$content'
-      fullPath: '/columns/hashtags/$content'
-      preLoaderRoute: typeof ColumnsLayoutHashtagsContentLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/replies/$id': {
@@ -672,38 +680,36 @@ const ColumnsLayoutCreateNewsfeedRouteWithChildren =
   )
 
 interface ColumnsLayoutRouteChildren {
-  ColumnsLayoutCreateGroupRoute: typeof ColumnsLayoutCreateGroupRoute
   ColumnsLayoutCreateNewsfeedRoute: typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
-  ColumnsLayoutGalleryRoute: typeof ColumnsLayoutGalleryRoute
   ColumnsLayoutGlobalRoute: typeof ColumnsLayoutGlobalRoute
-  ColumnsLayoutGroupRoute: typeof ColumnsLayoutGroupRoute
   ColumnsLayoutStoriesRoute: typeof ColumnsLayoutStoriesRoute
+  ColumnsLayoutGalleryLazyRoute: typeof ColumnsLayoutGalleryLazyRoute
   ColumnsLayoutNewsfeedLazyRoute: typeof ColumnsLayoutNewsfeedLazyRoute
   ColumnsLayoutNotificationLazyRoute: typeof ColumnsLayoutNotificationLazyRoute
   ColumnsLayoutOnboardingLazyRoute: typeof ColumnsLayoutOnboardingLazyRoute
   ColumnsLayoutSearchLazyRoute: typeof ColumnsLayoutSearchLazyRoute
   ColumnsLayoutTrendingLazyRoute: typeof ColumnsLayoutTrendingLazyRoute
+  ColumnsLayoutGroupsIdRoute: typeof ColumnsLayoutGroupsIdRoute
+  ColumnsLayoutInterestsIdRoute: typeof ColumnsLayoutInterestsIdRoute
   ColumnsLayoutEventsIdLazyRoute: typeof ColumnsLayoutEventsIdLazyRoute
-  ColumnsLayoutHashtagsContentLazyRoute: typeof ColumnsLayoutHashtagsContentLazyRoute
   ColumnsLayoutRepliesIdLazyRoute: typeof ColumnsLayoutRepliesIdLazyRoute
   ColumnsLayoutUsersIdLazyRoute: typeof ColumnsLayoutUsersIdLazyRoute
 }
 
 const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
-  ColumnsLayoutCreateGroupRoute: ColumnsLayoutCreateGroupRoute,
   ColumnsLayoutCreateNewsfeedRoute:
     ColumnsLayoutCreateNewsfeedRouteWithChildren,
-  ColumnsLayoutGalleryRoute: ColumnsLayoutGalleryRoute,
   ColumnsLayoutGlobalRoute: ColumnsLayoutGlobalRoute,
-  ColumnsLayoutGroupRoute: ColumnsLayoutGroupRoute,
   ColumnsLayoutStoriesRoute: ColumnsLayoutStoriesRoute,
+  ColumnsLayoutGalleryLazyRoute: ColumnsLayoutGalleryLazyRoute,
   ColumnsLayoutNewsfeedLazyRoute: ColumnsLayoutNewsfeedLazyRoute,
   ColumnsLayoutNotificationLazyRoute: ColumnsLayoutNotificationLazyRoute,
   ColumnsLayoutOnboardingLazyRoute: ColumnsLayoutOnboardingLazyRoute,
   ColumnsLayoutSearchLazyRoute: ColumnsLayoutSearchLazyRoute,
   ColumnsLayoutTrendingLazyRoute: ColumnsLayoutTrendingLazyRoute,
+  ColumnsLayoutGroupsIdRoute: ColumnsLayoutGroupsIdRoute,
+  ColumnsLayoutInterestsIdRoute: ColumnsLayoutInterestsIdRoute,
   ColumnsLayoutEventsIdLazyRoute: ColumnsLayoutEventsIdLazyRoute,
-  ColumnsLayoutHashtagsContentLazyRoute: ColumnsLayoutHashtagsContentLazyRoute,
   ColumnsLayoutRepliesIdLazyRoute: ColumnsLayoutRepliesIdLazyRoute,
   ColumnsLayoutUsersIdLazyRoute: ColumnsLayoutUsersIdLazyRoute,
 }
@@ -727,8 +733,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/loading': typeof LoadingRoute
+  '/set-group': typeof SetGroupRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
+  '/set-interest': typeof SetInterestLazyRoute
   '/$account': typeof AccountSettingsLazyRouteWithChildren
   '/$account/backup': typeof AccountBackupRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
@@ -743,12 +751,10 @@ export interface FileRoutesByFullPath {
   '/$account/profile': typeof AccountSettingsProfileRoute
   '/$account/relay': typeof AccountSettingsRelayRoute
   '/$account/wallet': typeof AccountSettingsWalletRoute
-  '/columns/create-group': typeof ColumnsLayoutCreateGroupRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
-  '/columns/gallery': typeof ColumnsLayoutGalleryRoute
   '/columns/global': typeof ColumnsLayoutGlobalRoute
-  '/columns/group': typeof ColumnsLayoutGroupRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
+  '/columns/gallery': typeof ColumnsLayoutGalleryLazyRoute
   '/columns/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -756,8 +762,9 @@ export interface FileRoutesByFullPath {
   '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
   '/columns/create-newsfeed/f2f': typeof ColumnsLayoutCreateNewsfeedF2fRoute
   '/columns/create-newsfeed/users': typeof ColumnsLayoutCreateNewsfeedUsersRoute
+  '/columns/groups/$id': typeof ColumnsLayoutGroupsIdRoute
+  '/columns/interests/$id': typeof ColumnsLayoutInterestsIdRoute
   '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
-  '/columns/hashtags/$content': typeof ColumnsLayoutHashtagsContentLazyRoute
   '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -766,8 +773,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/loading': typeof LoadingRoute
+  '/set-group': typeof SetGroupRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
+  '/set-interest': typeof SetInterestLazyRoute
   '/$account': typeof AccountSettingsLazyRouteWithChildren
   '/$account/backup': typeof AccountBackupRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
@@ -782,12 +791,10 @@ export interface FileRoutesByTo {
   '/$account/profile': typeof AccountSettingsProfileRoute
   '/$account/relay': typeof AccountSettingsRelayRoute
   '/$account/wallet': typeof AccountSettingsWalletRoute
-  '/columns/create-group': typeof ColumnsLayoutCreateGroupRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
-  '/columns/gallery': typeof ColumnsLayoutGalleryRoute
   '/columns/global': typeof ColumnsLayoutGlobalRoute
-  '/columns/group': typeof ColumnsLayoutGroupRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
+  '/columns/gallery': typeof ColumnsLayoutGalleryLazyRoute
   '/columns/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -795,8 +802,9 @@ export interface FileRoutesByTo {
   '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
   '/columns/create-newsfeed/f2f': typeof ColumnsLayoutCreateNewsfeedF2fRoute
   '/columns/create-newsfeed/users': typeof ColumnsLayoutCreateNewsfeedUsersRoute
+  '/columns/groups/$id': typeof ColumnsLayoutGroupsIdRoute
+  '/columns/interests/$id': typeof ColumnsLayoutInterestsIdRoute
   '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
-  '/columns/hashtags/$content': typeof ColumnsLayoutHashtagsContentLazyRoute
   '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -806,8 +814,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/loading': typeof LoadingRoute
+  '/set-group': typeof SetGroupRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
+  '/set-interest': typeof SetInterestLazyRoute
   '/$account': typeof AccountRouteWithChildren
   '/$account/_app': typeof AccountAppRouteWithChildren
   '/$account/backup': typeof AccountBackupRoute
@@ -825,12 +835,10 @@ export interface FileRoutesById {
   '/$account/_settings/profile': typeof AccountSettingsProfileRoute
   '/$account/_settings/relay': typeof AccountSettingsRelayRoute
   '/$account/_settings/wallet': typeof AccountSettingsWalletRoute
-  '/columns/_layout/create-group': typeof ColumnsLayoutCreateGroupRoute
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
-  '/columns/_layout/gallery': typeof ColumnsLayoutGalleryRoute
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
-  '/columns/_layout/group': typeof ColumnsLayoutGroupRoute
   '/columns/_layout/stories': typeof ColumnsLayoutStoriesRoute
+  '/columns/_layout/gallery': typeof ColumnsLayoutGalleryLazyRoute
   '/columns/_layout/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
   '/columns/_layout/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -838,8 +846,9 @@ export interface FileRoutesById {
   '/columns/_layout/trending': typeof ColumnsLayoutTrendingLazyRoute
   '/columns/_layout/create-newsfeed/f2f': typeof ColumnsLayoutCreateNewsfeedF2fRoute
   '/columns/_layout/create-newsfeed/users': typeof ColumnsLayoutCreateNewsfeedUsersRoute
+  '/columns/_layout/groups/$id': typeof ColumnsLayoutGroupsIdRoute
+  '/columns/_layout/interests/$id': typeof ColumnsLayoutInterestsIdRoute
   '/columns/_layout/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
-  '/columns/_layout/hashtags/$content': typeof ColumnsLayoutHashtagsContentLazyRoute
   '/columns/_layout/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/_layout/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -850,8 +859,10 @@ export interface FileRouteTypes {
     | '/'
     | '/bootstrap-relays'
     | '/loading'
+    | '/set-group'
     | '/new'
     | '/reset'
+    | '/set-interest'
     | '/$account'
     | '/$account/backup'
     | '/columns'
@@ -866,12 +877,10 @@ export interface FileRouteTypes {
     | '/$account/profile'
     | '/$account/relay'
     | '/$account/wallet'
-    | '/columns/create-group'
     | '/columns/create-newsfeed'
-    | '/columns/gallery'
     | '/columns/global'
-    | '/columns/group'
     | '/columns/stories'
+    | '/columns/gallery'
     | '/columns/newsfeed'
     | '/columns/notification'
     | '/columns/onboarding'
@@ -879,8 +888,9 @@ export interface FileRouteTypes {
     | '/columns/trending'
     | '/columns/create-newsfeed/f2f'
     | '/columns/create-newsfeed/users'
+    | '/columns/groups/$id'
+    | '/columns/interests/$id'
     | '/columns/events/$id'
-    | '/columns/hashtags/$content'
     | '/columns/replies/$id'
     | '/columns/users/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -888,8 +898,10 @@ export interface FileRouteTypes {
     | '/'
     | '/bootstrap-relays'
     | '/loading'
+    | '/set-group'
     | '/new'
     | '/reset'
+    | '/set-interest'
     | '/$account'
     | '/$account/backup'
     | '/columns'
@@ -904,12 +916,10 @@ export interface FileRouteTypes {
     | '/$account/profile'
     | '/$account/relay'
     | '/$account/wallet'
-    | '/columns/create-group'
     | '/columns/create-newsfeed'
-    | '/columns/gallery'
     | '/columns/global'
-    | '/columns/group'
     | '/columns/stories'
+    | '/columns/gallery'
     | '/columns/newsfeed'
     | '/columns/notification'
     | '/columns/onboarding'
@@ -917,8 +927,9 @@ export interface FileRouteTypes {
     | '/columns/trending'
     | '/columns/create-newsfeed/f2f'
     | '/columns/create-newsfeed/users'
+    | '/columns/groups/$id'
+    | '/columns/interests/$id'
     | '/columns/events/$id'
-    | '/columns/hashtags/$content'
     | '/columns/replies/$id'
     | '/columns/users/$id'
   id:
@@ -926,8 +937,10 @@ export interface FileRouteTypes {
     | '/'
     | '/bootstrap-relays'
     | '/loading'
+    | '/set-group'
     | '/new'
     | '/reset'
+    | '/set-interest'
     | '/$account'
     | '/$account/_app'
     | '/$account/backup'
@@ -945,12 +958,10 @@ export interface FileRouteTypes {
     | '/$account/_settings/profile'
     | '/$account/_settings/relay'
     | '/$account/_settings/wallet'
-    | '/columns/_layout/create-group'
     | '/columns/_layout/create-newsfeed'
-    | '/columns/_layout/gallery'
     | '/columns/_layout/global'
-    | '/columns/_layout/group'
     | '/columns/_layout/stories'
+    | '/columns/_layout/gallery'
     | '/columns/_layout/newsfeed'
     | '/columns/_layout/notification'
     | '/columns/_layout/onboarding'
@@ -958,8 +969,9 @@ export interface FileRouteTypes {
     | '/columns/_layout/trending'
     | '/columns/_layout/create-newsfeed/f2f'
     | '/columns/_layout/create-newsfeed/users'
+    | '/columns/_layout/groups/$id'
+    | '/columns/_layout/interests/$id'
     | '/columns/_layout/events/$id'
-    | '/columns/_layout/hashtags/$content'
     | '/columns/_layout/replies/$id'
     | '/columns/_layout/users/$id'
   fileRoutesById: FileRoutesById
@@ -969,8 +981,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BootstrapRelaysRoute: typeof BootstrapRelaysRoute
   LoadingRoute: typeof LoadingRoute
+  SetGroupRoute: typeof SetGroupRoute
   NewLazyRoute: typeof NewLazyRoute
   ResetLazyRoute: typeof ResetLazyRoute
+  SetInterestLazyRoute: typeof SetInterestLazyRoute
   AccountRoute: typeof AccountRouteWithChildren
   ColumnsRoute: typeof ColumnsRouteWithChildren
   ZapIdRoute: typeof ZapIdRoute
@@ -984,8 +998,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BootstrapRelaysRoute: BootstrapRelaysRoute,
   LoadingRoute: LoadingRoute,
+  SetGroupRoute: SetGroupRoute,
   NewLazyRoute: NewLazyRoute,
   ResetLazyRoute: ResetLazyRoute,
+  SetInterestLazyRoute: SetInterestLazyRoute,
   AccountRoute: AccountRouteWithChildren,
   ColumnsRoute: ColumnsRouteWithChildren,
   ZapIdRoute: ZapIdRoute,
@@ -1010,8 +1026,10 @@ export const routeTree = rootRoute
         "/",
         "/bootstrap-relays",
         "/loading",
+        "/set-group",
         "/new",
         "/reset",
+        "/set-interest",
         "/$account",
         "/columns",
         "/zap/$id",
@@ -1030,11 +1048,17 @@ export const routeTree = rootRoute
     "/loading": {
       "filePath": "loading.tsx"
     },
+    "/set-group": {
+      "filePath": "set-group.tsx"
+    },
     "/new": {
       "filePath": "new.lazy.tsx"
     },
     "/reset": {
       "filePath": "reset.lazy.tsx"
+    },
+    "/set-interest": {
+      "filePath": "set-interest.lazy.tsx"
     },
     "/$account": {
       "filePath": "$account",
@@ -1065,19 +1089,18 @@ export const routeTree = rootRoute
       "filePath": "columns/_layout.tsx",
       "parent": "/columns",
       "children": [
-        "/columns/_layout/create-group",
         "/columns/_layout/create-newsfeed",
-        "/columns/_layout/gallery",
         "/columns/_layout/global",
-        "/columns/_layout/group",
         "/columns/_layout/stories",
+        "/columns/_layout/gallery",
         "/columns/_layout/newsfeed",
         "/columns/_layout/notification",
         "/columns/_layout/onboarding",
         "/columns/_layout/search",
         "/columns/_layout/trending",
+        "/columns/_layout/groups/$id",
+        "/columns/_layout/interests/$id",
         "/columns/_layout/events/$id",
-        "/columns/_layout/hashtags/$content",
         "/columns/_layout/replies/$id",
         "/columns/_layout/users/$id"
       ]
@@ -1132,10 +1155,6 @@ export const routeTree = rootRoute
       "filePath": "$account/_settings/wallet.tsx",
       "parent": "/$account/_settings"
     },
-    "/columns/_layout/create-group": {
-      "filePath": "columns/_layout/create-group.tsx",
-      "parent": "/columns/_layout"
-    },
     "/columns/_layout/create-newsfeed": {
       "filePath": "columns/_layout/create-newsfeed.tsx",
       "parent": "/columns/_layout",
@@ -1144,20 +1163,16 @@ export const routeTree = rootRoute
         "/columns/_layout/create-newsfeed/users"
       ]
     },
-    "/columns/_layout/gallery": {
-      "filePath": "columns/_layout/gallery.tsx",
-      "parent": "/columns/_layout"
-    },
     "/columns/_layout/global": {
       "filePath": "columns/_layout/global.tsx",
       "parent": "/columns/_layout"
     },
-    "/columns/_layout/group": {
-      "filePath": "columns/_layout/group.tsx",
-      "parent": "/columns/_layout"
-    },
     "/columns/_layout/stories": {
       "filePath": "columns/_layout/stories.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/gallery": {
+      "filePath": "columns/_layout/gallery.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/newsfeed": {
@@ -1188,12 +1203,16 @@ export const routeTree = rootRoute
       "filePath": "columns/_layout/create-newsfeed.users.tsx",
       "parent": "/columns/_layout/create-newsfeed"
     },
-    "/columns/_layout/events/$id": {
-      "filePath": "columns/_layout/events.$id.lazy.tsx",
+    "/columns/_layout/groups/$id": {
+      "filePath": "columns/_layout/groups.$id.tsx",
       "parent": "/columns/_layout"
     },
-    "/columns/_layout/hashtags/$content": {
-      "filePath": "columns/_layout/hashtags.$content.lazy.tsx",
+    "/columns/_layout/interests/$id": {
+      "filePath": "columns/_layout/interests.$id.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/events/$id": {
+      "filePath": "columns/_layout/events.$id.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/replies/$id": {

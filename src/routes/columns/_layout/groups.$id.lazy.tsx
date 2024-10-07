@@ -10,13 +10,14 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/columns/_layout/group")({
+export const Route = createLazyFileRoute("/columns/_layout/groups/$id")({
 	component: Screen,
 });
 
 export function Screen() {
-	const { label, account } = Route.useSearch();
-	const { groups } = Route.useRouteContext();
+	const group = Route.useLoaderData();
+	const params = Route.useParams();
+
 	const {
 		data,
 		isLoading,
@@ -25,11 +26,11 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: [label, account],
+		queryKey: ["groups", params.id],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getGroupEvents(groups, until);
+			const res = await commands.getGroupEvents(group, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);
@@ -39,6 +40,7 @@ export function Screen() {
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
+		enabled: group?.length > 0,
 		refetchOnWindowFocus: false,
 	});
 

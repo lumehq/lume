@@ -1,13 +1,16 @@
-import { commands } from "@/commands.gen";
+import { appColumns } from "@/commons";
 import { Spinner } from "@/components";
 import { Column } from "@/components/column";
 import { LumeWindow } from "@/system";
 import type { ColumnEvent, LumeColumn } from "@/types";
 import { ArrowLeft, ArrowRight, Plus, StackPlus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+import { resolveResource } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
 import {
@@ -25,9 +28,8 @@ export const Route = createLazyFileRoute("/$account/_app/home")({
 });
 
 function Screen() {
-	const { initialColumns } = Route.useRouteContext();
+	const columns = useStore(appColumns, (state) => state);
 
-	const [columns, setColumns] = useState<LumeColumn[]>([]);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		watchDrag: false,
 		loop: false,
@@ -51,11 +53,11 @@ function Screen() {
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
 		column.label = `${column.label}-${nanoid()}`; // update col label
-		setColumns((prev) => [column, ...prev]);
+		appColumns.setState((prev) => [column, ...prev]);
 	}, 150);
 
 	const remove = useDebouncedCallback((label: string) => {
-		setColumns((prev) => prev.filter((t) => t.label !== label));
+		appColumns.setState((prev) => prev.filter((t) => t.label !== label));
 	}, 150);
 
 	const move = useDebouncedCallback(
@@ -70,12 +72,12 @@ function Screen() {
 			if (direction === "left") newCols.splice(colIndex - 1, 0, col);
 			if (direction === "right") newCols.splice(colIndex + 1, 0, col);
 
-			setColumns(newCols);
+			appColumns.setState(() => newCols);
 		},
 		150,
 	);
 
-	const updateName = useDebouncedCallback((label: string, title: string) => {
+	const update = useDebouncedCallback((label: string, title: string) => {
 		const currentColIndex = columns.findIndex((col) => col.label === label);
 
 		const updatedCol = Object.assign({}, columns[currentColIndex]);
@@ -84,10 +86,10 @@ function Screen() {
 		const newCols = columns.slice();
 		newCols[currentColIndex] = updatedCol;
 
-		setColumns(newCols);
+		appColumns.setState(() => newCols);
 	}, 150);
 
-	const reset = useDebouncedCallback(() => setColumns([]), 150);
+	const reset = useDebouncedCallback(() => appColumns.setState(() => []), 150);
 
 	const handleKeyDown = useDebouncedCallback((event) => {
 		if (event.defaultPrevented) return;
@@ -106,18 +108,6 @@ function Screen() {
 		event.preventDefault();
 	}, 150);
 
-	const saveAllColumns = useDebouncedCallback(async () => {
-		const key = "lume_v4:columns";
-		const content = JSON.stringify(columns);
-		const res = await commands.setLumeStore(key, content);
-
-		if (res.status === "ok") {
-			return res.data;
-		} else {
-			console.log(res.error);
-		}
-	}, 200);
-
 	useEffect(() => {
 		if (emblaApi) {
 			emblaApi.on("scroll", emitScrollEvent);
@@ -131,14 +121,6 @@ function Screen() {
 			emblaApi?.off("slidesChanged", emitScrollEvent);
 		};
 	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
-
-	useEffect(() => {
-		if (columns) saveAllColumns();
-	}, [columns]);
-
-	useEffect(() => {
-		setColumns(initialColumns);
-	}, [initialColumns]);
 
 	// Listen for keyboard event
 	useEffect(() => {
@@ -158,13 +140,28 @@ function Screen() {
 			if (data.payload.type === "move")
 				move(data.payload.label, data.payload.direction);
 			if (data.payload.type === "set_title")
-				updateName(data.payload.label, data.payload.title);
+				update(data.payload.label, data.payload.title);
 		});
 
 		return () => {
 			unlisten.then((f) => f());
 		};
 	}, []);
+
+	useEffect(() => {
+		async function getSystemColumns() {
+			const systemPath = "resources/columns.json";
+			const resourcePath = await resolveResource(systemPath);
+			const resourceFile = await readTextFile(resourcePath);
+			const cols: LumeColumn[] = JSON.parse(resourceFile);
+
+			appColumns.setState(() => cols.filter((col) => col.default));
+		}
+
+		if (!columns.length) {
+			getSystemColumns();
+		}
+	}, [columns.length]);
 
 	return (
 		<div className="size-full">

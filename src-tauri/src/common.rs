@@ -52,9 +52,14 @@ pub fn filter_converstation(events: Vec<Event>) -> Vec<Event> {
     events
         .into_iter()
         .filter_map(|ev| {
-            let tags = ev.get_tags_content(TagKind::SingleLetter(SingleLetterTag::lowercase(
-                Alphabet::E,
-            )));
+            let tags: Vec<&str> = ev
+                .tags
+                .iter()
+                .filter(|t| {
+                    t.kind() == TagKind::SingleLetter(SingleLetterTag::lowercase(Alphabet::E))
+                })
+                .filter_map(|t| t.content())
+                .collect();
 
             if tags.is_empty() {
                 Some(ev)

@@ -202,6 +202,136 @@ pub async fn toggle_contact(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn set_group(
+    label: String,
+    users: Vec<String>,
+    state: State<'_, Nostr>,
+) -> Result<String, String> {
+    let client = &state.client;
+    let public_keys: Vec<PublicKey> = users
+        .iter()
+        .map(|u| PublicKey::from_str(u).unwrap())
+        .collect();
+    let builder = EventBuilder::follow_set(label, public_keys);
+
+    match client.send_event_builder(builder).await {
+        Ok(report) => Ok(report.id().to_hex()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+    let client = &state.client;
+    let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
+    let filter = Filter::new().kind(Kind::FollowSet).id(event_id);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => match get_latest_event(&events) {
+            Some(ev) => Ok(ev.as_json()),
+            None => Err("Not found.".to_string()),
+        },
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let client = &state.client;
+    let signer = client.signer().await.map_err(|e| e.to_string())?;
+    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
+    let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            let data: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
+            Ok(data)
+        }
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn set_interest(
+    label: String,
+    hashtags: Vec<String>,
+    state: State<'_, Nostr>,
+) -> Result<String, String> {
+    let client = &state.client;
+    let builder = EventBuilder::interest_set(label, hashtags);
+
+    match client.send_event_builder(builder).await {
+        Ok(report) => Ok(report.id().to_hex()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+    let client = &state.client;
+    let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
+    let filter = Filter::new()
+        .kinds(vec![Kind::Interests, Kind::InterestSet])
+        .id(event_id);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => match get_latest_event(&events) {
+            Some(ev) => Ok(ev.as_json()),
+            None => Err("Not found.".to_string()),
+        },
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let client = &state.client;
+    let signer = client.signer().await.map_err(|e| e.to_string())?;
+    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
+    let filter = Filter::new()
+        .kinds(vec![Kind::InterestSet, Kind::Interests])
+        .author(public_key);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            let data: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
+            Ok(data)
+        }
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn get_mention_list(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
     let client = &state.client;
     let filter = Filter::new().kind(Kind::Metadata);
@@ -228,61 +358,6 @@ pub async fn get_mention_list(state: State<'_, Nostr>) -> Result<Vec<Mention>, S
         .collect();
 
     Ok(data)
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn set_lume_store(
-    key: String,
-    content: String,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
-    let client = &state.client;
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
-
-    let encrypted = signer
-        .nip44_encrypt(&public_key, content)
-        .await
-        .map_err(|e| e.to_string())?;
-    let tag = Tag::identifier(key);
-    let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
-
-    match client.send_event_builder(builder).await {
-        Ok(event_id) => Ok(event_id.to_string()),
-        Err(err) => Err(err.to_string()),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_lume_store(key: String, state: State<'_, Nostr>) -> Result<String, String> {
-    let client = &state.client;
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
-
-    let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::ApplicationSpecificData)
-        .identifier(key)
-        .limit(10);
-
-    match client
-        .get_events_of(vec![filter], EventSource::Database)
-        .await
-    {
-        Ok(events) => {
-            if let Some(event) = get_latest_event(&events) {
-                match signer.nip44_decrypt(&public_key, &event.content).await {
-                    Ok(decrypted) => Ok(decrypted),
-                    Err(_) => Err(event.content.to_string()),
-                }
-            } else {
-                Err("Not found".into())
-            }
-        }
-        Err(err) => Err(err.to_string()),
-    }
 }
 
 #[tauri::command]

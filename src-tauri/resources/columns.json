@@ -65,15 +65,6 @@
 	{
 		"default": false,
 		"official": true,
-		"label": "group_feeds",
-		"name": "Group",
-		"description": "Custom feeds for group of people.",
-		"url": "/columns/group",
-		"picture": ""
-	},
-	{
-		"default": false,
-		"official": true,
 		"label": "trending",
 		"name": "Trending",
 		"description": "Discover all trending notes.",

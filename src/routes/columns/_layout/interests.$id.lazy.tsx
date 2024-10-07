@@ -10,13 +10,14 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/columns/_layout/hashtags/$content")({
+export const Route = createLazyFileRoute("/columns/_layout/interests/$id")({
 	component: Screen,
 });
 
 export function Screen() {
-	const { label, account } = Route.useSearch();
-	const { content } = Route.useParams();
+	const hashtags = Route.useLoaderData();
+	const params = Route.useParams();
+
 	const {
 		data,
 		isLoading,
@@ -25,12 +26,12 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: [label, account],
+		queryKey: ["hashtags", params.id],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const hashtags = content.split("_");
+			const tags = hashtags.map((tag) => tag.toLowerCase().replace("#", ""));
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getHashtagEvents(hashtags, until);
+			const res = await commands.getHashtagEvents(tags, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);

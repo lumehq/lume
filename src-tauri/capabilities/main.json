@@ -14,7 +14,8 @@
 		"zap-*",
 		"event-*",
 		"user-*",
-		"editor-*"
+		"editor-*",
+		"popup-*"
 	],
 	"permissions": [
 		"core:path:default",

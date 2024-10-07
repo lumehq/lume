@@ -18,7 +18,7 @@ import { decode } from "light-bolt11-decoder";
 import { twMerge } from "tailwind-merge";
 import type { RichEvent, Settings } from "./commands.gen";
 import { LumeEvent } from "./system";
-import type { NostrEvent } from "./types";
+import type { LumeColumn, NostrEvent } from "./types";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -154,6 +154,7 @@ export function decodeZapInvoice(tags?: string[][]) {
 		(s: { name: string }) => s.name === "amount",
 	);
 
+	// @ts-ignore, its fine.
 	const amount = Number.parseInt(amountSection.value);
 	const displayValue = getBitcoinDisplayValues(amount);
 
@@ -289,3 +290,5 @@ export const appSettings = new Store<Settings>({
 	display_media: true,
 	transparent: true,
 });
+
+export const appColumns = new Store<LumeColumn[]>([]);

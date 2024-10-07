@@ -375,13 +375,13 @@ pub async fn get_global_events(
 #[tauri::command]
 #[specta::specta]
 pub async fn get_hashtag_events(
-    hashtags: Vec<&str>,
-    until: Option<&str>,
+    hashtags: Vec<String>,
+    until: Option<String>,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let as_of = match until {
-        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),
     };
     let filter = Filter::new()
