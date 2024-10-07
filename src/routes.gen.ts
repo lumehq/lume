@@ -23,6 +23,7 @@ import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as AccountBackupImport } from './routes/$account/backup'
 import { Route as AccountAppImport } from './routes/$account/_app'
 import { Route as ColumnsLayoutStoriesImport } from './routes/columns/_layout/stories'
+import { Route as ColumnsLayoutNewsfeedImport } from './routes/columns/_layout/newsfeed'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
 import { Route as AccountSettingsWalletImport } from './routes/$account/_settings/wallet'
@@ -58,9 +59,6 @@ const ColumnsLayoutOnboardingLazyImport = createFileRoute(
 )()
 const ColumnsLayoutNotificationLazyImport = createFileRoute(
   '/columns/_layout/notification',
-)()
-const ColumnsLayoutNewsfeedLazyImport = createFileRoute(
-  '/columns/_layout/newsfeed',
 )()
 const ColumnsLayoutGalleryLazyImport = createFileRoute(
   '/columns/_layout/gallery',
@@ -201,13 +199,6 @@ const ColumnsLayoutNotificationLazyRoute =
     import('./routes/columns/_layout/notification.lazy').then((d) => d.Route),
   )
 
-const ColumnsLayoutNewsfeedLazyRoute = ColumnsLayoutNewsfeedLazyImport.update({
-  path: '/newsfeed',
-  getParentRoute: () => ColumnsLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/columns/_layout/newsfeed.lazy').then((d) => d.Route),
-)
-
 const ColumnsLayoutGalleryLazyRoute = ColumnsLayoutGalleryLazyImport.update({
   path: '/gallery',
   getParentRoute: () => ColumnsLayoutRoute,
@@ -220,6 +211,13 @@ const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
   import('./routes/columns/_layout/stories.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutNewsfeedRoute = ColumnsLayoutNewsfeedImport.update({
+  path: '/newsfeed',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/newsfeed.lazy').then((d) => d.Route),
 )
 
 const ColumnsLayoutGlobalRoute = ColumnsLayoutGlobalImport.update({
@@ -513,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutGlobalImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/newsfeed': {
+      id: '/columns/_layout/newsfeed'
+      path: '/newsfeed'
+      fullPath: '/columns/newsfeed'
+      preLoaderRoute: typeof ColumnsLayoutNewsfeedImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/stories': {
       id: '/columns/_layout/stories'
       path: '/stories'
@@ -525,13 +530,6 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/columns/gallery'
       preLoaderRoute: typeof ColumnsLayoutGalleryLazyImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
-    '/columns/_layout/newsfeed': {
-      id: '/columns/_layout/newsfeed'
-      path: '/newsfeed'
-      fullPath: '/columns/newsfeed'
-      preLoaderRoute: typeof ColumnsLayoutNewsfeedLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
     '/columns/_layout/notification': {
@@ -682,9 +680,9 @@ const ColumnsLayoutCreateNewsfeedRouteWithChildren =
 interface ColumnsLayoutRouteChildren {
   ColumnsLayoutCreateNewsfeedRoute: typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   ColumnsLayoutGlobalRoute: typeof ColumnsLayoutGlobalRoute
+  ColumnsLayoutNewsfeedRoute: typeof ColumnsLayoutNewsfeedRoute
   ColumnsLayoutStoriesRoute: typeof ColumnsLayoutStoriesRoute
   ColumnsLayoutGalleryLazyRoute: typeof ColumnsLayoutGalleryLazyRoute
-  ColumnsLayoutNewsfeedLazyRoute: typeof ColumnsLayoutNewsfeedLazyRoute
   ColumnsLayoutNotificationLazyRoute: typeof ColumnsLayoutNotificationLazyRoute
   ColumnsLayoutOnboardingLazyRoute: typeof ColumnsLayoutOnboardingLazyRoute
   ColumnsLayoutSearchLazyRoute: typeof ColumnsLayoutSearchLazyRoute
@@ -700,9 +698,9 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
   ColumnsLayoutCreateNewsfeedRoute:
     ColumnsLayoutCreateNewsfeedRouteWithChildren,
   ColumnsLayoutGlobalRoute: ColumnsLayoutGlobalRoute,
+  ColumnsLayoutNewsfeedRoute: ColumnsLayoutNewsfeedRoute,
   ColumnsLayoutStoriesRoute: ColumnsLayoutStoriesRoute,
   ColumnsLayoutGalleryLazyRoute: ColumnsLayoutGalleryLazyRoute,
-  ColumnsLayoutNewsfeedLazyRoute: ColumnsLayoutNewsfeedLazyRoute,
   ColumnsLayoutNotificationLazyRoute: ColumnsLayoutNotificationLazyRoute,
   ColumnsLayoutOnboardingLazyRoute: ColumnsLayoutOnboardingLazyRoute,
   ColumnsLayoutSearchLazyRoute: ColumnsLayoutSearchLazyRoute,
@@ -753,9 +751,9 @@ export interface FileRoutesByFullPath {
   '/$account/wallet': typeof AccountSettingsWalletRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
+  '/columns/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
   '/columns/gallery': typeof ColumnsLayoutGalleryLazyRoute
-  '/columns/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
@@ -793,9 +791,9 @@ export interface FileRoutesByTo {
   '/$account/wallet': typeof AccountSettingsWalletRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
+  '/columns/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
   '/columns/gallery': typeof ColumnsLayoutGalleryLazyRoute
-  '/columns/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
@@ -837,9 +835,9 @@ export interface FileRoutesById {
   '/$account/_settings/wallet': typeof AccountSettingsWalletRoute
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
+  '/columns/_layout/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/_layout/stories': typeof ColumnsLayoutStoriesRoute
   '/columns/_layout/gallery': typeof ColumnsLayoutGalleryLazyRoute
-  '/columns/_layout/newsfeed': typeof ColumnsLayoutNewsfeedLazyRoute
   '/columns/_layout/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/_layout/search': typeof ColumnsLayoutSearchLazyRoute
@@ -879,9 +877,9 @@ export interface FileRouteTypes {
     | '/$account/wallet'
     | '/columns/create-newsfeed'
     | '/columns/global'
+    | '/columns/newsfeed'
     | '/columns/stories'
     | '/columns/gallery'
-    | '/columns/newsfeed'
     | '/columns/notification'
     | '/columns/onboarding'
     | '/columns/search'
@@ -918,9 +916,9 @@ export interface FileRouteTypes {
     | '/$account/wallet'
     | '/columns/create-newsfeed'
     | '/columns/global'
+    | '/columns/newsfeed'
     | '/columns/stories'
     | '/columns/gallery'
-    | '/columns/newsfeed'
     | '/columns/notification'
     | '/columns/onboarding'
     | '/columns/search'
@@ -960,9 +958,9 @@ export interface FileRouteTypes {
     | '/$account/_settings/wallet'
     | '/columns/_layout/create-newsfeed'
     | '/columns/_layout/global'
+    | '/columns/_layout/newsfeed'
     | '/columns/_layout/stories'
     | '/columns/_layout/gallery'
-    | '/columns/_layout/newsfeed'
     | '/columns/_layout/notification'
     | '/columns/_layout/onboarding'
     | '/columns/_layout/search'
@@ -1091,9 +1089,9 @@ export const routeTree = rootRoute
       "children": [
         "/columns/_layout/create-newsfeed",
         "/columns/_layout/global",
+        "/columns/_layout/newsfeed",
         "/columns/_layout/stories",
         "/columns/_layout/gallery",
-        "/columns/_layout/newsfeed",
         "/columns/_layout/notification",
         "/columns/_layout/onboarding",
         "/columns/_layout/search",
@@ -1167,16 +1165,16 @@ export const routeTree = rootRoute
       "filePath": "columns/_layout/global.tsx",
       "parent": "/columns/_layout"
     },
+    "/columns/_layout/newsfeed": {
+      "filePath": "columns/_layout/newsfeed.tsx",
+      "parent": "/columns/_layout"
+    },
     "/columns/_layout/stories": {
       "filePath": "columns/_layout/stories.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/gallery": {
       "filePath": "columns/_layout/gallery.lazy.tsx",
-      "parent": "/columns/_layout"
-    },
-    "/columns/_layout/newsfeed": {
-      "filePath": "columns/_layout/newsfeed.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/notification": {

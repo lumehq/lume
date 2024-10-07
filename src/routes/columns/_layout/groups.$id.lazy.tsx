@@ -30,7 +30,7 @@ export function Screen() {
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getGroupEvents(group, until);
+			const res = await commands.getAllEventsByAuthors(group, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);

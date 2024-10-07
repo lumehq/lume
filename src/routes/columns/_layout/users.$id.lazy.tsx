@@ -22,7 +22,7 @@ function Screen() {
 	const { isLoading, data: events } = useQuery({
 		queryKey: ["stories", id],
 		queryFn: async () => {
-			const res = await commands.getEventsBy(id, 100);
+			const res = await commands.getAllEventsByAuthor(id, 100);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);

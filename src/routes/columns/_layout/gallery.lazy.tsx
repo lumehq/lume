@@ -80,6 +80,7 @@ function Core() {
 							</div>
 							<button
 								type="button"
+								onClick={() => LumeWindow.openColumn(column)}
 								className="text-xs uppercase font-semibold w-16 h-7 hidden group-hover:inline-flex items-center justify-center rounded-full bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-black/10"
 							>
 								Open
@@ -126,7 +127,7 @@ function MyGroups() {
 						{item.tags
 							.filter((tag) => tag[0] === "p")
 							.map((tag) => (
-								<div>
+								<div key={tag[1]}>
 									<User.Provider pubkey={tag[1]}>
 										<User.Root>
 											<User.Avatar className="size-8 rounded-full" />
@@ -231,7 +232,9 @@ function MyInterests() {
 						{item.tags
 							.filter((tag) => tag[0] === "t")
 							.map((tag) => (
-								<div>{tag[1]}</div>
+								<div key={tag[1]} className="text-sm font-medium">
+									{tag[1]}
+								</div>
 							))}
 					</div>
 					<div className="p-3 flex items-center justify-between">

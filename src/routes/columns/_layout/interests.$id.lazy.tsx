@@ -31,7 +31,7 @@ export function Screen() {
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const tags = hashtags.map((tag) => tag.toLowerCase().replace("#", ""));
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getHashtagEvents(tags, until);
+			const res = await commands.getAllEventsByHashtags(tags, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);

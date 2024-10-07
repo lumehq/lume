@@ -339,9 +339,25 @@ async subscribeTo(id: string) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getEventsBy(publicKey: string, limit: number) : Promise<Result<RichEvent[], string>> {
+async getAllEventsByAuthor(publicKey: string, limit: number) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_events_by", { publicKey, limit }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_events_by_author", { publicKey, limit }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getAllEventsByAuthors(publicKeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_events_by_authors", { publicKeys, until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getAllEventsByHashtags(hashtags: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_events_by_hashtags", { hashtags, until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -355,25 +371,9 @@ async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>
     else return { status: "error", error: e  as any };
 }
 },
-async getGroupEvents(publicKeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_group_events", { publicKeys, until }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async getGlobalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_global_events", { until }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getHashtagEvents(hashtags: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_hashtag_events", { hashtags, until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

@@ -271,6 +271,15 @@ pub async fn login(
     // NIP-65: Connect to user's relay list
     init_nip65(client, &public_key).await;
 
+    // NIP-03: Get user's contact list
+    let contact_list = {
+        let contacts = client.get_contact_list(None).await.unwrap();
+        // Update app's state
+        state.contact_list.lock().await.clone_from(&contacts);
+        // Return
+        contacts
+    };
+
     // Run seperate thread for syncing data
     let pk = public_key.clone();
     tauri::async_runtime::spawn(async move {
@@ -354,15 +363,6 @@ pub async fn login(
         {
             println!("Subscribed: {}", e.success.len())
         }
-
-        // Get user's contact list
-        let contact_list = {
-            let contacts = client.get_contact_list(None).await.unwrap();
-            // Update app's state
-            state.contact_list.lock().await.clone_from(&contacts);
-            // Return
-            contacts
-        };
 
         // Get events from contact list
         if !contact_list.is_empty() {

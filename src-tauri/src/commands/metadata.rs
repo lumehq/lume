@@ -105,18 +105,14 @@ pub async fn set_contact_list(
 #[tauri::command]
 #[specta::specta]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
-    let client = &state.client;
+    let contact_list = state.contact_list.lock().await.clone();
+    println!("Total contacts: {}", contact_list.len());
+    let vec: Vec<String> = contact_list
+        .into_iter()
+        .map(|f| f.public_key.to_hex())
+        .collect();
 
-    match client.get_contact_list(Some(Duration::from_secs(5))).await {
-        Ok(contact_list) => {
-            let list = contact_list
-                .into_iter()
-                .map(|f| f.public_key.to_hex())
-                .collect();
-            Ok(list)
-        }
-        Err(err) => Err(err.to_string()),
-    }
+    Ok(vec)
 }
 
 #[tauri::command]
