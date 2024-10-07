@@ -50,7 +50,7 @@ function StoryItem({ contact }: { contact: string }) {
 	} = useQuery({
 		queryKey: ["stories", contact],
 		queryFn: async () => {
-			const res = await commands.getEventsBy(contact, 10);
+			const res = await commands.getAllEventsByAuthor(contact, 10);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);

@@ -1,7 +1,9 @@
 import { commands } from "@/commands.gen";
+import { appColumns } from "@/commons";
 import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import { useParams } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
@@ -88,7 +90,7 @@ export const Column = memo(function Column({ column }: { column: LumeColumn }) {
 	return (
 		<div className="h-full w-[440px] shrink-0 border-r border-black/5 dark:border-white/5">
 			<div className="flex flex-col gap-px size-full">
-				<Header label={column.label} name={column.name} />
+				<Header label={column.label} />
 				<div ref={container} className="flex-1 size-full">
 					{!isCreated ? (
 						<div className="size-full flex items-center justify-center">
@@ -101,9 +103,13 @@ export const Column = memo(function Column({ column }: { column: LumeColumn }) {
 	);
 });
 
-function Header({ label, name }: { label: string; name: string }) {
+function Header({ label }: { label: string }) {
 	const [title, setTitle] = useState("");
 	const [isChanged, setIsChanged] = useState(false);
+
+	const column = useStore(appColumns, (state) =>
+		state.find((col) => col.label === label),
+	);
 
 	const saveNewTitle = async () => {
 		const mainWindow = getCurrentWindow();
@@ -186,7 +192,7 @@ function Header({ label, name }: { label: string; name: string }) {
 						onBlur={(e) => setTitle(e.currentTarget.textContent)}
 						className="text-[12px] font-semibold focus:outline-none"
 					>
-						{name}
+						{column.name}
 					</div>
 					{isChanged ? (
 						<button

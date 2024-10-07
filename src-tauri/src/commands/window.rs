@@ -113,15 +113,15 @@ pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<bool
 #[specta::specta]
 #[cfg(target_os = "macos")]
 pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
-    if let Some(window) = app_handle.get_window(&window.label) {
-        if window.is_visible().unwrap_or_default() {
-            let _ = window.set_focus();
+    if let Some(current_window) = app_handle.get_window(&window.label) {
+        if current_window.is_visible().unwrap_or_default() {
+            let _ = current_window.set_focus();
         } else {
-            let _ = window.show();
-            let _ = window.set_focus();
+            let _ = current_window.show();
+            let _ = current_window.set_focus();
         };
     } else {
-        let window = WebviewWindowBuilder::new(
+        let new_window = WebviewWindowBuilder::new(
             &app_handle,
             &window.label,
             WebviewUrl::App(PathBuf::from(window.url)),
@@ -129,7 +129,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .title(&window.title)
         .min_inner_size(window.width, window.height)
         .inner_size(window.width, window.height)
-        .hidden_title(true)
+        .hidden_title(window.hidden_title)
         .title_bar_style(TitleBarStyle::Overlay)
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
@@ -144,7 +144,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .unwrap();
 
         // Restore native border
-        window.add_border(None);
+        new_window.add_border(None);
     }
 
     Ok(())
@@ -217,7 +217,7 @@ pub fn reopen_lume(app: tauri::AppHandle) {
 
         // Set a custom inset to the traffic lights
         #[cfg(target_os = "macos")]
-        window.set_traffic_lights_inset(7.0, 13.0).unwrap();
+        window.set_traffic_lights_inset(7.0, 10.0).unwrap();
 
         #[cfg(target_os = "macos")]
         let win = window.clone();
@@ -225,7 +225,7 @@ pub fn reopen_lume(app: tauri::AppHandle) {
         #[cfg(target_os = "macos")]
         window.on_window_event(move |event| {
             if let tauri::WindowEvent::ThemeChanged(_) = event {
-                win.set_traffic_lights_inset(7.0, 13.0).unwrap();
+                win.set_traffic_lights_inset(7.0, 10.0).unwrap();
             }
         });
     }

@@ -198,7 +198,7 @@ pub async fn subscribe_to(id: String, state: State<'_, Nostr>) -> Result<(), Str
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_events_by(
+pub async fn get_all_events_by_author(
     public_key: String,
     limit: i32,
     state: State<'_, Nostr>,
@@ -237,14 +237,111 @@ pub async fn get_events_by(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_local_events(
-    until: Option<&str>,
+pub async fn get_all_events_by_authors(
+    public_keys: Vec<String>,
+    until: Option<String>,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
 
     let as_of = match until {
-        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
+        None => Timestamp::now(),
+    };
+
+    let authors: Vec<PublicKey> = public_keys
+        .iter()
+        .map(|pk| PublicKey::from_str(pk).map_err(|err| err.to_string()))
+        .collect::<Result<Vec<_>, _>>()?;
+
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .limit(FETCH_LIMIT)
+        .until(as_of)
+        .authors(authors);
+
+    match client
+        .get_events_of(vec![filter], EventSource::Database)
+        .await
+    {
+        Ok(events) => {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
+                let raw = ev.as_json();
+                let parsed = if ev.kind == Kind::TextNote {
+                    Some(parse_event(&ev.content).await)
+                } else {
+                    None
+                };
+
+                RichEvent { raw, parsed }
+            });
+
+            let rich_events = join_all(futures).await;
+
+            Ok(rich_events)
+        }
+        Err(err) => Err(err.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_events_by_hashtags(
+    hashtags: Vec<String>,
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
+        None => Timestamp::now(),
+    };
+
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .limit(FETCH_LIMIT)
+        .until(as_of)
+        .hashtags(hashtags);
+
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            let fils = filter_converstation(events);
+            let futures = fils.iter().map(|ev| async move {
+                let raw = ev.as_json();
+                let parsed = if ev.kind == Kind::TextNote {
+                    Some(parse_event(&ev.content).await)
+                } else {
+                    None
+                };
+
+                RichEvent { raw, parsed }
+            });
+            let rich_events = join_all(futures).await;
+
+            Ok(rich_events)
+        }
+        Err(err) => Err(err.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_local_events(
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),
     };
 
@@ -276,119 +373,21 @@ pub async fn get_local_events(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_group_events(
-    public_keys: Vec<&str>,
-    until: Option<&str>,
-    state: State<'_, Nostr>,
-) -> Result<Vec<RichEvent>, String> {
-    let client = &state.client;
-
-    let as_of = match until {
-        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
-        None => Timestamp::now(),
-    };
-
-    let authors: Vec<PublicKey> = public_keys
-        .iter()
-        .map(|p| PublicKey::from_str(p).map_err(|err| err.to_string()))
-        .collect::<Result<Vec<_>, _>>()?;
-
-    let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(20)
-        .until(as_of)
-        .authors(authors);
-
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
-        Err(err) => Err(err.to_string()),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn get_global_events(
-    until: Option<&str>,
+    until: Option<String>,
     state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
 
     let as_of = match until {
-        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),
     };
 
     let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(20)
+        .limit(FETCH_LIMIT)
         .until(as_of);
-
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
-        Err(err) => Err(err.to_string()),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_hashtag_events(
-    hashtags: Vec<&str>,
-    until: Option<&str>,
-    state: State<'_, Nostr>,
-) -> Result<Vec<RichEvent>, String> {
-    let client = &state.client;
-    let as_of = match until {
-        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
-        None => Timestamp::now(),
-    };
-    let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(20)
-        .until(as_of)
-        .hashtags(hashtags);
 
     match client
         .get_events_of(
@@ -534,7 +533,7 @@ pub async fn reply(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let event = Event::from_json(raw).map_err(|err| err.to_string())?;
 
@@ -587,7 +586,7 @@ pub async fn event_to_bech32(id: String, state: State<'_, Nostr>) -> Result<Stri
 
 #[tauri::command]
 #[specta::specta]
-pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn user_to_bech32(user: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let public_key = PublicKey::parse(user).map_err(|err| err.to_string())?;
 
@@ -669,6 +668,24 @@ pub async fn search(
 
             Ok(rich_events)
         }
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn is_deleted_event(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let signer = client.signer().await.map_err(|err| err.to_string())?;
+    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
+    let filter = Filter::new()
+        .author(public_key)
+        .event(event_id)
+        .kind(Kind::EventDeletion);
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(!events.is_empty()),
         Err(e) => Err(e.to_string()),
     }
 }

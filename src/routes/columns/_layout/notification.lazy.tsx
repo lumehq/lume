@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { nip19 } from "nostr-tools";
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useMemo, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/notification")({
@@ -180,17 +180,7 @@ function Screen() {
 									</div>
 									<div className="flex flex-wrap items-center gap-3">
 										{events.map((event) => (
-											<User.Provider
-												key={event.id}
-												pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
-											>
-												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
-													<User.Avatar className="rounded-full size-6" />
-													<div className="flex-1 h-6 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-xs font-semibold truncate">
-														₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
-													</div>
-												</User.Root>
-											</User.Provider>
+											<ZapReceipt key={event.id} event={event} />
 										))}
 									</div>
 								</div>
@@ -309,5 +299,38 @@ function TextNote({ event }: { event: LumeEvent }) {
 				</Note.Root>
 			</Note.Provider>
 		</button>
+	);
+}
+
+function ZapReceipt({ event }: { event: LumeEvent }) {
+	const amount = useMemo(
+		() => decodeZapInvoice(event.tags).bitcoinFormatted ?? "0",
+		[event.id],
+	);
+	const sender = useMemo(
+		() => event.tags.find((tag) => tag[0] === "P")?.[1],
+		[event.id],
+	);
+
+	if (!sender) {
+		return (
+			<div className="shrink-0 flex gap-1.5 rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
+				<div className="rounded-full size-6 bg-blue-500" />
+				<div className="flex-1 h-6 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-xs font-semibold truncate">
+					₿ {amount}
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<User.Provider pubkey={sender}>
+			<User.Root className="shrink-0 flex gap-1.5 rounded-full h-7 bg-black/10 dark:bg-white/10 p-[2px]">
+				<User.Avatar className="rounded-full size-6" />
+				<div className="flex-1 h-6 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-xs font-semibold truncate">
+					₿ {amount}
+				</div>
+			</User.Root>
+		</User.Provider>
 	);
 }

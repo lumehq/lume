@@ -20,9 +20,9 @@
 	{
 		"default": false,
 		"official": true,
-		"label": "local_feeds",
-		"name": "Local Feeds",
-		"description": "All notes from your follows.",
+		"label": "newsfeed",
+		"name": "Newsfeed",
+		"description": "All notes from you're following.",
 		"url": "/columns/newsfeed",
 		"picture": ""
 	},
@@ -58,17 +58,8 @@
 		"official": true,
 		"label": "global_feeds",
 		"name": "Global Feeds",
-		"description": "Discover all global notes.",
+		"description": "All global notes from all connected relays.",
 		"url": "/columns/global",
-		"picture": ""
-	},
-	{
-		"default": false,
-		"official": true,
-		"label": "group_feeds",
-		"name": "Group",
-		"description": "Custom feeds for group of people.",
-		"url": "/columns/group",
 		"picture": ""
 	},
 	{

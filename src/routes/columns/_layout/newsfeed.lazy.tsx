@@ -6,11 +6,7 @@ import { Kind, type Meta } from "@/types";
 import { ArrowDown, ArrowUp } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import {
-	Navigate,
-	createLazyFileRoute,
-	useLocation,
-} from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
@@ -33,12 +29,12 @@ export const Route = createLazyFileRoute("/columns/_layout/newsfeed")({
 });
 
 export function Screen() {
+	const contacts = Route.useLoaderData();
 	const { queryClient } = Route.useRouteContext();
 	const { label, account } = Route.useSearch();
 	const {
 		data,
 		isLoading,
-		isError,
 		isFetching,
 		isFetchingNextPage,
 		hasNextPage,
@@ -48,7 +44,7 @@ export function Screen() {
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getLocalEvents(until);
+			const res = await commands.getAllEventsByAuthors(contacts, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);
@@ -58,9 +54,9 @@ export function Screen() {
 		},
 		getNextPageParam: (lastPage) => lastPage?.at?.(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
+		enabled: contacts?.length > 0,
 	});
 
-	const location = useLocation();
 	const ref = useRef<HTMLDivElement>(null);
 
 	const renderItem = useCallback(
@@ -108,16 +104,6 @@ export function Screen() {
 			unlisten.then((f) => f());
 		};
 	}, []);
-
-	if (isError) {
-		return (
-			<Navigate
-				to="/columns/create-newsfeed/users"
-				// @ts-ignore, tanstack router bug.
-				search={{ label, account, redirect: location.href }}
-			/>
-		);
-	}
 
 	return (
 		<ScrollArea.Root

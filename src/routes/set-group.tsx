@@ -1,7 +1,16 @@
 import { commands } from "@/commands.gen";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/columns/_layout/create-group")({
+type RouteSearch = {
+	account: string;
+};
+
+export const Route = createFileRoute("/set-group")({
+	validateSearch: (search: Record<string, string>): RouteSearch => {
+		return {
+			account: search.account,
+		};
+	},
 	loader: async () => {
 		const res = await commands.getContactList();
 

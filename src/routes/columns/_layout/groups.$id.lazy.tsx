@@ -7,16 +7,19 @@ import { ArrowDown } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useCallback, useRef } from "react";
+import { listen } from "@tauri-apps/api/event";
+import { useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/columns/_layout/hashtags/$content")({
+export const Route = createLazyFileRoute("/columns/_layout/groups/$id")({
 	component: Screen,
 });
 
 export function Screen() {
-	const { label, account } = Route.useSearch();
-	const { content } = Route.useParams();
+	const group = Route.useLoaderData();
+	const params = Route.useParams();
+	const { queryClient } = Route.useRouteContext();
+
 	const {
 		data,
 		isLoading,
@@ -25,12 +28,11 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: [label, account],
+		queryKey: ["groups", params.id],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const hashtags = content.split("_");
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
-			const res = await commands.getHashtagEvents(hashtags, until);
+			const res = await commands.getAllEventsByAuthors(group, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);
@@ -40,6 +42,7 @@ export function Screen() {
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
+		enabled: group?.length > 0,
 		refetchOnWindowFocus: false,
 	});
 
@@ -80,6 +83,16 @@ export function Screen() {
 		},
 		[data],
 	);
+
+	useEffect(() => {
+		const unlisten = listen("synchronized", async () => {
+			await queryClient.invalidateQueries({ queryKey: ["groups", params.id] });
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
 
 	return (
 		<ScrollArea.Root
