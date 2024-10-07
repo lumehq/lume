@@ -143,6 +143,7 @@ fn main() {
             get_all_events_by_hashtags,
             get_local_events,
             get_global_events,
+            is_deleted_event,
             search,
             publish,
             reply,

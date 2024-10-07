@@ -52,19 +52,23 @@ pub fn filter_converstation(events: Vec<Event>) -> Vec<Event> {
     events
         .into_iter()
         .filter_map(|ev| {
-            let tags: Vec<&str> = ev
-                .tags
-                .iter()
-                .filter(|t| {
-                    t.kind() == TagKind::SingleLetter(SingleLetterTag::lowercase(Alphabet::E))
-                })
-                .filter_map(|t| t.content())
-                .collect();
+            if ev.kind == Kind::TextNote {
+                let tags: Vec<&str> = ev
+                    .tags
+                    .iter()
+                    .filter(|t| {
+                        t.kind() == TagKind::SingleLetter(SingleLetterTag::lowercase(Alphabet::E))
+                    })
+                    .filter_map(|t| t.content())
+                    .collect();
 
-            if tags.is_empty() {
-                Some(ev)
+                if tags.is_empty() {
+                    Some(ev)
+                } else {
+                    None
+                }
             } else {
-                None
+                Some(ev)
             }
         })
         .collect::<Vec<Event>>()

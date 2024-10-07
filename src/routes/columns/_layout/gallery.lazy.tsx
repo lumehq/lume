@@ -138,19 +138,21 @@ function MyGroups() {
 					</div>
 					<div className="p-3 flex items-center justify-between">
 						<div className="text-sm font-medium">{name}</div>
-						<button
-							type="button"
-							onClick={() =>
-								LumeWindow.openColumn({
-									label: name,
-									name,
-									url: `/columns/groups/${item.id}`,
-								})
-							}
-							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white"
-						>
-							Add
-						</button>
+						<div className="flex items-center gap-3">
+							<button
+								type="button"
+								onClick={() =>
+									LumeWindow.openColumn({
+										label: name,
+										name,
+										url: `/columns/groups/${item.id}`,
+									})
+								}
+								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white"
+							>
+								Add
+							</button>
+						</div>
 					</div>
 				</div>
 			);
@@ -172,7 +174,9 @@ function MyGroups() {
 					</button>
 					<button
 						type="button"
-						onClick={() => LumeWindow.openPopup("New group", "/set-group")}
+						onClick={() =>
+							LumeWindow.openPopup("New group", `/set-group?account=${account}`)
+						}
 						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 					>
 						<Plus className="size-3" weight="bold" />
@@ -201,7 +205,7 @@ function MyGroups() {
 function MyInterests() {
 	const { account } = Route.useSearch();
 	const { isLoading, data, refetch } = useQuery({
-		queryKey: ["myinterest", account],
+		queryKey: ["myinterests", account],
 		queryFn: async () => {
 			const res = await commands.getAllInterests();
 
@@ -239,19 +243,21 @@ function MyInterests() {
 					</div>
 					<div className="p-3 flex items-center justify-between">
 						<div className="text-sm font-medium">{name}</div>
-						<button
-							type="button"
-							onClick={() =>
-								LumeWindow.openColumn({
-									label: name,
-									name,
-									url: `/columns/interests/${item.id}`,
-								})
-							}
-							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white"
-						>
-							Add
-						</button>
+						<div className="flex items-center gap-3">
+							<button
+								type="button"
+								onClick={() =>
+									LumeWindow.openColumn({
+										label: name,
+										name,
+										url: `/columns/interests/${item.id}`,
+									})
+								}
+								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white"
+							>
+								Add
+							</button>
+						</div>
 					</div>
 				</div>
 			);
@@ -274,7 +280,10 @@ function MyInterests() {
 					<button
 						type="button"
 						onClick={() =>
-							LumeWindow.openPopup("New interest", "/set-interest")
+							LumeWindow.openPopup(
+								"New interest",
+								`/set-interest?account=${account}`,
+							)
 						}
 						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 					>

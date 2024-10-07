@@ -671,3 +671,21 @@ pub async fn search(
         Err(e) => Err(e.to_string()),
     }
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn is_deleted_event(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let signer = client.signer().await.map_err(|err| err.to_string())?;
+    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
+    let filter = Filter::new()
+        .author(public_key)
+        .event(event_id)
+        .kind(Kind::EventDeletion);
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(!events.is_empty()),
+        Err(e) => Err(e.to_string()),
+    }
+}

@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SetInterestImport } from './routes/set-interest'
 import { Route as SetGroupImport } from './routes/set-group'
 import { Route as LoadingImport } from './routes/loading'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
@@ -41,7 +42,6 @@ import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/
 
 const ColumnsImport = createFileRoute('/columns')()
 const AccountImport = createFileRoute('/$account')()
-const SetInterestLazyImport = createFileRoute('/set-interest')()
 const ResetLazyImport = createFileRoute('/reset')()
 const NewLazyImport = createFileRoute('/new')()
 const AuthNewLazyImport = createFileRoute('/auth/new')()
@@ -85,11 +85,6 @@ const AccountRoute = AccountImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SetInterestLazyRoute = SetInterestLazyImport.update({
-  path: '/set-interest',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/set-interest.lazy').then((d) => d.Route))
-
 const ResetLazyRoute = ResetLazyImport.update({
   path: '/reset',
   getParentRoute: () => rootRoute,
@@ -99,6 +94,11 @@ const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
+
+const SetInterestRoute = SetInterestImport.update({
+  path: '/set-interest',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/set-interest.lazy').then((d) => d.Route))
 
 const SetGroupRoute = SetGroupImport.update({
   path: '/set-group',
@@ -357,6 +357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetGroupImport
       parentRoute: typeof rootRoute
     }
+    '/set-interest': {
+      id: '/set-interest'
+      path: '/set-interest'
+      fullPath: '/set-interest'
+      preLoaderRoute: typeof SetInterestImport
+      parentRoute: typeof rootRoute
+    }
     '/new': {
       id: '/new'
       path: '/new'
@@ -369,13 +376,6 @@ declare module '@tanstack/react-router' {
       path: '/reset'
       fullPath: '/reset'
       preLoaderRoute: typeof ResetLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/set-interest': {
-      id: '/set-interest'
-      path: '/set-interest'
-      fullPath: '/set-interest'
-      preLoaderRoute: typeof SetInterestLazyImport
       parentRoute: typeof rootRoute
     }
     '/$account': {
@@ -732,9 +732,9 @@ export interface FileRoutesByFullPath {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/loading': typeof LoadingRoute
   '/set-group': typeof SetGroupRoute
+  '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
-  '/set-interest': typeof SetInterestLazyRoute
   '/$account': typeof AccountSettingsLazyRouteWithChildren
   '/$account/backup': typeof AccountBackupRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
@@ -772,9 +772,9 @@ export interface FileRoutesByTo {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/loading': typeof LoadingRoute
   '/set-group': typeof SetGroupRoute
+  '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
-  '/set-interest': typeof SetInterestLazyRoute
   '/$account': typeof AccountSettingsLazyRouteWithChildren
   '/$account/backup': typeof AccountBackupRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
@@ -813,9 +813,9 @@ export interface FileRoutesById {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/loading': typeof LoadingRoute
   '/set-group': typeof SetGroupRoute
+  '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
-  '/set-interest': typeof SetInterestLazyRoute
   '/$account': typeof AccountRouteWithChildren
   '/$account/_app': typeof AccountAppRouteWithChildren
   '/$account/backup': typeof AccountBackupRoute
@@ -858,9 +858,9 @@ export interface FileRouteTypes {
     | '/bootstrap-relays'
     | '/loading'
     | '/set-group'
+    | '/set-interest'
     | '/new'
     | '/reset'
-    | '/set-interest'
     | '/$account'
     | '/$account/backup'
     | '/columns'
@@ -897,9 +897,9 @@ export interface FileRouteTypes {
     | '/bootstrap-relays'
     | '/loading'
     | '/set-group'
+    | '/set-interest'
     | '/new'
     | '/reset'
-    | '/set-interest'
     | '/$account'
     | '/$account/backup'
     | '/columns'
@@ -936,9 +936,9 @@ export interface FileRouteTypes {
     | '/bootstrap-relays'
     | '/loading'
     | '/set-group'
+    | '/set-interest'
     | '/new'
     | '/reset'
-    | '/set-interest'
     | '/$account'
     | '/$account/_app'
     | '/$account/backup'
@@ -980,9 +980,9 @@ export interface RootRouteChildren {
   BootstrapRelaysRoute: typeof BootstrapRelaysRoute
   LoadingRoute: typeof LoadingRoute
   SetGroupRoute: typeof SetGroupRoute
+  SetInterestRoute: typeof SetInterestRoute
   NewLazyRoute: typeof NewLazyRoute
   ResetLazyRoute: typeof ResetLazyRoute
-  SetInterestLazyRoute: typeof SetInterestLazyRoute
   AccountRoute: typeof AccountRouteWithChildren
   ColumnsRoute: typeof ColumnsRouteWithChildren
   ZapIdRoute: typeof ZapIdRoute
@@ -997,9 +997,9 @@ const rootRouteChildren: RootRouteChildren = {
   BootstrapRelaysRoute: BootstrapRelaysRoute,
   LoadingRoute: LoadingRoute,
   SetGroupRoute: SetGroupRoute,
+  SetInterestRoute: SetInterestRoute,
   NewLazyRoute: NewLazyRoute,
   ResetLazyRoute: ResetLazyRoute,
-  SetInterestLazyRoute: SetInterestLazyRoute,
   AccountRoute: AccountRouteWithChildren,
   ColumnsRoute: ColumnsRouteWithChildren,
   ZapIdRoute: ZapIdRoute,
@@ -1025,9 +1025,9 @@ export const routeTree = rootRoute
         "/bootstrap-relays",
         "/loading",
         "/set-group",
+        "/set-interest",
         "/new",
         "/reset",
-        "/set-interest",
         "/$account",
         "/columns",
         "/zap/$id",
@@ -1049,14 +1049,14 @@ export const routeTree = rootRoute
     "/set-group": {
       "filePath": "set-group.tsx"
     },
+    "/set-interest": {
+      "filePath": "set-interest.tsx"
+    },
     "/new": {
       "filePath": "new.lazy.tsx"
     },
     "/reset": {
       "filePath": "reset.lazy.tsx"
-    },
-    "/set-interest": {
-      "filePath": "set-interest.lazy.tsx"
     },
     "/$account": {
       "filePath": "$account",

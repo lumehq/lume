@@ -1,14 +1,23 @@
-import { commands } from '@/commands.gen'
-import { createFileRoute } from '@tanstack/react-router'
+import { commands } from "@/commands.gen";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/set-group')({
-  loader: async () => {
-    const res = await commands.getContactList()
+type RouteSearch = {
+	account: string;
+};
 
-    if (res.status === 'ok') {
-      return res.data
-    } else {
-      throw new Error(res.error)
-    }
-  },
-})
+export const Route = createFileRoute("/set-group")({
+	validateSearch: (search: Record<string, string>): RouteSearch => {
+		return {
+			account: search.account,
+		};
+	},
+	loader: async () => {
+		const res = await commands.getContactList();
+
+		if (res.status === "ok") {
+			return res.data;
+		} else {
+			throw new Error(res.error);
+		}
+	},
+});

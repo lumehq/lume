@@ -14,6 +14,8 @@ export const Route = createLazyFileRoute("/set-group")({
 
 function Screen() {
 	const contacts = Route.useLoaderData();
+	const { account } = Route.useSearch();
+	const { queryClient } = Route.useRouteContext();
 
 	const [title, setTitle] = useState("");
 	const [npub, setNpub] = useState("");
@@ -38,13 +40,15 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			const res = await commands.setGroup(
-				title.toLowerCase().replace(" ", "_"),
-				users,
-			);
+			const res = await commands.setGroup(title, null, null, users);
 
 			if (res.status === "ok") {
 				const window = getCurrentWindow();
+
+				// Invalidate cache
+				await queryClient.invalidateQueries({
+					queryKey: ["mygroups", account],
+				});
 
 				// Create column in the main window
 				await window.emitTo("main", "columns", {
@@ -100,7 +104,26 @@ function Screen() {
 			>
 				<ScrollArea.Viewport className="bg-white dark:bg-black h-full p-3">
 					<div className="mb-3 flex flex-col gap-2">
-						<span className="text-sm font-semibold">Added</span>
+						<h3 className="text-sm font-semibold">Added</h3>
+						<div className="flex gap-2">
+							<input
+								name="npub"
+								value={npub}
+								onChange={(e) => setNpub(e.target.value)}
+								onKeyDown={(event) => {
+									if (event.key === "Enter") addUser();
+								}}
+								placeholder="npub1..."
+								className="w-full px-3 text-sm border-none rounded-lg h-9 bg-neutral-100 dark:bg-neutral-900 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
+							/>
+							<button
+								type="button"
+								onClick={() => addUser()}
+								className="inline-flex items-center justify-center text-neutral-500 rounded-lg size-9 bg-neutral-200 dark:bg-neutral-800 shrink-0 hover:bg-blue-500 hover:text-white"
+							>
+								<Plus className="size-5" />
+							</button>
+						</div>
 						<div className="flex flex-col gap-2">
 							{users.length ? (
 								users.map((item: string) => (
@@ -129,45 +152,28 @@ function Screen() {
 						</div>
 					</div>
 					<div className="flex flex-col gap-2">
-						<span className="text-sm font-semibold">Contacts</span>
-						<div className="flex gap-2">
-							<input
-								name="npub"
-								value={npub}
-								onChange={(e) => setNpub(e.target.value)}
-								onKeyDown={(event) => {
-									if (event.key === "Enter") addUser();
-								}}
-								placeholder="npub1..."
-								className="w-full px-3 text-sm border-none rounded-lg h-9 bg-neutral-100 dark:bg-neutral-900 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
-							/>
-							<button
-								type="button"
-								onClick={() => addUser()}
-								className="inline-flex items-center justify-center text-neutral-500 rounded-lg size-9 bg-neutral-200 dark:bg-neutral-800 shrink-0 hover:bg-blue-500 hover:text-white"
-							>
-								<Plus className="size-5" />
-							</button>
-						</div>
+						<h3 className="text-sm font-semibold">Contacts</h3>
 						<div className="flex flex-col gap-2">
 							{contacts.length ? (
-								contacts.map((item: string) => (
-									<button
-										key={item}
-										type="button"
-										onClick={() => toggleUser(item)}
-										className="inline-flex items-center justify-between px-3 py-2 rounded-lg border-[.5px] border-neutral-300 dark:border-neutral-700 hover:border-blue-500"
-									>
-										<User.Provider pubkey={item}>
-											<User.Root className="flex items-center gap-2.5">
-												<User.Avatar className="rounded-full size-8" />
-												<div className="flex items-center gap-1">
-													<User.Name className="text-sm font-medium" />
-												</div>
-											</User.Root>
-										</User.Provider>
-									</button>
-								))
+								contacts
+									.filter((c) => !users.includes(c))
+									.map((item: string) => (
+										<button
+											key={item}
+											type="button"
+											onClick={() => toggleUser(item)}
+											className="inline-flex items-center justify-between px-3 py-2 rounded-lg border-[.5px] border-neutral-300 dark:border-neutral-700 hover:border-blue-500"
+										>
+											<User.Provider pubkey={item}>
+												<User.Root className="flex items-center gap-2.5">
+													<User.Avatar className="rounded-full size-8" />
+													<div className="flex items-center gap-1">
+														<User.Name className="text-sm font-medium" />
+													</div>
+												</User.Root>
+											</User.Provider>
+										</button>
+									))
 							) : (
 								<div className="flex items-center justify-center text-sm rounded-lg bg-black/5 dark:bg-white/5 h-14">
 									<p>

@@ -163,9 +163,9 @@ async getMentionList() : Promise<Result<Mention[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async setGroup(label: string, users: string[]) : Promise<Result<string, string>> {
+async setGroup(title: string, description: string | null, image: string | null, users: string[]) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_group", { label, users }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_group", { title, description, image, users }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -187,9 +187,9 @@ async getAllGroups() : Promise<Result<string[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async setInterest(label: string, hashtags: string[]) : Promise<Result<string, string>> {
+async setInterest(title: string, description: string | null, image: string | null, hashtags: string[]) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_interest", { label, hashtags }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_interest", { title, description, image, hashtags }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -374,6 +374,14 @@ async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>
 async getGlobalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_global_events", { until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async isDeletedEvent(id: string) : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_deleted_event", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

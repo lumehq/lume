@@ -3,7 +3,7 @@ use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{str::FromStr, time::Duration};
-use tauri::State;
+use tauri::{Emitter, Manager, State};
 use tauri_specta::Event;
 
 use crate::{common::get_latest_event, NewSettings, Nostr, Settings};
@@ -199,19 +199,51 @@ pub async fn toggle_contact(
 #[tauri::command]
 #[specta::specta]
 pub async fn set_group(
-    label: String,
+    title: String,
+    description: Option<String>,
+    image: Option<String>,
     users: Vec<String>,
     state: State<'_, Nostr>,
+    handle: tauri::AppHandle,
 ) -> Result<String, String> {
     let client = &state.client;
     let public_keys: Vec<PublicKey> = users
         .iter()
         .map(|u| PublicKey::from_str(u).unwrap())
         .collect();
-    let builder = EventBuilder::follow_set(label, public_keys);
+    let label = title.to_lowercase().replace(" ", "-");
+    let mut tags: Vec<Tag> = vec![Tag::title(title)];
+
+    if let Some(desc) = description {
+        tags.push(Tag::description(desc))
+    };
+
+    if let Some(img) = image {
+        let url = UncheckedUrl::new(img);
+        tags.push(Tag::image(url, None));
+    }
+
+    let builder = EventBuilder::follow_set(label, public_keys.clone()).add_tags(tags);
 
     match client.send_event_builder(builder).await {
-        Ok(report) => Ok(report.id().to_hex()),
+        Ok(report) => {
+            tauri::async_runtime::spawn(async move {
+                let state = handle.state::<Nostr>();
+                let client = &state.client;
+
+                let filter = Filter::new()
+                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                    .authors(public_keys)
+                    .limit(500);
+
+                if let Ok(report) = client.reconcile(filter, NegentropyOptions::default()).await {
+                    println!("Received: {}", report.received.len());
+                    handle.emit("synchronized", ()).unwrap();
+                };
+            });
+
+            Ok(report.id().to_hex())
+        }
         Err(e) => Err(e.to_string()),
     }
 }
@@ -247,10 +279,7 @@ pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<String>, Stri
     let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {
@@ -264,15 +293,47 @@ pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<String>, Stri
 #[tauri::command]
 #[specta::specta]
 pub async fn set_interest(
-    label: String,
+    title: String,
+    description: Option<String>,
+    image: Option<String>,
     hashtags: Vec<String>,
     state: State<'_, Nostr>,
+    handle: tauri::AppHandle,
 ) -> Result<String, String> {
     let client = &state.client;
-    let builder = EventBuilder::interest_set(label, hashtags);
+    let label = title.to_lowercase().replace(" ", "-");
+    let mut tags: Vec<Tag> = vec![Tag::title(title)];
+
+    if let Some(desc) = description {
+        tags.push(Tag::description(desc))
+    };
+
+    if let Some(img) = image {
+        let url = UncheckedUrl::new(img);
+        tags.push(Tag::image(url, None));
+    }
+
+    let builder = EventBuilder::interest_set(label, hashtags.clone()).add_tags(tags);
 
     match client.send_event_builder(builder).await {
-        Ok(report) => Ok(report.id().to_hex()),
+        Ok(report) => {
+            tauri::async_runtime::spawn(async move {
+                let state = handle.state::<Nostr>();
+                let client = &state.client;
+
+                let filter = Filter::new()
+                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                    .hashtags(hashtags)
+                    .limit(500);
+
+                if let Ok(report) = client.reconcile(filter, NegentropyOptions::default()).await {
+                    println!("Received: {}", report.received.len());
+                    handle.emit("synchronized", ()).unwrap();
+                };
+            });
+
+            Ok(report.id().to_hex())
+        }
         Err(e) => Err(e.to_string()),
     }
 }
@@ -312,10 +373,7 @@ pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<String>, S
         .author(public_key);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .get_events_of(vec![filter], EventSource::Database)
         .await
     {
         Ok(events) => {

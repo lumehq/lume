@@ -301,7 +301,10 @@ pub async fn login(
                         Kind::MuteList,
                         Kind::Bookmarks,
                         Kind::Interests,
+                        Kind::InterestSet,
+                        Kind::FollowSet,
                         Kind::PinList,
+                        Kind::EventDeletion,
                     ])
                     .limit(1000),
                 NegentropyOptions::default(),

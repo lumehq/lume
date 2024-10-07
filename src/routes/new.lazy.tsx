@@ -21,25 +21,21 @@ function Screen() {
 						href="/auth/connect"
 						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-900 ring-1 ring-black/5 dark:ring-white/5"
 					>
-						<h3 className="mb-1.5 font-medium">Continue with Nostr Connect</h3>
-						<div className="text-sm">
-							<p className="text-neutral-500 dark:text-neutral-600">
-								Your account will be handled by a remote signer. Lume will not
-								store your account keys.
-							</p>
-						</div>
+						<h3 className="mb-1 font-medium">Continue with Nostr Connect</h3>
+						<p className="text-xs text-neutral-500 dark:text-neutral-600">
+							Your account will be handled by a remote signer. Lume will not
+							store your account keys.
+						</p>
 					</a>
 					<a
 						href="/auth/import"
 						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-900 ring-1 ring-black/5 dark:ring-white/5"
 					>
-						<h3 className="mb-1.5 font-medium">Continue with Secret Key</h3>
-						<div className="text-sm">
-							<p className="text-neutral-500 dark:text-neutral-600">
-								Lume will store your keys in secure storage. You can provide a
-								password to add extra security.
-							</p>
-						</div>
+						<h3 className="mb-1 font-medium">Continue with Secret Key</h3>
+						<p className="text-xs text-neutral-500 dark:text-neutral-600">
+							Lume will store your keys in secure storage. You can provide a
+							password to add extra security.
+						</p>
 					</a>
 					<div className="flex items-center justify-between gap-2">
 						<div className="flex-1 h-px bg-black/5 dark:bg-white/5" />

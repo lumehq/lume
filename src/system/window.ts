@@ -160,7 +160,7 @@ export const LumeWindow = {
 			height: 500,
 			maximizable: false,
 			minimizable: false,
-			hidden_title: true,
+			hidden_title: false,
 		});
 
 		if (query.status === "ok") {
