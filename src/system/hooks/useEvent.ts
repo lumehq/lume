@@ -4,11 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { nip19 } from "nostr-tools";
 import { LumeEvent } from "../event";
 
-export function useEvent(id: string) {
+export function useEvent(id: string, repost?: string) {
 	const { isLoading, isError, error, data } = useQuery({
 		queryKey: ["event", id],
 		queryFn: async () => {
 			try {
+				if (repost?.length) {
+					const nostrEvent: NostrEvent = JSON.parse(repost);
+					const res = await commands.getEventMeta(nostrEvent.content);
+
+					if (res.status === "ok") {
+						nostrEvent.meta = res.data;
+					}
+
+					return new LumeEvent(nostrEvent);
+				}
+
 				// Validate ID
 				let normalizeId: string = id
 					.replace("nostr:", "")

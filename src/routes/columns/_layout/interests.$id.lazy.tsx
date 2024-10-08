@@ -7,8 +7,7 @@ import { ArrowDown } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { listen } from "@tauri-apps/api/event";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/interests/$id")({
@@ -18,7 +17,6 @@ export const Route = createLazyFileRoute("/columns/_layout/interests/$id")({
 export function Screen() {
 	const hashtags = Route.useLoaderData();
 	const params = Route.useParams();
-	const { queryClient } = Route.useRouteContext();
 
 	const {
 		data,
@@ -83,18 +81,6 @@ export function Screen() {
 		},
 		[data],
 	);
-
-	useEffect(() => {
-		const unlisten = listen("synchronized", async () => {
-			await queryClient.invalidateQueries({
-				queryKey: ["hashtags", params.id],
-			});
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
 
 	return (
 		<ScrollArea.Root

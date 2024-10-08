@@ -48,7 +48,7 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
 
     match client.database().query(vec![filter.clone()]).await {
         Ok(events) => {
-            if let Some(event) = events.first() {
+            if let Some(event) = get_latest_event(&events) {
                 if let Ok(metadata) = Metadata::from_json(&event.content) {
                     Ok(metadata.as_json())
                 } else {
@@ -63,7 +63,7 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
                     .await
                 {
                     Ok(events) => {
-                        if let Some(event) = events.first() {
+                        if let Some(event) = get_latest_event(&events) {
                             if let Ok(metadata) = Metadata::from_json(&event.content) {
                                 Ok(metadata.as_json())
                             } else {
@@ -652,9 +652,8 @@ pub async fn verify_nip05(id: String, nip05: &str) -> Result<bool, String> {
 #[tauri::command]
 #[specta::specta]
 pub async fn is_trusted_user(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let circles = &state.circles.lock().await;
+    let trusted_list = &state.trusted_list.lock().await;
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
-    let trusted = circles.values().any(|v| v.contains(&public_key));
 
-    Ok(trusted)
+    Ok(trusted_list.contains(&public_key))
 }

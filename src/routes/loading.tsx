@@ -1,3 +1,4 @@
+import { commands } from "@/commands.gen";
 import { Frame, Spinner } from "@/components";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
@@ -21,13 +22,19 @@ function Screen() {
 	const search = Route.useSearch();
 
 	useEffect(() => {
-		const unlisten = listen("synchronized", () => {
-			navigate({
-				to: "/$account/home",
-				// @ts-ignore, this is tanstack router bug
-				params: { account: search.account },
-				replace: true,
-			});
+		const unlisten = listen("neg_synchronized", async () => {
+			const status = await commands.createSyncFile(search.account);
+
+			if (status) {
+				navigate({
+					to: "/$account/home",
+					// @ts-ignore, this is tanstack router bug
+					params: { account: search.account },
+					replace: true,
+				});
+			} else {
+				throw new Error("System error.");
+			}
 		});
 
 		return () => {
@@ -43,7 +50,7 @@ function Screen() {
 			>
 				<Spinner />
 				<p className="text-sm text-neutral-600 dark:text-neutral-40">
-					Fetching necessary data for the first time login...
+					Syncing all necessary data for the first time login...
 				</p>
 			</Frame>
 		</div>

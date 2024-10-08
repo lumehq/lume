@@ -10,8 +10,12 @@ use std::{
     time::Duration,
 };
 use tauri::{Emitter, Manager, State};
+use tokio::time::sleep;
 
-use crate::{common::init_nip65, Nostr, NOTIFICATION_SUB_ID};
+use crate::{
+    common::{get_latest_event, init_nip65},
+    Nostr, NOTIFICATION_SUB_ID,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -219,6 +223,17 @@ pub fn is_account_sync(id: String, handle: tauri::AppHandle) -> bool {
 
 #[tauri::command]
 #[specta::specta]
+pub fn create_sync_file(id: String, handle: tauri::AppHandle) -> bool {
+    let config_dir = handle
+        .path()
+        .app_config_dir()
+        .expect("Error: app config directory not found.");
+
+    File::create(config_dir.join(id)).is_ok()
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn login(
     account: String,
     password: String,
@@ -273,93 +288,27 @@ pub async fn login(
 
     // NIP-03: Get user's contact list
     let contact_list = {
-        let contacts = client.get_contact_list(None).await.unwrap();
-        // Update app's state
-        state.contact_list.lock().await.clone_from(&contacts);
-        // Return
-        contacts
+        if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
+            state.contact_list.lock().await.clone_from(&contacts);
+            contacts
+        } else {
+            Vec::new()
+        }
     };
 
-    // Run seperate thread for syncing data
-    let pk = public_key.clone();
+    let public_key_clone = public_key.clone();
+
+    // Run seperate thread for sync
     tauri::async_runtime::spawn(async move {
-        let config_dir = handle.path().app_config_dir().unwrap();
         let state = handle.state::<Nostr>();
         let client = &state.client;
-
-        // Convert current user to PublicKey
-        let author = PublicKey::from_str(&pk).unwrap();
-
-        // Fetching user's metadata
-        if let Ok(report) = client
-            .reconcile(
-                Filter::new()
-                    .author(author)
-                    .kinds(vec![
-                        Kind::Metadata,
-                        Kind::ContactList,
-                        Kind::MuteList,
-                        Kind::Bookmarks,
-                        Kind::Interests,
-                        Kind::InterestSet,
-                        Kind::FollowSet,
-                        Kind::PinList,
-                        Kind::EventDeletion,
-                    ])
-                    .limit(1000),
-                NegentropyOptions::default(),
-            )
-            .await
-        {
-            println!("Received: {}", report.received.len())
-        }
-
-        // Fetching user's events
-        if let Ok(report) = client
-            .reconcile(
-                Filter::new()
-                    .author(author)
-                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                    .limit(200),
-                NegentropyOptions::default(),
-            )
-            .await
-        {
-            println!("Received: {}", report.received.len())
-        }
-
-        // Fetching user's notification
-        if let Ok(report) = client
-            .reconcile(
-                Filter::new()
-                    .pubkey(author)
-                    .kinds(vec![
-                        Kind::TextNote,
-                        Kind::Repost,
-                        Kind::Reaction,
-                        Kind::ZapReceipt,
-                    ])
-                    .limit(200),
-                NegentropyOptions::default(),
-            )
-            .await
-        {
-            println!("Received: {}", report.received.len())
-        }
+        let author = PublicKey::from_str(&public_key).unwrap();
 
         // Subscribe for new notification
         if let Ok(e) = client
             .subscribe_with_id(
                 SubscriptionId::new(NOTIFICATION_SUB_ID),
-                vec![Filter::new()
-                    .pubkey(author)
-                    .kinds(vec![
-                        Kind::TextNote,
-                        Kind::Repost,
-                        Kind::Reaction,
-                        Kind::ZapReceipt,
-                    ])
-                    .since(Timestamp::now())],
+                vec![Filter::new().pubkey(author).since(Timestamp::now())],
                 None,
             )
             .await
@@ -371,13 +320,82 @@ pub async fn login(
         if !contact_list.is_empty() {
             let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
 
-            // Fetching contact's metadata
+            // Syncing all metadata events from contact list
             if let Ok(report) = client
                 .reconcile(
                     Filter::new()
                         .authors(authors.clone())
-                        .kinds(vec![Kind::Metadata, Kind::ContactList, Kind::MuteList])
-                        .limit(3000),
+                        .kinds(vec![Kind::Metadata, Kind::ContactList])
+                        .limit(authors.len() * 10),
+                    NegentropyOptions::default(),
+                )
+                .await
+            {
+                println!("Received: {}", report.received.len());
+            }
+
+            // Syncing all events from contact list
+            if let Ok(report) = client
+                .reconcile(
+                    Filter::new()
+                        .authors(authors.clone())
+                        .kinds(vec![Kind::TextNote, Kind::Repost])
+                        .limit(authors.len() * 50),
+                    NegentropyOptions::default(),
+                )
+                .await
+            {
+                println!("Received: {}", report.received.len());
+            }
+
+            // Create the trusted public key list from contact list
+            // TODO: create a cached file
+            let mut trusted_list: HashSet<PublicKey> = HashSet::new();
+
+            for author in authors.into_iter() {
+                trusted_list.insert(author);
+
+                let filter = Filter::new()
+                    .author(author)
+                    .kind(Kind::ContactList)
+                    .limit(1);
+
+                if let Ok(events) = client.database().query(vec![filter]).await {
+                    if let Some(event) = get_latest_event(&events) {
+                        for tag in event.tags.iter() {
+                            if let Some(TagStandard::PublicKey {
+                                public_key,
+                                uppercase: false,
+                                ..
+                            }) = tag.to_owned().to_standardized()
+                            {
+                                trusted_list.insert(public_key);
+                            };
+                        }
+                    }
+                }
+            }
+
+            // Update app's state
+            state.trusted_list.lock().await.clone_from(&trusted_list);
+
+            // Syncing all user's events
+            if let Ok(report) = client
+                .reconcile(Filter::new().author(author), NegentropyOptions::default())
+                .await
+            {
+                println!("Received: {}", report.received.len())
+            }
+
+            // Syncing all tagged events for current user
+            if let Ok(report) = client
+                .reconcile(
+                    Filter::new().pubkey(author).kinds(vec![
+                        Kind::TextNote,
+                        Kind::Repost,
+                        Kind::Reaction,
+                        Kind::ZapReceipt,
+                    ]),
                     NegentropyOptions::default(),
                 )
                 .await
@@ -385,57 +403,30 @@ pub async fn login(
                 println!("Received: {}", report.received.len())
             }
 
-            // Fetching contact's events
+            // Syncing all events for trusted list
+            let trusted: Vec<PublicKey> = trusted_list.into_iter().collect();
             if let Ok(report) = client
                 .reconcile(
                     Filter::new()
-                        .authors(authors.clone())
-                        .kinds(vec![Kind::TextNote, Kind::Repost])
-                        .limit(1000),
+                        .authors(trusted)
+                        .kinds(vec![Kind::Metadata, Kind::TextNote, Kind::Repost])
+                        .limit(20000),
                     NegentropyOptions::default(),
                 )
                 .await
             {
-                println!("Received: {}", report.received.len());
-
-                // Save the process status
-                let _ = File::create(config_dir.join(author.to_bech32().unwrap()));
-                // Update frontend
-                handle.emit("synchronized", ()).unwrap();
-            };
-
-            for author in authors.into_iter() {
-                let filter = Filter::new()
-                    .author(author)
-                    .kind(Kind::ContactList)
-                    .limit(1);
-
-                let mut circles = state.circles.lock().await;
-                let mut list: Vec<PublicKey> = Vec::new();
-
-                if let Ok(events) = client.database().query(vec![filter]).await {
-                    if let Some(event) = events.into_iter().next() {
-                        for tag in event.tags.into_iter() {
-                            if let Some(TagStandard::PublicKey {
-                                public_key,
-                                uppercase: false,
-                                ..
-                            }) = tag.to_standardized()
-                            {
-                                list.push(public_key)
-                            }
-                        }
-
-                        if !list.is_empty() {
-                            circles.insert(author, list);
-                        };
-                    }
-                }
+                println!("Received: {}", report.received.len())
             }
-        } else {
-            handle.emit("synchronized", ()).unwrap();
+
+            // Wait a little longer
+            // TODO: remove?
+            sleep(Duration::from_secs(5)).await;
         }
+
+        handle
+            .emit("neg_synchronized", ())
+            .expect("Something wrong!");
     });
 
-    Ok(public_key)
+    Ok(public_key_clone)
 }

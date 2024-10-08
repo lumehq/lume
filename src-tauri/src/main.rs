@@ -7,13 +7,12 @@
 use border::WebviewWindowExt as BorderWebviewWindowExt;
 use commands::{account::*, event::*, metadata::*, relay::*, window::*};
 use common::parse_event;
-use nostr_relay_builder::prelude::*;
-use nostr_sdk::prelude::*;
+use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
-    collections::HashMap,
+    collections::HashSet,
     fs,
     io::{self, BufRead},
     str::FromStr,
@@ -32,7 +31,7 @@ pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
     contact_list: Mutex<Vec<Contact>>,
-    circles: Mutex<HashMap<PublicKey, Vec<PublicKey>>>,
+    trusted_list: Mutex<HashSet<PublicKey>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -84,7 +83,6 @@ struct NewSettings(Settings);
 
 pub const DEFAULT_DIFFICULTY: u8 = 21;
 pub const FETCH_LIMIT: usize = 100;
-pub const NEWSFEED_NEG_LIMIT: usize = 512;
 pub const NOTIFICATION_NEG_LIMIT: usize = 64;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
@@ -108,6 +106,7 @@ fn main() {
             delete_account,
             reset_password,
             is_account_sync,
+            create_sync_file,
             login,
             get_profile,
             set_profile,
@@ -274,7 +273,7 @@ fn main() {
                 }
 
                 // Connect
-                client.connect().await;
+                client.connect_with_timeout(Duration::from_secs(20)).await;
 
                 client
             });
@@ -284,7 +283,7 @@ fn main() {
                 client,
                 settings: Mutex::new(Settings::default()),
                 contact_list: Mutex::new(Vec::new()),
-                circles: Mutex::new(HashMap::new()),
+                trusted_list: Mutex::new(HashSet::new()),
             });
 
             Subscription::listen_any(app, move |event| {
@@ -432,14 +431,15 @@ fn main() {
                                     // Send native notification
                                     if allow_notification {
                                         let author = client
-                                            .fetch_metadata(
-                                                event.pubkey,
-                                                Some(Duration::from_secs(3)),
-                                            )
+                                            .database()
+                                            .profile(event.pubkey)
                                             .await
-                                            .unwrap_or_else(|_| Metadata::new());
+                                            .unwrap_or_else(|_| {
+                                                DatabaseProfile::new(event.pubkey, Metadata::new())
+                                            });
+                                        let metadata = author.metadata();
 
-                                        send_event_notification(&event, author, &handle_clone);
+                                        send_event_notification(&event, metadata, &handle_clone);
                                     }
                                 }
 
@@ -472,30 +472,36 @@ fn main() {
             if let tauri::WindowEvent::Focused(focused) = event {
                 if !focused {
                     let handle = window.app_handle().to_owned();
+                    let config_dir = handle.path().app_config_dir().unwrap();
 
                     tauri::async_runtime::spawn(async move {
                         let state = handle.state::<Nostr>();
                         let client = &state.client;
 
-                        if client.signer().await.is_ok() {
-                            if let Ok(contact_list) =
-                                client.get_contact_list(Some(Duration::from_secs(5))).await
-                            {
-                                let authors: Vec<PublicKey> =
-                                    contact_list.iter().map(|f| f.public_key).collect();
+                        if let Ok(signer) = client.signer().await {
+                            let public_key = signer.public_key().await.unwrap();
+                            let bech32 = public_key.to_bech32().unwrap();
 
-                                if client
-                                    .reconcile(
-                                        Filter::new()
-                                            .authors(authors)
-                                            .kinds(vec![Kind::TextNote, Kind::Repost])
-                                            .limit(NEWSFEED_NEG_LIMIT),
-                                        NegentropyOptions::default(),
-                                    )
-                                    .await
-                                    .is_ok()
+                            if fs::metadata(config_dir.join(bech32)).is_ok() {
+                                if let Ok(contact_list) =
+                                    client.get_contact_list(Some(Duration::from_secs(5))).await
                                 {
-                                    handle.emit("synchronized", ()).unwrap();
+                                    let authors: Vec<PublicKey> =
+                                        contact_list.iter().map(|f| f.public_key).collect();
+
+                                    if client
+                                        .reconcile(
+                                            Filter::new()
+                                                .authors(authors)
+                                                .kinds(vec![Kind::TextNote, Kind::Repost])
+                                                .limit(1000),
+                                            NegentropyOptions::default(),
+                                        )
+                                        .await
+                                        .is_ok()
+                                    {
+                                        handle.emit("synchronized", ()).unwrap();
+                                    }
                                 }
                             }
                         }

@@ -99,6 +99,9 @@ async resetPassword(key: string, password: string) : Promise<Result<null, string
 async isAccountSync(id: string) : Promise<boolean> {
     return await TAURI_INVOKE("is_account_sync", { id });
 },
+async createSyncFile(id: string) : Promise<boolean> {
+    return await TAURI_INVOKE("create_sync_file", { id });
+},
 async login(account: string, password: string) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("login", { account, password }) };

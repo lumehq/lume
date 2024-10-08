@@ -7,7 +7,6 @@ import { ArrowDown, ArrowUp } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
 	memo,
@@ -30,7 +29,6 @@ export const Route = createLazyFileRoute("/columns/_layout/newsfeed")({
 
 export function Screen() {
 	const contacts = Route.useLoaderData();
-	const { queryClient } = Route.useRouteContext();
 	const { label, account } = Route.useSearch();
 	const {
 		data,
@@ -94,16 +92,6 @@ export function Screen() {
 		},
 		[data],
 	);
-
-	useEffect(() => {
-		const unlisten = listen("synchronized", async () => {
-			await queryClient.invalidateQueries({ queryKey: [label, account] });
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
 
 	return (
 		<ScrollArea.Root

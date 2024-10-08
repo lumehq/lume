@@ -12,7 +12,7 @@ export const RepostNote = memo(function RepostNote({
 	event: LumeEvent;
 	className?: string;
 }) {
-	const { isLoading, isError, data } = useEvent(event.repostId);
+	const { isLoading, isError, data } = useEvent(event.repostId, event.content);
 
 	return (
 		<Note.Root className={cn("", className)}>
