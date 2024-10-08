@@ -5,7 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::common::{create_event_tags, filter_converstation, parse_event, Meta};
+use crate::common::{create_tags, parse_event, process_event, Meta};
 use crate::{Nostr, DEFAULT_DIFFICULTY, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
@@ -215,22 +215,7 @@ pub async fn get_all_events_by_author(
         .get_events_of(vec![filter], EventSource::Database)
         .await
     {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -264,23 +249,7 @@ pub async fn get_all_events_by_authors(
         .get_events_of(vec![filter], EventSource::Database)
         .await
     {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -312,22 +281,7 @@ pub async fn get_all_events_by_hashtags(
         )
         .await
     {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -351,22 +305,7 @@ pub async fn get_local_events(
         .until(as_of);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -396,22 +335,7 @@ pub async fn get_global_events(
         )
         .await
     {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -427,7 +351,7 @@ pub async fn publish(
     let client = &state.client;
 
     // Create tags from content
-    let mut tags = create_event_tags(&content);
+    let mut tags = create_tags(&content);
 
     // Add client tag
     // TODO: allow user config this setting
@@ -464,10 +388,8 @@ pub async fn reply(
     let client = &state.client;
     let database = client.database();
 
-    // Create tags from content
-    let mut tags = create_event_tags(&content);
-
     let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
+    let mut tags = create_tags(&content);
 
     match database.query(vec![Filter::new().id(reply_id)]).await {
         Ok(events) => {
@@ -651,23 +573,7 @@ pub async fn search(
         )
         .await
     {
-        Ok(events) => {
-            let fils = filter_converstation(events);
-            let futures = fils.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -686,6 +592,19 @@ pub async fn is_deleted_event(id: String, state: State<'_, Nostr>) -> Result<boo
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(!events.is_empty()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn request_delete(id: String, state: State<'_, Nostr>) -> Result<(), String> {
+    let client = &state.client;
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
+    let builder = EventBuilder::delete(vec![event_id]);
+
+    match client.send_event_builder(builder).await {
+        Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
     }
 }

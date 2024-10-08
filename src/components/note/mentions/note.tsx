@@ -13,14 +13,17 @@ export const MentionNote = memo(function MentionNote({
 
 	return (
 		<div className="relative my-2">
-			<div className="pl-3 before:content-[''] before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:border-l-[2px] before:border-black/10 dark:before:border-white/10">
+			<div className="min-h-[64px] pl-3 before:content-[''] before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:border-l-[2px] before:border-black/10 dark:before:border-white/10">
 				{isLoading ? (
-					<Spinner />
+					<div className="h-[64px] flex items-center">
+						<Spinner />
+					</div>
 				) : isError || !event ? (
-					<p className="text-sm font-medium text-red-500">
-						{error.message ||
-							"Quoted note is not found with your current relay set"}
-					</p>
+					<div className="h-[64px] flex items-center">
+						<p className="text-sm font-medium text-red-500">
+							{error.message || "Note can be found with your current relay set"}
+						</p>
+					</div>
 				) : (
 					<Note.Provider event={event}>
 						<User.Provider pubkey={event.pubkey}>

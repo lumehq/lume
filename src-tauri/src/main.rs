@@ -143,6 +143,7 @@ fn main() {
             get_local_events,
             get_global_events,
             is_deleted_event,
+            request_delete,
             search,
             publish,
             reply,

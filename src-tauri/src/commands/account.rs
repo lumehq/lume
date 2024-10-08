@@ -325,8 +325,8 @@ pub async fn login(
                 .reconcile(
                     Filter::new()
                         .authors(authors.clone())
-                        .kinds(vec![Kind::Metadata, Kind::ContactList])
-                        .limit(authors.len() * 10),
+                        .kinds(vec![Kind::Metadata, Kind::ContactList, Kind::EventDeletion])
+                        .limit(authors.len() * 20),
                     NegentropyOptions::default(),
                 )
                 .await
@@ -409,8 +409,13 @@ pub async fn login(
                 .reconcile(
                     Filter::new()
                         .authors(trusted)
-                        .kinds(vec![Kind::Metadata, Kind::TextNote, Kind::Repost])
-                        .limit(20000),
+                        .kinds(vec![
+                            Kind::Metadata,
+                            Kind::TextNote,
+                            Kind::Repost,
+                            Kind::EventDeletion,
+                        ])
+                        .limit(30000),
                     NegentropyOptions::default(),
                 )
                 .await

@@ -1,10 +1,6 @@
 import { commands } from "@/commands.gen";
 import { toLumeEvents } from "@/commons";
-import { Spinner } from "@/components";
-import { Quote } from "@/components/quote";
-import { RepostNote } from "@/components/repost";
-import { TextNote } from "@/components/text";
-import { User } from "@/components/user";
+import { RepostNote, Spinner, TextNote, User } from "@/components";
 import type { LumeEvent } from "@/system";
 import { Kind } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -48,16 +44,7 @@ function Screen() {
 							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
 						/>
 					);
-				default: {
-					if (event.isQuote) {
-						return (
-							<Quote
-								key={event.id}
-								event={event}
-								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
-							/>
-						);
-					}
+				default:
 					return (
 						<TextNote
 							key={event.id}
@@ -65,7 +52,6 @@ function Screen() {
 							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
 						/>
 					);
-				}
 			}
 		},
 		[events],

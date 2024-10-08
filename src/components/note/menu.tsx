@@ -1,51 +1,68 @@
+import { commands } from "@/commands.gen";
 import { DotsThree } from "@phosphor-icons/react";
+import { useSearch } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { nip19 } from "nostr-tools";
 import { useCallback } from "react";
 import { useNoteContext } from "./provider";
 
 export function NoteMenu() {
 	const event = useNoteContext();
+	const { account }: { account: string } = useSearch({ strict: false });
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
 
-		const menuItems = await Promise.all([
+		const list = [
 			MenuItem.new({
-				text: "Copy Sharable Link",
-				action: async () => {
-					const eventId = await event.idAsBech32();
-					await writeText(`https://njump.me/${eventId}`);
-				},
-			}),
-			MenuItem.new({
-				text: "Copy Event ID",
+				text: "Copy ID",
 				action: async () => {
 					const eventId = await event.idAsBech32();
 					await writeText(eventId);
 				},
 			}),
 			MenuItem.new({
-				text: "Copy Public Key",
+				text: "Copy author",
 				action: async () => {
 					const pubkey = await event.pubkeyAsBech32();
 					await writeText(pubkey);
 				},
 			}),
-			PredefinedMenuItem.new({ item: "Separator" }),
 			MenuItem.new({
-				text: "Copy Raw Event",
+				text: "Copy sharable link",
 				action: async () => {
-					event.meta = undefined;
-					const raw = JSON.stringify(event);
-					await writeText(raw);
+					const eventId = await event.idAsBech32();
+					await writeText(`https://njump.me/${eventId}`);
 				},
 			}),
-		]);
+			PredefinedMenuItem.new({ item: "Separator" }),
+			MenuItem.new({
+				text: "Copy raw event",
+				action: async () => {
+					event.meta = undefined;
+					await writeText(JSON.stringify(event));
+				},
+			}),
+		];
 
-		const menu = await Menu.new({
-			items: menuItems,
-		});
+		if (account?.length) {
+			const pubkey = nip19.decode(account).data;
+
+			if (event.pubkey === pubkey) {
+				list.push(
+					MenuItem.new({
+						text: "Request delete",
+						action: async () => {
+							await commands.requestDelete(event.id);
+						},
+					}),
+				);
+			}
+		}
+
+		const items = await Promise.all(list);
+		const menu = await Menu.new({ items });
 
 		await menu.popup().catch((e) => console.error(e));
 	}, []);

@@ -1,6 +1,6 @@
 import { events, commands } from "@/commands.gen";
 import { toLumeEvents } from "@/commons";
-import { Quote, RepostNote, Spinner, TextNote } from "@/components";
+import { RepostNote, Spinner, TextNote } from "@/components";
 import { LumeEvent } from "@/system";
 import { Kind, type Meta } from "@/types";
 import { ArrowDown, ArrowUp } from "@phosphor-icons/react";
@@ -69,25 +69,14 @@ export function Screen() {
 							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
 						/>
 					);
-				default: {
-					if (event.isQuote) {
-						return (
-							<Quote
-								key={event.id}
-								event={event}
-								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
-							/>
-						);
-					} else {
-						return (
-							<TextNote
-								key={event.id}
-								event={event}
-								className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
-							/>
-						);
-					}
-				}
+				default:
+					return (
+						<TextNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 			}
 		},
 		[data],
