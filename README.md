@@ -1,63 +1,30 @@
 ## Introduction
 
-Lume is a Nostr client for desktop include Linux, Windows and macOS. It is free and open source, you can look at source code on Github. Lume is actively improving the app and adding new features, you can expect new update every month.
+Lume is a Nostr client for macOS and Windows 11. It is free and open source, you can look at source code on Github. Lume is actively improving the app and adding new features, you can expect new update every month.
 
-## Usage
+## Installation and Usage
 
-Download Lume v4 for your platform here: [https://github.com/lumehq/lume/releases](https://github.com/lumehq/lume/releases)
+- *Microsoft Windows*: See the releases area for a file named something like Lume_VERSION_x64-setup.exe or Lume_VERSION_x64_en-US.msi
 
-Supported platform: macOS. Windows and Linux are coming soon.
+- *macOS*: See the releases area for a file named something like Lume_VERSION_PLATFORM.dmg
 
-Windows and Linux are availabel on v3 and below.
+Lume only supported macOS and Windows 11. Linux user can consider using [Gossip client](https://github.com/mikedilger/gossip)
 
-## Prerequisites
+## Screenshots
 
-- Node.js >= 18: https://nodejs.org/en
+![Login Screen](https://image.nostr.build/d7a59ada0ed107e9556b0c8e547803f41f99e7973da4e52eab1b0b0a7dbdfadf.png)
+![Welcome Screen](https://image.nostr.build/b6f63e5bda01a37de06e59bd2cebc7be47fb6a8b01ce3155b7269d5235e6db0c.png)
+![Newsfeed](https://image.nostr.build/66fdcd96c6008794a02fa282e70a4538393c2a0041b1ee52aaf09893c17dba96.png)
+![Thread](https://image.nostr.build/11538fae77da1e8b00099b92642f2d9e40f6fbf7fde49459c93a9d99c97e4cfc.png)
+![Dark Mode](https://image.nostr.build/6b6c024a029a61d96d507dd7d1d8f7c48332cc77aad1bb87c6a952b8d9175348.png)
 
-- Rust: https://rustup.rs/
+## Building from Source
 
-- PNPM: https://pnpm.io
-
-- Tauri v2: https://beta.tauri.app/guides/prerequisites/
-
-## Develop
-
-Clone project
-
-```
-git clone https://github.com/lumehq/lume.git && cd lume
-```
-
-Install packages
-
-```
-pnpm install
-```
-
-Run dev build
-
-```
-pnpm tauri dev
-```
-
-Generate production build
-
-```
-pnpm tauri build
-```
-
-## Nix
-
-Requirements:
-
-1. [Install Nix](https://zero-to-flakes.com/install)
-1. [Setup `direnv`](https://zero-to-flakes.com/direnv)
-
-`cd` into the root folder of the project to enter `nix develop` shell. Run `direnv allow` (only once). Then run `pnpm` or `bun` (experimental) commands as described above.
+See [Developing](docs/DEVELOPING.md)
 
 ## License
 
-Copyright (C) 2023-2024 Ren Amamiya & other Lume contributors (see AUTHORS.md)
+Copyright (C) 2023-2024 Ren Amamiya & other Lume contributors
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
