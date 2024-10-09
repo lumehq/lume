@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$account/_settings/general")({
 	beforeLoad: async () => {
-		const res = await commands.getSettings();
+		const res = await commands.getUserSettings();
 
 		if (res.status === "ok") {
 			appSettings.setState((state) => {

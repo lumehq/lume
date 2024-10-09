@@ -128,8 +128,8 @@ fn main() {
             zap_event,
             copy_friend,
             get_notifications,
-            get_settings,
-            set_settings,
+            get_user_settings,
+            set_user_settings,
             verify_nip05,
             is_trusted_user,
             get_event_meta,
@@ -523,6 +523,7 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

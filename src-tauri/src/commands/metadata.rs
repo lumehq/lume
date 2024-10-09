@@ -577,31 +577,24 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
+pub async fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
     Ok(state.settings.lock().await.clone())
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_settings(
-    settings: &str,
+pub async fn set_user_settings(
+    settings: String,
     state: State<'_, Nostr>,
     handle: tauri::AppHandle,
 ) -> Result<(), String> {
     let client = &state.client;
-    let ident = "lume_v4:settings";
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
-    let encrypted = signer
-        .nip44_encrypt(&public_key, settings)
-        .await
-        .map_err(|e| e.to_string())?;
-    let tag = Tag::identifier(ident);
-    let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
+    let tags = vec![Tag::identifier("lume_user_setting")];
+    let builder = EventBuilder::new(Kind::ApplicationSpecificData, &settings, tags);
 
     match client.send_event_builder(builder).await {
         Ok(_) => {
-            let parsed: Settings = serde_json::from_str(settings).map_err(|e| e.to_string())?;
+            let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
 
             // Update state
             state.settings.lock().await.clone_from(&parsed);

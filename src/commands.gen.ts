@@ -270,17 +270,17 @@ async getNotifications() : Promise<Result<string[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getSettings() : Promise<Result<Settings, null>> {
+async getUserSettings() : Promise<Result<Settings, null>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_settings") };
+    return { status: "ok", data: await TAURI_INVOKE("get_user_settings") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async setSettings(settings: string) : Promise<Result<null, string>> {
+async setUserSettings(settings: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_settings", { settings }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_user_settings", { settings }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

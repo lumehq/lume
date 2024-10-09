@@ -29,7 +29,7 @@ function Screen() {
 	const updateSettings = () => {
 		startTransition(async () => {
 			const newSettings = JSON.stringify(appSettings.state);
-			const res = await commands.setSettings(newSettings);
+			const res = await commands.setUserSettings(newSettings);
 
 			if (res.status === "error") {
 				await message(res.error, { kind: "error" });

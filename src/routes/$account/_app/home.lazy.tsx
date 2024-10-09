@@ -28,6 +28,7 @@ export const Route = createLazyFileRoute("/$account/_app/home")({
 });
 
 function Screen() {
+	const params = Route.useParams();
 	const columns = useStore(appColumns, (state) => state);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -159,7 +160,21 @@ function Screen() {
 		}
 
 		if (!columns.length) {
-			getSystemColumns();
+			const prevColumns = window.localStorage.getItem(
+				`${params.account}_columns`,
+			);
+
+			if (!prevColumns) {
+				getSystemColumns();
+			} else {
+				const parsed: LumeColumn[] = JSON.parse(prevColumns);
+				appColumns.setState(() => parsed);
+			}
+		} else {
+			window.localStorage.setItem(
+				`${params.account}_columns`,
+				JSON.stringify(columns),
+			);
 		}
 	}, [columns.length]);
 

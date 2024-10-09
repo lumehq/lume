@@ -12,7 +12,7 @@ export const Route = createFileRoute("/columns/_layout")({
 		};
 	},
 	beforeLoad: async () => {
-		const res = await commands.getSettings();
+		const res = await commands.getUserSettings();
 
 		if (res.status === "ok") {
 			appSettings.setState((state) => {

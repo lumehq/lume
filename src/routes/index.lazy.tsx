@@ -84,7 +84,7 @@ function Screen() {
 			const res = await commands.login(value, password);
 
 			if (res.status === "ok") {
-				const settings = await commands.getSettings();
+				const settings = await commands.getUserSettings();
 
 				if (settings.status === "ok") {
 					appSettings.setState(() => settings.data);

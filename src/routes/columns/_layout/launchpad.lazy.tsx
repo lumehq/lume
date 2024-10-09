@@ -1,5 +1,5 @@
 import { commands } from "@/commands.gen";
-import { toLumeEvents } from "@/commons";
+import { cn, toLumeEvents } from "@/commons";
 import { Spinner, User } from "@/components";
 import { LumeWindow } from "@/system";
 import type { LumeColumn, NostrEvent } from "@/types";
@@ -24,8 +24,8 @@ function Screen() {
 			className="overflow-hidden size-full"
 		>
 			<ScrollArea.Viewport className="relative h-full px-3 pb-3">
-				<MyGroups />
-				<MyInterests />
+				<Groups />
+				<Interests />
 				<Core />
 			</ScrollArea.Viewport>
 			<ScrollArea.Scrollbar
@@ -95,10 +95,10 @@ function Core() {
 	);
 }
 
-function MyGroups() {
+function Groups() {
 	const { account } = Route.useSearch();
-	const { isLoading, data, refetch } = useQuery({
-		queryKey: ["mygroups", account],
+	const { isLoading, data, refetch, isRefetching } = useQuery({
+		queryKey: ["groups", account],
 		queryFn: async () => {
 			const res = await commands.getAllGroups();
 
@@ -167,12 +167,15 @@ function MyGroups() {
 	return (
 		<div className="mb-12 flex flex-col gap-3">
 			<div className="flex items-center justify-between px-2">
-				<h3 className="font-semibold">My groups</h3>
+				<h3 className="font-semibold">Groups</h3>
 				<div className="inline-flex items-center justify-center gap-2">
 					<button
 						type="button"
 						onClick={() => refetch()}
-						className="size-7 inline-flex items-center justify-center rounded-full"
+						className={cn(
+							"size-7 inline-flex items-center justify-center rounded-full",
+							isRefetching ? "animate-spin" : "",
+						)}
 					>
 						<ArrowClockwise className="size-4" />
 					</button>
@@ -206,10 +209,10 @@ function MyGroups() {
 	);
 }
 
-function MyInterests() {
+function Interests() {
 	const { account } = Route.useSearch();
-	const { isLoading, data, refetch } = useQuery({
-		queryKey: ["myinterests", account],
+	const { isLoading, data, refetch, isRefetching } = useQuery({
+		queryKey: ["interests", account],
 		queryFn: async () => {
 			const res = await commands.getAllInterests();
 
@@ -275,12 +278,15 @@ function MyInterests() {
 	return (
 		<div className="mb-12 flex flex-col gap-3">
 			<div className="flex items-center justify-between px-2">
-				<h3 className="font-semibold">My interests</h3>
+				<h3 className="font-semibold">Interests</h3>
 				<div className="inline-flex items-center justify-center gap-2">
 					<button
 						type="button"
 						onClick={() => refetch()}
-						className="size-7 inline-flex items-center justify-center rounded-full"
+						className={cn(
+							"size-7 inline-flex items-center justify-center rounded-full",
+							isRefetching ? "animate-spin" : "",
+						)}
 					>
 						<ArrowClockwise className="size-4" />
 					</button>
