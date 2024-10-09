@@ -1,4 +1,5 @@
 import { commands } from "@/commands.gen";
+import { toLumeEvents } from "@/commons";
 import { Spinner, User } from "@/components";
 import { LumeWindow } from "@/system";
 import type { LumeColumn, NostrEvent } from "@/types";
@@ -8,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
+import { nanoid } from "nanoid";
 import { useCallback } from "react";
 
 export const Route = createLazyFileRoute("/columns/_layout/launchpad")({
@@ -101,7 +103,7 @@ function MyGroups() {
 			const res = await commands.getAllGroups();
 
 			if (res.status === "ok") {
-				const data = res.data.map((item) => JSON.parse(item) as NostrEvent);
+				const data = toLumeEvents(res.data);
 				return data;
 			} else {
 				throw new Error(res.error);
@@ -118,6 +120,7 @@ function MyGroups() {
 		(item: NostrEvent) => {
 			const name =
 				item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
+			const label = item.tags.find((tag) => tag[0] === "d")?.[1] || nanoid();
 
 			return (
 				<div
@@ -144,7 +147,7 @@ function MyGroups() {
 								type="button"
 								onClick={() =>
 									LumeWindow.openColumn({
-										label: name,
+										label,
 										name,
 										url: `/columns/groups/${item.id}`,
 									})
@@ -211,7 +214,7 @@ function MyInterests() {
 			const res = await commands.getAllInterests();
 
 			if (res.status === "ok") {
-				const data = res.data.map((item) => JSON.parse(item) as NostrEvent);
+				const data = toLumeEvents(res.data);
 				return data;
 			} else {
 				throw new Error(res.error);
@@ -228,6 +231,8 @@ function MyInterests() {
 		(item: NostrEvent) => {
 			const name =
 				item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
+			const label =
+				item.tags.find((tag) => tag[0] === "label")?.[1] || nanoid();
 
 			return (
 				<div
@@ -250,7 +255,7 @@ function MyInterests() {
 								type="button"
 								onClick={() =>
 									LumeWindow.openColumn({
-										label: name,
+										label,
 										name,
 										url: `/columns/interests/${item.id}`,
 									})

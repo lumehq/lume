@@ -1,12 +1,17 @@
 import { commands } from "@/commands.gen";
 import { replyTime, toLumeEvents } from "@/commons";
 import { Note, Spinner, User } from "@/components";
+import { Hashtag } from "@/components/note/mentions/hashtag";
+import { MentionUser } from "@/components/note/mentions/user";
 import { type LumeEvent, LumeWindow } from "@/system";
-import { ColumnsPlusLeft } from "@phosphor-icons/react";
+import { Kind } from "@/types";
+import { ArrowRight } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { memo, useRef } from "react";
+import { nip19 } from "nostr-tools";
+import { type ReactNode, memo, useMemo, useRef } from "react";
+import reactStringReplace from "react-string-replace";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/stories")({
@@ -14,7 +19,7 @@ export const Route = createLazyFileRoute("/columns/_layout/stories")({
 });
 
 function Screen() {
-	const { contacts } = Route.useRouteContext();
+	const contacts = Route.useLoaderData();
 	const ref = useRef<HTMLDivElement>(null);
 
 	return (
@@ -25,9 +30,15 @@ function Screen() {
 		>
 			<ScrollArea.Viewport ref={ref} className="relative h-full px-3 pb-3">
 				<Virtualizer scrollRef={ref} overscan={0}>
-					{contacts.map((contact) => (
-						<StoryItem key={contact} contact={contact} />
-					))}
+					{!contacts ? (
+						<div className="w-full h-24 flex items-center justify-center">
+							<Spinner className="size-4" />
+						</div>
+					) : (
+						contacts.map((contact) => (
+							<StoryItem key={contact} contact={contact} />
+						))
+					)}
 				</Virtualizer>
 			</ScrollArea.Viewport>
 			<ScrollArea.Scrollbar
@@ -59,6 +70,7 @@ function StoryItem({ contact }: { contact: string }) {
 				throw new Error(res.error);
 			}
 		},
+		select: (data) => data.filter((ev) => ev.kind === Kind.Text),
 		refetchOnWindowFocus: false,
 	});
 
@@ -77,9 +89,10 @@ function StoryItem({ contact }: { contact: string }) {
 					<button
 						type="button"
 						onClick={() => LumeWindow.openProfile(contact)}
-						className="size-7 inline-flex items-center justify-center rounded-lg text-neutral-500 hover:bg-neutral-100 dark:hover:bg-white/20"
+						className="h-7 w-max px-2.5 inline-flex gap-1 items-center justify-center rounded-full text-sm font-medium hover:bg-neutral-100 dark:hover:bg-white/20"
 					>
-						<ColumnsPlusLeft className="size-4" />
+						Open
+						<ArrowRight className="size-3" weight="bold" />
 					</button>
 				</div>
 			</div>
@@ -129,9 +142,10 @@ const StoryEvent = memo(function StoryEvent({ event }: { event: LumeEvent }) {
 							className="shrink-0 inline font-medium text-blue-500"
 							suffix=":"
 						/>
-						<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
-							{event.content}
-						</div>
+						<Content
+							text={event.content}
+							className="pl-2 inline select-text text-balance content-break overflow-hidden"
+						/>
 					</div>
 					<div className="flex-1 flex items-center justify-between">
 						<span className="text-sm text-neutral-500">
@@ -148,3 +162,64 @@ const StoryEvent = memo(function StoryEvent({ event }: { event: LumeEvent }) {
 		</Note.Provider>
 	);
 });
+
+function Content({ text, className }: { text: string; className?: string }) {
+	const content = useMemo(() => {
+		let replacedText: ReactNode[] | string = text.trim();
+
+		const nostr = replacedText
+			.split(/\s+/)
+			.filter((w) => w.startsWith("nostr:"));
+
+		replacedText = reactStringReplace(text, /(https?:\/\/\S+)/g, (match, i) => (
+			<a
+				key={match + i}
+				href={match}
+				target="_blank"
+				rel="noreferrer"
+				className="text-blue-600 dark:text-blue-400 !underline"
+			>
+				{match}
+			</a>
+		));
+
+		replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
+			<Hashtag key={match + i} tag={match} />
+		));
+
+		for (const word of nostr) {
+			const bech32 = word.replace("nostr:", "");
+			const data = nip19.decode(bech32);
+
+			switch (data.type) {
+				case "npub":
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<MentionUser key={match + i} pubkey={data.data} />
+					));
+					break;
+				case "nprofile":
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<MentionUser key={match + i} pubkey={data.data.pubkey} />
+					));
+					break;
+				default:
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<a
+							key={match + i}
+							href={`https://njump.me/${bech32}`}
+							target="_blank"
+							rel="noreferrer"
+							className="text-blue-600 dark:text-blue-400 !underline"
+						>
+							{match}
+						</a>
+					));
+					break;
+			}
+		}
+
+		return replacedText;
+	}, [text]);
+
+	return <div className={className}>{content}</div>;
+}

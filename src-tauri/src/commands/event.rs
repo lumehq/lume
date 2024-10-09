@@ -5,7 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::common::{create_tags, parse_event, process_event, Meta};
+use crate::common::{create_tags, get_latest_event, parse_event, process_event, Meta};
 use crate::{Nostr, DEFAULT_DIFFICULTY, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
@@ -30,7 +30,7 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
     match client.database().query(vec![filter.clone()]).await {
         Ok(events) => {
-            if let Some(event) = events.first() {
+            if let Some(event) = get_latest_event(&events) {
                 let raw = event.as_json();
                 let parsed = if event.kind == Kind::TextNote {
                     Some(parse_event(&event.content).await)
@@ -40,26 +40,25 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
                 Ok(RichEvent { raw, parsed })
             } else {
+                println!("Not found, getting event from relays...");
                 match client
-                    .get_events_of(
-                        vec![filter],
-                        EventSource::relays(Some(Duration::from_secs(5))),
-                    )
+                    .stream_events_of(vec![filter], Some(Duration::from_secs(10)))
                     .await
                 {
-                    Ok(events) => {
-                        if let Some(event) = events.first() {
-                            let raw = event.as_json();
-                            let parsed = if event.kind == Kind::TextNote {
+                    Ok(mut rx) => {
+                        let mut raw: String = String::new();
+                        let mut parsed: Option<Meta> = None;
+
+                        while let Some(event) = rx.next().await {
+                            raw = event.as_json();
+                            parsed = if event.kind == Kind::TextNote {
                                 Some(parse_event(&event.content).await)
                             } else {
                                 None
                             };
-
-                            Ok(RichEvent { raw, parsed })
-                        } else {
-                            Err("Cannot found this event with current relay list".into())
                         }
+
+                        Ok(RichEvent { raw, parsed })
                     }
                     Err(err) => Err(err.to_string()),
                 }
@@ -548,31 +547,11 @@ pub async fn user_to_bech32(user: String, state: State<'_, Nostr>) -> Result<Str
 
 #[tauri::command]
 #[specta::specta]
-pub async fn search(
-    query: String,
-    until: Option<String>,
-    state: State<'_, Nostr>,
-) -> Result<Vec<RichEvent>, String> {
+pub async fn search(query: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
+    let filter = Filter::new().search(query);
 
-    let timestamp = match until {
-        Some(str) => Timestamp::from_str(&str).map_err(|err| err.to_string())?,
-        None => Timestamp::now(),
-    };
-
-    let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Metadata])
-        .search(query)
-        .until(timestamp)
-        .limit(FETCH_LIMIT);
-
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
         Err(e) => Err(e.to_string()),
     }

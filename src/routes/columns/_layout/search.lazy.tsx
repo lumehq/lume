@@ -27,12 +27,18 @@ function Screen() {
 
 			switch (event.kind) {
 				case Kind.Text:
-					return <TextNote key={event.id} event={event} className="mb-3" />;
+					return (
+						<TextNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 				case Kind.Metadata:
 					return (
 						<div
 							key={event.id}
-							className="p-3 mb-3 bg-white dark:bg-black/20 rounded-xl shadow-primary dark:ring-1 dark:ring-white/5"
+							className="p-3 border-b-[.5px] border-neutral-300 dark:border-neutral-700"
 						>
 							<User.Provider pubkey={event.pubkey}>
 								<User.Root className="flex flex-col w-full h-full gap-2">
@@ -61,7 +67,13 @@ function Screen() {
 						</div>
 					);
 				default:
-					return <TextNote key={event.id} event={event} className="mb-3" />;
+					return (
+						<TextNote
+							key={event.id}
+							event={event}
+							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
+						/>
+					);
 			}
 		},
 		[events],
@@ -71,7 +83,7 @@ function Screen() {
 		startTransition(async () => {
 			if (!query.length) return;
 
-			const res = await commands.search(query, null);
+			const res = await commands.search(query);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);
@@ -114,7 +126,7 @@ function Screen() {
 					scrollHideDelay={300}
 					className="overflow-hidden size-full flex-1"
 				>
-					<ScrollArea.Viewport ref={ref} className="relative h-full px-3">
+					<ScrollArea.Viewport ref={ref} className="relative h-full">
 						<Virtualizer scrollRef={ref}>
 							{isPending ? (
 								<div className="w-full h-[200px] flex gap-2 items-center justify-center">

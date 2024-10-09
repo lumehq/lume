@@ -6,7 +6,10 @@ use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
 use tauri_specta::Event;
 
-use crate::{common::get_latest_event, NewSettings, Nostr, Settings};
+use crate::{
+    common::{get_latest_event, process_event},
+    NewSettings, Nostr, RichEvent, Settings,
+};
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Profile {
@@ -55,23 +58,23 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
                     Err("Parse metadata failed".into())
                 }
             } else {
+                println!("Not found, getting event from relays...");
                 match client
-                    .get_events_of(
-                        vec![filter],
-                        EventSource::relays(Some(Duration::from_secs(5))),
-                    )
+                    .stream_events_of(vec![filter], Some(Duration::from_secs(10)))
                     .await
                 {
-                    Ok(events) => {
-                        if let Some(event) = get_latest_event(&events) {
-                            if let Ok(metadata) = Metadata::from_json(&event.content) {
-                                Ok(metadata.as_json())
-                            } else {
-                                Err("Parse metadata failed".into())
+                    Ok(mut rx) => {
+                        let mut metadata: String = Metadata::new().as_json();
+
+                        while let Some(event) = rx.next().await {
+                            println!("Event: {}", event.as_json());
+                            if let Ok(m) = Metadata::from_json(&event.content) {
+                                metadata = m.as_json();
+                                break;
                             }
-                        } else {
-                            Ok(Metadata::new().as_json())
                         }
+
+                        Ok(metadata)
                     }
                     Err(e) => Err(e.to_string()),
                 }
@@ -106,7 +109,6 @@ pub async fn set_contact_list(
 #[specta::specta]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
     let contact_list = state.contact_list.lock().await.clone();
-    println!("Total contacts: {}", contact_list.len());
     let vec: Vec<String> = contact_list
         .into_iter()
         .map(|f| f.public_key.to_hex())
@@ -255,13 +257,7 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
     let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
     let filter = Filter::new().kind(Kind::FollowSet).id(event_id);
 
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => match get_latest_event(&events) {
             Some(ev) => Ok(ev.as_json()),
             None => Err("Not found.".to_string()),
@@ -272,20 +268,14 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let signer = client.signer().await.map_err(|e| e.to_string())?;
     let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
     let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
 
-    match client
-        .get_events_of(vec![filter], EventSource::Database)
-        .await
-    {
-        Ok(events) => {
-            let data: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
-            Ok(data)
-        }
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(process_event(client, events).await),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -347,13 +337,7 @@ pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String,
         .kinds(vec![Kind::Interests, Kind::InterestSet])
         .id(event_id);
 
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => match get_latest_event(&events) {
             Some(ev) => Ok(ev.as_json()),
             None => Err("Not found.".to_string()),
@@ -364,7 +348,7 @@ pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String,
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let signer = client.signer().await.map_err(|e| e.to_string())?;
     let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
@@ -372,14 +356,8 @@ pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<String>, S
         .kinds(vec![Kind::InterestSet, Kind::Interests])
         .author(public_key);
 
-    match client
-        .get_events_of(vec![filter], EventSource::Database)
-        .await
-    {
-        Ok(events) => {
-            let data: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
-            Ok(data)
-        }
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(process_event(client, events).await),
         Err(e) => Err(e.to_string()),
     }
 }

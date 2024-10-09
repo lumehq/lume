@@ -2,7 +2,11 @@ import { replyTime } from "@/commons";
 import { Note, Spinner } from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow, useEvent } from "@/system";
-import { memo } from "react";
+import { nip19 } from "nostr-tools";
+import { type ReactNode, memo, useMemo } from "react";
+import reactStringReplace from "react-string-replace";
+import { Hashtag } from "./hashtag";
+import { MentionUser } from "./user";
 
 export const MentionNote = memo(function MentionNote({
 	eventId,
@@ -36,9 +40,11 @@ export const MentionNote = memo(function MentionNote({
 										/>
 									</User.Root>
 									<div className="pl-2 inline select-text text-balance content-break overflow-hidden">
-										{event.content.length > 120
-											? `${event.content.substring(0, 120)}...`
-											: event.content}
+										{event.content.length > 300 ? (
+											`${event.content.substring(0, 300)}...`
+										) : (
+											<Content text={event.content} className="inline" />
+										)}
 									</div>
 								</div>
 								<div className="flex-1 flex items-center justify-between">
@@ -66,3 +72,64 @@ export const MentionNote = memo(function MentionNote({
 		</div>
 	);
 });
+
+function Content({ text, className }: { text: string; className?: string }) {
+	const content = useMemo(() => {
+		let replacedText: ReactNode[] | string = text.trim();
+
+		const nostr = replacedText
+			.split(/\s+/)
+			.filter((w) => w.startsWith("nostr:"));
+
+		replacedText = reactStringReplace(text, /(https?:\/\/\S+)/g, (match, i) => (
+			<a
+				key={match + i}
+				href={match}
+				target="_blank"
+				rel="noreferrer"
+				className="text-blue-600 dark:text-blue-400 !underline"
+			>
+				{match}
+			</a>
+		));
+
+		replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
+			<Hashtag key={match + i} tag={match} />
+		));
+
+		for (const word of nostr) {
+			const bech32 = word.replace("nostr:", "");
+			const data = nip19.decode(bech32);
+
+			switch (data.type) {
+				case "npub":
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<MentionUser key={match + i} pubkey={data.data} />
+					));
+					break;
+				case "nprofile":
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<MentionUser key={match + i} pubkey={data.data.pubkey} />
+					));
+					break;
+				default:
+					replacedText = reactStringReplace(replacedText, word, (match, i) => (
+						<a
+							key={match + i}
+							href={`https://njump.me/${bech32}`}
+							target="_blank"
+							rel="noreferrer"
+							className="text-blue-600 dark:text-blue-400 !underline"
+						>
+							{match}
+						</a>
+					));
+					break;
+			}
+		}
+
+		return replacedText;
+	}, [text]);
+
+	return <div className={className}>{content}</div>;
+}
