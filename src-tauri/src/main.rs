@@ -273,8 +273,12 @@ fn main() {
                     println!("Add discovery relay failed: {}", e)
                 }
 
+                if let Err(e) = client.add_discovery_relay("wss://user.kindpag.es/").await {
+                    println!("Add discovery relay failed: {}", e)
+                }
+
                 // Connect
-                client.connect_with_timeout(Duration::from_secs(20)).await;
+                client.connect_with_timeout(Duration::from_secs(10)).await;
 
                 client
             });

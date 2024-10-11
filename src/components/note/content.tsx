@@ -113,10 +113,12 @@ const ContentWarning = memo(function ContentWarning({
 }: { warning: string }) {
 	const [blurred, setBlurred] = useState(() => warning?.length > 0);
 
-	if (!blurred) return null;
+	if (!blurred) {
+		return null;
+	}
 
 	return (
-		<div className="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black/80 backdrop-blur-lg">
+		<div className="absolute inset-0 z-10 flex items-center justify-center w-full bg-black/80 backdrop-blur-lg">
 			<div className="flex flex-col items-center justify-center gap-2 text-center">
 				<p className="text-sm text-white/60">
 					The content is hidden because the author

@@ -80,7 +80,7 @@ function Screen() {
 				<div className="flex flex-col gap-1 text-center">
 					<h1 className="leading-tight text-xl font-semibold">Manage Relays</h1>
 					<p className="text-sm text-neutral-700 dark:text-neutral-300">
-						This relays will be only use to get user's metadata.
+						The default relays that Lume will connected.
 					</p>
 				</div>
 				<div className="flex flex-col gap-3">
@@ -126,6 +126,13 @@ function Screen() {
 									</div>
 								</div>
 							))}
+						</div>
+						<div className="text-xs text-neutral-600 dark:text-neutral-400">
+							<p>
+								Lume is heavily depend on Negentropy for syncing data. You need
+								to use at least 1 relay that support Negentropy. If you not
+								sure, you can keep using the default relay list.
+							</p>
 						</div>
 					</Frame>
 					<div className="flex flex-col items-center gap-1">

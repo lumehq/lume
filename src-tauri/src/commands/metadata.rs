@@ -58,23 +58,23 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
                     Err("Parse metadata failed".into())
                 }
             } else {
-                println!("Not found, getting event from relays...");
                 match client
-                    .stream_events_of(vec![filter], Some(Duration::from_secs(10)))
+                    .get_events_of(
+                        vec![filter],
+                        EventSource::relays(Some(Duration::from_secs(10))),
+                    )
                     .await
                 {
-                    Ok(mut rx) => {
-                        let mut metadata: String = Metadata::new().as_json();
-
-                        while let Some(event) = rx.next().await {
-                            println!("Event: {}", event.as_json());
-                            if let Ok(m) = Metadata::from_json(&event.content) {
-                                metadata = m.as_json();
-                                break;
+                    Ok(events) => {
+                        if let Some(event) = get_latest_event(&events) {
+                            if let Ok(metadata) = Metadata::from_json(&event.content) {
+                                Ok(metadata.as_json())
+                            } else {
+                                Err("Metadata is not valid.".into())
                             }
+                        } else {
+                            Err("Not found.".into())
                         }
-
-                        Ok(metadata)
                     }
                     Err(e) => Err(e.to_string()),
                 }

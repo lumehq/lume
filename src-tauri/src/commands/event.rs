@@ -40,25 +40,26 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
                 Ok(RichEvent { raw, parsed })
             } else {
-                println!("Not found, getting event from relays...");
                 match client
-                    .stream_events_of(vec![filter], Some(Duration::from_secs(10)))
+                    .get_events_of(
+                        vec![filter],
+                        EventSource::relays(Some(Duration::from_secs(10))),
+                    )
                     .await
                 {
-                    Ok(mut rx) => {
-                        let mut raw: String = String::new();
-                        let mut parsed: Option<Meta> = None;
-
-                        while let Some(event) = rx.next().await {
-                            raw = event.as_json();
-                            parsed = if event.kind == Kind::TextNote {
+                    Ok(events) => {
+                        if let Some(event) = get_latest_event(&events) {
+                            let raw = event.as_json();
+                            let parsed = if event.kind == Kind::TextNote {
                                 Some(parse_event(&event.content).await)
                             } else {
                                 None
                             };
-                        }
 
-                        Ok(RichEvent { raw, parsed })
+                            Ok(RichEvent { raw, parsed })
+                        } else {
+                            Err("Not found.".into())
+                        }
                     }
                     Err(err) => Err(err.to_string()),
                 }
