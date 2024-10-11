@@ -353,7 +353,14 @@ pub async fn login(
             {
                 let keys: Vec<&str> = events
                     .iter()
-                    .flat_map(|event| event.get_tags_content(TagKind::p()))
+                    .flat_map(|event| {
+                        event
+                            .tags
+                            .iter()
+                            .filter(|t| t.kind() == TagKind::p())
+                            .filter_map(|t| t.content())
+                            .collect::<Vec<&str>>()
+                    })
                     .collect();
 
                 let trusted_list: HashSet<PublicKey> = keys

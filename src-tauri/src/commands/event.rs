@@ -372,7 +372,7 @@ pub async fn publish(
 
     // Publish
     match client.send_event_builder(builder).await {
-        Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
+        Ok(event_id) => Ok(event_id.to_hex()),
         Err(err) => Err(err.to_string()),
     }
 }

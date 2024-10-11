@@ -164,7 +164,14 @@ pub async fn process_event(client: &Client, events: Vec<Event>) -> Vec<RichEvent
         if !requests.is_empty() {
             let ids: Vec<&str> = requests
                 .iter()
-                .flat_map(|ev| ev.get_tags_content(TagKind::e()))
+                .flat_map(|event| {
+                    event
+                        .tags
+                        .iter()
+                        .filter(|t| t.kind() == TagKind::e())
+                        .filter_map(|t| t.content())
+                        .collect::<Vec<&str>>()
+                })
                 .collect();
 
             // Remove event if event is deleted by author

@@ -7,6 +7,7 @@ import { User } from "@/components/user";
 import { LumeEvent, useEvent } from "@/system";
 import { Feather } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { nip19 } from "nostr-tools";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
@@ -84,8 +85,9 @@ function Screen() {
 	const { reply_to } = Route.useSearch();
 	const { users, initialValue } = Route.useRouteContext();
 
-	const [isPending, startTransition] = useTransition();
 	const [text, setText] = useState("");
+	const [error, setError] = useState("");
+	const [isPending, startTransition] = useTransition();
 	const [attaches, setAttaches] = useState<string[]>(null);
 	const [warning, setWarning] = useState({ enable: false, reason: "" });
 	const [difficulty, setDifficulty] = useState({ enable: false, num: 21 });
@@ -127,16 +129,26 @@ function Screen() {
 	const publish = async () => {
 		startTransition(async () => {
 			try {
-				const content = text.trim();
+				// Temporary hide window
+				await getCurrentWindow().hide();
 
-				await LumeEvent.publish(
-					content,
-					warning.enable && warning.reason.length ? warning.reason : null,
-					difficulty.num,
-					reply_to,
-				);
+				let res: Result<string, string>;
 
-				setText("");
+				if (reply_to) {
+					res = await commands.reply(content, reply_to, root_to);
+				} else {
+					res = await commands.publish(content, warning, difficulty);
+				}
+
+				if (res.status === "ok") {
+					setText("");
+					// Close window
+					await getCurrentWindow().close();
+				} else {
+					setError(res.error);
+					// Focus window
+					await getCurrentWindow().setFocus();
+				}
 			} catch {
 				return;
 			}
@@ -157,6 +169,10 @@ function Screen() {
 					<div className="flex flex-col gap-2 px-3.5 pb-3 border-b border-black/5 dark:border-white/5">
 						<span className="text-sm font-semibold">Reply to:</span>
 						<EmbedNote id={reply_to} />
+					</div>
+				) : error?.length ? (
+					<div className="flex flex-col gap-2 px-3.5 pb-3 border-b border-black/5 dark:border-white/5">
+						<p className="text-sm font-medium text-red-600">{error}</p>
 					</div>
 				) : null}
 				<div className="p-4 overflow-y-auto h-full">
@@ -332,6 +348,7 @@ function Menu({
 						{u.avatar?.length ? (
 							<img
 								src={u.avatar}
+								alt=""
 								className="size-7 rounded-full outline outline-1 -outline-offset-1 outline-black/15"
 								loading="lazy"
 								decoding="async"
