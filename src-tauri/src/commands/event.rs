@@ -73,71 +73,35 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 #[specta::specta]
 pub async fn get_event_from(
     id: String,
-    relay_hint: String,
+    _relay_hint: String,
     state: State<'_, Nostr>,
 ) -> Result<RichEvent, String> {
     let client = &state.client;
-    let settings = state.settings.lock().await;
     let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
     let filter = Filter::new().id(event_id);
 
-    if !settings.use_relay_hint {
-        match client
-            .get_events_of(
-                vec![filter],
-                EventSource::both(Some(Duration::from_secs(5))),
-            )
-            .await
-        {
-            Ok(events) => {
-                if let Some(event) = events.first() {
-                    let raw = event.as_json();
-                    let parsed = if event.kind == Kind::TextNote {
-                        Some(parse_event(&event.content).await)
-                    } else {
-                        None
-                    };
-
-                    Ok(RichEvent { raw, parsed })
+    match client
+        .get_events_of(
+            vec![filter],
+            EventSource::both(Some(Duration::from_secs(5))),
+        )
+        .await
+    {
+        Ok(events) => {
+            if let Some(event) = events.first() {
+                let raw = event.as_json();
+                let parsed = if event.kind == Kind::TextNote {
+                    Some(parse_event(&event.content).await)
                 } else {
-                    Err("Cannot found this event with current relay list".into())
-                }
+                    None
+                };
+
+                Ok(RichEvent { raw, parsed })
+            } else {
+                Err("Cannot found this event with current relay list".into())
             }
-            Err(err) => Err(err.to_string()),
         }
-    } else {
-        // Add relay hint to relay pool
-        if let Err(e) = client.add_relay(&relay_hint).await {
-            return Err(e.to_string());
-        }
-
-        if let Err(e) = client.connect_relay(&relay_hint).await {
-            return Err(e.to_string());
-        }
-
-        match client
-            .get_events_of(
-                vec![Filter::new().id(event_id)],
-                EventSource::both(Some(Duration::from_secs(5))),
-            )
-            .await
-        {
-            Ok(events) => {
-                if let Some(event) = events.first() {
-                    let raw = event.as_json();
-                    let parsed = if event.kind == Kind::TextNote {
-                        Some(parse_event(&event.content).await)
-                    } else {
-                        None
-                    };
-
-                    Ok(RichEvent { raw, parsed })
-                } else {
-                    Err("Cannot found this event with current relay list".into())
-                }
-            }
-            Err(err) => Err(err.to_string()),
-        }
+        Err(err) => Err(err.to_string()),
     }
 }
 

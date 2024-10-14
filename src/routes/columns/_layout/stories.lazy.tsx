@@ -188,33 +188,48 @@ function Content({ text, className }: { text: string; className?: string }) {
 		));
 
 		for (const word of nostr) {
-			const bech32 = word.replace("nostr:", "");
-			const data = nip19.decode(bech32);
+			const bech32 = word.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 
-			switch (data.type) {
-				case "npub":
-					replacedText = reactStringReplace(replacedText, word, (match, i) => (
-						<MentionUser key={match + i} pubkey={data.data} />
-					));
-					break;
-				case "nprofile":
-					replacedText = reactStringReplace(replacedText, word, (match, i) => (
-						<MentionUser key={match + i} pubkey={data.data.pubkey} />
-					));
-					break;
-				default:
-					replacedText = reactStringReplace(replacedText, word, (match, i) => (
-						<a
-							key={match + i}
-							href={`https://njump.me/${bech32}`}
-							target="_blank"
-							rel="noreferrer"
-							className="text-blue-600 dark:text-blue-400 !underline"
-						>
-							{match}
-						</a>
-					));
-					break;
+			try {
+				const data = nip19.decode(bech32);
+
+				switch (data.type) {
+					case "npub":
+						replacedText = reactStringReplace(
+							replacedText,
+							word,
+							(match, i) => <MentionUser key={match + i} pubkey={data.data} />,
+						);
+						break;
+					case "nprofile":
+						replacedText = reactStringReplace(
+							replacedText,
+							word,
+							(match, i) => (
+								<MentionUser key={match + i} pubkey={data.data.pubkey} />
+							),
+						);
+						break;
+					default:
+						replacedText = reactStringReplace(
+							replacedText,
+							word,
+							(match, i) => (
+								<a
+									key={match + i}
+									href={`https://njump.me/${bech32}`}
+									target="_blank"
+									rel="noreferrer"
+									className="text-blue-600 dark:text-blue-400 !underline"
+								>
+									{match}
+								</a>
+							),
+						);
+						break;
+				}
+			} catch {
+				console.log(word);
 			}
 		}
 

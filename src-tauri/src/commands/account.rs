@@ -285,7 +285,7 @@ pub async fn login(
     // NIP-03: Get user's contact list
     let contact_list = {
         if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
-            state.contact_list.lock().await.clone_from(&contacts);
+            state.contact_list.lock().unwrap().clone_from(&contacts);
             contacts
         } else {
             Vec::new()
@@ -375,7 +375,7 @@ pub async fn login(
                     .collect();
 
                 // Update app's state
-                state.trusted_list.lock().await.clone_from(&trusted_list);
+                state.trusted_list.lock().unwrap().clone_from(&trusted_list);
 
                 let trusted_users: Vec<PublicKey> = trusted_list.into_iter().collect();
                 println!("Total trusted users: {}", trusted_users.len());

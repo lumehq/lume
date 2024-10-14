@@ -16,13 +16,13 @@ use std::{
     fs,
     io::{self, BufRead},
     str::FromStr,
+    sync::Mutex,
     time::Duration,
 };
 use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, collect_events, Builder, Event as TauriEvent};
-use tokio::sync::Mutex;
 
 pub mod commands;
 pub mod common;
@@ -317,11 +317,7 @@ fn main() {
                                     }
                                 }
                                 None => {
-                                    let contact_list = client
-                                        .get_contact_list(Some(Duration::from_secs(5)))
-                                        .await
-                                        .unwrap();
-
+                                    let contact_list = state.contact_list.lock().unwrap().clone();
                                     if !contact_list.is_empty() {
                                         let authors: Vec<PublicKey> =
                                             contact_list.iter().map(|f| f.public_key).collect();

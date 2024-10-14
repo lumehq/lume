@@ -107,8 +107,8 @@ pub async fn set_contact_list(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
-    let contact_list = state.contact_list.lock().await.clone();
+pub fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let contact_list = state.contact_list.lock().unwrap().clone();
     let vec: Vec<String> = contact_list
         .into_iter()
         .map(|f| f.public_key.to_hex())
@@ -152,8 +152,8 @@ pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn check_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let contact_list = &state.contact_list.lock().await;
+pub fn check_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let contact_list = &state.contact_list.lock().unwrap();
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
     match contact_list.iter().position(|x| x.public_key == public_key) {
@@ -577,8 +577,8 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
-    Ok(state.settings.lock().await.clone())
+pub fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
+    Ok(state.settings.lock().unwrap().clone())
 }
 
 #[tauri::command]
@@ -597,7 +597,7 @@ pub async fn set_user_settings(
             let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
 
             // Update state
-            state.settings.lock().await.clone_from(&parsed);
+            state.settings.lock().unwrap().clone_from(&parsed);
 
             // Emit new changes to frontend
             NewSettings(parsed).emit(&handle).unwrap();
@@ -622,8 +622,8 @@ pub async fn verify_nip05(id: String, nip05: &str) -> Result<bool, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn is_trusted_user(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let trusted_list = &state.trusted_list.lock().await;
+pub fn is_trusted_user(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let trusted_list = &state.trusted_list.lock().unwrap();
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
     Ok(trusted_list.contains(&public_key))

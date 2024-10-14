@@ -270,7 +270,7 @@ async getNotifications() : Promise<Result<string[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getUserSettings() : Promise<Result<Settings, null>> {
+async getUserSettings() : Promise<Result<Settings, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_user_settings") };
 } catch (e) {
