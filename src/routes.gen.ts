@@ -32,7 +32,6 @@ import { Route as AccountSettingsRelayImport } from './routes/$account/_settings
 import { Route as AccountSettingsProfileImport } from './routes/$account/_settings/profile'
 import { Route as AccountSettingsGeneralImport } from './routes/$account/_settings/general'
 import { Route as AccountSettingsBitcoinConnectImport } from './routes/$account/_settings/bitcoin-connect'
-import { Route as AccountAppHomeImport } from './routes/$account/_app/home'
 import { Route as ColumnsLayoutInterestsIdImport } from './routes/columns/_layout/interests.$id'
 import { Route as ColumnsLayoutGroupsIdImport } from './routes/columns/_layout/groups.$id'
 import { Route as ColumnsLayoutCreateNewsfeedUsersImport } from './routes/columns/_layout/create-newsfeed.users'
@@ -63,6 +62,7 @@ const ColumnsLayoutNotificationLazyImport = createFileRoute(
 const ColumnsLayoutLaunchpadLazyImport = createFileRoute(
   '/columns/_layout/launchpad',
 )()
+const AccountAppHomeLazyImport = createFileRoute('/$account/_app/home')()
 const ColumnsLayoutUsersIdLazyImport = createFileRoute(
   '/columns/_layout/users/$id',
 )()
@@ -208,6 +208,13 @@ const ColumnsLayoutLaunchpadLazyRoute = ColumnsLayoutLaunchpadLazyImport.update(
   import('./routes/columns/_layout/launchpad.lazy').then((d) => d.Route),
 )
 
+const AccountAppHomeLazyRoute = AccountAppHomeLazyImport.update({
+  path: '/home',
+  getParentRoute: () => AccountAppRoute,
+} as any).lazy(() =>
+  import('./routes/$account/_app.home.lazy').then((d) => d.Route),
+)
+
 const ColumnsLayoutStoriesRoute = ColumnsLayoutStoriesImport.update({
   path: '/stories',
   getParentRoute: () => ColumnsLayoutRoute,
@@ -270,13 +277,6 @@ const AccountSettingsBitcoinConnectRoute =
       (d) => d.Route,
     ),
   )
-
-const AccountAppHomeRoute = AccountAppHomeImport.update({
-  path: '/home',
-  getParentRoute: () => AccountAppRoute,
-} as any).lazy(() =>
-  import('./routes/$account/_app/home.lazy').then((d) => d.Route),
-)
 
 const ColumnsLayoutUsersIdLazyRoute = ColumnsLayoutUsersIdLazyImport.update({
   path: '/users/$id',
@@ -457,13 +457,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorIndexImport
       parentRoute: typeof rootRoute
     }
-    '/$account/_app/home': {
-      id: '/$account/_app/home'
-      path: '/home'
-      fullPath: '/$account/home'
-      preLoaderRoute: typeof AccountAppHomeImport
-      parentRoute: typeof AccountAppImport
-    }
     '/$account/_settings/bitcoin-connect': {
       id: '/$account/_settings/bitcoin-connect'
       path: '/bitcoin-connect'
@@ -526,6 +519,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/columns/stories'
       preLoaderRoute: typeof ColumnsLayoutStoriesImport
       parentRoute: typeof ColumnsLayoutImport
+    }
+    '/$account/_app/home': {
+      id: '/$account/_app/home'
+      path: '/home'
+      fullPath: '/$account/home'
+      preLoaderRoute: typeof AccountAppHomeLazyImport
+      parentRoute: typeof AccountAppImport
     }
     '/columns/_layout/launchpad': {
       id: '/columns/_layout/launchpad'
@@ -617,11 +617,11 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AccountAppRouteChildren {
-  AccountAppHomeRoute: typeof AccountAppHomeRoute
+  AccountAppHomeLazyRoute: typeof AccountAppHomeLazyRoute
 }
 
 const AccountAppRouteChildren: AccountAppRouteChildren = {
-  AccountAppHomeRoute: AccountAppHomeRoute,
+  AccountAppHomeLazyRoute: AccountAppHomeLazyRoute,
 }
 
 const AccountAppRouteWithChildren = AccountAppRoute._addFileChildren(
@@ -745,7 +745,6 @@ export interface FileRoutesByFullPath {
   '/auth/import': typeof AuthImportLazyRoute
   '/auth/new': typeof AuthNewLazyRoute
   '/editor': typeof EditorIndexRoute
-  '/$account/home': typeof AccountAppHomeRoute
   '/$account/bitcoin-connect': typeof AccountSettingsBitcoinConnectRoute
   '/$account/general': typeof AccountSettingsGeneralRoute
   '/$account/profile': typeof AccountSettingsProfileRoute
@@ -755,6 +754,7 @@ export interface FileRoutesByFullPath {
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/columns/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
+  '/$account/home': typeof AccountAppHomeLazyRoute
   '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -785,7 +785,6 @@ export interface FileRoutesByTo {
   '/auth/import': typeof AuthImportLazyRoute
   '/auth/new': typeof AuthNewLazyRoute
   '/editor': typeof EditorIndexRoute
-  '/$account/home': typeof AccountAppHomeRoute
   '/$account/bitcoin-connect': typeof AccountSettingsBitcoinConnectRoute
   '/$account/general': typeof AccountSettingsGeneralRoute
   '/$account/profile': typeof AccountSettingsProfileRoute
@@ -795,6 +794,7 @@ export interface FileRoutesByTo {
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/columns/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/stories': typeof ColumnsLayoutStoriesRoute
+  '/$account/home': typeof AccountAppHomeLazyRoute
   '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -829,7 +829,6 @@ export interface FileRoutesById {
   '/auth/import': typeof AuthImportLazyRoute
   '/auth/new': typeof AuthNewLazyRoute
   '/editor/': typeof EditorIndexRoute
-  '/$account/_app/home': typeof AccountAppHomeRoute
   '/$account/_settings/bitcoin-connect': typeof AccountSettingsBitcoinConnectRoute
   '/$account/_settings/general': typeof AccountSettingsGeneralRoute
   '/$account/_settings/profile': typeof AccountSettingsProfileRoute
@@ -839,6 +838,7 @@ export interface FileRoutesById {
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
   '/columns/_layout/newsfeed': typeof ColumnsLayoutNewsfeedRoute
   '/columns/_layout/stories': typeof ColumnsLayoutStoriesRoute
+  '/$account/_app/home': typeof AccountAppHomeLazyRoute
   '/columns/_layout/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/_layout/notification': typeof ColumnsLayoutNotificationLazyRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -871,7 +871,6 @@ export interface FileRouteTypes {
     | '/auth/import'
     | '/auth/new'
     | '/editor'
-    | '/$account/home'
     | '/$account/bitcoin-connect'
     | '/$account/general'
     | '/$account/profile'
@@ -881,6 +880,7 @@ export interface FileRouteTypes {
     | '/columns/global'
     | '/columns/newsfeed'
     | '/columns/stories'
+    | '/$account/home'
     | '/columns/launchpad'
     | '/columns/notification'
     | '/columns/onboarding'
@@ -910,7 +910,6 @@ export interface FileRouteTypes {
     | '/auth/import'
     | '/auth/new'
     | '/editor'
-    | '/$account/home'
     | '/$account/bitcoin-connect'
     | '/$account/general'
     | '/$account/profile'
@@ -920,6 +919,7 @@ export interface FileRouteTypes {
     | '/columns/global'
     | '/columns/newsfeed'
     | '/columns/stories'
+    | '/$account/home'
     | '/columns/launchpad'
     | '/columns/notification'
     | '/columns/onboarding'
@@ -952,7 +952,6 @@ export interface FileRouteTypes {
     | '/auth/import'
     | '/auth/new'
     | '/editor/'
-    | '/$account/_app/home'
     | '/$account/_settings/bitcoin-connect'
     | '/$account/_settings/general'
     | '/$account/_settings/profile'
@@ -962,6 +961,7 @@ export interface FileRouteTypes {
     | '/columns/_layout/global'
     | '/columns/_layout/newsfeed'
     | '/columns/_layout/stories'
+    | '/$account/_app/home'
     | '/columns/_layout/launchpad'
     | '/columns/_layout/notification'
     | '/columns/_layout/onboarding'
@@ -1131,10 +1131,6 @@ export const routeTree = rootRoute
     "/editor/": {
       "filePath": "editor/index.tsx"
     },
-    "/$account/_app/home": {
-      "filePath": "$account/_app/home.tsx",
-      "parent": "/$account/_app"
-    },
     "/$account/_settings/bitcoin-connect": {
       "filePath": "$account/_settings/bitcoin-connect.tsx",
       "parent": "/$account/_settings"
@@ -1174,6 +1170,10 @@ export const routeTree = rootRoute
     "/columns/_layout/stories": {
       "filePath": "columns/_layout/stories.tsx",
       "parent": "/columns/_layout"
+    },
+    "/$account/_app/home": {
+      "filePath": "$account/_app.home.lazy.tsx",
+      "parent": "/$account/_app"
     },
     "/columns/_layout/launchpad": {
       "filePath": "columns/_layout/launchpad.lazy.tsx",

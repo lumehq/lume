@@ -151,10 +151,9 @@ fn main() {
             event_to_bech32,
             user_to_bech32,
             create_column,
-            close_column,
-            reposition_column,
-            resize_column,
+            update_column,
             reload_column,
+            close_column,
             open_window,
             reopen_lume,
             quit

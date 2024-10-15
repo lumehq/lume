@@ -454,25 +454,9 @@ async createColumn(column: Column) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async closeColumn(label: string) : Promise<Result<boolean, string>> {
+async updateColumn(label: string, width: number, height: number, x: number, y: number) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("close_column", { label }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async repositionColumn(label: string, x: number, y: number) : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("reposition_column", { label, x, y }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async resizeColumn(label: string, width: number, height: number) : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("resize_column", { label, width, height }) };
+    return { status: "ok", data: await TAURI_INVOKE("update_column", { label, width, height, x, y }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -481,6 +465,14 @@ async resizeColumn(label: string, width: number, height: number) : Promise<Resul
 async reloadColumn(label: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reload_column", { label }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async closeColumn(label: string) : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("close_column", { label }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

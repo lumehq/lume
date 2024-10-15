@@ -1,4 +1,5 @@
 export * from "./event";
 export * from "./window";
-export * from "./hooks/useEvent";
-export * from "./hooks/useProfile";
+export * from "./useEvent";
+export * from "./useProfile";
+export * from "./useRect";

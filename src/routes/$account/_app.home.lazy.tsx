@@ -45,16 +45,16 @@ function Screen() {
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {
-		getCurrentWindow().emit("child_webview", { scroll: true });
-	}, []);
-
-	const emitResizeEvent = useCallback(() => {
-		getCurrentWindow().emit("child_webview", { resize: true, direction: "x" });
+		getCurrentWindow().emit("column_scroll", {});
 	}, []);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
 		column.label = `${column.label}-${nanoid()}`; // update col label
 		appColumns.setState((prev) => [column, ...prev]);
+
+		if (emblaApi) {
+			emblaApi.scrollTo(0, true);
+		}
 	}, 150);
 
 	const remove = useDebouncedCallback((label: string) => {
@@ -112,16 +112,14 @@ function Screen() {
 	useEffect(() => {
 		if (emblaApi) {
 			emblaApi.on("scroll", emitScrollEvent);
-			emblaApi.on("resize", emitResizeEvent);
 			emblaApi.on("slidesChanged", emitScrollEvent);
 		}
 
 		return () => {
 			emblaApi?.off("scroll", emitScrollEvent);
-			emblaApi?.off("resize", emitResizeEvent);
 			emblaApi?.off("slidesChanged", emitScrollEvent);
 		};
-	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
+	}, [emblaApi, emitScrollEvent]);
 
 	// Listen for keyboard event
 	useEffect(() => {

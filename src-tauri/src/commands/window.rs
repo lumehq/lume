@@ -48,18 +48,17 @@ pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<Str
                     .incognito(true)
                     .transparent(true);
 
-                if let Ok(webview) = main_window.add_child(
+                match main_window.add_child(
                     builder,
                     LogicalPosition::new(column.x, column.y),
                     LogicalSize::new(column.width, column.height),
                 ) {
-                    Ok(webview.label().into())
-                } else {
-                    Err("Create webview failed".into())
+                    Ok(webview) => Ok(webview.label().into()),
+                    Err(e) => Err(e.to_string()),
                 }
             }
         },
-        None => Err("Main window not found".into()),
+        None => Err("Window not found".into()),
     }
 }
 
@@ -68,35 +67,33 @@ pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<Str
 pub fn close_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
         Some(webview) => Ok(webview.close().is_ok()),
-        None => Err("Not found.".into()),
+        None => Err("Cannot close, column not found.".into()),
     }
 }
 
 #[tauri::command(async)]
 #[specta::specta]
-pub fn reposition_column(
-    label: String,
-    x: f32,
-    y: f32,
-    app_handle: tauri::AppHandle,
-) -> Result<bool, String> {
-    match app_handle.get_webview(&label) {
-        Some(webview) => Ok(webview.set_position(LogicalPosition::new(x, y)).is_ok()),
-        None => Err("Not found".into()),
-    }
-}
-
-#[tauri::command(async)]
-#[specta::specta]
-pub fn resize_column(
+pub fn update_column(
     label: String,
     width: f32,
     height: f32,
+    x: f32,
+    y: f32,
     app_handle: tauri::AppHandle,
-) -> Result<bool, String> {
+) -> Result<(), String> {
     match app_handle.get_webview(&label) {
-        Some(webview) => Ok(webview.set_size(LogicalSize::new(width, height)).is_ok()),
-        None => Err("Not found".into()),
+        Some(webview) => {
+            if let Err(e) = webview.set_size(LogicalSize::new(width, height)) {
+                return Err(e.to_string());
+            }
+
+            if let Err(e) = webview.set_position(LogicalPosition::new(x, y)) {
+                return Err(e.to_string());
+            }
+
+            Ok(())
+        }
+        None => Err("Cannot update, column not found.".into()),
     }
 }
 
@@ -105,7 +102,7 @@ pub fn resize_column(
 pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
         Some(webview) => Ok(webview.eval("window.location.reload()").is_ok()),
-        None => Err("Not found".into()),
+        None => Err("Cannot reload, column not found.".into()),
     }
 }
 

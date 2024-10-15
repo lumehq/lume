@@ -2,7 +2,7 @@ import { type Result, type RichEvent, commands } from "@/commands.gen";
 import type { NostrEvent } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { nip19 } from "nostr-tools";
-import { LumeEvent } from "../event";
+import { LumeEvent } from "./event";
 
 export function useEvent(id: string, repost?: string) {
 	const { isLoading, isError, error, data } = useQuery({

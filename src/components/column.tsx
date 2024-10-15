@@ -1,107 +1,89 @@
 import { commands } from "@/commands.gen";
 import { appColumns } from "@/commons";
+import { useRect } from "@/system";
 import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import { useParams } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Spinner } from "./spinner";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-type WindowEvent = {
-	scroll: boolean;
-	resize: boolean;
-};
-
-export const Column = memo(function Column({ column }: { column: LumeColumn }) {
+export function Column({ column }: { column: LumeColumn }) {
 	const params = useParams({ strict: false });
-	const container = useRef<HTMLDivElement>(null);
-	const webviewLabel = `column-${params.account}_${column.label}`;
+	const webviewLabel = useMemo(
+		() => `column-${params.account}_${column.label}`,
+		[params.account, column.label],
+	);
 
-	const [isCreated, setIsCreated] = useState(false);
-
-	const repositionWebview = useCallback(async () => {
-		if (!container.current) return;
-
-		const newRect = container.current.getBoundingClientRect();
-		await invoke("reposition_column", {
-			label: webviewLabel,
-			x: newRect.x,
-			y: newRect.y,
-		});
-	}, []);
-
-	const resizeWebview = useCallback(async () => {
-		if (!container.current) return;
-
-		const newRect = container.current.getBoundingClientRect();
-		await invoke("resize_column", {
-			label: webviewLabel,
-			width: newRect.width,
-			height: newRect.height,
-		});
-	}, []);
+	const [rect, ref] = useRect();
+	const [error, setError] = useState<string>(null);
 
 	useEffect(() => {
-		if (!isCreated) return;
+		(async () => {
+			if (rect) {
+				const res = await commands.updateColumn(
+					webviewLabel,
+					rect.width,
+					rect.height,
+					rect.x,
+					rect.y,
+				);
 
-		const unlisten = listen<WindowEvent>("child_webview", (data) => {
-			if (data.payload.scroll) repositionWebview();
-			if (data.payload.resize) repositionWebview().then(() => resizeWebview());
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, [isCreated]);
+				if (res.status === "ok") {
+					console.log("webview is updated: ", webviewLabel);
+				} else {
+					console.log("webview error: ", res.error);
+				}
+			}
+		})();
+	}, [rect]);
 
 	useEffect(() => {
-		if (!container.current) return;
+		const isCreated = window.sessionStorage.getItem(webviewLabel);
 
-		const rect = container.current.getBoundingClientRect();
-		const url = `${column.url}?account=${params.account}&label=${column.label}&name=${column.name}`;
+		if (!isCreated) {
+			const initialRect = ref.current.getBoundingClientRect();
 
-		const prop = {
-			label: webviewLabel,
-			x: rect.x,
-			y: rect.y,
-			width: rect.width,
-			height: rect.height,
-			url,
-		};
+			commands
+				.createColumn({
+					label: webviewLabel,
+					x: initialRect.x,
+					y: initialRect.y,
+					width: initialRect.width,
+					height: initialRect.height,
+					url: `${column.url}?account=${params.account}&label=${column.label}&name=${column.name}`,
+				})
+				.then((res) => {
+					if (res.status === "ok") {
+						console.log("webview is created: ", webviewLabel);
+						window.sessionStorage.setItem(webviewLabel, "");
+					} else {
+						setError(res.error);
+					}
+				});
 
-		// create new webview
-		invoke("create_column", { column: prop }).then(() => {
-			console.log("created: ", webviewLabel);
-			setIsCreated(true);
-		});
-
-		// close webview when unmounted
-		return () => {
-			invoke("close_column", { label: webviewLabel }).then(() => {
-				console.log("closed: ", webviewLabel);
-			});
-		};
+			return () => {
+				commands.closeColumn(webviewLabel).then((res) => {
+					if (res.status === "ok") {
+						console.log("webview is closed: ", webviewLabel);
+					} else {
+						console.log("webview error: ", res.error);
+					}
+				});
+			};
+		}
 	}, [params.account]);
 
 	return (
 		<div className="h-full w-[440px] shrink-0 border-r border-black/5 dark:border-white/5">
 			<div className="flex flex-col gap-px size-full">
 				<Header label={column.label} />
-				<div ref={container} className="flex-1 size-full">
-					{!isCreated ? (
-						<div className="size-full flex items-center justify-center">
-							<Spinner />
-						</div>
-					) : null}
-				</div>
+				<div ref={ref} className="flex-1 size-full" />
 			</div>
 		</div>
 	);
-});
+}
 
 function Header({ label }: { label: string }) {
 	const [title, setTitle] = useState("");
