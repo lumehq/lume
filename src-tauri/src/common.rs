@@ -4,9 +4,7 @@ use nostr_sdk::prelude::*;
 use reqwest::Client as ReqClient;
 use serde::Serialize;
 use specta::Type;
-use std::collections::HashSet;
-use std::str::FromStr;
-use std::time::Duration;
+use std::{collections::HashSet, str::FromStr, time::Duration};
 
 use crate::RichEvent;
 
@@ -45,7 +43,7 @@ const NOSTR_MENTIONS: [&str; 10] = [
     "Nostr:naddr1",
 ];
 
-pub fn get_latest_event(events: &[Event]) -> Option<&Event> {
+pub fn get_latest_event(events: &Events) -> Option<&Event> {
     events.iter().next()
 }
 
@@ -130,7 +128,7 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
     tags
 }
 
-pub async fn process_event(client: &Client, events: Vec<Event>) -> Vec<RichEvent> {
+pub async fn process_event(client: &Client, events: Events) -> Vec<RichEvent> {
     // Remove event thread if event is TextNote
     let events: Vec<Event> = events
         .into_iter()
@@ -211,10 +209,7 @@ pub async fn init_nip65(client: &Client, public_key: &str) {
     // client.connect_relay("ws://127.0.0.1:1984").await.unwrap();
 
     if let Ok(events) = client
-        .get_events_of(
-            vec![filter],
-            EventSource::relays(Some(Duration::from_secs(5))),
-        )
+        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
         if let Some(event) = events.first() {

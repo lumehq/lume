@@ -41,10 +41,7 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
                 Ok(RichEvent { raw, parsed })
             } else {
                 match client
-                    .get_events_of(
-                        vec![filter],
-                        EventSource::relays(Some(Duration::from_secs(10))),
-                    )
+                    .fetch_events(vec![filter], Some(Duration::from_secs(10)))
                     .await
                 {
                     Ok(events) => {
@@ -81,10 +78,7 @@ pub async fn get_event_from(
     let filter = Filter::new().id(event_id);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
         Ok(events) => {
@@ -113,10 +107,7 @@ pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<Rich
     let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
         Ok(events) => {
@@ -175,10 +166,7 @@ pub async fn get_all_events_by_author(
         .author(author)
         .limit(limit as usize);
 
-    match client
-        .get_events_of(vec![filter], EventSource::Database)
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
@@ -209,10 +197,7 @@ pub async fn get_all_events_by_authors(
         .until(as_of)
         .authors(authors);
 
-    match client
-        .get_events_of(vec![filter], EventSource::Database)
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
@@ -239,10 +224,7 @@ pub async fn get_all_events_by_hashtags(
         .hashtags(hashtags);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
         Ok(events) => Ok(process_event(client, events).await),
@@ -293,10 +275,7 @@ pub async fn get_global_events(
         .until(as_of);
 
     match client
-        .get_events_of(
-            vec![filter],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
         Ok(events) => Ok(process_event(client, events).await),
@@ -477,13 +456,11 @@ pub async fn user_to_bech32(user: String, state: State<'_, Nostr>) -> Result<Str
     let public_key = PublicKey::parse(user).map_err(|err| err.to_string())?;
 
     match client
-        .get_events_of(
-            vec![Filter::new()
-                .author(public_key)
-                .kind(Kind::RelayList)
-                .limit(1)],
-            EventSource::both(Some(Duration::from_secs(5))),
-        )
+        .database()
+        .query(vec![Filter::new()
+            .author(public_key)
+            .kind(Kind::RelayList)
+            .limit(1)])
         .await
     {
         Ok(events) => match events.first() {

@@ -5,7 +5,6 @@ use specta::Type;
 use std::{
     fs::OpenOptions,
     io::{self, BufRead, Write},
-    time::Duration,
 };
 use tauri::{path::BaseDirectory, Manager, State};
 
@@ -37,16 +36,7 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
         .kind(Kind::RelayList)
         .limit(1);
 
-    match client
-        .get_events_of(
-            vec![filter],
-            EventSource::Relays {
-                timeout: Some(Duration::from_secs(5)),
-                specific_relays: None,
-            },
-        )
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => {
             if let Some(event) = events.first() {
                 let nip65_list = nip65::extract_relay_list(event).collect::<Vec<_>>();

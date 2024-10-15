@@ -59,10 +59,7 @@ pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<
                 }
             } else {
                 match client
-                    .get_events_of(
-                        vec![filter],
-                        EventSource::relays(Some(Duration::from_secs(10))),
-                    )
+                    .fetch_events(vec![filter], Some(Duration::from_secs(10)))
                     .await
                 {
                     Ok(events) => {
@@ -518,10 +515,7 @@ pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, St
                 .limit(1);
 
             if let Ok(contact_list_events) = client
-                .get_events_of(
-                    vec![contact_list_filter],
-                    EventSource::both(Some(Duration::from_secs(5))),
-                )
+                .fetch_events(vec![contact_list_filter], Some(Duration::from_secs(5)))
                 .await
             {
                 for event in contact_list_events.into_iter() {
