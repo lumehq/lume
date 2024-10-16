@@ -1,4 +1,5 @@
 use futures::future::join_all;
+use keyring_search::{Limit, List, Search};
 use linkify::LinkFinder;
 use nostr_sdk::prelude::*;
 use reqwest::Client as ReqClient;
@@ -18,6 +19,8 @@ pub struct Meta {
 }
 
 const IMAGES: [&str; 7] = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
+// const VIDEOS: [&str; 6] = ["mp4", "avi", "mov", "mkv", "wmv", "webm"];
+
 const NOSTR_EVENTS: [&str; 10] = [
     "@nevent1",
     "@note1",
@@ -30,6 +33,7 @@ const NOSTR_EVENTS: [&str; 10] = [
     "Nostr:note1",
     "Nostr:nevent1",
 ];
+
 const NOSTR_MENTIONS: [&str; 10] = [
     "@npub1",
     "nostr:npub1",
@@ -126,6 +130,19 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
     }
 
     tags
+}
+
+pub fn get_all_accounts() -> Vec<String> {
+    let search = Search::new().expect("Unexpected.");
+    let results = search.by_service("Lume Secret Storage");
+    let list = List::list_credentials(&results, Limit::All);
+    let accounts: HashSet<String> = list
+        .split_whitespace()
+        .filter(|v| v.starts_with("npub1") && !v.ends_with("Lume"))
+        .map(String::from)
+        .collect();
+
+    accounts.into_iter().collect()
 }
 
 pub async fn process_event(client: &Client, events: Events) -> Vec<RichEvent> {

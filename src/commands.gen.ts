@@ -5,6 +5,9 @@
 
 
 export const commands = {
+async runSync(reader: TAURI_CHANNEL<NegentropyEvent>) : Promise<void> {
+    await TAURI_INVOKE("run_sync", { reader });
+},
 async getRelays() : Promise<Result<Relays, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_relays") };
@@ -514,6 +517,7 @@ subscription: "subscription"
 export type Column = { label: string; url: string; x: number; y: number; width: number; height: number }
 export type Mention = { pubkey: string; avatar: string; display_name: string; name: string }
 export type Meta = { content: string; images: string[]; events: string[]; mentions: string[]; hashtags: string[] }
+export type NegentropyEvent = { Progress: { message: string; total_event: number } }
 export type NewSettings = Settings
 export type Profile = { name: string; display_name: string; about: string | null; picture: string; banner: string | null; nip05: string | null; lud16: string | null; website: string | null }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }

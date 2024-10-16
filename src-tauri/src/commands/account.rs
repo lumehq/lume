@@ -298,6 +298,8 @@ pub async fn login(
     tauri::async_runtime::spawn(async move {
         let state = handle.state::<Nostr>();
         let client = &state.client;
+
+        let bootstrap_relays: Vec<Url> = client.pool().all_relays().await.into_keys().collect();
         let author = PublicKey::from_str(&public_key).unwrap();
 
         // Subscribe for new notification
@@ -318,7 +320,8 @@ pub async fn login(
 
             // Syncing all metadata events from contact list
             if let Ok(report) = client
-                .reconcile(
+                .reconcile_with(
+                    &bootstrap_relays,
                     Filter::new()
                         .authors(authors.clone())
                         .kinds(vec![Kind::Metadata, Kind::ContactList])
@@ -332,7 +335,8 @@ pub async fn login(
 
             // Syncing all events from contact list
             if let Ok(report) = client
-                .reconcile(
+                .reconcile_with(
+                    &bootstrap_relays,
                     Filter::new()
                         .authors(authors.clone())
                         .kinds(vec![Kind::TextNote, Kind::Repost, Kind::EventDeletion])
@@ -381,7 +385,8 @@ pub async fn login(
                 println!("Total trusted users: {}", trusted_users.len());
 
                 if let Ok(report) = client
-                    .reconcile(
+                    .reconcile_with(
+                        &bootstrap_relays,
                         Filter::new()
                             .authors(trusted_users)
                             .kinds(vec![
@@ -402,7 +407,8 @@ pub async fn login(
 
         // Syncing all user's events
         if let Ok(report) = client
-            .reconcile(
+            .reconcile_with(
+                &bootstrap_relays,
                 Filter::new().author(author).kinds(vec![
                     Kind::TextNote,
                     Kind::Repost,
@@ -427,7 +433,8 @@ pub async fn login(
 
         // Syncing all tagged events for current user
         if let Ok(report) = client
-            .reconcile(
+            .reconcile_with(
+                &bootstrap_relays,
                 Filter::new().pubkey(author).kinds(vec![
                     Kind::TextNote,
                     Kind::Repost,

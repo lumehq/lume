@@ -5,7 +5,7 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{account::*, event::*, metadata::*, relay::*, window::*};
+use commands::{account::*, event::*, metadata::*, relay::*, sync::*, window::*};
 use common::parse_event;
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
@@ -93,6 +93,7 @@ fn main() {
     let builder = Builder::<tauri::Wry>::new()
         // Then register them (separated by a comma)
         .commands(collect_commands![
+            run_sync,
             get_relays,
             connect_relay,
             remove_relay,
