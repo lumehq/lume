@@ -3,21 +3,16 @@ import { appColumns } from "@/commons";
 import { useRect } from "@/system";
 import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
-import { useParams } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export function Column({ column }: { column: LumeColumn }) {
-	const params = useParams({ strict: false });
-	const webviewLabel = useMemo(
-		() => `column-${params.account}_${column.label}`,
-		[params.account, column.label],
-	);
+	const webviewLabel = useMemo(() => `column-${column.label}`, [column.label]);
 
 	const [rect, ref] = useRect();
-	const [error, setError] = useState<string>(null);
+	const [_error, setError] = useState<string>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -52,7 +47,7 @@ export function Column({ column }: { column: LumeColumn }) {
 					y: initialRect.y,
 					width: initialRect.width,
 					height: initialRect.height,
-					url: `${column.url}?account=${params.account}&label=${column.label}&name=${column.name}`,
+					url: `${column.url}?label=${column.label}&name=${column.name}`,
 				})
 				.then((res) => {
 					if (res.status === "ok") {
@@ -73,7 +68,7 @@ export function Column({ column }: { column: LumeColumn }) {
 				});
 			};
 		}
-	}, [params.account]);
+	}, []);
 
 	return (
 		<div className="h-full w-[440px] shrink-0 border-r border-black/5 dark:border-white/5">
@@ -94,14 +89,11 @@ function Header({ label }: { label: string }) {
 	);
 
 	const saveNewTitle = async () => {
-		const mainWindow = getCurrentWindow();
-		await mainWindow.emit("columns", { type: "set_title", label, title });
-
-		// update search params
-		// @ts-ignore, hahaha
-		search.name = title;
-
-		// reset state
+		await getCurrentWindow().emit("columns", {
+			type: "set_title",
+			label,
+			title,
+		});
 		setIsChanged(false);
 	};
 

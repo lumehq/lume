@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     fs,
     io::{self, BufRead},
     str::FromStr,
@@ -30,7 +30,7 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
-    contact_list: Mutex<Vec<Contact>>,
+    contact_list: Mutex<HashMap<PublicKey, Vec<Contact>>>,
     trusted_list: Mutex<HashSet<PublicKey>>,
 }
 
@@ -287,10 +287,11 @@ fn main() {
             app.manage(Nostr {
                 client,
                 settings: Mutex::new(Settings::default()),
-                contact_list: Mutex::new(Vec::new()),
+                contact_list: Mutex::new(HashMap::new()),
                 trusted_list: Mutex::new(HashSet::new()),
             });
 
+            /*
             Subscription::listen_any(app, move |event| {
                 let handle = handle_clone_child.to_owned();
                 let payload = event.payload;
@@ -318,6 +319,7 @@ fn main() {
                                 }
                                 None => {
                                     let contact_list = state.contact_list.lock().unwrap().clone();
+
                                     if !contact_list.is_empty() {
                                         let authors: Vec<PublicKey> =
                                             contact_list.iter().map(|f| f.public_key).collect();
@@ -344,6 +346,7 @@ fn main() {
                     }
                 });
             });
+            */
 
             // Run local relay thread
             //tauri::async_runtime::spawn(async move {

@@ -1,74 +1,37 @@
 [
 	{
 		"default": true,
-		"official": true,
 		"label": "onboarding",
 		"name": "Onboarding",
 		"description": "Tips for Mastering Lume.",
-		"url": "/columns/onboarding",
-		"picture": ""
+		"url": "/columns/onboarding"
 	},
 	{
 		"default": true,
-		"official": true,
 		"label": "Launchpad",
 		"name": "Launchpad",
 		"description": "Expand your experiences.",
-		"url": "/columns/launchpad",
-		"picture": ""
+		"url": "/columns/launchpad"
 	},
 	{
 		"default": false,
-		"official": true,
-		"label": "newsfeed",
-		"name": "Newsfeed",
-		"description": "All notes from you're following.",
-		"url": "/columns/newsfeed",
-		"picture": ""
-	},
-	{
-		"default": false,
-		"official": true,
-		"label": "notification",
-		"name": "Notification",
-		"description": "All things around you.",
-		"url": "/columns/notification",
-		"picture": ""
-	},
-	{
-		"default": false,
-		"official": true,
 		"label": "search",
 		"name": "Search",
 		"description": "Find anything.",
-		"url": "/columns/search",
-		"picture": ""
+		"url": "/columns/search"
 	},
 	{
 		"default": false,
-		"official": true,
-		"label": "stories",
-		"name": "Stories",
-		"description": "Keep up to date with your follows.",
-		"url": "/columns/stories",
-		"picture": ""
-	},
-	{
-		"default": false,
-		"official": true,
 		"label": "global_feeds",
 		"name": "Global Feeds",
 		"description": "All global notes from all connected relays.",
-		"url": "/columns/global",
-		"picture": ""
+		"url": "/columns/global"
 	},
 	{
 		"default": false,
-		"official": true,
 		"label": "trending",
 		"name": "Trending",
 		"description": "Discover all trending notes.",
-		"url": "/columns/trending",
-		"picture": ""
+		"url": "/columns/trending"
 	}
 ]

@@ -151,13 +151,6 @@ pub fn run_sync(handle: tauri::AppHandle, reader: Channel<NegentropyEvent>) {
             };
         };
 
-        reader
-            .send(NegentropyEvent::Progress {
-                message: "Ok".to_string(),
-                total_event: 0,
-            })
-            .unwrap();
-
         let tagged = Filter::new()
             .pubkeys(public_keys)
             .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
@@ -170,10 +163,17 @@ pub fn run_sync(handle: tauri::AppHandle, reader: Channel<NegentropyEvent>) {
         {
             reader
                 .send(NegentropyEvent::Progress {
-                    message: "Syncing all tagged events for your accounts.".to_string(),
+                    message: "Syncing all tagged events for your accounts".to_string(),
                     total_event: report.received.len() as i32,
                 })
                 .unwrap();
         }
+
+        reader
+            .send(NegentropyEvent::Progress {
+                message: "Ok".to_string(),
+                total_event: 0,
+            })
+            .unwrap();
     });
 }

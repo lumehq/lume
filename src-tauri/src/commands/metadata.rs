@@ -7,7 +7,7 @@ use tauri::{Emitter, Manager, State};
 use tauri_specta::Event;
 
 use crate::{
-    common::{get_latest_event, process_event},
+    common::{get_all_accounts, get_latest_event, process_event},
     NewSettings, Nostr, RichEvent, Settings,
 };
 
@@ -104,14 +104,17 @@ pub async fn set_contact_list(
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
-    let contact_list = state.contact_list.lock().unwrap().clone();
-    let vec: Vec<String> = contact_list
-        .into_iter()
-        .map(|f| f.public_key.to_hex())
-        .collect();
+pub fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let contact_state = state.contact_list.lock().unwrap().clone();
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    Ok(vec)
+    match contact_state.get(&public_key) {
+        Some(contact_list) => {
+            let vec: Vec<String> = contact_list.iter().map(|f| f.public_key.to_hex()).collect();
+            Ok(vec)
+        }
+        None => Err("Contact list is empty.".into()),
+    }
 }
 
 #[tauri::command]
@@ -150,12 +153,15 @@ pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<St
 #[tauri::command]
 #[specta::specta]
 pub fn check_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let contact_list = &state.contact_list.lock().unwrap();
+    let contact_state = &state.contact_list.lock().unwrap();
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
-    match contact_list.iter().position(|x| x.public_key == public_key) {
-        Some(_) => Ok(true),
-        None => Ok(false),
+    match contact_state.get(&public_key) {
+        Some(contact_list) => match contact_list.iter().position(|x| x.public_key == public_key) {
+            Some(_) => Ok(true),
+            None => Ok(false),
+        },
+        None => Err("Contact list is empty.".into()),
     }
 }
 
@@ -267,9 +273,18 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
 #[specta::specta]
 pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
-    let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
+    let accounts = get_all_accounts();
+    let authors: Vec<PublicKey> = accounts
+        .iter()
+        .filter_map(|acc| {
+            if let Ok(pk) = PublicKey::from_str(acc) {
+                Some(pk)
+            } else {
+                None
+            }
+        })
+        .collect();
+    let filter = Filter::new().kind(Kind::FollowSet).authors(authors);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
@@ -347,11 +362,20 @@ pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String,
 #[specta::specta]
 pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
+    let accounts = get_all_accounts();
+    let authors: Vec<PublicKey> = accounts
+        .iter()
+        .filter_map(|acc| {
+            if let Ok(pk) = PublicKey::from_str(acc) {
+                Some(pk)
+            } else {
+                None
+            }
+        })
+        .collect();
     let filter = Filter::new()
         .kinds(vec![Kind::InterestSet, Kind::Interests])
-        .author(public_key);
+        .authors(authors);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),

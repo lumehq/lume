@@ -105,7 +105,7 @@ async isAccountSync(id: string) : Promise<boolean> {
 async createSyncFile(id: string) : Promise<boolean> {
     return await TAURI_INVOKE("create_sync_file", { id });
 },
-async login(account: string, password: string) : Promise<Result<string, string>> {
+async login(account: string, password: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("login", { account, password }) };
 } catch (e) {
@@ -129,9 +129,9 @@ async setProfile(profile: Profile) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getContactList() : Promise<Result<string[], string>> {
+async getContactList(id: string) : Promise<Result<string[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_contact_list") };
+    return { status: "ok", data: await TAURI_INVOKE("get_contact_list", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

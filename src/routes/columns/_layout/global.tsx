@@ -15,7 +15,7 @@ export const Route = createFileRoute("/columns/_layout/global")({
 });
 
 export function Screen() {
-	const { label, account } = Route.useSearch();
+	const { label } = Route.useSearch();
 	const {
 		data,
 		isLoading,
@@ -24,7 +24,7 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: [label, account],
+		queryKey: [label],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : undefined;

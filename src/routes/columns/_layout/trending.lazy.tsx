@@ -13,7 +13,7 @@ export const Route = createLazyFileRoute("/columns/_layout/trending")({
 
 function Screen() {
 	const { isLoading, data } = useQuery({
-		queryKey: ["trending-notes"],
+		queryKey: ["trending"],
 		queryFn: async ({ signal }) => {
 			const res = await fetch("https://api.nostr.band/v0/trending/notes", {
 				signal,

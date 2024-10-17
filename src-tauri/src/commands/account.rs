@@ -1,5 +1,4 @@
 use keyring::Entry;
-use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -11,7 +10,7 @@ use std::{
 };
 use tauri::{Emitter, Manager, State};
 
-use crate::{Nostr, NOTIFICATION_SUB_ID};
+use crate::{common::get_all_accounts, Nostr, NOTIFICATION_SUB_ID};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -22,16 +21,7 @@ struct Account {
 #[tauri::command]
 #[specta::specta]
 pub fn get_accounts() -> Vec<String> {
-    let search = Search::new().expect("Unexpected.");
-    let results = search.by_service("Lume Secret Storage");
-    let list = List::list_credentials(&results, Limit::All);
-    let accounts: HashSet<String> = list
-        .split_whitespace()
-        .filter(|v| v.starts_with("npub1"))
-        .map(String::from)
-        .collect();
-
-    accounts.into_iter().collect()
+    get_all_accounts()
 }
 
 #[tauri::command]
@@ -235,7 +225,7 @@ pub async fn login(
     password: String,
     state: State<'_, Nostr>,
     handle: tauri::AppHandle,
-) -> Result<String, String> {
+) -> Result<(), String> {
     let client = &state.client;
     let keyring = Entry::new("Lume Secret Storage", &account).map_err(|e| e.to_string())?;
 
@@ -255,7 +245,7 @@ pub async fn login(
                 .to_secret_key(password)
                 .map_err(|_| "Wrong password.")?;
             let keys = Keys::new(secret_key);
-            let public_key = keys.public_key().to_bech32().unwrap();
+            let public_key = keys.public_key();
             let signer = NostrSigner::Keys(keys);
 
             // Update signer
@@ -265,7 +255,7 @@ pub async fn login(
         }
         Some(bunker) => {
             let uri = NostrConnectURI::parse(bunker).map_err(|e| e.to_string())?;
-            let public_key = uri.signer_public_key().unwrap().to_bech32().unwrap();
+            let public_key = uri.signer_public_key().unwrap();
             let app_keys = Keys::from_str(&account.password).map_err(|e| e.to_string())?;
 
             match Nip46Signer::new(uri, app_keys, Duration::from_secs(120), None) {
@@ -285,22 +275,25 @@ pub async fn login(
     // NIP-03: Get user's contact list
     let contact_list = {
         if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
-            state.contact_list.lock().unwrap().clone_from(&contacts);
+            state
+                .contact_list
+                .lock()
+                .unwrap()
+                .insert(public_key, contacts.clone());
+
             contacts
         } else {
             Vec::new()
         }
     };
 
-    let public_key_clone = public_key.clone();
-
     // Run seperate thread for sync
     tauri::async_runtime::spawn(async move {
         let state = handle.state::<Nostr>();
         let client = &state.client;
 
+        let author = public_key;
         let bootstrap_relays: Vec<Url> = client.pool().all_relays().await.into_keys().collect();
-        let author = PublicKey::from_str(&public_key).unwrap();
 
         // Subscribe for new notification
         if let Ok(e) = client
@@ -453,5 +446,5 @@ pub async fn login(
             .expect("Something wrong!");
     });
 
-    Ok(public_key_clone)
+    Ok(())
 }

@@ -11,7 +11,7 @@ export const LumeWindow = {
 			column,
 		});
 	},
-	openColumnsGallery: async () => {
+	openLaunchpad: async () => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
@@ -21,23 +21,33 @@ export const LumeWindow = {
 			},
 		});
 	},
-	openLocalFeeds: async () => {
+	openNewsfeed: async (account: string) => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "newsfeed",
 				name: "Newsfeed",
-				url: "/columns/newsfeed",
+				url: `/columns/newsfeed/${account}`,
 			},
 		});
 	},
-	openNotification: async () => {
+	openStory: async (account: string) => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "newsfeed",
+				name: "Newsfeed",
+				url: `/columns/stories/${account}`,
+			},
+		});
+	},
+	openNotification: async (account: string) => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "notification",
 				name: "Notification",
-				url: "/columns/notification",
+				url: `/columns/notification/${account}`,
 			},
 		});
 	},
