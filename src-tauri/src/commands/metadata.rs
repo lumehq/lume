@@ -171,16 +171,27 @@ pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<St
 
 #[tauri::command]
 #[specta::specta]
-pub fn check_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let contact_state = &state.contact_list.lock().unwrap();
-    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
+pub async fn is_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    match contact_state.get(&public_key) {
-        Some(contact_list) => match contact_list.iter().position(|x| x.public_key == public_key) {
-            Some(_) => Ok(true),
-            None => Ok(false),
-        },
-        None => Err("Contact list is empty.".into()),
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ContactList)
+        .limit(1);
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => {
+            if let Some(event) = events.into_iter().next() {
+                let hex = public_key.to_hex();
+                let pubkeys = event.get_tags_content(TagKind::p());
+
+                Ok(pubkeys.iter().any(|&i| i == &hex))
+            } else {
+                Ok(false)
+            }
+        }
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -655,13 +666,4 @@ pub async fn verify_nip05(id: String, nip05: &str) -> Result<bool, String> {
         },
         Err(e) => Err(e.to_string()),
     }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn is_trusted_user(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let trusted_list = &state.trusted_list.lock().unwrap();
-    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
-
-    Ok(trusted_list.contains(&public_key))
 }

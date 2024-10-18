@@ -6,13 +6,12 @@
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
 use commands::{account::*, event::*, metadata::*, relay::*, sync::*, window::*};
-use common::parse_event;
+use common::{get_all_accounts, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
-    collections::{HashMap, HashSet},
     fs,
     io::{self, BufRead},
     str::FromStr,
@@ -30,8 +29,7 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
-    contact_list: Mutex<HashMap<PublicKey, Vec<Contact>>>,
-    trusted_list: Mutex<HashSet<PublicKey>>,
+    accounts: Mutex<Vec<String>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -76,6 +74,7 @@ struct Subscription {
     label: String,
     kind: SubKind,
     event_id: Option<String>,
+    contacts: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Type, Clone, TauriEvent)]
@@ -100,20 +99,18 @@ fn main() {
             get_bootstrap_relays,
             save_bootstrap_relays,
             get_accounts,
-            create_account,
+            watch_account,
             import_account,
             connect_account,
             get_private_key,
             delete_account,
             reset_password,
-            is_account_sync,
-            create_sync_file,
-            login,
+            set_signer,
             get_profile,
             set_profile,
             get_contact_list,
             set_contact_list,
-            check_contact,
+            is_contact,
             toggle_contact,
             get_mention_list,
             set_group,
@@ -132,7 +129,6 @@ fn main() {
             get_user_settings,
             set_user_settings,
             verify_nip05,
-            is_trusted_user,
             get_event_meta,
             get_event,
             get_event_from,
@@ -283,15 +279,15 @@ fn main() {
                 client
             });
 
+            let accounts = get_all_accounts();
+
             // Create global state
             app.manage(Nostr {
                 client,
+                accounts: Mutex::new(accounts),
                 settings: Mutex::new(Settings::default()),
-                contact_list: Mutex::new(HashMap::new()),
-                trusted_list: Mutex::new(HashSet::new()),
             });
 
-            /*
             Subscription::listen_any(app, move |event| {
                 let handle = handle_clone_child.to_owned();
                 let payload = event.payload;
@@ -304,40 +300,42 @@ fn main() {
                         SubKind::Subscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
 
-                            match payload.event_id {
-                                Some(id) => {
-                                    let event_id = EventId::from_str(&id).unwrap();
-                                    let filter =
-                                        Filter::new().event(event_id).since(Timestamp::now());
+                            if let Some(id) = payload.event_id {
+                                let event_id = EventId::from_str(&id).unwrap();
+                                let filter = Filter::new().event(event_id).since(Timestamp::now());
 
-                                    if let Err(e) = client
-                                        .subscribe_with_id(subscription_id, vec![filter], None)
-                                        .await
-                                    {
-                                        println!("Subscription error: {}", e)
-                                    }
+                                if let Err(e) = client
+                                    .subscribe_with_id(subscription_id.clone(), vec![filter], None)
+                                    .await
+                                {
+                                    println!("Subscription error: {}", e)
                                 }
-                                None => {
-                                    let contact_list = state.contact_list.lock().unwrap().clone();
+                            }
 
-                                    if !contact_list.is_empty() {
-                                        let authors: Vec<PublicKey> =
-                                            contact_list.iter().map(|f| f.public_key).collect();
-
-                                        let filter = Filter::new()
-                                            .kinds(vec![Kind::TextNote, Kind::Repost])
-                                            .authors(authors)
-                                            .since(Timestamp::now());
-
-                                        if let Err(e) = client
-                                            .subscribe_with_id(subscription_id, vec![filter], None)
-                                            .await
-                                        {
-                                            println!("Subscription error: {}", e)
+                            if let Some(ids) = payload.contacts {
+                                let authors: Vec<PublicKey> = ids
+                                    .iter()
+                                    .filter_map(|item| {
+                                        if let Ok(pk) = PublicKey::from_str(item) {
+                                            Some(pk)
+                                        } else {
+                                            None
                                         }
-                                    }
+                                    })
+                                    .collect();
+
+                                let filter = Filter::new()
+                                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                                    .authors(authors)
+                                    .since(Timestamp::now());
+
+                                if let Err(e) = client
+                                    .subscribe_with_id(subscription_id, vec![filter], None)
+                                    .await
+                                {
+                                    println!("Subscription error: {}", e)
                                 }
-                            };
+                            }
                         }
                         SubKind::Unsubscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
@@ -346,7 +344,6 @@ fn main() {
                     }
                 });
             });
-            */
 
             // Run local relay thread
             //tauri::async_runtime::spawn(async move {
@@ -367,6 +364,7 @@ fn main() {
             tauri::async_runtime::spawn(async move {
                 let state = handle_clone.state::<Nostr>();
                 let client = &state.client;
+                let accounts = state.accounts.lock().unwrap().clone();
 
                 let allow_notification = match handle_clone.notification().request_permission() {
                     Ok(_) => {
@@ -381,6 +379,7 @@ fn main() {
 
                 let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
                 let mut notifications = client.pool().notifications();
+                let mut new_events: Vec<EventId> = Vec::new();
 
                 while let Ok(notification) = notifications.recv().await {
                     match notification {
@@ -430,8 +429,12 @@ fn main() {
                                 event,
                             } = message
                             {
+                                let tags = event.get_tags_content(TagKind::p());
+
                                 // Handle events from notification subscription
-                                if subscription_id == notification_id {
+                                if subscription_id == notification_id
+                                    && tags.iter().any(|item| accounts.iter().any(|i| i == item))
+                                {
                                     // Send native notification
                                     if allow_notification {
                                         let author = client
@@ -441,27 +444,40 @@ fn main() {
                                             .unwrap_or_else(|_| {
                                                 DatabaseProfile::new(event.pubkey, Metadata::new())
                                             });
-                                        let metadata = author.metadata();
 
-                                        send_event_notification(&event, metadata, &handle_clone);
+                                        send_event_notification(
+                                            &event,
+                                            author.metadata(),
+                                            &handle_clone,
+                                        );
                                     }
                                 }
 
-                                let label = subscription_id.to_string();
-                                let raw = event.as_json();
-                                let parsed = if event.kind == Kind::TextNote {
-                                    Some(parse_event(&event.content).await)
-                                } else {
-                                    None
+                                let payload = RichEvent {
+                                    raw: event.as_json(),
+                                    parsed: if event.kind == Kind::TextNote {
+                                        Some(parse_event(&event.content).await)
+                                    } else {
+                                        None
+                                    },
                                 };
 
                                 handle_clone
                                     .emit_to(
-                                        EventTarget::labeled(label),
+                                        EventTarget::labeled(subscription_id.to_string()),
                                         "event",
-                                        RichEvent { raw, parsed },
+                                        payload,
                                     )
                                     .unwrap();
+
+                                if event.kind == Kind::TextNote {
+                                    new_events.push(event.id);
+
+                                    if new_events.len() > 100 {
+                                        handle_clone.emit("synchronized", ()).unwrap();
+                                        new_events.clear();
+                                    }
+                                }
                             };
                         }
                         RelayPoolNotification::Shutdown => break,
@@ -471,47 +487,6 @@ fn main() {
             });
 
             Ok(())
-        })
-        .on_window_event(|window, event| {
-            if let tauri::WindowEvent::Focused(focused) = event {
-                if !focused {
-                    let handle = window.app_handle().to_owned();
-                    let config_dir = handle.path().app_config_dir().unwrap();
-
-                    tauri::async_runtime::spawn(async move {
-                        let state = handle.state::<Nostr>();
-                        let client = &state.client;
-
-                        if let Ok(signer) = client.signer().await {
-                            let public_key = signer.public_key().await.unwrap();
-                            let bech32 = public_key.to_bech32().unwrap();
-
-                            if fs::metadata(config_dir.join(bech32)).is_ok() {
-                                if let Ok(contact_list) =
-                                    client.get_contact_list(Some(Duration::from_secs(5))).await
-                                {
-                                    let authors: Vec<PublicKey> =
-                                        contact_list.iter().map(|f| f.public_key).collect();
-
-                                    if client
-                                        .reconcile(
-                                            Filter::new()
-                                                .authors(authors)
-                                                .kinds(vec![Kind::TextNote, Kind::Repost])
-                                                .limit(1000),
-                                            NegentropyOptions::default(),
-                                        )
-                                        .await
-                                        .is_ok()
-                                    {
-                                        handle.emit("synchronized", ()).unwrap();
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
         })
         .plugin(prevent_default())
         .plugin(tauri_plugin_decorum::init())

@@ -3,7 +3,6 @@ import { cn } from "@/commons";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
 import { Feather, MagnifyingGlass, Plus } from "@phosphor-icons/react";
-import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { Channel } from "@tauri-apps/api/core";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
@@ -26,20 +25,14 @@ function Layout() {
 }
 
 function Topbar() {
-	const context = Route.useRouteContext();
-	const { data: accounts } = useQuery({
-		queryKey: ["accounts"],
-		queryFn: async () => {
-			return await commands.getAccounts();
-		},
-	});
+	const { platform, accounts } = Route.useRouteContext();
 
 	return (
 		<div
 			data-tauri-drag-region
 			className={cn(
 				"flex h-10 shrink-0 items-center justify-between",
-				context.platform === "macos" ? "pl-[72px] pr-3" : "pr-[156px] pl-3",
+				platform === "macos" ? "pl-[72px] pr-3" : "pr-[156px] pl-3",
 			)}
 		>
 			<div
@@ -126,6 +119,9 @@ const NegentropyBadge = memo(function NegentropyBadge() {
 });
 
 const Account = memo(function Account({ pubkey }: { pubkey: string }) {
+	const navigate = Route.useNavigate();
+	const { accounts } = Route.useRouteContext();
+
 	const showContextMenu = useCallback(
 		async (e: React.MouseEvent) => {
 			e.preventDefault();
@@ -147,6 +143,22 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 				MenuItem.new({
 					text: "Copy Public Key",
 					action: async () => await writeText(pubkey),
+				}),
+				MenuItem.new({
+					text: "Logout",
+					action: async () => {
+						const res = await commands.deleteAccount(pubkey);
+
+						if (res.status === "ok") {
+							const newAccounts = accounts.filter(
+								(account) => account !== pubkey,
+							);
+
+							if (newAccounts.length < 1) {
+								navigate({ to: "/", replace: true });
+							}
+						}
+					},
 				}),
 			]);
 

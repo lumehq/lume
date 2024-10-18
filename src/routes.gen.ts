@@ -41,7 +41,7 @@ const ColumnsImport = createFileRoute('/columns')()
 const ResetLazyImport = createFileRoute('/reset')()
 const NewLazyImport = createFileRoute('/new')()
 const SettingsLazyImport = createFileRoute('/_settings')()
-const AuthNewLazyImport = createFileRoute('/auth/new')()
+const AuthWatchLazyImport = createFileRoute('/auth/watch')()
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthConnectLazyImport = createFileRoute('/auth/connect')()
 const ColumnsLayoutTrendingLazyImport = createFileRoute(
@@ -123,10 +123,10 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any).lazy(() => import('./routes/_layout/index.lazy').then((d) => d.Route))
 
-const AuthNewLazyRoute = AuthNewLazyImport.update({
-  path: '/auth/new',
+const AuthWatchLazyRoute = AuthWatchLazyImport.update({
+  path: '/auth/watch',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/auth/new.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/auth/watch.lazy').then((d) => d.Route))
 
 const AuthImportLazyRoute = AuthImportLazyImport.update({
   path: '/auth/import',
@@ -421,11 +421,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImportLazyImport
       parentRoute: typeof rootRoute
     }
-    '/auth/new': {
-      id: '/auth/new'
-      path: '/auth/new'
-      fullPath: '/auth/new'
-      preLoaderRoute: typeof AuthNewLazyImport
+    '/auth/watch': {
+      id: '/auth/watch'
+      path: '/auth/watch'
+      fullPath: '/auth/watch'
+      preLoaderRoute: typeof AuthWatchLazyImport
       parentRoute: typeof rootRoute
     }
     '/_layout/': {
@@ -673,7 +673,7 @@ export interface FileRoutesByFullPath {
   '/zap/$id': typeof ZapIdRoute
   '/auth/connect': typeof AuthConnectLazyRoute
   '/auth/import': typeof AuthImportLazyRoute
-  '/auth/new': typeof AuthNewLazyRoute
+  '/auth/watch': typeof AuthWatchLazyRoute
   '/': typeof LayoutIndexRoute
   '/editor': typeof EditorIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
@@ -710,7 +710,7 @@ export interface FileRoutesByTo {
   '/zap/$id': typeof ZapIdRoute
   '/auth/connect': typeof AuthConnectLazyRoute
   '/auth/import': typeof AuthImportLazyRoute
-  '/auth/new': typeof AuthNewLazyRoute
+  '/auth/watch': typeof AuthWatchLazyRoute
   '/': typeof LayoutIndexRoute
   '/editor': typeof EditorIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
@@ -750,7 +750,7 @@ export interface FileRoutesById {
   '/zap/$id': typeof ZapIdRoute
   '/auth/connect': typeof AuthConnectLazyRoute
   '/auth/import': typeof AuthImportLazyRoute
-  '/auth/new': typeof AuthNewLazyRoute
+  '/auth/watch': typeof AuthWatchLazyRoute
   '/_layout/': typeof LayoutIndexRoute
   '/editor/': typeof EditorIndexRoute
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
@@ -789,7 +789,7 @@ export interface FileRouteTypes {
     | '/zap/$id'
     | '/auth/connect'
     | '/auth/import'
-    | '/auth/new'
+    | '/auth/watch'
     | '/'
     | '/editor'
     | '/columns/create-newsfeed'
@@ -825,7 +825,7 @@ export interface FileRouteTypes {
     | '/zap/$id'
     | '/auth/connect'
     | '/auth/import'
-    | '/auth/new'
+    | '/auth/watch'
     | '/'
     | '/editor'
     | '/columns/create-newsfeed'
@@ -863,7 +863,7 @@ export interface FileRouteTypes {
     | '/zap/$id'
     | '/auth/connect'
     | '/auth/import'
-    | '/auth/new'
+    | '/auth/watch'
     | '/_layout/'
     | '/editor/'
     | '/columns/_layout/create-newsfeed'
@@ -897,7 +897,7 @@ export interface RootRouteChildren {
   ZapIdRoute: typeof ZapIdRoute
   AuthConnectLazyRoute: typeof AuthConnectLazyRoute
   AuthImportLazyRoute: typeof AuthImportLazyRoute
-  AuthNewLazyRoute: typeof AuthNewLazyRoute
+  AuthWatchLazyRoute: typeof AuthWatchLazyRoute
   EditorIndexRoute: typeof EditorIndexRoute
 }
 
@@ -913,7 +913,7 @@ const rootRouteChildren: RootRouteChildren = {
   ZapIdRoute: ZapIdRoute,
   AuthConnectLazyRoute: AuthConnectLazyRoute,
   AuthImportLazyRoute: AuthImportLazyRoute,
-  AuthNewLazyRoute: AuthNewLazyRoute,
+  AuthWatchLazyRoute: AuthWatchLazyRoute,
   EditorIndexRoute: EditorIndexRoute,
 }
 
@@ -940,7 +940,7 @@ export const routeTree = rootRoute
         "/zap/$id",
         "/auth/connect",
         "/auth/import",
-        "/auth/new",
+        "/auth/watch",
         "/editor/"
       ]
     },
@@ -1030,8 +1030,8 @@ export const routeTree = rootRoute
     "/auth/import": {
       "filePath": "auth/import.lazy.tsx"
     },
-    "/auth/new": {
-      "filePath": "auth/new.lazy.tsx"
+    "/auth/watch": {
+      "filePath": "auth/watch.lazy.tsx"
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",

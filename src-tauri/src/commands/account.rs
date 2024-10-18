@@ -2,15 +2,10 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::{
-    collections::HashSet,
-    fs::{self, File},
-    str::FromStr,
-    time::Duration,
-};
-use tauri::{Emitter, Manager, State};
+use std::{str::FromStr, time::Duration};
+use tauri::State;
 
-use crate::{common::get_all_accounts, Nostr, NOTIFICATION_SUB_ID};
+use crate::{common::get_all_accounts, Nostr};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -26,48 +21,14 @@ pub fn get_accounts() -> Vec<String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn create_account(
-    name: String,
-    about: String,
-    picture: String,
-    password: String,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
-    let client = &state.client;
-    let keys = Keys::generate();
-    let npub = keys.public_key().to_bech32().map_err(|e| e.to_string())?;
-    let secret_key = keys.secret_key();
-    let enc = EncryptedSecretKey::new(secret_key, password, 16, KeySecurity::Medium)
-        .map_err(|err| err.to_string())?;
-    let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
+pub async fn watch_account(key: String) -> Result<String, String> {
+    let public_key = PublicKey::from_str(&key).map_err(|e| e.to_string())?;
+    let bech32 = public_key.to_bech32().map_err(|e| e.to_string())?;
+    let keyring = Entry::new("Lume Secret Storage", &bech32).map_err(|e| e.to_string())?;
 
-    // Save account
-    let keyring = Entry::new("Lume Secret Storage", &npub).map_err(|e| e.to_string())?;
-    let account = Account {
-        password: enc_bech32,
-        nostr_connect: None,
-    };
-    let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
-    let _ = keyring.set_password(&j);
+    keyring.set_password("").map_err(|e| e.to_string())?;
 
-    let signer = NostrSigner::Keys(keys);
-
-    // Update signer
-    client.set_signer(Some(signer)).await;
-
-    let mut metadata = Metadata::new()
-        .display_name(name.clone())
-        .name(name.to_lowercase())
-        .about(about);
-
-    if let Ok(url) = Url::parse(&picture) {
-        metadata = metadata.picture(url)
-    }
-
-    match client.set_metadata(&metadata).await {
-        Ok(_) => Ok(npub),
-        Err(e) => Err(e.to_string()),
-    }
+    Ok(bech32)
 }
 
 #[tauri::command]
@@ -198,33 +159,10 @@ pub fn delete_account(id: String) -> Result<(), String> {
 
 #[tauri::command]
 #[specta::specta]
-pub fn is_account_sync(id: String, handle: tauri::AppHandle) -> bool {
-    let config_dir = handle
-        .path()
-        .app_config_dir()
-        .expect("Error: app config directory not found.");
-
-    fs::metadata(config_dir.join(id)).is_ok()
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn create_sync_file(id: String, handle: tauri::AppHandle) -> bool {
-    let config_dir = handle
-        .path()
-        .app_config_dir()
-        .expect("Error: app config directory not found.");
-
-    File::create(config_dir.join(id)).is_ok()
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn login(
+pub async fn set_signer(
     account: String,
     password: String,
     state: State<'_, Nostr>,
-    handle: tauri::AppHandle,
 ) -> Result<(), String> {
     let client = &state.client;
     let keyring = Entry::new("Lume Secret Storage", &account).map_err(|e| e.to_string())?;
@@ -237,7 +175,7 @@ pub async fn login(
         Err(e) => return Err(e.to_string()),
     };
 
-    let public_key = match account.nostr_connect {
+    match account.nostr_connect {
         None => {
             let ncryptsec =
                 EncryptedSecretKey::from_bech32(account.password).map_err(|e| e.to_string())?;
@@ -245,206 +183,26 @@ pub async fn login(
                 .to_secret_key(password)
                 .map_err(|_| "Wrong password.")?;
             let keys = Keys::new(secret_key);
-            let public_key = keys.public_key();
             let signer = NostrSigner::Keys(keys);
 
             // Update signer
             client.set_signer(Some(signer)).await;
 
-            public_key
+            Ok(())
         }
         Some(bunker) => {
             let uri = NostrConnectURI::parse(bunker).map_err(|e| e.to_string())?;
-            let public_key = uri.signer_public_key().unwrap();
             let app_keys = Keys::from_str(&account.password).map_err(|e| e.to_string())?;
 
             match Nip46Signer::new(uri, app_keys, Duration::from_secs(120), None) {
                 Ok(signer) => {
                     // Update signer
                     client.set_signer(Some(signer.into())).await;
-                    public_key
+
+                    Ok(())
                 }
-                Err(e) => return Err(e.to_string()),
+                Err(e) => Err(e.to_string()),
             }
         }
-    };
-
-    // NIP-65: Connect to user's relay list
-    // init_nip65(client, &public_key).await;
-
-    // NIP-03: Get user's contact list
-    let contact_list = {
-        if let Ok(contacts) = client.get_contact_list(Some(Duration::from_secs(5))).await {
-            state
-                .contact_list
-                .lock()
-                .unwrap()
-                .insert(public_key, contacts.clone());
-
-            contacts
-        } else {
-            Vec::new()
-        }
-    };
-
-    // Run seperate thread for sync
-    tauri::async_runtime::spawn(async move {
-        let state = handle.state::<Nostr>();
-        let client = &state.client;
-
-        let author = public_key;
-        let bootstrap_relays: Vec<Url> = client.pool().all_relays().await.into_keys().collect();
-
-        // Subscribe for new notification
-        if let Ok(e) = client
-            .subscribe_with_id(
-                SubscriptionId::new(NOTIFICATION_SUB_ID),
-                vec![Filter::new().pubkey(author).since(Timestamp::now())],
-                None,
-            )
-            .await
-        {
-            println!("Subscribed: {}", e.success.len())
-        }
-
-        // Get events from contact list
-        if !contact_list.is_empty() {
-            let authors: Vec<PublicKey> = contact_list.iter().map(|f| f.public_key).collect();
-
-            // Syncing all metadata events from contact list
-            if let Ok(report) = client
-                .reconcile_with(
-                    &bootstrap_relays,
-                    Filter::new()
-                        .authors(authors.clone())
-                        .kinds(vec![Kind::Metadata, Kind::ContactList])
-                        .limit(authors.len() * 10),
-                    NegentropyOptions::default(),
-                )
-                .await
-            {
-                println!("Received: {}", report.received.len());
-            }
-
-            // Syncing all events from contact list
-            if let Ok(report) = client
-                .reconcile_with(
-                    &bootstrap_relays,
-                    Filter::new()
-                        .authors(authors.clone())
-                        .kinds(vec![Kind::TextNote, Kind::Repost, Kind::EventDeletion])
-                        .limit(authors.len() * 40),
-                    NegentropyOptions::default(),
-                )
-                .await
-            {
-                println!("Received: {}", report.received.len());
-            }
-
-            // Create the trusted public key list from contact list
-            // TODO: create a cached file
-            if let Ok(events) = client
-                .database()
-                .query(vec![Filter::new().kind(Kind::ContactList)])
-                .await
-            {
-                let keys: Vec<&str> = events
-                    .iter()
-                    .flat_map(|event| {
-                        event
-                            .tags
-                            .iter()
-                            .filter(|t| t.kind() == TagKind::p())
-                            .filter_map(|t| t.content())
-                            .collect::<Vec<&str>>()
-                    })
-                    .collect();
-
-                let trusted_list: HashSet<PublicKey> = keys
-                    .into_iter()
-                    .filter_map(|item| {
-                        if let Ok(pk) = PublicKey::from_str(item) {
-                            Some(pk)
-                        } else {
-                            None
-                        }
-                    })
-                    .collect();
-
-                // Update app's state
-                state.trusted_list.lock().unwrap().clone_from(&trusted_list);
-
-                let trusted_users: Vec<PublicKey> = trusted_list.into_iter().collect();
-                println!("Total trusted users: {}", trusted_users.len());
-
-                if let Ok(report) = client
-                    .reconcile_with(
-                        &bootstrap_relays,
-                        Filter::new()
-                            .authors(trusted_users)
-                            .kinds(vec![
-                                Kind::Metadata,
-                                Kind::TextNote,
-                                Kind::Repost,
-                                Kind::EventDeletion,
-                            ])
-                            .limit(5000),
-                        NegentropyOptions::default(),
-                    )
-                    .await
-                {
-                    println!("Received: {}", report.received.len())
-                }
-            };
-        };
-
-        // Syncing all user's events
-        if let Ok(report) = client
-            .reconcile_with(
-                &bootstrap_relays,
-                Filter::new().author(author).kinds(vec![
-                    Kind::TextNote,
-                    Kind::Repost,
-                    Kind::FollowSet,
-                    Kind::InterestSet,
-                    Kind::Interests,
-                    Kind::EventDeletion,
-                    Kind::MuteList,
-                    Kind::BookmarkSet,
-                    Kind::BlockedRelays,
-                    Kind::EmojiSet,
-                    Kind::RelaySet,
-                    Kind::RelayList,
-                    Kind::ApplicationSpecificData,
-                ]),
-                NegentropyOptions::default(),
-            )
-            .await
-        {
-            println!("Received: {}", report.received.len())
-        }
-
-        // Syncing all tagged events for current user
-        if let Ok(report) = client
-            .reconcile_with(
-                &bootstrap_relays,
-                Filter::new().pubkey(author).kinds(vec![
-                    Kind::TextNote,
-                    Kind::Repost,
-                    Kind::Reaction,
-                    Kind::ZapReceipt,
-                ]),
-                NegentropyOptions::default(),
-            )
-            .await
-        {
-            println!("Received: {}", report.received.len())
-        };
-
-        handle
-            .emit("neg_synchronized", ())
-            .expect("Something wrong!");
-    });
-
-    Ok(())
+    }
 }

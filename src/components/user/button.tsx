@@ -7,7 +7,7 @@ import { message } from "@tauri-apps/plugin-dialog";
 import { useTransition } from "react";
 import { useUserContext } from "./provider";
 
-export function UserFollowButton({ className }: { className?: string }) {
+export function UserButton({ className }: { className?: string }) {
 	const user = useUserContext();
 
 	const { queryClient } = useRouteContext({ strict: false });
@@ -18,7 +18,7 @@ export function UserFollowButton({ className }: { className?: string }) {
 	} = useQuery({
 		queryKey: ["status", user.pubkey],
 		queryFn: async () => {
-			const res = await commands.checkContact(user.pubkey);
+			const res = await commands.isContact(user.pubkey);
 
 			if (res.status === "ok") {
 				return res.data;

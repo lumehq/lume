@@ -1,14 +1,14 @@
-import { commands } from '@/commands.gen'
-import { createFileRoute } from '@tanstack/react-router'
+import { commands } from "@/commands.gen";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/columns/_layout/stories/$id')({
-  loader: async () => {
-    const res = await commands.getContactList()
+export const Route = createFileRoute("/columns/_layout/stories/$id")({
+	loader: async ({ params }) => {
+		const res = await commands.getContactList(params.id);
 
-    if (res.status === 'ok') {
-      return res.data
-    } else {
-      throw new Error(res.error)
-    }
-  },
-})
+		if (res.status === "ok") {
+			return res.data;
+		} else {
+			throw new Error(res.error);
+		}
+	},
+});

@@ -51,9 +51,9 @@ async saveBootstrapRelays(relays: string) : Promise<Result<null, string>> {
 async getAccounts() : Promise<string[]> {
     return await TAURI_INVOKE("get_accounts");
 },
-async createAccount(name: string, about: string, picture: string, password: string) : Promise<Result<string, string>> {
+async watchAccount(key: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("create_account", { name, about, picture, password }) };
+    return { status: "ok", data: await TAURI_INVOKE("watch_account", { key }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -99,15 +99,9 @@ async resetPassword(key: string, password: string) : Promise<Result<null, string
     else return { status: "error", error: e  as any };
 }
 },
-async isAccountSync(id: string) : Promise<boolean> {
-    return await TAURI_INVOKE("is_account_sync", { id });
-},
-async createSyncFile(id: string) : Promise<boolean> {
-    return await TAURI_INVOKE("create_sync_file", { id });
-},
-async login(account: string, password: string) : Promise<Result<null, string>> {
+async setSigner(account: string, password: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("login", { account, password }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_signer", { account, password }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -145,9 +139,9 @@ async setContactList(publicKeys: string[]) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async checkContact(id: string) : Promise<Result<boolean, string>> {
+async isContact(id: string) : Promise<Result<boolean, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("check_contact", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("is_contact", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -292,14 +286,6 @@ async setUserSettings(settings: string) : Promise<Result<null, string>> {
 async verifyNip05(id: string, nip05: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("verify_nip05", { id, nip05 }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async isTrustedUser(id: string) : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("is_trusted_user", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -524,7 +510,7 @@ export type Relays = { connected: string[]; read: string[] | null; write: string
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; trusted_only: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; transparent: boolean }
 export type SubKind = "Subscribe" | "Unsubscribe"
-export type Subscription = { label: string; kind: SubKind; event_id: string | null }
+export type Subscription = { label: string; kind: SubKind; event_id: string | null; contacts: string[] | null }
 export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean }
 
 /** tauri-specta globals **/
