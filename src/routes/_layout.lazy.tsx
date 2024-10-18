@@ -2,9 +2,9 @@ import { type NegentropyEvent, commands } from "@/commands.gen";
 import { cn } from "@/commons";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
-import { Feather, MagnifyingGlass } from "@phosphor-icons/react";
+import { Feather, MagnifyingGlass, Plus } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
+import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { Channel } from "@tauri-apps/api/core";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -44,19 +44,25 @@ function Topbar() {
 		>
 			<div
 				data-tauri-drag-region
-				className="relative z-[200] flex-1 flex items-center gap-4"
+				className="relative z-[200] flex-1 flex items-center gap-2"
 			>
 				<NegentropyBadge />
 				{accounts?.map((account) => (
 					<Account key={account} pubkey={account} />
 				))}
+				<Link
+					to="/new"
+					className="inline-flex items-center justify-center size-7 bg-black/5 dark:bg-white/5 rounded-full hover:bg-blue-500 hover:text-white"
+				>
+					<Plus className="size-4" weight="bold" />
+				</Link>
 			</div>
 			<div
 				data-tauri-drag-region
-				className="relative z-[200] flex-1 flex items-center justify-end gap-1"
+				className="relative z-[200] flex-1 flex items-center justify-end gap-4"
 			>
 				{accounts?.length ? (
-					<>
+					<div className="inline-flex items-center gap-2">
 						<button
 							type="button"
 							onClick={() => LumeWindow.openEditor()}
@@ -72,9 +78,9 @@ function Topbar() {
 						>
 							<MagnifyingGlass className="size-4" />
 						</button>
-					</>
+					</div>
 				) : null}
-				<div id="toolbar" className="inline-flex items-center gap-1" />
+				<div id="toolbar" className="inline-flex items-center gap-2" />
 			</div>
 		</div>
 	);

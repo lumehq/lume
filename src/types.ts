@@ -53,11 +53,10 @@ export interface Metadata {
 export interface LumeColumn {
 	label: string;
 	name: string;
-	description?: string;
 	url: string;
-	picture?: string;
+	description?: string;
 	default?: boolean;
-	official?: boolean;
+	account?: string;
 }
 
 export interface ColumnEvent {

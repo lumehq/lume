@@ -1,12 +1,11 @@
 import { commands } from "@/commands.gen";
-import { appColumns } from "@/commons";
 import { useRect } from "@/system";
 import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
-import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { User } from "./user";
 
 export function Column({ column }: { column: LumeColumn }) {
 	const webviewLabel = useMemo(() => `column-${column.label}`, [column.label]);
@@ -73,44 +72,36 @@ export function Column({ column }: { column: LumeColumn }) {
 	return (
 		<div className="h-full w-[440px] shrink-0 border-r border-black/5 dark:border-white/5">
 			<div className="flex flex-col gap-px size-full">
-				<Header label={column.label} />
+				<Header
+					label={column.label}
+					name={column.name}
+					account={column.account}
+				/>
 				<div ref={ref} className="flex-1 size-full" />
 			</div>
 		</div>
 	);
 }
 
-function Header({ label }: { label: string }) {
+function Header({
+	label,
+	name,
+	account,
+}: { label: string; name: string; account?: string }) {
 	const [title, setTitle] = useState("");
 	const [isChanged, setIsChanged] = useState(false);
-
-	const column = useStore(appColumns, (state) =>
-		state.find((col) => col.label === label),
-	);
-
-	const saveNewTitle = async () => {
-		await getCurrentWindow().emit("columns", {
-			type: "set_title",
-			label,
-			title,
-		});
-		setIsChanged(false);
-	};
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
 
 		const window = getCurrentWindow();
+
 		const menuItems = await Promise.all([
 			MenuItem.new({
 				text: "Reload",
 				action: async () => {
 					await commands.reloadColumn(label);
 				},
-			}),
-			MenuItem.new({
-				text: "Open in new window",
-				action: () => console.log("not implemented."),
 			}),
 			PredefinedMenuItem.new({ item: "Separator" }),
 			MenuItem.new({
@@ -152,6 +143,15 @@ function Header({ label }: { label: string }) {
 		await menu.popup().catch((e) => console.error(e));
 	}, []);
 
+	const saveNewTitle = async () => {
+		await getCurrentWindow().emit("columns", {
+			type: "set_title",
+			label,
+			title,
+		});
+		setIsChanged(false);
+	};
+
 	useEffect(() => {
 		if (title.length > 0) setIsChanged(true);
 	}, [title.length]);
@@ -160,13 +160,20 @@ function Header({ label }: { label: string }) {
 		<div className="group flex items-center justify-center gap-2 w-full h-9 shrink-0">
 			<div className="flex items-center justify-center shrink-0 h-7">
 				<div className="relative flex items-center gap-2">
+					{account?.length ? (
+						<User.Provider pubkey={account}>
+							<User.Root>
+								<User.Avatar className="size-6 rounded-full" />
+							</User.Root>
+						</User.Provider>
+					) : null}
 					<div
 						contentEditable
 						suppressContentEditableWarning={true}
 						onBlur={(e) => setTitle(e.currentTarget.textContent)}
 						className="text-[12px] font-semibold focus:outline-none"
 					>
-						{column.name}
+						{name}
 					</div>
 					{isChanged ? (
 						<button

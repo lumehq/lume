@@ -28,6 +28,7 @@ export const LumeWindow = {
 				label: "newsfeed",
 				name: "Newsfeed",
 				url: `/columns/newsfeed/${account}`,
+				account,
 			},
 		});
 	},
@@ -35,9 +36,10 @@ export const LumeWindow = {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
-				label: "newsfeed",
-				name: "Newsfeed",
+				label: "stories",
+				name: "Stories",
 				url: `/columns/stories/${account}`,
+				account,
 			},
 		});
 	},
@@ -48,6 +50,7 @@ export const LumeWindow = {
 				label: "notification",
 				name: "Notification",
 				url: `/columns/notification/${account}`,
+				account,
 			},
 		});
 	},

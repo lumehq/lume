@@ -104,16 +104,35 @@ pub async fn set_contact_list(
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
-    let contact_state = state.contact_list.lock().unwrap().clone();
+pub async fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    match contact_state.get(&public_key) {
-        Some(contact_list) => {
-            let vec: Vec<String> = contact_list.iter().map(|f| f.public_key.to_hex()).collect();
-            Ok(vec)
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ContactList)
+        .limit(1);
+
+    let mut contact_list: Vec<String> = Vec::new();
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => {
+            if let Some(event) = events.into_iter().next() {
+                for tag in event.tags.into_iter() {
+                    if let Some(TagStandard::PublicKey {
+                        public_key,
+                        uppercase: false,
+                        ..
+                    }) = tag.to_standardized()
+                    {
+                        contact_list.push(public_key.to_hex())
+                    }
+                }
+            }
+
+            Ok(contact_list)
         }
-        None => Err("Contact list is empty.".into()),
+        Err(e) => Err(e.to_string()),
     }
 }
 

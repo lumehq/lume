@@ -8,7 +8,7 @@
 	},
 	{
 		"default": true,
-		"label": "Launchpad",
+		"label": "launchpad",
 		"name": "Launchpad",
 		"description": "Expand your experiences.",
 		"url": "/columns/launchpad"
