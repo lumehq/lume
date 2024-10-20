@@ -1,6 +1,6 @@
 import { commands } from "@/commands.gen";
 import type { LumeColumn, NostrEvent } from "@/types";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Window, getCurrentWindow } from "@tauri-apps/api/window";
 import { nanoid } from "nanoid";
 import type { LumeEvent } from "./event";
 
@@ -120,6 +120,7 @@ export const LumeWindow = {
 			maximizable: false,
 			minimizable: false,
 			hidden_title: true,
+			closable: true,
 		});
 
 		if (query.status === "ok") {
@@ -141,6 +142,7 @@ export const LumeWindow = {
 				maximizable: false,
 				minimizable: false,
 				hidden_title: true,
+				closable: true,
 			});
 		} else {
 			await LumeWindow.openSettings(account, "bitcoin-connect");
@@ -156,6 +158,7 @@ export const LumeWindow = {
 			maximizable: false,
 			minimizable: false,
 			hidden_title: true,
+			closable: true,
 		});
 
 		if (query.status === "ok") {
@@ -164,20 +167,21 @@ export const LumeWindow = {
 			throw new Error(query.error);
 		}
 	},
-	openPopup: async (title: string, url: string) => {
+	openPopup: async (url: string, title?: string, closable = true) => {
 		const query = await commands.openWindow({
 			label: `popup-${nanoid()}`,
 			url,
-			title,
+			title: title ?? "",
 			width: 400,
 			height: 500,
 			maximizable: false,
 			minimizable: false,
-			hidden_title: false,
+			hidden_title: !!title,
+			closable,
 		});
 
 		if (query.status === "ok") {
-			return query.data;
+			return await Window.getByLabel(query.data);
 		} else {
 			throw new Error(query.error);
 		}

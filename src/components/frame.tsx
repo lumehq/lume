@@ -1,5 +1,4 @@
 import { cn } from "@/commons";
-import { useRouteContext } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 export function Frame({
@@ -7,8 +6,6 @@ export function Frame({
 	shadow,
 	className,
 }: { children: ReactNode; shadow?: boolean; className?: string }) {
-	const { platform } = useRouteContext({ strict: false });
-
 	return (
 		<div
 			className={cn(

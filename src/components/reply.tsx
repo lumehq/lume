@@ -1,21 +1,12 @@
-import { commands } from "@/commands.gen";
-import { appSettings, cn, replyTime } from "@/commons";
+import { cn, replyTime } from "@/commons";
 import { Note } from "@/components/note";
 import { type LumeEvent, LumeWindow } from "@/system";
 import { CaretDown } from "@phosphor-icons/react";
 import { Link, useSearch } from "@tanstack/react-router";
-import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { nip19 } from "nostr-tools";
-import {
-	type ReactNode,
-	memo,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import { type ReactNode, memo, useCallback, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./note/mentions/hashtag";
 import { MentionUser } from "./note/mentions/user";
@@ -28,11 +19,7 @@ export const ReplyNote = memo(function ReplyNote({
 	event: LumeEvent;
 	className?: string;
 }) {
-	const trustedOnly = useStore(appSettings, (state) => state.trusted_only);
 	const search = useSearch({ strict: false });
-
-	const [isTrusted, setIsTrusted] = useState<boolean>(null);
-
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
 
@@ -56,24 +43,6 @@ export const ReplyNote = memo(function ReplyNote({
 
 		await menu.popup().catch((e) => console.error(e));
 	}, []);
-
-	useEffect(() => {
-		async function check() {
-			const res = await commands.isTrustedUser(event.pubkey);
-
-			if (res.status === "ok") {
-				setIsTrusted(res.data);
-			}
-		}
-
-		if (trustedOnly) {
-			check();
-		}
-	}, []);
-
-	if (isTrusted !== null && isTrusted === false) {
-		return null;
-	}
 
 	return (
 		<Note.Provider event={event}>
@@ -99,7 +68,7 @@ export const ReplyNote = memo(function ReplyNote({
 							<span className="text-sm text-neutral-500">
 								{replyTime(event.created_at)}
 							</span>
-							<div className="flex items-center justify-end gap-5">
+							<div className="flex items-center justify-end">
 								<Note.Reply smol />
 								<Note.Repost smol />
 								<Note.Zap smol />
@@ -180,7 +149,7 @@ function ChildReply({ event }: { event: LumeEvent }) {
 						<span className="text-sm text-neutral-500">
 							{replyTime(event.created_at)}
 						</span>
-						<div className="invisible group-hover:visible flex items-center justify-end gap-5">
+						<div className="invisible group-hover:visible flex items-center justify-end">
 							<Note.Reply smol />
 							<Note.Repost smol />
 							<Note.Zap smol />

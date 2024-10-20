@@ -18,7 +18,7 @@ export const TextNote = memo(function TextNote({
 					<Note.Menu />
 				</div>
 				<Note.Content className="px-3" />
-				<div className="flex items-center gap-6 px-3 mt-3 h-14">
+				<div className="flex items-center gap-2 px-3 mt-3 h-14">
 					<Note.Open />
 					<Note.Reply />
 					<Note.Repost />

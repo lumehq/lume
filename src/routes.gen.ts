@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SetSignerImport } from './routes/set-signer'
 import { Route as SetInterestImport } from './routes/set-interest'
 import { Route as SetGroupImport } from './routes/set-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
@@ -90,6 +91,11 @@ const SettingsLazyRoute = SettingsLazyImport.update({
   id: '/_settings',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/_settings.lazy').then((d) => d.Route))
+
+const SetSignerRoute = SetSignerImport.update({
+  path: '/set-signer',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/set-signer.lazy').then((d) => d.Route))
 
 const SetInterestRoute = SetInterestImport.update({
   path: '/set-interest',
@@ -328,6 +334,13 @@ declare module '@tanstack/react-router' {
       path: '/set-interest'
       fullPath: '/set-interest'
       preLoaderRoute: typeof SetInterestImport
+      parentRoute: typeof rootRoute
+    }
+    '/set-signer': {
+      id: '/set-signer'
+      path: '/set-signer'
+      fullPath: '/set-signer'
+      preLoaderRoute: typeof SetSignerImport
       parentRoute: typeof rootRoute
     }
     '/_settings': {
@@ -662,6 +675,7 @@ export interface FileRoutesByFullPath {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/set-group': typeof SetGroupRoute
   '/set-interest': typeof SetInterestRoute
+  '/set-signer': typeof SetSignerRoute
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
   '/bitcoin-connect': typeof SettingsBitcoinConnectRoute
@@ -698,6 +712,7 @@ export interface FileRoutesByTo {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/set-group': typeof SetGroupRoute
   '/set-interest': typeof SetInterestRoute
+  '/set-signer': typeof SetSignerRoute
   '': typeof SettingsLazyRouteWithChildren
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
@@ -737,6 +752,7 @@ export interface FileRoutesById {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/set-group': typeof SetGroupRoute
   '/set-interest': typeof SetInterestRoute
+  '/set-signer': typeof SetSignerRoute
   '/_settings': typeof SettingsLazyRouteWithChildren
   '/new': typeof NewLazyRoute
   '/reset': typeof ResetLazyRoute
@@ -778,6 +794,7 @@ export interface FileRouteTypes {
     | '/bootstrap-relays'
     | '/set-group'
     | '/set-interest'
+    | '/set-signer'
     | '/new'
     | '/reset'
     | '/bitcoin-connect'
@@ -813,6 +830,7 @@ export interface FileRouteTypes {
     | '/bootstrap-relays'
     | '/set-group'
     | '/set-interest'
+    | '/set-signer'
     | ''
     | '/new'
     | '/reset'
@@ -850,6 +868,7 @@ export interface FileRouteTypes {
     | '/bootstrap-relays'
     | '/set-group'
     | '/set-interest'
+    | '/set-signer'
     | '/_settings'
     | '/new'
     | '/reset'
@@ -890,6 +909,7 @@ export interface RootRouteChildren {
   BootstrapRelaysRoute: typeof BootstrapRelaysRoute
   SetGroupRoute: typeof SetGroupRoute
   SetInterestRoute: typeof SetInterestRoute
+  SetSignerRoute: typeof SetSignerRoute
   SettingsLazyRoute: typeof SettingsLazyRouteWithChildren
   NewLazyRoute: typeof NewLazyRoute
   ResetLazyRoute: typeof ResetLazyRoute
@@ -906,6 +926,7 @@ const rootRouteChildren: RootRouteChildren = {
   BootstrapRelaysRoute: BootstrapRelaysRoute,
   SetGroupRoute: SetGroupRoute,
   SetInterestRoute: SetInterestRoute,
+  SetSignerRoute: SetSignerRoute,
   SettingsLazyRoute: SettingsLazyRouteWithChildren,
   NewLazyRoute: NewLazyRoute,
   ResetLazyRoute: ResetLazyRoute,
@@ -933,6 +954,7 @@ export const routeTree = rootRoute
         "/bootstrap-relays",
         "/set-group",
         "/set-interest",
+        "/set-signer",
         "/_settings",
         "/new",
         "/reset",
@@ -958,6 +980,9 @@ export const routeTree = rootRoute
     },
     "/set-interest": {
       "filePath": "set-interest.tsx"
+    },
+    "/set-signer": {
+      "filePath": "set-signer.tsx"
     },
     "/_settings": {
       "filePath": "_settings.lazy.tsx",

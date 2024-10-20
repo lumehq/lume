@@ -12,10 +12,10 @@ export class LumeEvent {
 	public meta: Meta;
 	public relay?: string;
 	public replies?: LumeEvent[];
-	#raw: NostrEvent;
+	public raw: NostrEvent;
 
 	constructor(event: NostrEvent) {
-		this.#raw = event;
+		this.raw = event;
 		Object.assign(this, event);
 	}
 
@@ -126,16 +126,6 @@ export class LumeEvent {
 
 	public async pubkeyAsBech32() {
 		const query = await commands.userToBech32(this.pubkey);
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
-	}
-
-	public async repost() {
-		const query = await commands.repost(JSON.stringify(this.#raw));
 
 		if (query.status === "ok") {
 			return query.data;

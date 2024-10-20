@@ -410,13 +410,55 @@ pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<String, Stri
 
 #[tauri::command]
 #[specta::specta]
-pub async fn delete(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn is_reposted(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
+    let accounts = state.accounts.lock().unwrap().clone();
+
     let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
 
-    match client.delete_event(event_id).await {
-        Ok(event_id) => Ok(event_id.to_string()),
+    let authors: Vec<PublicKey> = accounts
+        .iter()
+        .map(|acc| PublicKey::from_str(acc).unwrap())
+        .collect();
+
+    let filter = Filter::new()
+        .event(event_id)
+        .kind(Kind::Repost)
+        .authors(authors);
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(!events.is_empty()),
         Err(err) => Err(err.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn request_delete(id: String, state: State<'_, Nostr>) -> Result<(), String> {
+    let client = &state.client;
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
+
+    match client.delete_event(event_id).await {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn is_deleted_event(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let signer = client.signer().await.map_err(|err| err.to_string())?;
+    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
+    let filter = Filter::new()
+        .author(public_key)
+        .event(event_id)
+        .kind(Kind::EventDeletion);
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(!events.is_empty()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -495,37 +537,6 @@ pub async fn search(query: String, state: State<'_, Nostr>) -> Result<Vec<RichEv
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
-        Err(e) => Err(e.to_string()),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn is_deleted_event(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let client = &state.client;
-    let signer = client.signer().await.map_err(|err| err.to_string())?;
-    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
-    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
-    let filter = Filter::new()
-        .author(public_key)
-        .event(event_id)
-        .kind(Kind::EventDeletion);
-
-    match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(!events.is_empty()),
-        Err(e) => Err(e.to_string()),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn request_delete(id: String, state: State<'_, Nostr>) -> Result<(), String> {
-    let client = &state.client;
-    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
-    let builder = EventBuilder::delete(vec![event_id]);
-
-    match client.send_event_builder(builder).await {
-        Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
     }
 }

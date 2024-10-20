@@ -159,6 +159,26 @@ pub fn delete_account(id: String) -> Result<(), String> {
 
 #[tauri::command]
 #[specta::specta]
+pub async fn has_signer(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
+
+    match client.signer().await {
+        Ok(signer) => {
+            let signer_key = signer.public_key().await.unwrap();
+
+            if signer_key == public_key {
+                Ok(true)
+            } else {
+                Ok(false)
+            }
+        }
+        Err(_) => Ok(false),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn set_signer(
     account: String,
     password: String,

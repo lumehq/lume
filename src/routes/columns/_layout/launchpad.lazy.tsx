@@ -134,7 +134,7 @@ function Groups() {
 					</button>
 					<button
 						type="button"
-						onClick={() => LumeWindow.openPopup("New group", "/set-group")}
+						onClick={() => LumeWindow.openPopup("/set-group", "New group")}
 						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 					>
 						<Plus className="size-3" weight="bold" />
@@ -252,7 +252,7 @@ function Interests() {
 					<button
 						type="button"
 						onClick={() =>
-							LumeWindow.openPopup("New interest", "/set-interest")
+							LumeWindow.openPopup("/set-interest", "New interest")
 						}
 						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 					>

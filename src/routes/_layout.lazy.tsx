@@ -126,24 +126,20 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 		async (e: React.MouseEvent) => {
 			e.preventDefault();
 
-			const menuItems = await Promise.all([
+			const items = await Promise.all([
 				MenuItem.new({
-					text: "New Post",
-					action: () => LumeWindow.openEditor(),
+					text: "View Profile",
+					action: () => LumeWindow.openProfile(pubkey),
 				}),
 				MenuItem.new({
-					text: "Profile",
-					action: () => LumeWindow.openProfile(pubkey),
+					text: "Copy Public Key",
+					action: async () => await writeText(pubkey),
 				}),
 				MenuItem.new({
 					text: "Settings",
 					action: () => LumeWindow.openSettings(pubkey),
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
-				MenuItem.new({
-					text: "Copy Public Key",
-					action: async () => await writeText(pubkey),
-				}),
 				MenuItem.new({
 					text: "Logout",
 					action: async () => {
@@ -162,9 +158,7 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 				}),
 			]);
 
-			const menu = await Menu.new({
-				items: menuItems,
-			});
+			const menu = await Menu.new({ items });
 
 			await menu.popup().catch((e) => console.error(e));
 		},
