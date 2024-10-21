@@ -59,7 +59,7 @@ function StoryItem({ contact }: { contact: string }) {
 		error,
 		data: events,
 	} = useQuery({
-		queryKey: ["stories", contact],
+		queryKey: ["events", "story", contact],
 		queryFn: async () => {
 			const res = await commands.getAllEventsByAuthor(contact, 10);
 

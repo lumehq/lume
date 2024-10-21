@@ -1,11 +1,12 @@
-import { type NegentropyEvent, commands } from "@/commands.gen";
+import { commands } from "@/commands.gen";
 import { cn } from "@/commons";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
 import { Feather, MagnifyingGlass, Plus } from "@phosphor-icons/react";
 import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
-import { Channel } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { memo, useCallback, useEffect, useState } from "react";
 
@@ -37,9 +38,8 @@ function Topbar() {
 		>
 			<div
 				data-tauri-drag-region
-				className="relative z-[200] flex-1 flex items-center gap-2"
+				className="relative z-[200] h-10 flex-1 flex items-center gap-2"
 			>
-				<NegentropyBadge />
 				{accounts?.map((account) => (
 					<Account key={account} pubkey={account} />
 				))}
@@ -80,22 +80,20 @@ function Topbar() {
 }
 
 const NegentropyBadge = memo(function NegentropyBadge() {
-	const [process, setProcess] = useState<NegentropyEvent>(null);
+	const [process, setProcess] = useState(null);
 
 	useEffect(() => {
-		const channel = new Channel<NegentropyEvent>();
-
-		channel.onmessage = (message) => {
-			if (message.Progress.message === "Ok") {
+		const unlisten = listen("negentropy", async (data) => {
+			if (data.payload === "Ok") {
 				setProcess(null);
 			} else {
-				setProcess(message);
+				setProcess(data.payload);
 			}
-		};
+		});
 
-		(async () => {
-			await commands.runSync(channel);
-		})();
+		return () => {
+			unlisten.then((f) => f());
+		};
 	}, []);
 
 	if (!process) {
@@ -106,10 +104,8 @@ const NegentropyBadge = memo(function NegentropyBadge() {
 		<div className="h-7 w-max px-3 inline-flex items-center justify-center text-[9px] font-medium rounded-full bg-black/5 dark:bg-white/5">
 			{process ? (
 				<span>
-					{process.Progress.message}
-					{process.Progress.total_event > 0
-						? ` / ${process.Progress.total_event}`
-						: null}
+					{process.message}
+					{process.total_event > 0 ? ` / ${process.total_event}` : null}
 				</span>
 			) : (
 				"Syncing"
@@ -120,7 +116,9 @@ const NegentropyBadge = memo(function NegentropyBadge() {
 
 const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 	const navigate = Route.useNavigate();
-	const { accounts } = Route.useRouteContext();
+	const context = Route.useRouteContext();
+
+	const [isActive, setIsActive] = useState(false);
 
 	const showContextMenu = useCallback(
 		async (e: React.MouseEvent) => {
@@ -135,6 +133,7 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 					text: "Copy Public Key",
 					action: async () => await writeText(pubkey),
 				}),
+				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
 					text: "Settings",
 					action: () => LumeWindow.openSettings(pubkey),
@@ -146,7 +145,7 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 						const res = await commands.deleteAccount(pubkey);
 
 						if (res.status === "ok") {
-							const newAccounts = accounts.filter(
+							const newAccounts = context.accounts.filter(
 								(account) => account !== pubkey,
 							);
 
@@ -165,13 +164,40 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 		[pubkey],
 	);
 
+	useEffect(() => {
+		(async () => {
+			const res = await commands.hasSigner(pubkey);
+
+			if (res.status === "ok" && res.data) {
+				setIsActive(true);
+			}
+		})();
+	}, [pubkey]);
+
+	useEffect(() => {
+		const unlisten = getCurrentWindow().listen("signer-updated", async () => {
+			setIsActive((prev) => !prev);
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
+
 	return (
-		<button type="button" onClick={(e) => showContextMenu(e)}>
+		<button
+			type="button"
+			onClick={(e) => showContextMenu(e)}
+			className="h-10 relative"
+		>
 			<User.Provider pubkey={pubkey}>
 				<User.Root className="shrink-0 rounded-full">
 					<User.Avatar className="rounded-full size-7" />
 				</User.Root>
 			</User.Provider>
+			{isActive ? (
+				<div className="h-px w-full absolute bottom-0 left-0 bg-blue-500 rounded-full" />
+			) : null}
 		</button>
 	);
 });

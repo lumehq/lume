@@ -5,8 +5,15 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{account::*, event::*, metadata::*, relay::*, sync::*, window::*};
-use common::{get_all_accounts, parse_event};
+use commands::{
+    account::*,
+    event::*,
+    metadata::*,
+    relay::*,
+    sync::{run_fast_sync, NegentropyEvent},
+    window::*,
+};
+use common::{get_all_accounts, get_tags_content, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -30,6 +37,8 @@ pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
     accounts: Mutex<Vec<String>>,
+    subscriptions: Mutex<Vec<SubscriptionId>>,
+    bootstrap_relays: Mutex<Vec<Url>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -92,7 +101,6 @@ fn main() {
     let builder = Builder::<tauri::Wry>::new()
         // Then register them (separated by a comma)
         .commands(collect_commands![
-            run_sync,
             get_relays,
             connect_relay,
             remove_relay,
@@ -157,7 +165,7 @@ fn main() {
             reopen_lume,
             quit
         ])
-        .events(collect_events![Subscription, NewSettings]);
+        .events(collect_events![Subscription, NewSettings, NegentropyEvent]);
 
     #[cfg(debug_assertions)]
     builder
@@ -178,6 +186,7 @@ fn main() {
             let handle = app.handle();
             let handle_clone = handle.clone();
             let handle_clone_child = handle_clone.clone();
+            let handle_clone_sync = handle_clone_child.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             let config_dir = handle
@@ -215,7 +224,7 @@ fn main() {
                 }
             });
 
-            let client = tauri::async_runtime::block_on(async move {
+            let (client, bootstrap_relays) = tauri::async_runtime::block_on(async move {
                 // Setup database
                 let database = NostrLMDB::open(config_dir.join("nostr-lmdb"))
                     .expect("Error: cannot create database.");
@@ -278,18 +287,27 @@ fn main() {
                 // Connect
                 client.connect_with_timeout(Duration::from_secs(10)).await;
 
-                client
+                // Get all bootstrap relays
+                let bootstrap_relays: Vec<Url> =
+                    client.pool().all_relays().await.into_keys().collect();
+
+                (client, bootstrap_relays)
             });
 
             let accounts = get_all_accounts();
+            // Run fast sync for all accounts
+            run_fast_sync(accounts.clone(), handle_clone_sync);
 
             // Create global state
             app.manage(Nostr {
                 client,
                 accounts: Mutex::new(accounts),
                 settings: Mutex::new(Settings::default()),
+                subscriptions: Mutex::new(Vec::new()),
+                bootstrap_relays: Mutex::new(bootstrap_relays),
             });
 
+            // Handle subscription
             Subscription::listen_any(app, move |event| {
                 let handle = handle_clone_child.to_owned();
                 let payload = event.payload;
@@ -301,6 +319,18 @@ fn main() {
                     match payload.kind {
                         SubKind::Subscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
+
+                            // Update state
+                            state
+                                .subscriptions
+                                .lock()
+                                .unwrap()
+                                .push(subscription_id.clone());
+
+                            println!(
+                                "Total subscriptions: {}",
+                                state.subscriptions.lock().unwrap().len()
+                            );
 
                             if let Some(id) = payload.event_id {
                                 let event_id = EventId::from_str(&id).unwrap();
@@ -326,13 +356,15 @@ fn main() {
                                     })
                                     .collect();
 
-                                let filter = Filter::new()
-                                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                                    .authors(authors)
-                                    .since(Timestamp::now());
-
                                 if let Err(e) = client
-                                    .subscribe_with_id(subscription_id, vec![filter], None)
+                                    .subscribe_with_id(
+                                        subscription_id,
+                                        vec![Filter::new()
+                                            .kinds(vec![Kind::TextNote, Kind::Repost])
+                                            .authors(authors)
+                                            .since(Timestamp::now())],
+                                        None,
+                                    )
                                     .await
                                 {
                                     println!("Subscription error: {}", e)
@@ -341,6 +373,19 @@ fn main() {
                         }
                         SubKind::Unsubscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
+                            let mut sub_state = state.subscriptions.lock().unwrap().clone();
+
+                            if let Some(pos) = sub_state.iter().position(|x| *x == subscription_id)
+                            {
+                                sub_state.remove(pos);
+                                state.subscriptions.lock().unwrap().clone_from(&sub_state)
+                            }
+
+                            println!(
+                                "Total subscriptions: {}",
+                                state.subscriptions.lock().unwrap().len()
+                            );
+
                             client.unsubscribe(subscription_id).await
                         }
                     }
@@ -367,6 +412,29 @@ fn main() {
                 let state = handle_clone.state::<Nostr>();
                 let client = &state.client;
                 let accounts = state.accounts.lock().unwrap().clone();
+
+                let public_keys: Vec<PublicKey> = accounts
+                    .iter()
+                    .filter_map(|acc| {
+                        if let Ok(pk) = PublicKey::from_str(acc) {
+                            Some(pk)
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
+
+                // Subscribe for new notification
+                if let Ok(e) = client
+                    .subscribe_with_id(
+                        SubscriptionId::new(NOTIFICATION_SUB_ID),
+                        vec![Filter::new().pubkeys(public_keys).since(Timestamp::now())],
+                        None,
+                    )
+                    .await
+                {
+                    println!("Subscribed for notification on {} relays", e.success.len())
+                }
 
                 let allow_notification = match handle_clone.notification().request_permission() {
                     Ok(_) => {
@@ -431,7 +499,7 @@ fn main() {
                                 event,
                             } = message
                             {
-                                let tags = event.get_tags_content(TagKind::p());
+                                let tags = get_tags_content(&event, TagKind::p());
 
                                 // Handle events from notification subscription
                                 if subscription_id == notification_id
@@ -472,10 +540,16 @@ fn main() {
                                     )
                                     .unwrap();
 
-                                if event.kind == Kind::TextNote {
+                                if state
+                                    .subscriptions
+                                    .lock()
+                                    .unwrap()
+                                    .iter()
+                                    .any(|i| i == &subscription_id)
+                                {
                                     new_events.push(event.id);
 
-                                    if new_events.len() > 100 {
+                                    if new_events.len() > 5 {
                                         handle_clone.emit("synchronized", ()).unwrap();
                                         new_events.clear();
                                     }

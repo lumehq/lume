@@ -24,7 +24,7 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: [label],
+		queryKey: ["events", "global", label],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : undefined;

@@ -1,21 +1,30 @@
 use nostr_sdk::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::str::FromStr;
-use tauri::{ipc::Channel, Emitter, Manager};
+use tauri::{AppHandle, Manager};
+use tauri_specta::Event as TauriEvent;
 
-use crate::{common::get_all_accounts, Nostr, NOTIFICATION_SUB_ID};
+use crate::{common::get_tags_content, Nostr};
 
-#[derive(Clone, Serialize, Type)]
-pub enum NegentropyEvent {
-    Progress { message: String, total_event: i32 },
+#[derive(Clone, Serialize, Type, TauriEvent)]
+pub struct NegentropyEvent {
+    kind: NegentropyKind,
+    total_event: i32,
 }
 
-#[tauri::command]
-#[specta::specta]
-pub fn run_sync(handle: tauri::AppHandle, reader: Channel<NegentropyEvent>) {
-    let accounts = get_all_accounts();
+#[derive(Clone, Serialize, Deserialize, Type)]
+pub enum NegentropyKind {
+    Profile,
+    Metadata,
+    Events,
+    EventIds,
+    Global,
+    Notification,
+    Others,
+}
 
+pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
     if accounts.is_empty() {
         return;
     };
@@ -32,196 +41,136 @@ pub fn run_sync(handle: tauri::AppHandle, reader: Channel<NegentropyEvent>) {
         .collect();
 
     tauri::async_runtime::spawn(async move {
-        let state = handle.state::<Nostr>();
+        let state = app_handle.state::<Nostr>();
         let client = &state.client;
-        let bootstrap_relays: Vec<Url> = client.pool().all_relays().await.into_keys().collect();
+        let bootstrap_relays = state.bootstrap_relays.lock().unwrap().clone();
 
-        // Subscribe for new notification
-        if let Ok(e) = client
-            .subscribe_with_id(
-                SubscriptionId::new(NOTIFICATION_SUB_ID),
-                vec![Filter::new()
-                    .pubkeys(public_keys.clone())
-                    .since(Timestamp::now())],
-                None,
-            )
+        // NEG: Sync profile
+        //
+        let profile = Filter::new()
+            .authors(public_keys.clone())
+            .kind(Kind::Metadata)
+            .limit(4);
+
+        if let Ok(report) = client
+            .reconcile_with(&bootstrap_relays, profile, NegentropyOptions::default())
             .await
         {
-            println!("Notificatin subscribed: {}", e.success.len())
-        }
-
-        let metadata = Filter::new().authors(public_keys.clone()).kinds(vec![
-            Kind::Metadata,
-            Kind::ContactList,
-            Kind::FollowSet,
-            Kind::InterestSet,
-            Kind::Interests,
-            Kind::EventDeletion,
-            Kind::MuteList,
-            Kind::BookmarkSet,
-            Kind::BlockedRelays,
-            Kind::EmojiSet,
-            Kind::RelaySet,
-            Kind::RelayList,
-            Kind::ApplicationSpecificData,
-        ]);
-
-        // Syncing all metadata events
-        if reader
-            .send(NegentropyEvent::Progress {
-                message: "Syncing metadata".to_string(),
-                total_event: 0,
-            })
-            .is_ok()
-        {
-            if let Ok(report) = client
-                .reconcile_with(
-                    &bootstrap_relays,
-                    metadata.clone(),
-                    NegentropyOptions::default(),
-                )
-                .await
-            {
-                reader
-                    .send(NegentropyEvent::Progress {
-                        message: "Total events received".to_string(),
-                        total_event: report.received.len() as i32,
-                    })
-                    .unwrap();
+            NegentropyEvent {
+                kind: NegentropyKind::Profile,
+                total_event: report.received.len() as i32,
             }
+            .emit(&app_handle)
+            .unwrap();
         }
 
-        if reader
-            .send(NegentropyEvent::Progress {
-                message: "Syncing events from contact list".to_string(),
-                total_event: 0,
-            })
-            .is_ok()
-        {
-            if let Ok(events) = client.database().query(vec![metadata]).await {
-                let pubkeys: Vec<PublicKey> = events
-                    .iter()
-                    .flat_map(|ev| {
-                        let tags = ev.get_tags_content(TagKind::p());
-                        tags.into_iter().filter_map(|p| {
-                            if let Ok(pk) = PublicKey::from_hex(p) {
-                                Some(pk)
-                            } else {
-                                None
-                            }
-                        })
-                    })
-                    .collect();
+        // NEG: Sync contact list
+        //
+        let contact_list = Filter::new()
+            .authors(public_keys.clone())
+            .kind(Kind::ContactList)
+            .limit(4);
 
-                for chunk in pubkeys.chunks(500) {
-                    if chunk.is_empty() {
-                        break;
-                    }
-
-                    let authors = chunk.to_owned();
-
-                    // Syncing all metadata events
-                    // Limit: 1000 events
-                    if let Ok(report) = client
-                        .reconcile_with(
-                            &bootstrap_relays,
-                            Filter::new()
-                                .authors(authors.clone())
-                                .kinds(vec![Kind::Metadata, Kind::ContactList])
-                                .limit(1000),
-                            NegentropyOptions::default(),
-                        )
-                        .await
-                    {
-                        reader
-                            .send(NegentropyEvent::Progress {
-                                message: "Event received".to_string(),
-                                total_event: report.received.len() as i32,
-                            })
-                            .unwrap();
-                    }
-
-                    // Syncing all text events
-                    // Limit: 1000 events
-                    if let Ok(report) = client
-                        .reconcile_with(
-                            &bootstrap_relays,
-                            Filter::new()
-                                .authors(authors.clone())
-                                .kinds(vec![Kind::TextNote, Kind::Repost])
-                                .limit(1000),
-                            NegentropyOptions::default(),
-                        )
-                        .await
-                    {
-                        // Trigger reload the newsfeed
-                        if let Err(e) = handle.emit("synchronized", ()) {
-                            println!("Emitter error: {}", e)
-                        }
-
-                        reader
-                            .send(NegentropyEvent::Progress {
-                                message: "Event received".to_string(),
-                                total_event: report.received.len() as i32,
-                            })
-                            .unwrap();
-                    }
-
-                    // Syncing all other events
-                    // Limit: None
-                    if let Ok(report) = client
-                        .reconcile_with(
-                            &bootstrap_relays,
-                            Filter::new().authors(authors).kinds(vec![
-                                Kind::FollowSet,
-                                Kind::InterestSet,
-                                Kind::Interests,
-                                Kind::EventDeletion,
-                                Kind::MuteList,
-                                Kind::BookmarkSet,
-                                Kind::RelayList,
-                            ]),
-                            NegentropyOptions::default(),
-                        )
-                        .await
-                    {
-                        reader
-                            .send(NegentropyEvent::Progress {
-                                message: "Event received".to_string(),
-                                total_event: report.received.len() as i32,
-                            })
-                            .unwrap();
-                    }
-                }
-            };
-        };
-
-        // Syncing notification
         if let Ok(report) = client
             .reconcile_with(
                 &bootstrap_relays,
-                Filter::new()
-                    .pubkeys(public_keys)
-                    .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
-                    .limit(1000),
+                contact_list.clone(),
                 NegentropyOptions::default(),
             )
             .await
         {
-            reader
-                .send(NegentropyEvent::Progress {
-                    message: "Syncing notification".to_string(),
-                    total_event: report.received.len() as i32,
-                })
-                .unwrap();
+            NegentropyEvent {
+                kind: NegentropyKind::Metadata,
+                total_event: report.received.len() as i32,
+            }
+            .emit(&app_handle)
+            .unwrap();
         }
 
-        // Trigger hide the sync badge in front-end.
-        reader
-            .send(NegentropyEvent::Progress {
-                message: "Ok".to_string(),
-                total_event: 0,
-            })
+        // NEG: Sync events from contact list
+        //
+        if let Ok(events) = client.database().query(vec![contact_list]).await {
+            let pubkeys: Vec<PublicKey> = events
+                .iter()
+                .flat_map(|ev| {
+                    let tags = get_tags_content(ev, TagKind::p());
+                    tags.into_iter().filter_map(|p| {
+                        if let Ok(pk) = PublicKey::from_hex(p) {
+                            Some(pk)
+                        } else {
+                            None
+                        }
+                    })
+                })
+                .collect();
+
+            for chunk in pubkeys.chunks(500) {
+                if chunk.is_empty() {
+                    break;
+                }
+
+                let authors = chunk.to_owned();
+
+                // NEG: Sync event
+                //
+                let events = Filter::new()
+                    .authors(authors.clone())
+                    .kinds(vec![Kind::TextNote, Kind::Repost])
+                    .limit(1000);
+
+                if let Ok(report) = client
+                    .reconcile_with(&bootstrap_relays, events, NegentropyOptions::default())
+                    .await
+                {
+                    NegentropyEvent {
+                        kind: NegentropyKind::Events,
+                        total_event: report.received.len() as i32,
+                    }
+                    .emit(&app_handle)
+                    .unwrap();
+                }
+
+                // NEG: Sync metadata
+                //
+                let metadata = Filter::new()
+                    .authors(authors)
+                    .kind(Kind::Metadata)
+                    .limit(1000);
+
+                if let Ok(report) = client
+                    .reconcile_with(&bootstrap_relays, metadata, NegentropyOptions::default())
+                    .await
+                {
+                    NegentropyEvent {
+                        kind: NegentropyKind::Metadata,
+                        total_event: report.received.len() as i32,
+                    }
+                    .emit(&app_handle)
+                    .unwrap();
+                }
+            }
+        }
+
+        // NEG: Sync other metadata
+        //
+        let others = Filter::new().authors(public_keys).kinds(vec![
+            Kind::Interests,
+            Kind::InterestSet,
+            Kind::FollowSet,
+            Kind::EventDeletion,
+            Kind::Custom(30315),
+        ]);
+
+        if let Ok(report) = client
+            .reconcile_with(&bootstrap_relays, others, NegentropyOptions::default())
+            .await
+        {
+            NegentropyEvent {
+                kind: NegentropyKind::Others,
+                total_event: report.received.len() as i32,
+            }
+            .emit(&app_handle)
             .unwrap();
+        }
     });
 }

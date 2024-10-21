@@ -3,7 +3,7 @@ use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{str::FromStr, time::Duration};
-use tauri::State;
+use tauri::{Emitter, State};
 
 use crate::{common::get_all_accounts, Nostr};
 
@@ -21,19 +21,26 @@ pub fn get_accounts() -> Vec<String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn watch_account(key: String) -> Result<String, String> {
+pub async fn watch_account(key: String, state: State<'_, Nostr>) -> Result<String, String> {
     let public_key = PublicKey::from_str(&key).map_err(|e| e.to_string())?;
     let bech32 = public_key.to_bech32().map_err(|e| e.to_string())?;
     let keyring = Entry::new("Lume Secret Storage", &bech32).map_err(|e| e.to_string())?;
 
     keyring.set_password("").map_err(|e| e.to_string())?;
 
+    // Update state
+    state.accounts.lock().unwrap().push(bech32.clone());
+
     Ok(bech32)
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn import_account(key: String, password: String) -> Result<String, String> {
+pub async fn import_account(
+    key: String,
+    password: String,
+    state: State<'_, Nostr>,
+) -> Result<String, String> {
     let (npub, enc_bech32) = match key.starts_with("ncryptsec") {
         true => {
             let enc = EncryptedSecretKey::from_bech32(key).map_err(|err| err.to_string())?;
@@ -67,6 +74,9 @@ pub async fn import_account(key: String, password: String) -> Result<String, Str
 
     let pwd = serde_json::to_string(&account).map_err(|e| e.to_string())?;
     keyring.set_password(&pwd).map_err(|e| e.to_string())?;
+
+    // Update state
+    state.accounts.lock().unwrap().push(npub.clone());
 
     Ok(npub)
 }
@@ -107,6 +117,9 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
 
                     // Update signer
                     let _ = client.set_signer(Some(signer.into())).await;
+
+                    // Update state
+                    state.accounts.lock().unwrap().push(remote_npub.clone());
 
                     Ok(remote_npub)
                 }
@@ -183,6 +196,7 @@ pub async fn set_signer(
     account: String,
     password: String,
     state: State<'_, Nostr>,
+    handle: tauri::AppHandle,
 ) -> Result<(), String> {
     let client = &state.client;
     let keyring = Entry::new("Lume Secret Storage", &account).map_err(|e| e.to_string())?;
@@ -207,6 +221,8 @@ pub async fn set_signer(
 
             // Update signer
             client.set_signer(Some(signer)).await;
+            // Emit to front-end
+            handle.emit("signer-updated", ()).unwrap();
 
             Ok(())
         }
@@ -218,6 +234,8 @@ pub async fn set_signer(
                 Ok(signer) => {
                     // Update signer
                     client.set_signer(Some(signer.into())).await;
+                    // Emit to front-end
+                    handle.emit("signer-updated", ()).unwrap();
 
                     Ok(())
                 }

@@ -6,7 +6,7 @@ import { LumeEvent } from "./event";
 
 export function useEvent(id: string, repost?: string) {
 	const { isLoading, isError, error, data } = useQuery({
-		queryKey: ["event", id],
+		queryKey: ["ids", "event", id],
 		queryFn: async () => {
 			try {
 				if (repost?.length) {

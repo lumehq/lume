@@ -7,7 +7,7 @@ use tauri::{Emitter, Manager, State};
 use tauri_specta::Event;
 
 use crate::{
-    common::{get_all_accounts, get_latest_event, process_event},
+    common::{get_all_accounts, get_latest_event, get_tags_content, process_event},
     NewSettings, Nostr, RichEvent, Settings,
 };
 
@@ -184,9 +184,9 @@ pub async fn is_contact(id: String, state: State<'_, Nostr>) -> Result<bool, Str
         Ok(events) => {
             if let Some(event) = events.into_iter().next() {
                 let hex = public_key.to_hex();
-                let pubkeys = event.get_tags_content(TagKind::p());
+                let pubkeys = get_tags_content(&event, TagKind::p());
 
-                Ok(pubkeys.iter().any(|&i| i == &hex))
+                Ok(pubkeys.iter().any(|i| i == &hex))
             } else {
                 Ok(false)
             }

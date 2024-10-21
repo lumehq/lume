@@ -16,7 +16,7 @@ export const Route = createLazyFileRoute("/columns/_layout/users/$id")({
 function Screen() {
 	const { id } = Route.useParams();
 	const { isLoading, data: events } = useQuery({
-		queryKey: ["stories", id],
+		queryKey: ["events", "story", id],
 		queryFn: async () => {
 			const res = await commands.getAllEventsByAuthor(id, 100);
 

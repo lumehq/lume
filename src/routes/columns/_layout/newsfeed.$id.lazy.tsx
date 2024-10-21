@@ -1,27 +1,14 @@
 import { events, commands } from "@/commands.gen";
 import { toLumeEvents } from "@/commons";
 import { RepostNote, Spinner, TextNote } from "@/components";
-import { LumeEvent } from "@/system";
-import { Kind, type Meta } from "@/types";
-import { ArrowDown, ArrowUp } from "@phosphor-icons/react";
+import type { LumeEvent } from "@/system";
+import { Kind } from "@/types";
+import { ArrowDown } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import {
-	memo,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-	useTransition,
-} from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
-
-type Payload = {
-	raw: string;
-	parsed: Meta;
-};
 
 export const Route = createLazyFileRoute("/columns/_layout/newsfeed/$id")({
 	component: Screen,
@@ -29,7 +16,8 @@ export const Route = createLazyFileRoute("/columns/_layout/newsfeed/$id")({
 
 export function Screen() {
 	const contacts = Route.useLoaderData();
-	const { label } = Route.useSearch();
+	const search = Route.useSearch();
+
 	const {
 		data,
 		isLoading,
@@ -38,7 +26,7 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: [label],
+		queryKey: ["events", "newsfeed", search.label],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : undefined;
@@ -59,7 +47,10 @@ export function Screen() {
 
 	const renderItem = useCallback(
 		(event: LumeEvent) => {
-			if (!event) return;
+			if (!event) {
+				return;
+			}
+
 			switch (event.kind) {
 				case Kind.Repost:
 					return (
@@ -82,6 +73,28 @@ export function Screen() {
 		[data],
 	);
 
+	useEffect(() => {
+		events.subscription
+			.emit({
+				label: search.label,
+				kind: "Subscribe",
+				event_id: undefined,
+				contacts,
+			})
+			.then(() => console.log("Subscribe: ", search.label));
+
+		return () => {
+			events.subscription
+				.emit({
+					label: search.label,
+					kind: "Unsubscribe",
+					event_id: undefined,
+					contacts,
+				})
+				.then(() => console.log("Unsubscribe: ", search.label));
+		};
+	}, []);
+
 	return (
 		<ScrollArea.Root
 			type={"scroll"}
@@ -92,7 +105,6 @@ export function Screen() {
 				ref={ref}
 				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
-				<Listener />
 				<Virtualizer scrollRef={ref}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
 						<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
@@ -145,87 +157,3 @@ export function Screen() {
 		</ScrollArea.Root>
 	);
 }
-
-const Listener = memo(function Listerner() {
-	const contacts = Route.useLoaderData();
-	const { queryClient } = Route.useRouteContext();
-	const { label } = Route.useSearch();
-
-	const [lumeEvents, setLumeEvents] = useState<LumeEvent[]>([]);
-	const [isPending, startTransition] = useTransition();
-
-	const queryStatus = queryClient.getQueryState([label]);
-
-	const pushNewEvents = () => {
-		startTransition(() => {
-			queryClient.setQueryData(
-				[label],
-				(oldData: InfiniteData<LumeEvent[], number> | undefined) => {
-					if (oldData) {
-						const firstPage = oldData.pages[0];
-						const newPage = [...lumeEvents, ...firstPage];
-
-						return {
-							...oldData,
-							pages: [newPage, ...oldData.pages.slice(1)],
-						};
-					}
-				},
-			);
-
-			// Reset array
-			setLumeEvents([]);
-
-			return;
-		});
-	};
-
-	useEffect(() => {
-		events.subscription
-			.emit({ label, kind: "Subscribe", event_id: undefined, contacts })
-			.then(() => console.log("Subscribe: ", label));
-
-		return () => {
-			events.subscription
-				.emit({
-					label,
-					kind: "Unsubscribe",
-					event_id: undefined,
-					contacts,
-				})
-				.then(() => console.log("Unsubscribe: ", label));
-		};
-	}, []);
-
-	useEffect(() => {
-		const unlisten = getCurrentWindow().listen<Payload>("event", (data) => {
-			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-			setLumeEvents((prev) => [event, ...prev]);
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
-
-	if (lumeEvents.length && queryStatus.fetchStatus !== "fetching") {
-		return (
-			<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
-				<button
-					type="button"
-					onClick={() => pushNewEvents()}
-					className="w-max h-8 pl-2 pr-3 inline-flex items-center justify-center gap-1.5 rounded-full shadow-lg text-sm font-medium text-white bg-black dark:text-black dark:bg-white"
-				>
-					{isPending ? (
-						<Spinner className="size-4" />
-					) : (
-						<ArrowUp className="size-4" />
-					)}
-					{lumeEvents.length} new notes
-				</button>
-			</div>
-		);
-	}
-
-	return null;
-});

@@ -42,7 +42,7 @@ function Screen() {
 
 function Groups() {
 	const { isLoading, data, refetch, isRefetching } = useQuery({
-		queryKey: ["groups"],
+		queryKey: ["others", "groups"],
 		queryFn: async () => {
 			const res = await commands.getAllGroups();
 
@@ -162,7 +162,7 @@ function Groups() {
 
 function Interests() {
 	const { isLoading, data, refetch, isRefetching } = useQuery({
-		queryKey: ["interests"],
+		queryKey: ["others", "interests"],
 		queryFn: async () => {
 			const res = await commands.getAllInterests();
 

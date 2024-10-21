@@ -27,7 +27,6 @@ function Screen() {
 			const res = await commands.setSigner(account, password);
 
 			if (res.status === "ok") {
-				await window.emit("signer-updated", {});
 				await window.close();
 			} else {
 				await message(res.error, { kind: "error" });
@@ -65,7 +64,7 @@ function Screen() {
 						}}
 						disabled={isPending}
 						placeholder="Enter password to unlock"
-						className="px-3 flex-1 rounded-full h-10 bg-transparent border border-black/10 dark:border-white/10 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
+						className="px-3 flex-1 rounded-full h-10 text-center bg-transparent border border-black/10 dark:border-white/10 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 					/>
 					<button
 						type="button"
