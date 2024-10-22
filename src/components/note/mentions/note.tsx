@@ -51,11 +51,11 @@ export const MentionNote = memo(function MentionNote({
 									<span className="text-sm text-neutral-500">
 										{replyTime(event.created_at)}
 									</span>
-									<div className="invisible group-hover:visible flex items-center justify-end gap-3">
+									<div className="invisible group-hover:visible flex items-center justify-end">
 										<button
 											type="button"
 											onClick={() => LumeWindow.openEvent(event)}
-											className="text-sm font-medium text-blue-500 hover:text-blue-600"
+											className="mr-3 text-sm font-medium text-blue-500 hover:text-blue-600"
 										>
 											Show all
 										</button>

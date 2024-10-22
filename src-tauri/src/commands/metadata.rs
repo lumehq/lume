@@ -4,11 +4,10 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
-use tauri_specta::Event;
 
 use crate::{
-    common::{get_latest_event, process_event},
-    NewSettings, Nostr, RichEvent, Settings,
+    common::{get_all_accounts, get_latest_event, get_tags_content, process_event},
+    Nostr, RichEvent, Settings,
 };
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -104,14 +103,36 @@ pub async fn set_contact_list(
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
-    let contact_list = state.contact_list.lock().unwrap().clone();
-    let vec: Vec<String> = contact_list
-        .into_iter()
-        .map(|f| f.public_key.to_hex())
-        .collect();
+pub async fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let client = &state.client;
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    Ok(vec)
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ContactList)
+        .limit(1);
+
+    let mut contact_list: Vec<String> = Vec::new();
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => {
+            if let Some(event) = events.into_iter().next() {
+                for tag in event.tags.into_iter() {
+                    if let Some(TagStandard::PublicKey {
+                        public_key,
+                        uppercase: false,
+                        ..
+                    }) = tag.to_standardized()
+                    {
+                        contact_list.push(public_key.to_hex())
+                    }
+                }
+            }
+
+            Ok(contact_list)
+        }
+        Err(e) => Err(e.to_string()),
+    }
 }
 
 #[tauri::command]
@@ -149,13 +170,27 @@ pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<St
 
 #[tauri::command]
 #[specta::specta]
-pub fn check_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let contact_list = &state.contact_list.lock().unwrap();
-    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
+pub async fn is_contact(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    match contact_list.iter().position(|x| x.public_key == public_key) {
-        Some(_) => Ok(true),
-        None => Ok(false),
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ContactList)
+        .limit(1);
+
+    match client.database().query(vec![filter]).await {
+        Ok(events) => {
+            if let Some(event) = events.into_iter().next() {
+                let hex = public_key.to_hex();
+                let pubkeys = get_tags_content(&event, TagKind::p());
+
+                Ok(pubkeys.iter().any(|i| i == &hex))
+            } else {
+                Ok(false)
+            }
+        }
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -267,9 +302,18 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
 #[specta::specta]
 pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
-    let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
+    let accounts = get_all_accounts();
+    let authors: Vec<PublicKey> = accounts
+        .iter()
+        .filter_map(|acc| {
+            if let Ok(pk) = PublicKey::from_str(acc) {
+                Some(pk)
+            } else {
+                None
+            }
+        })
+        .collect();
+    let filter = Filter::new().kind(Kind::FollowSet).authors(authors);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
@@ -347,11 +391,20 @@ pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String,
 #[specta::specta]
 pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
+    let accounts = get_all_accounts();
+    let authors: Vec<PublicKey> = accounts
+        .iter()
+        .filter_map(|acc| {
+            if let Ok(pk) = PublicKey::from_str(acc) {
+                Some(pk)
+            } else {
+                None
+            }
+        })
+        .collect();
     let filter = Filter::new()
         .kinds(vec![Kind::InterestSet, Kind::Interests])
-        .author(public_key);
+        .authors(authors);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events).await),
@@ -361,7 +414,7 @@ pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_mention_list(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
+pub async fn get_all_profiles(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
     let client = &state.client;
     let filter = Filter::new().kind(Kind::Metadata);
 
@@ -396,7 +449,9 @@ pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, Stri
 
     if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
         let nwc = NWC::new(nwc_uri);
-        let keyring = Entry::new("Lume Secret", "Bitcoin Connect").map_err(|e| e.to_string())?;
+        let keyring =
+            Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
+
         keyring.set_password(uri).map_err(|e| e.to_string())?;
         client.set_zapper(nwc).await;
 
@@ -408,29 +463,25 @@ pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, Stri
 
 #[tauri::command]
 #[specta::specta]
-pub async fn load_wallet(state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn load_wallet(state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
-    let keyring =
-        Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
-    match keyring.get_password() {
-        Ok(val) => {
-            let uri = NostrWalletConnectURI::from_str(&val).unwrap();
-            let nwc = NWC::new(uri);
+    if client.zapper().await.is_err() {
+        let keyring =
+            Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
-            // Get current balance
-            let balance = nwc.get_balance().await;
+        match keyring.get_password() {
+            Ok(val) => {
+                let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+                let nwc = NWC::new(uri);
 
-            // Update zapper
-            client.set_zapper(nwc).await;
-
-            match balance {
-                Ok(val) => Ok(val.to_string()),
-                Err(_) => Err("Get balance failed.".into()),
+                client.set_zapper(nwc).await;
             }
+            Err(_) => return Err("Wallet not found.".into()),
         }
-        Err(_) => Err("NWC not found.".into()),
     }
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -452,52 +503,40 @@ pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), String> {
 #[tauri::command]
 #[specta::specta]
 pub async fn zap_profile(
-    id: &str,
-    amount: &str,
-    message: &str,
+    id: String,
+    amount: String,
+    message: Option<String>,
     state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<(), String> {
     let client = &state.client;
+
     let public_key: PublicKey = PublicKey::parse(id).map_err(|e| e.to_string())?;
-
-    let details = ZapDetails::new(ZapType::Private).message(message);
     let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
+    let details = message.map(|m| ZapDetails::new(ZapType::Public).message(m));
 
-    if client.zap(public_key, num, Some(details)).await.is_ok() {
-        Ok(true)
-    } else {
-        Err("Zap profile failed".into())
+    match client.zap(public_key, num, details).await {
+        Ok(()) => Ok(()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn zap_event(
-    id: &str,
-    amount: &str,
-    message: &str,
+    id: String,
+    amount: String,
+    message: Option<String>,
     state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<(), String> {
     let client = &state.client;
-    let event_id = match Nip19::from_bech32(id) {
-        Ok(val) => match val {
-            Nip19::EventId(id) => id,
-            Nip19::Event(event) => event.event_id,
-            _ => return Err("Event ID is invalid.".into()),
-        },
-        Err(_) => match EventId::from_hex(id) {
-            Ok(val) => val,
-            Err(_) => return Err("Event ID is invalid.".into()),
-        },
-    };
 
-    let details = ZapDetails::new(ZapType::Private).message(message);
+    let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
     let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
+    let details = message.map(|m| ZapDetails::new(ZapType::Public).message(m));
 
-    if client.zap(event_id, num, Some(details)).await.is_ok() {
-        Ok(true)
-    } else {
-        Err("Zap event failed".into())
+    match client.zap(event_id, num, details).await {
+        Ok(()) => Ok(()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -544,27 +583,22 @@ pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
     let client = &state.client;
+    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
-    match client.signer().await {
-        Ok(signer) => {
-            let public_key = signer.public_key().await.unwrap();
-            let filter = Filter::new()
-                .pubkey(public_key)
-                .kinds(vec![
-                    Kind::TextNote,
-                    Kind::Repost,
-                    Kind::Reaction,
-                    Kind::ZapReceipt,
-                ])
-                .limit(200);
+    let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Reaction,
+            Kind::ZapReceipt,
+        ])
+        .limit(200);
 
-            match client.database().query(vec![filter]).await {
-                Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
-                Err(err) => Err(err.to_string()),
-            }
-        }
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -577,29 +611,11 @@ pub fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_user_settings(
-    settings: String,
-    state: State<'_, Nostr>,
-    handle: tauri::AppHandle,
-) -> Result<(), String> {
-    let client = &state.client;
-    let tags = vec![Tag::identifier("lume_user_setting")];
-    let builder = EventBuilder::new(Kind::ApplicationSpecificData, &settings, tags);
+pub async fn set_user_settings(settings: String, state: State<'_, Nostr>) -> Result<(), String> {
+    let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
+    state.settings.lock().unwrap().clone_from(&parsed);
 
-    match client.send_event_builder(builder).await {
-        Ok(_) => {
-            let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
-
-            // Update state
-            state.settings.lock().unwrap().clone_from(&parsed);
-
-            // Emit new changes to frontend
-            NewSettings(parsed).emit(&handle).unwrap();
-
-            Ok(())
-        }
-        Err(err) => Err(err.to_string()),
-    }
+    Ok(())
 }
 
 #[tauri::command]
@@ -612,13 +628,4 @@ pub async fn verify_nip05(id: String, nip05: &str) -> Result<bool, String> {
         },
         Err(e) => Err(e.to_string()),
     }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn is_trusted_user(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
-    let trusted_list = &state.trusted_list.lock().unwrap();
-    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
-
-    Ok(trusted_list.contains(&public_key))
 }

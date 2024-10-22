@@ -22,6 +22,7 @@ pub struct Window {
     maximizable: bool,
     minimizable: bool,
     hidden_title: bool,
+    closable: bool,
 }
 
 #[derive(Serialize, Deserialize, Type)]
@@ -109,7 +110,7 @@ pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<bool
 #[tauri::command]
 #[specta::specta]
 #[cfg(target_os = "macos")]
-pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
+pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<String, String> {
     if let Some(current_window) = app_handle.get_window(&window.label) {
         if current_window.is_visible().unwrap_or_default() {
             let _ = current_window.set_focus();
@@ -117,6 +118,8 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
             let _ = current_window.show();
             let _ = current_window.set_focus();
         };
+
+        Ok(current_window.label().to_string())
     } else {
         let new_window = WebviewWindowBuilder::new(
             &app_handle,
@@ -131,6 +134,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .minimizable(window.minimizable)
         .maximizable(window.maximizable)
         .transparent(true)
+        .closable(window.closable)
         .effects(WindowEffectsConfig {
             state: None,
             effects: vec![Effect::UnderWindowBackground],
@@ -142,24 +146,26 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
 
         // Restore native border
         new_window.add_border(None);
-    }
 
-    Ok(())
+        Ok(new_window.label().to_string())
+    }
 }
 
 #[tauri::command(async)]
 #[specta::specta]
 #[cfg(target_os = "windows")]
-pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
-    if let Some(window) = app_handle.get_window(&window.label) {
-        if window.is_visible().unwrap_or_default() {
-            let _ = window.set_focus();
+pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<String, String> {
+    if let Some(current_window) = app_handle.get_window(&window.label) {
+        if current_window.is_visible().unwrap_or_default() {
+            let _ = current_window.set_focus();
         } else {
-            let _ = window.show();
-            let _ = window.set_focus();
+            let _ = current_window.show();
+            let _ = current_window.set_focus();
         };
+
+        Ok(current_window.label().to_string())
     } else {
-        let window = WebviewWindowBuilder::new(
+        let new_window = WebviewWindowBuilder::new(
             &app_handle,
             &window.label,
             WebviewUrl::App(PathBuf::from(window.url)),
@@ -171,6 +177,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .maximizable(window.maximizable)
         .transparent(true)
         .decorations(false)
+        .closable(window.closable)
         .effects(WindowEffectsConfig {
             state: None,
             effects: vec![Effect::Mica],
@@ -181,7 +188,9 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
         .unwrap();
 
         // Set decoration
-        window.create_overlay_titlebar().unwrap();
+        new_window.create_overlay_titlebar().unwrap();
+
+        Ok(new_window.label().to_string())
     }
 
     Ok(())

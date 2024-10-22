@@ -155,7 +155,7 @@ export function decodeZapInvoice(tags?: string[][]) {
 	);
 
 	// @ts-ignore, its fine.
-	const amount = Number.parseInt(amountSection.value);
+	const amount = Number.parseInt(amountSection.value) / 1000;
 	const displayValue = getBitcoinDisplayValues(amount);
 
 	return displayValue;

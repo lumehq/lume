@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/zap/$id")({
 	beforeLoad: async ({ params }) => {
+		const accounts = await commands.getAccounts();
 		const res = await commands.getEvent(params.id);
 
 		if (res.status === "ok") {
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/zap/$id")({
 				raw.meta = data.parsed;
 			}
 
-			return { event: new LumeEvent(raw) };
+			return { accounts, event: new LumeEvent(raw) };
 		} else {
 			throw new Error(res.error);
 		}

@@ -8,7 +8,7 @@ export function NoteOpenThread() {
 
 	return (
 		<Tooltip.Provider>
-			<Tooltip.Root delayDuration={150}>
+			<Tooltip.Root delayDuration={300}>
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"

@@ -1,12 +1,16 @@
 import { commands } from "@/commands.gen";
 import { appSettings } from "@/commons";
-import type { ColumnRouteSearch } from "@/types";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
+export interface RouteSearch {
+	label?: string;
+	name?: string;
+	redirect?: string;
+}
+
 export const Route = createFileRoute("/columns/_layout")({
-	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
+	validateSearch: (search: Record<string, string>): RouteSearch => {
 		return {
-			account: search.account,
 			label: search.label,
 			name: search.name,
 		};

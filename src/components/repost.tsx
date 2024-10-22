@@ -36,7 +36,7 @@ export const RepostNote = memo(function RepostNote({
 						</div>
 						<Note.Content className="px-3" />
 						<div className="flex items-center justify-between px-3 mt-3 h-14">
-							<div className="inline-flex items-center gap-6">
+							<div className="inline-flex items-center gap-2">
 								<Note.Open />
 								<Note.Reply />
 								<Note.Repost />

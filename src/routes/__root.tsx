@@ -3,13 +3,13 @@ import { appSettings } from "@/commons";
 import { Spinner } from "@/components";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
-import { listen } from "@tauri-apps/api/event";
 import type { OsType } from "@tauri-apps/plugin-os";
 import { useEffect } from "react";
 
 interface RouterContext {
 	queryClient: QueryClient;
 	platform: OsType;
+	accounts: string[];
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -33,8 +33,9 @@ function Screen() {
 	}, []);
 
 	useEffect(() => {
-		const unlisten = listen("synchronized", async () => {
-			await queryClient.invalidateQueries();
+		const unlisten = events.negentropyEvent.listen(async (data) => {
+			const queryKey = [data.payload.kind.toLowerCase()];
+			await queryClient.invalidateQueries({ queryKey });
 		});
 
 		return () => {

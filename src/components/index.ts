@@ -4,10 +4,8 @@ export * from "./spinner";
 export * from "./column";
 
 // Newsfeed
-export * from "./repost";
-export * from "./conversation";
-export * from "./quote";
 export * from "./text";
+export * from "./repost";
 export * from "./reply";
 
 // Global components
@@ -18,3 +16,5 @@ export * from "./user";
 export * from "./icons/reply";
 export * from "./icons/repost";
 export * from "./icons/zap";
+export * from "./icons/quote";
+export * from "./icons/publish";

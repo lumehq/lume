@@ -50,21 +50,13 @@ export interface Metadata {
 	lud16?: string;
 }
 
-export interface ColumnRouteSearch {
-	account?: string;
-	label?: string;
-	name?: string;
-	redirect?: string;
-}
-
 export interface LumeColumn {
 	label: string;
 	name: string;
-	description?: string;
 	url: string;
-	picture?: string;
+	description?: string;
 	default?: boolean;
-	official?: boolean;
+	account?: string;
 }
 
 export interface ColumnEvent {

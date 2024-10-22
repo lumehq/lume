@@ -1,4 +1,5 @@
 import { NoteOpenThread } from "./buttons/open";
+import { NoteQuote } from "./buttons/quote";
 import { NoteReply } from "./buttons/reply";
 import { NoteRepost } from "./buttons/repost";
 import { NoteZap } from "./buttons/zap";
@@ -16,6 +17,7 @@ export const Note = {
 	User: NoteUser,
 	Menu: NoteMenu,
 	Reply: NoteReply,
+	Quote: NoteQuote,
 	Repost: NoteRepost,
 	Content: NoteContent,
 	ContentLarge: NoteContentLarge,

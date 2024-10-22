@@ -1,6 +1,6 @@
 import { commands } from "@/commands.gen";
 import type { LumeColumn, NostrEvent } from "@/types";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Window, getCurrentWindow } from "@tauri-apps/api/window";
 import { nanoid } from "nanoid";
 import type { LumeEvent } from "./event";
 
@@ -11,7 +11,7 @@ export const LumeWindow = {
 			column,
 		});
 	},
-	openColumnsGallery: async () => {
+	openLaunchpad: async () => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
@@ -21,23 +21,36 @@ export const LumeWindow = {
 			},
 		});
 	},
-	openLocalFeeds: async () => {
+	openNewsfeed: async (account: string) => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "newsfeed",
 				name: "Newsfeed",
-				url: "/columns/newsfeed",
+				url: `/columns/newsfeed/${account}`,
+				account,
 			},
 		});
 	},
-	openNotification: async () => {
+	openStory: async (account: string) => {
+		await getCurrentWindow().emit("columns", {
+			type: "add",
+			column: {
+				label: "stories",
+				name: "Stories",
+				url: `/columns/stories/${account}`,
+				account,
+			},
+		});
+	},
+	openNotification: async (account: string) => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "notification",
 				name: "Notification",
-				url: "/columns/notification",
+				url: `/columns/notification/${account}`,
+				account,
 			},
 		});
 	},
@@ -86,27 +99,28 @@ export const LumeWindow = {
 		let url: string;
 
 		if (reply_to) {
-			url = `/editor?reply_to=${reply_to}`;
+			url = `/new-post?reply_to=${reply_to}`;
 		}
 
 		if (quote?.length) {
-			url = `/editor?quote=${quote}`;
+			url = `/new-post?quote=${quote}`;
 		}
 
 		if (!reply_to?.length && !quote?.length) {
-			url = "/editor";
+			url = "/new-post";
 		}
 
 		const label = `editor-${reply_to ? reply_to : 0}`;
 		const query = await commands.openWindow({
 			label,
 			url,
-			title: "Editor",
+			title: "New Post",
 			width: 560,
 			height: 340,
 			maximizable: false,
 			minimizable: false,
 			hidden_title: true,
+			closable: true,
 		});
 
 		if (query.status === "ok") {
@@ -128,21 +142,25 @@ export const LumeWindow = {
 				maximizable: false,
 				minimizable: false,
 				hidden_title: true,
+				closable: true,
 			});
 		} else {
-			await LumeWindow.openSettings(account, "bitcoin-connect");
+			await LumeWindow.openSettings(account, "wallet");
 		}
 	},
 	openSettings: async (account: string, path?: string) => {
 		const query = await commands.openWindow({
 			label: "settings",
-			url: path ? `${account}/${path}` : `${account}/general`,
+			url: path
+				? `/settings/${account}/${path}`
+				: `/settings/${account}/general`,
 			title: "Settings",
-			width: 800,
+			width: 700,
 			height: 500,
 			maximizable: false,
 			minimizable: false,
 			hidden_title: true,
+			closable: true,
 		});
 
 		if (query.status === "ok") {
@@ -151,20 +169,21 @@ export const LumeWindow = {
 			throw new Error(query.error);
 		}
 	},
-	openPopup: async (title: string, url: string) => {
+	openPopup: async (url: string, title?: string, closable = true) => {
 		const query = await commands.openWindow({
 			label: `popup-${nanoid()}`,
 			url,
-			title,
+			title: title ?? "",
 			width: 400,
 			height: 500,
 			maximizable: false,
 			minimizable: false,
-			hidden_title: false,
+			hidden_title: !!title,
+			closable,
 		});
 
 		if (query.status === "ok") {
-			return query.data;
+			return await Window.getByLabel(query.data);
 		} else {
 			throw new Error(query.error);
 		}

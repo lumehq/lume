@@ -1,10 +1,11 @@
 use futures::future::join_all;
+use keyring_search::{Limit, List, Search};
 use linkify::LinkFinder;
 use nostr_sdk::prelude::*;
 use reqwest::Client as ReqClient;
 use serde::Serialize;
 use specta::Type;
-use std::{collections::HashSet, str::FromStr, time::Duration};
+use std::{collections::HashSet, str::FromStr};
 
 use crate::RichEvent;
 
@@ -18,6 +19,8 @@ pub struct Meta {
 }
 
 const IMAGES: [&str; 7] = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
+// const VIDEOS: [&str; 6] = ["mp4", "avi", "mov", "mkv", "wmv", "webm"];
+
 const NOSTR_EVENTS: [&str; 10] = [
     "@nevent1",
     "@note1",
@@ -30,6 +33,7 @@ const NOSTR_EVENTS: [&str; 10] = [
     "Nostr:note1",
     "Nostr:nevent1",
 ];
+
 const NOSTR_MENTIONS: [&str; 10] = [
     "@npub1",
     "nostr:npub1",
@@ -45,6 +49,15 @@ const NOSTR_MENTIONS: [&str; 10] = [
 
 pub fn get_latest_event(events: &Events) -> Option<&Event> {
     events.iter().next()
+}
+
+pub fn get_tags_content(event: &Event, kind: TagKind) -> Vec<String> {
+    event
+        .tags
+        .iter()
+        .filter(|t| t.kind() == kind)
+        .filter_map(|t| t.content().map(|content| content.to_string()))
+        .collect()
 }
 
 pub fn create_tags(content: &str) -> Vec<Tag> {
@@ -65,7 +78,7 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
     let hashtags = words
         .iter()
         .filter(|&&word| word.starts_with('#'))
-        .map(|&s| s.to_string())
+        .map(|&s| s.to_string().replace("#", "").to_lowercase())
         .collect::<Vec<_>>();
 
     for mention in mentions {
@@ -126,6 +139,19 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
     }
 
     tags
+}
+
+pub fn get_all_accounts() -> Vec<String> {
+    let search = Search::new().expect("Unexpected.");
+    let results = search.by_service("Lume Secret Storage");
+    let list = List::list_credentials(&results, Limit::All);
+    let accounts: HashSet<String> = list
+        .split_whitespace()
+        .filter(|v| v.starts_with("npub1") && !v.ends_with("Lume"))
+        .map(String::from)
+        .collect();
+
+    accounts.into_iter().collect()
 }
 
 pub async fn process_event(client: &Client, events: Events) -> Vec<RichEvent> {
@@ -199,38 +225,6 @@ pub async fn process_event(client: &Client, events: Events) -> Vec<RichEvent> {
     });
 
     join_all(futures).await
-}
-
-pub async fn init_nip65(client: &Client, public_key: &str) {
-    let author = PublicKey::from_str(public_key).unwrap();
-    let filter = Filter::new().author(author).kind(Kind::RelayList).limit(1);
-
-    // client.add_relay("ws://127.0.0.1:1984").await.unwrap();
-    // client.connect_relay("ws://127.0.0.1:1984").await.unwrap();
-
-    if let Ok(events) = client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
-        .await
-    {
-        if let Some(event) = events.first() {
-            let relay_list = nip65::extract_relay_list(event);
-            for (url, metadata) in relay_list {
-                let opts = match metadata {
-                    Some(RelayMetadata::Read) => RelayOptions::new().read(true).write(false),
-                    Some(_) => RelayOptions::new().write(true).read(false),
-                    None => RelayOptions::default(),
-                };
-                if let Err(e) = client.pool().add_relay(&url.to_string(), opts).await {
-                    eprintln!("Failed to add relay {}: {:?}", url, e);
-                }
-                if let Err(e) = client.connect_relay(url.to_string()).await {
-                    eprintln!("Failed to connect to relay {}: {:?}", url, e);
-                } else {
-                    println!("Connecting to relay: {} - {:?}", url, metadata);
-                }
-            }
-        }
-    }
 }
 
 pub async fn parse_event(content: &str) -> Meta {

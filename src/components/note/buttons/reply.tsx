@@ -18,10 +18,8 @@ export function NoteReply({
 						type="button"
 						onClick={() => LumeWindow.openEditor(event.id)}
 						className={cn(
-							"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
-							label
-								? "rounded-full h-7 gap-1.5 w-20 text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10"
-								: "size-7",
+							"h-7 rounded-full inline-flex items-center justify-center text-neutral-800 hover:bg-black/5 dark:hover:bg-white/5 dark:text-neutral-200 text-sm font-medium",
+							label ? "w-24 gap-1.5" : "w-14",
 						)}
 					>
 						<ReplyIcon className={cn("shrink-0", smol ? "size-4" : "size-5")} />

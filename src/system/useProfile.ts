@@ -9,7 +9,7 @@ export function useProfile(pubkey: string, embed?: string) {
 		isError,
 		data: profile,
 	} = useQuery({
-		queryKey: ["profile", pubkey],
+		queryKey: ["metadata", "profile", pubkey],
 		queryFn: async () => {
 			if (embed) {
 				const metadata: Metadata = JSON.parse(embed);

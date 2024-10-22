@@ -44,20 +44,22 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="size-full flex items-center justify-center"
+			className="bg-white/50 dark:bg-black/50 size-full flex items-center justify-center"
 		>
-			<div className="w-[320px] flex flex-col gap-8">
+			<div className="w-[340px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">
-					<h1 className="leading-tight text-xl font-semibold">Nostr Connect</h1>
+					<h1 className="leading-tight text-xl font-semibold">
+						Continue with Nostr Connect
+					</h1>
 				</div>
-				<div className="flex flex-col gap-3">
+				<div className="flex flex-col gap-5">
 					<Frame
-						className="flex flex-col gap-1 p-3 rounded-xl overflow-hidden"
+						className="flex flex-col gap-3 p-4 rounded-xl overflow-hidden"
 						shadow
 					>
 						<label
 							htmlFor="uri"
-							className="font-medium text-neutral-900 dark:text-neutral-100"
+							className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
 						>
 							Connection String
 						</label>
@@ -68,7 +70,7 @@ function Screen() {
 								placeholder="bunker://..."
 								value={uri}
 								onChange={(e) => setUri(e.target.value)}
-								className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
+								className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-700 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 							/>
 							<button
 								type="button"
