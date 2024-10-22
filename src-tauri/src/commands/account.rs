@@ -178,13 +178,13 @@ pub async fn has_signer(id: String, state: State<'_, Nostr>) -> Result<bool, Str
 
     match client.signer().await {
         Ok(signer) => {
-            let signer_key = signer.public_key().await.unwrap();
+            // Emit reload in front-end
+            // handle.emit("signer", ()).unwrap();
 
-            if signer_key == public_key {
-                Ok(true)
-            } else {
-                Ok(false)
-            }
+            let signer_key = signer.public_key().await.map_err(|e| e.to_string())?;
+            let is_match = signer_key == public_key;
+
+            Ok(is_match)
         }
         Err(_) => Ok(false),
     }

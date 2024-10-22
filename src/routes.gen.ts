@@ -25,7 +25,6 @@ import { Route as SettingsIdWalletImport } from './routes/settings.$id/wallet'
 import { Route as SettingsIdRelayImport } from './routes/settings.$id/relay'
 import { Route as SettingsIdProfileImport } from './routes/settings.$id/profile'
 import { Route as SettingsIdGeneralImport } from './routes/settings.$id/general'
-import { Route as SettingsIdBitcoinConnectImport } from './routes/settings.$id/bitcoin-connect'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
 import { Route as ColumnsLayoutStoriesIdImport } from './routes/columns/_layout/stories.$id'
@@ -213,13 +212,6 @@ const SettingsIdGeneralRoute = SettingsIdGeneralImport.update({
   getParentRoute: () => SettingsIdLazyRoute,
 } as any).lazy(() =>
   import('./routes/settings.$id/general.lazy').then((d) => d.Route),
-)
-
-const SettingsIdBitcoinConnectRoute = SettingsIdBitcoinConnectImport.update({
-  path: '/bitcoin-connect',
-  getParentRoute: () => SettingsIdLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings.$id/bitcoin-connect.lazy').then((d) => d.Route),
 )
 
 const ColumnsLayoutGlobalRoute = ColumnsLayoutGlobalImport.update({
@@ -436,13 +428,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutGlobalImport
       parentRoute: typeof ColumnsLayoutImport
     }
-    '/settings/$id/bitcoin-connect': {
-      id: '/settings/$id/bitcoin-connect'
-      path: '/bitcoin-connect'
-      fullPath: '/settings/$id/bitcoin-connect'
-      preLoaderRoute: typeof SettingsIdBitcoinConnectImport
-      parentRoute: typeof SettingsIdLazyImport
-    }
     '/settings/$id/general': {
       id: '/settings/$id/general'
       path: '/general'
@@ -653,7 +638,6 @@ const ColumnsRouteWithChildren =
   ColumnsRoute._addFileChildren(ColumnsRouteChildren)
 
 interface SettingsIdLazyRouteChildren {
-  SettingsIdBitcoinConnectRoute: typeof SettingsIdBitcoinConnectRoute
   SettingsIdGeneralRoute: typeof SettingsIdGeneralRoute
   SettingsIdProfileRoute: typeof SettingsIdProfileRoute
   SettingsIdRelayRoute: typeof SettingsIdRelayRoute
@@ -661,7 +645,6 @@ interface SettingsIdLazyRouteChildren {
 }
 
 const SettingsIdLazyRouteChildren: SettingsIdLazyRouteChildren = {
-  SettingsIdBitcoinConnectRoute: SettingsIdBitcoinConnectRoute,
   SettingsIdGeneralRoute: SettingsIdGeneralRoute,
   SettingsIdProfileRoute: SettingsIdProfileRoute,
   SettingsIdRelayRoute: SettingsIdRelayRoute,
@@ -690,7 +673,6 @@ export interface FileRoutesByFullPath {
   '/new-post': typeof NewPostIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
-  '/settings/$id/bitcoin-connect': typeof SettingsIdBitcoinConnectRoute
   '/settings/$id/general': typeof SettingsIdGeneralRoute
   '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
@@ -728,7 +710,6 @@ export interface FileRoutesByTo {
   '/new-post': typeof NewPostIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
-  '/settings/$id/bitcoin-connect': typeof SettingsIdBitcoinConnectRoute
   '/settings/$id/general': typeof SettingsIdGeneralRoute
   '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
@@ -769,7 +750,6 @@ export interface FileRoutesById {
   '/new-post/': typeof NewPostIndexRoute
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
-  '/settings/$id/bitcoin-connect': typeof SettingsIdBitcoinConnectRoute
   '/settings/$id/general': typeof SettingsIdGeneralRoute
   '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
@@ -810,7 +790,6 @@ export interface FileRouteTypes {
     | '/new-post'
     | '/columns/create-newsfeed'
     | '/columns/global'
-    | '/settings/$id/bitcoin-connect'
     | '/settings/$id/general'
     | '/settings/$id/profile'
     | '/settings/$id/relay'
@@ -847,7 +826,6 @@ export interface FileRouteTypes {
     | '/new-post'
     | '/columns/create-newsfeed'
     | '/columns/global'
-    | '/settings/$id/bitcoin-connect'
     | '/settings/$id/general'
     | '/settings/$id/profile'
     | '/settings/$id/relay'
@@ -886,7 +864,6 @@ export interface FileRouteTypes {
     | '/new-post/'
     | '/columns/_layout/create-newsfeed'
     | '/columns/_layout/global'
-    | '/settings/$id/bitcoin-connect'
     | '/settings/$id/general'
     | '/settings/$id/profile'
     | '/settings/$id/relay'
@@ -1035,7 +1012,6 @@ export const routeTree = rootRoute
     "/settings/$id": {
       "filePath": "settings.$id.lazy.tsx",
       "children": [
-        "/settings/$id/bitcoin-connect",
         "/settings/$id/general",
         "/settings/$id/profile",
         "/settings/$id/relay",
@@ -1060,10 +1036,6 @@ export const routeTree = rootRoute
     "/columns/_layout/global": {
       "filePath": "columns/_layout/global.tsx",
       "parent": "/columns/_layout"
-    },
-    "/settings/$id/bitcoin-connect": {
-      "filePath": "settings.$id/bitcoin-connect.tsx",
-      "parent": "/settings/$id"
     },
     "/settings/$id/general": {
       "filePath": "settings.$id/general.tsx",

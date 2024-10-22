@@ -1,8 +1,14 @@
-import { User } from "@/components/user";
+import { commands } from "@/commands.gen";
+import { displayNpub } from "@/commons";
+import { User } from "@/components";
+import { LumeWindow } from "@/system";
+import type { Metadata } from "@/types";
+import { CaretDown } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { Menu, MenuItem } from "@tauri-apps/api/menu";
+import { type Window, getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
-import { useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 const DEFAULT_VALUES = [21, 50, 100, 200];
@@ -12,38 +18,102 @@ export const Route = createLazyFileRoute("/zap/$id")({
 });
 
 function Screen() {
-	const { event } = Route.useRouteContext();
+	const { accounts, event } = Route.useRouteContext();
 
+	const [currentUser, setCurrentUser] = useState<string>(null);
+	const [popup, setPopup] = useState<Window>(null);
 	const [amount, setAmount] = useState(21);
-	const [content, setContent] = useState("");
+	const [content, setContent] = useState<string>("");
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isPending, startTransition] = useTransition();
 
-	const submit = () => {
-		startTransition(async () => {
-			try {
-				const val = await event.zap(amount, content);
+	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
+		e.preventDefault();
 
-				if (val) {
-					setIsCompleted(true);
-					// close current window
-					await getCurrentWebviewWindow().close();
-				}
-			} catch (e) {
-				await message(String(e), {
-					title: "Zap",
-					kind: "error",
-				});
+		const list = [];
+
+		for (const account of accounts) {
+			const res = await commands.getProfile(account);
+			let name = "unknown";
+
+			if (res.status === "ok") {
+				const profile: Metadata = JSON.parse(res.data);
+				name = profile.display_name ?? profile.name;
+			}
+
+			list.push(
+				MenuItem.new({
+					text: `Zap as ${name} (${displayNpub(account, 16)})`,
+					action: async () => setCurrentUser(account),
+				}),
+			);
+		}
+
+		const items = await Promise.all(list);
+		const menu = await Menu.new({ items });
+
+		await menu.popup().catch((e) => console.error(e));
+	}, []);
+
+	const zap = () => {
+		startTransition(async () => {
+			const res = await commands.zapEvent(event.id, amount.toString(), content);
+
+			if (res.status === "ok") {
+				setIsCompleted(true);
+				// close current window
+				await getCurrentWindow().close();
+			} else {
+				await message(res.error, { kind: "error" });
 				return;
 			}
 		});
 	};
 
+	const submit = async () => {
+		if (currentUser) {
+			const signer = await commands.hasSigner(currentUser);
+
+			if (signer.status === "ok") {
+				if (!signer.data) {
+					const newPopup = await LumeWindow.openPopup(
+						`/set-signer/${currentUser}`,
+						undefined,
+						false,
+					);
+
+					setPopup(newPopup);
+					return;
+				}
+
+				zap();
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (!popup) return;
+
+		const unlisten = popup.listen("signer-updated", () => {
+			zap();
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, [popup]);
+
+	useEffect(() => {
+		if (accounts?.length) {
+			setCurrentUser(accounts[0]);
+		}
+	}, [accounts]);
+
 	return (
 		<div data-tauri-drag-region className="flex flex-col pb-5 size-full">
 			<div
 				data-tauri-drag-region
-				className="flex items-center justify-center h-24 gap-2 shrink-0"
+				className="flex items-center justify-center h-32 gap-2 shrink-0"
 			>
 				<p className="text-sm">Send zap to </p>
 				<User.Provider pubkey={event.pubkey}>
@@ -95,15 +165,34 @@ function Screen() {
 							autoCorrect="off"
 							autoCapitalize="off"
 							placeholder="Enter message (optional)"
-							className="h-11 w-full resize-none rounded-xl border-transparent bg-black/5 px-3 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/5"
+							className="h-10 w-full resize-none rounded-lg border-transparent bg-black/5 px-3 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/5"
 						/>
-						<button
-							type="button"
-							onClick={() => submit()}
-							className="inline-flex items-center justify-center w-full h-10 font-medium rounded-xl bg-neutral-950 text-neutral-50 hover:bg-neutral-900 dark:bg-white/20 dark:hover:bg-white/30"
-						>
-							{isCompleted ? "Zapped" : isPending ? "Processing..." : "Zap"}
-						</button>
+						<div className="inline-flex items-center gap-3">
+							<button
+								type="button"
+								onClick={() => submit()}
+								className="inline-flex items-center justify-center w-full h-9 text-sm font-semibold rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:hover:bg-blue-400"
+							>
+								{isCompleted ? "Zapped" : isPending ? "Processing..." : "Zap"}
+							</button>
+							{currentUser ? (
+								<button
+									type="button"
+									onClick={(e) => showContextMenu(e)}
+									className="inline-flex items-center gap-1.5"
+								>
+									<User.Provider pubkey={currentUser}>
+										<User.Root>
+											<User.Avatar className="size-6 rounded-full" />
+										</User.Root>
+									</User.Provider>
+									<CaretDown
+										className="mt-px size-3 text-neutral-500"
+										weight="bold"
+									/>
+								</button>
+							) : null}
+						</div>
 					</div>
 				</div>
 			</div>

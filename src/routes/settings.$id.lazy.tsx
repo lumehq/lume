@@ -17,10 +17,13 @@ function Screen() {
 			<div
 				data-tauri-drag-region
 				className={cn(
-					"w-[250px] shrink-0 flex flex-col gap-1 border-r border-black/10 dark:border-white/10 p-2",
+					"w-[200px] shrink-0 flex flex-col gap-1 border-r border-black/10 dark:border-white/10 p-2",
 					platform === "macos" ? "pt-11" : "",
 				)}
 			>
+				<div className="h-8 px-1.5">
+					<h1 className="text-lg font-semibold">Settings</h1>
+				</div>
 				<Link to="/settings/$id/general" params={{ id }}>
 					{({ isActive }) => {
 						return (

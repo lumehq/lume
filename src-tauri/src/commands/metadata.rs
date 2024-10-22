@@ -449,7 +449,9 @@ pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, Stri
 
     if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
         let nwc = NWC::new(nwc_uri);
-        let keyring = Entry::new("Lume Secret", "Bitcoin Connect").map_err(|e| e.to_string())?;
+        let keyring =
+            Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
+
         keyring.set_password(uri).map_err(|e| e.to_string())?;
         client.set_zapper(nwc).await;
 
@@ -461,29 +463,25 @@ pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, Stri
 
 #[tauri::command]
 #[specta::specta]
-pub async fn load_wallet(state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn load_wallet(state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
-    let keyring =
-        Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
-    match keyring.get_password() {
-        Ok(val) => {
-            let uri = NostrWalletConnectURI::from_str(&val).unwrap();
-            let nwc = NWC::new(uri);
+    if client.zapper().await.is_err() {
+        let keyring =
+            Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
-            // Get current balance
-            let balance = nwc.get_balance().await;
+        match keyring.get_password() {
+            Ok(val) => {
+                let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+                let nwc = NWC::new(uri);
 
-            // Update zapper
-            client.set_zapper(nwc).await;
-
-            match balance {
-                Ok(val) => Ok(val.to_string()),
-                Err(_) => Err("Get balance failed.".into()),
+                client.set_zapper(nwc).await;
             }
+            Err(_) => return Err("Wallet not found.".into()),
         }
-        Err(_) => Err("NWC not found.".into()),
     }
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -505,52 +503,40 @@ pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), String> {
 #[tauri::command]
 #[specta::specta]
 pub async fn zap_profile(
-    id: &str,
-    amount: &str,
-    message: &str,
+    id: String,
+    amount: String,
+    message: Option<String>,
     state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<(), String> {
     let client = &state.client;
+
     let public_key: PublicKey = PublicKey::parse(id).map_err(|e| e.to_string())?;
-
-    let details = ZapDetails::new(ZapType::Private).message(message);
     let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
+    let details = message.map(|m| ZapDetails::new(ZapType::Public).message(m));
 
-    if client.zap(public_key, num, Some(details)).await.is_ok() {
-        Ok(true)
-    } else {
-        Err("Zap profile failed".into())
+    match client.zap(public_key, num, details).await {
+        Ok(()) => Ok(()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn zap_event(
-    id: &str,
-    amount: &str,
-    message: &str,
+    id: String,
+    amount: String,
+    message: Option<String>,
     state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<(), String> {
     let client = &state.client;
-    let event_id = match Nip19::from_bech32(id) {
-        Ok(val) => match val {
-            Nip19::EventId(id) => id,
-            Nip19::Event(event) => event.event_id,
-            _ => return Err("Event ID is invalid.".into()),
-        },
-        Err(_) => match EventId::from_hex(id) {
-            Ok(val) => val,
-            Err(_) => return Err("Event ID is invalid.".into()),
-        },
-    };
 
-    let details = ZapDetails::new(ZapType::Private).message(message);
+    let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
     let num = amount.parse::<u64>().map_err(|e| e.to_string())?;
+    let details = message.map(|m| ZapDetails::new(ZapType::Public).message(m));
 
-    if client.zap(event_id, num, Some(details)).await.is_ok() {
-        Ok(true)
-    } else {
-        Err("Zap event failed".into())
+    match client.zap(event_id, num, details).await {
+        Ok(()) => Ok(()),
+        Err(e) => Err(e.to_string()),
     }
 }
 

@@ -4,10 +4,10 @@ import { PublishIcon } from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
 import { MagnifyingGlass, Plus } from "@phosphor-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { memo, useCallback, useEffect, useState } from "react";
 
@@ -115,11 +115,22 @@ const NegentropyBadge = memo(function NegentropyBadge() {
 	);
 });
 
-const Account = memo(function Account({ pubkey }: { pubkey: string }) {
+function Account({ pubkey }: { pubkey: string }) {
 	const navigate = Route.useNavigate();
 	const context = Route.useRouteContext();
 
-	const [isActive, setIsActive] = useState(false);
+	const { data: isActive } = useQuery({
+		queryKey: ["signer", pubkey],
+		queryFn: async () => {
+			const res = await commands.hasSigner(pubkey);
+
+			if (res.status === "ok") {
+				return res.data;
+			} else {
+				return false;
+			}
+		},
+	});
 
 	const showContextMenu = useCallback(
 		async (e: React.MouseEvent) => {
@@ -165,26 +176,6 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 		[pubkey],
 	);
 
-	useEffect(() => {
-		(async () => {
-			const res = await commands.hasSigner(pubkey);
-
-			if (res.status === "ok" && res.data) {
-				setIsActive(true);
-			}
-		})();
-	}, [pubkey]);
-
-	useEffect(() => {
-		const unlisten = getCurrentWindow().listen("signer-updated", async () => {
-			setIsActive((prev) => !prev);
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
-
 	return (
 		<button
 			type="button"
@@ -197,8 +188,8 @@ const Account = memo(function Account({ pubkey }: { pubkey: string }) {
 				</User.Root>
 			</User.Provider>
 			{isActive ? (
-				<div className="h-px w-full absolute bottom-0 left-0 bg-blue-500 rounded-full" />
+				<div className="h-px w-full absolute bottom-0 left-0 bg-green-500 rounded-full" />
 			) : null}
 		</button>
 	);
-});
+}

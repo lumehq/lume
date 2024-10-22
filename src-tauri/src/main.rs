@@ -90,8 +90,7 @@ struct Subscription {
 struct NewSettings(Settings);
 
 pub const DEFAULT_DIFFICULTY: u8 = 21;
-pub const FETCH_LIMIT: usize = 100;
-pub const NOTIFICATION_NEG_LIMIT: usize = 64;
+pub const FETCH_LIMIT: usize = 50;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
@@ -232,10 +231,10 @@ fn main() {
                 // Config
                 let opts = Options::new()
                     .gossip(true)
-                    .max_avg_latency(Duration::from_millis(500))
+                    .max_avg_latency(Duration::from_millis(800))
                     .automatic_authentication(false)
                     .connection_timeout(Some(Duration::from_secs(20)))
-                    .send_timeout(Some(Duration::from_secs(10)))
+                    .send_timeout(Some(Duration::from_secs(20)))
                     .timeout(Duration::from_secs(20));
 
                 // Setup nostr client
@@ -478,6 +477,17 @@ fn main() {
                                             if let Err(e) = relay.resubscribe(opts).await {
                                                 println!("Error: {}", e);
                                             }
+
+                                            // Workaround for https://github.com/rust-nostr/nostr/issues/509
+                                            // TODO: remove
+                                            let _ = client
+                                                .fetch_events(
+                                                    vec![Filter::new()
+                                                        .kind(Kind::TextNote)
+                                                        .limit(0)],
+                                                    Some(Duration::from_secs(5)),
+                                                )
+                                                .await;
 
                                             if allow_notification {
                                                 if let Err(e) = &handle_clone

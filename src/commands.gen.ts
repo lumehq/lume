@@ -224,7 +224,7 @@ async setWallet(uri: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async loadWallet() : Promise<Result<string, string>> {
+async loadWallet() : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("load_wallet") };
 } catch (e) {
@@ -240,7 +240,7 @@ async removeWallet() : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async zapProfile(id: string, amount: string, message: string) : Promise<Result<boolean, string>> {
+async zapProfile(id: string, amount: string, message: string | null) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("zap_profile", { id, amount, message }) };
 } catch (e) {
@@ -248,7 +248,7 @@ async zapProfile(id: string, amount: string, message: string) : Promise<Result<b
     else return { status: "error", error: e  as any };
 }
 },
-async zapEvent(id: string, amount: string, message: string) : Promise<Result<boolean, string>> {
+async zapEvent(id: string, amount: string, message: string | null) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("zap_event", { id, amount, message }) };
 } catch (e) {

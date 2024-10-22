@@ -145,7 +145,7 @@ export const LumeWindow = {
 				closable: true,
 			});
 		} else {
-			await LumeWindow.openSettings(account, "bitcoin-connect");
+			await LumeWindow.openSettings(account, "wallet");
 		}
 	},
 	openSettings: async (account: string, path?: string) => {
@@ -155,7 +155,7 @@ export const LumeWindow = {
 				? `/settings/${account}/${path}`
 				: `/settings/${account}/general`,
 			title: "Settings",
-			width: 800,
+			width: 700,
 			height: 500,
 			maximizable: false,
 			minimizable: false,
