@@ -5,7 +5,7 @@ use nostr_sdk::prelude::*;
 use reqwest::Client as ReqClient;
 use serde::Serialize;
 use specta::Type;
-use std::{collections::HashSet, str::FromStr, time::Duration};
+use std::{collections::HashSet, str::FromStr};
 
 use crate::RichEvent;
 
@@ -78,7 +78,7 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
     let hashtags = words
         .iter()
         .filter(|&&word| word.starts_with('#'))
-        .map(|&s| s.to_string())
+        .map(|&s| s.to_string().replace("#", "").to_lowercase())
         .collect::<Vec<_>>();
 
     for mention in mentions {
@@ -225,38 +225,6 @@ pub async fn process_event(client: &Client, events: Events) -> Vec<RichEvent> {
     });
 
     join_all(futures).await
-}
-
-pub async fn init_nip65(client: &Client, public_key: &str) {
-    let author = PublicKey::from_str(public_key).unwrap();
-    let filter = Filter::new().author(author).kind(Kind::RelayList).limit(1);
-
-    // client.add_relay("ws://127.0.0.1:1984").await.unwrap();
-    // client.connect_relay("ws://127.0.0.1:1984").await.unwrap();
-
-    if let Ok(events) = client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
-        .await
-    {
-        if let Some(event) = events.first() {
-            let relay_list = nip65::extract_relay_list(event);
-            for (url, metadata) in relay_list {
-                let opts = match metadata {
-                    Some(RelayMetadata::Read) => RelayOptions::new().read(true).write(false),
-                    Some(_) => RelayOptions::new().write(true).read(false),
-                    None => RelayOptions::default(),
-                };
-                if let Err(e) = client.pool().add_relay(&url.to_string(), opts).await {
-                    eprintln!("Failed to add relay {}: {:?}", url, e);
-                }
-                if let Err(e) = client.connect_relay(url.to_string()).await {
-                    eprintln!("Failed to connect to relay {}: {:?}", url, e);
-                } else {
-                    println!("Connecting to relay: {} - {:?}", url, metadata);
-                }
-            }
-        }
-    }
 }
 
 pub async fn parse_event(content: &str) -> Meta {

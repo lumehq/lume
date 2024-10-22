@@ -18,7 +18,7 @@ import { Route as SetInterestImport } from './routes/set-interest'
 import { Route as SetGroupImport } from './routes/set-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as LayoutImport } from './routes/_layout'
-import { Route as EditorIndexImport } from './routes/editor/index'
+import { Route as NewPostIndexImport } from './routes/new-post/index'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
@@ -119,8 +119,8 @@ const LayoutRoute = LayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/_layout.lazy').then((d) => d.Route))
 
-const EditorIndexRoute = EditorIndexImport.update({
-  path: '/editor/',
+const NewPostIndexRoute = NewPostIndexImport.update({
+  path: '/new-post/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -448,11 +448,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
-    '/editor/': {
-      id: '/editor/'
-      path: '/editor'
-      fullPath: '/editor'
-      preLoaderRoute: typeof EditorIndexImport
+    '/new-post/': {
+      id: '/new-post/'
+      path: '/new-post'
+      fullPath: '/new-post'
+      preLoaderRoute: typeof NewPostIndexImport
       parentRoute: typeof rootRoute
     }
     '/columns/_layout/create-newsfeed': {
@@ -689,7 +689,7 @@ export interface FileRoutesByFullPath {
   '/auth/import': typeof AuthImportLazyRoute
   '/auth/watch': typeof AuthWatchLazyRoute
   '/': typeof LayoutIndexRoute
-  '/editor': typeof EditorIndexRoute
+  '/new-post': typeof NewPostIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
@@ -727,7 +727,7 @@ export interface FileRoutesByTo {
   '/auth/import': typeof AuthImportLazyRoute
   '/auth/watch': typeof AuthWatchLazyRoute
   '/': typeof LayoutIndexRoute
-  '/editor': typeof EditorIndexRoute
+  '/new-post': typeof NewPostIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
@@ -768,7 +768,7 @@ export interface FileRoutesById {
   '/auth/import': typeof AuthImportLazyRoute
   '/auth/watch': typeof AuthWatchLazyRoute
   '/_layout/': typeof LayoutIndexRoute
-  '/editor/': typeof EditorIndexRoute
+  '/new-post/': typeof NewPostIndexRoute
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
   '/columns/_layout/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
@@ -808,7 +808,7 @@ export interface FileRouteTypes {
     | '/auth/import'
     | '/auth/watch'
     | '/'
-    | '/editor'
+    | '/new-post'
     | '/columns/create-newsfeed'
     | '/columns/global'
     | '/columns/launchpad'
@@ -845,7 +845,7 @@ export interface FileRouteTypes {
     | '/auth/import'
     | '/auth/watch'
     | '/'
-    | '/editor'
+    | '/new-post'
     | '/columns/create-newsfeed'
     | '/columns/global'
     | '/columns/launchpad'
@@ -884,7 +884,7 @@ export interface FileRouteTypes {
     | '/auth/import'
     | '/auth/watch'
     | '/_layout/'
-    | '/editor/'
+    | '/new-post/'
     | '/columns/_layout/create-newsfeed'
     | '/columns/_layout/global'
     | '/columns/_layout/launchpad'
@@ -918,7 +918,7 @@ export interface RootRouteChildren {
   AuthConnectLazyRoute: typeof AuthConnectLazyRoute
   AuthImportLazyRoute: typeof AuthImportLazyRoute
   AuthWatchLazyRoute: typeof AuthWatchLazyRoute
-  EditorIndexRoute: typeof EditorIndexRoute
+  NewPostIndexRoute: typeof NewPostIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -935,7 +935,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthConnectLazyRoute: AuthConnectLazyRoute,
   AuthImportLazyRoute: AuthImportLazyRoute,
   AuthWatchLazyRoute: AuthWatchLazyRoute,
-  EditorIndexRoute: EditorIndexRoute,
+  NewPostIndexRoute: NewPostIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -963,7 +963,7 @@ export const routeTree = rootRoute
         "/auth/connect",
         "/auth/import",
         "/auth/watch",
-        "/editor/"
+        "/new-post/"
       ]
     },
     "/_layout": {
@@ -1062,8 +1062,8 @@ export const routeTree = rootRoute
       "filePath": "_layout/index.tsx",
       "parent": "/_layout"
     },
-    "/editor/": {
-      "filePath": "editor/index.tsx"
+    "/new-post/": {
+      "filePath": "new-post/index.tsx"
     },
     "/columns/_layout/create-newsfeed": {
       "filePath": "columns/_layout/create-newsfeed.tsx",

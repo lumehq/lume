@@ -160,9 +160,9 @@ async toggleContact(id: string, alias: string | null) : Promise<Result<string, s
     else return { status: "error", error: e  as any };
 }
 },
-async getMentionList() : Promise<Result<Mention[], string>> {
+async getAllProfiles() : Promise<Result<Mention[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_mention_list") };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_profiles") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

@@ -415,7 +415,7 @@ pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_mention_list(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
+pub async fn get_all_profiles(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
     let client = &state.client;
     let filter = Filter::new().kind(Kind::Metadata);
 

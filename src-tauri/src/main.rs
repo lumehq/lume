@@ -121,7 +121,7 @@ fn main() {
             set_contact_list,
             is_contact,
             toggle_contact,
-            get_mention_list,
+            get_all_profiles,
             set_group,
             get_group,
             get_all_groups,
@@ -320,54 +320,66 @@ fn main() {
                         SubKind::Subscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
 
-                            // Update state
-                            state
-                                .subscriptions
-                                .lock()
-                                .unwrap()
-                                .push(subscription_id.clone());
+                            if !client
+                                .pool()
+                                .subscriptions()
+                                .await
+                                .contains_key(&subscription_id)
+                            {
+                                // Update state
+                                state
+                                    .subscriptions
+                                    .lock()
+                                    .unwrap()
+                                    .push(subscription_id.clone());
 
-                            println!(
-                                "Total subscriptions: {}",
-                                state.subscriptions.lock().unwrap().len()
-                            );
+                                println!(
+                                    "Total subscriptions: {}",
+                                    state.subscriptions.lock().unwrap().len()
+                                );
 
-                            if let Some(id) = payload.event_id {
-                                let event_id = EventId::from_str(&id).unwrap();
-                                let filter = Filter::new().event(event_id).since(Timestamp::now());
+                                if let Some(id) = payload.event_id {
+                                    let event_id = EventId::from_str(&id).unwrap();
+                                    let filter =
+                                        Filter::new().event(event_id).since(Timestamp::now());
 
-                                if let Err(e) = client
-                                    .subscribe_with_id(subscription_id.clone(), vec![filter], None)
-                                    .await
-                                {
-                                    println!("Subscription error: {}", e)
+                                    if let Err(e) = client
+                                        .subscribe_with_id(
+                                            subscription_id.clone(),
+                                            vec![filter],
+                                            None,
+                                        )
+                                        .await
+                                    {
+                                        println!("Subscription error: {}", e)
+                                    }
                                 }
-                            }
 
-                            if let Some(ids) = payload.contacts {
-                                let authors: Vec<PublicKey> = ids
-                                    .iter()
-                                    .filter_map(|item| {
-                                        if let Ok(pk) = PublicKey::from_str(item) {
-                                            Some(pk)
-                                        } else {
-                                            None
-                                        }
-                                    })
-                                    .collect();
+                                if let Some(ids) = payload.contacts {
+                                    let authors: Vec<PublicKey> = ids
+                                        .iter()
+                                        .filter_map(|item| {
+                                            if let Ok(pk) = PublicKey::from_str(item) {
+                                                Some(pk)
+                                            } else {
+                                                None
+                                            }
+                                        })
+                                        .collect();
 
-                                if let Err(e) = client
-                                    .subscribe_with_id(
-                                        subscription_id,
-                                        vec![Filter::new()
-                                            .kinds(vec![Kind::TextNote, Kind::Repost])
-                                            .authors(authors)
-                                            .since(Timestamp::now())],
-                                        None,
-                                    )
-                                    .await
-                                {
-                                    println!("Subscription error: {}", e)
+                                    if let Err(e) = client
+                                        .subscribe_with_id(
+                                            subscription_id,
+                                            vec![Filter::new()
+                                                .kinds(vec![Kind::TextNote, Kind::Repost])
+                                                .authors(authors)
+                                                .since(Timestamp::now())],
+                                            None,
+                                        )
+                                        .await
+                                    {
+                                        println!("Subscription error: {}", e)
+                                    }
                                 }
                             }
                         }

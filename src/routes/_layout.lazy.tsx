@@ -1,8 +1,9 @@
 import { commands } from "@/commands.gen";
 import { cn } from "@/commons";
+import { PublishIcon } from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
-import { Feather, MagnifyingGlass, Plus } from "@phosphor-icons/react";
+import { MagnifyingGlass, Plus } from "@phosphor-icons/react";
 import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
@@ -59,9 +60,9 @@ function Topbar() {
 						<button
 							type="button"
 							onClick={() => LumeWindow.openEditor()}
-							className="inline-flex items-center justify-center h-7 gap-1.5 px-2 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
+							className="inline-flex items-center justify-center h-7 gap-1 px-2 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
 						>
-							<Feather className="size-4" weight="fill" />
+							<PublishIcon className="size-4" />
 							New Post
 						</button>
 						<button

@@ -17,3 +17,4 @@ export * from "./icons/reply";
 export * from "./icons/repost";
 export * from "./icons/zap";
 export * from "./icons/quote";
+export * from "./icons/publish";

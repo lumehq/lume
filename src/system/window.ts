@@ -99,22 +99,22 @@ export const LumeWindow = {
 		let url: string;
 
 		if (reply_to) {
-			url = `/editor?reply_to=${reply_to}`;
+			url = `/new-post?reply_to=${reply_to}`;
 		}
 
 		if (quote?.length) {
-			url = `/editor?quote=${quote}`;
+			url = `/new-post?quote=${quote}`;
 		}
 
 		if (!reply_to?.length && !quote?.length) {
-			url = "/editor";
+			url = "/new-post";
 		}
 
 		const label = `editor-${reply_to ? reply_to : 0}`;
 		const query = await commands.openWindow({
 			label,
 			url,
-			title: "Editor",
+			title: "New Post",
 			width: 560,
 			height: 340,
 			maximizable: false,

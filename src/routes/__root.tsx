@@ -9,7 +9,7 @@ import { useEffect } from "react";
 interface RouterContext {
 	queryClient: QueryClient;
 	platform: OsType;
-	account: string[];
+	accounts: string[];
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

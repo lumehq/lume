@@ -12,10 +12,8 @@ import {
 
 export function MediaButton({
 	setText,
-	setAttaches,
 }: {
 	setText: Dispatch<SetStateAction<string>>;
-	setAttaches: Dispatch<SetStateAction<string[]>>;
 }) {
 	const [isPending, startTransition] = useTransition();
 
@@ -24,8 +22,6 @@ export function MediaButton({
 			try {
 				const image = await upload();
 				setText((prev) => `${prev}\n${image}`);
-				setAttaches((prev) => [...prev, image]);
-				return;
 			} catch (e) {
 				await message(String(e), { title: "Upload", kind: "error" });
 				return;
@@ -44,7 +40,6 @@ export function MediaButton({
 					if (isImagePath(item)) {
 						const image = await upload(item);
 						setText((prev) => `${prev}\n${image}`);
-						setAttaches((prev) => [...prev, image]);
 					}
 				}
 

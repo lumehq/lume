@@ -1,15 +1,23 @@
-// @ts-nocheck
-import { type Mention, commands } from "@/commands.gen";
-import { cn } from "@/commons";
-import { Spinner } from "@/components";
+import { type Mention, type Result, commands } from "@/commands.gen";
+import { cn, displayNpub } from "@/commons";
+import { PublishIcon, Spinner } from "@/components";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { LumeEvent, useEvent } from "@/system";
-import { Feather } from "@phosphor-icons/react";
+import { LumeWindow, useEvent } from "@/system";
+import type { Metadata } from "@/types";
+import { CaretDown } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Menu, MenuItem } from "@tauri-apps/api/menu";
+import type { Window } from "@tauri-apps/api/window";
 import { nip19 } from "nostr-tools";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
 import { createPortal } from "react-dom";
 import {
 	RichTextarea,
@@ -45,7 +53,15 @@ const renderer = createRegexRenderer([
 	],
 	[
 		/(?:^|\W)nostr:(\w+)(?!\w)/g,
-		({ children, key, value }) => (
+		({ children, key }) => (
+			<span key={key} className="text-blue-500">
+				{children}
+			</span>
+		),
+	],
+	[
+		/(?:^|\W)#(\w+)(?!\w)/g,
+		({ children, key }) => (
 			<span key={key} className="text-blue-500">
 				{children}
 			</span>
@@ -53,7 +69,7 @@ const renderer = createRegexRenderer([
 	],
 ]);
 
-export const Route = createFileRoute("/editor/")({
+export const Route = createFileRoute("/new-post/")({
 	validateSearch: (search: Record<string, string>): EditorSearch => {
 		return {
 			reply_to: search.reply_to,
@@ -70,25 +86,28 @@ export const Route = createFileRoute("/editor/")({
 			initialValue = "";
 		}
 
-		const res = await commands.getMentionList();
+		const res = await commands.getAllProfiles();
+		const accounts = await commands.getAccounts();
 
 		if (res.status === "ok") {
 			users = res.data;
 		}
 
-		return { users, initialValue };
+		return { accounts, users, initialValue };
 	},
 	component: Screen,
 });
 
 function Screen() {
 	const { reply_to } = Route.useSearch();
-	const { users, initialValue } = Route.useRouteContext();
+	const { accounts, users, initialValue } = Route.useRouteContext();
 
 	const [text, setText] = useState("");
+	const [currentUser, setCurrentUser] = useState<string>(null);
+	const [popup, setPopup] = useState<Window>(null);
+	const [isPublish, setIsPublish] = useState(false);
 	const [error, setError] = useState("");
 	const [isPending, startTransition] = useTransition();
-	const [attaches, setAttaches] = useState<string[]>(null);
 	const [warning, setWarning] = useState({ enable: false, reason: "" });
 	const [difficulty, setDifficulty] = useState({ enable: false, num: 21 });
 	const [index, setIndex] = useState<number>(0);
@@ -110,6 +129,34 @@ function Screen() {
 		[name],
 	);
 
+	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		const list = [];
+
+		for (const account of accounts) {
+			const res = await commands.getProfile(account);
+			let name = "unknown";
+
+			if (res.status === "ok") {
+				const profile: Metadata = JSON.parse(res.data);
+				name = profile.display_name ?? profile.name;
+			}
+
+			list.push(
+				MenuItem.new({
+					text: `Publish as ${name} (${displayNpub(account, 16)})`,
+					action: async () => setCurrentUser(account),
+				}),
+			);
+		}
+
+		const items = await Promise.all(list);
+		const menu = await Menu.new({ items });
+
+		await menu.popup().catch((e) => console.error(e));
+	}, []);
+
 	const insert = (i: number) => {
 		if (!ref.current || !pos) return;
 
@@ -126,40 +173,83 @@ function Screen() {
 		setIndex(0);
 	};
 
-	const publish = async () => {
+	const publish = () => {
 		startTransition(async () => {
-			try {
-				// Temporary hide window
-				await getCurrentWindow().hide();
+			const content = text.trim();
+			const warn = warning.enable ? warning.reason : undefined;
+			const diff = difficulty.enable ? difficulty.num : undefined;
 
-				let res: Result<string, string>;
+			let res: Result<string, string>;
 
-				if (reply_to) {
-					res = await commands.reply(content, reply_to, root_to);
-				} else {
-					res = await commands.publish(content, warning, difficulty);
-				}
+			if (reply_to?.length) {
+				res = await commands.reply(content, reply_to, undefined);
+			} else {
+				res = await commands.publish(content, warn, diff);
+			}
 
-				if (res.status === "ok") {
-					setText("");
-					// Close window
-					await getCurrentWindow().close();
-				} else {
-					setError(res.error);
-					// Focus window
-					await getCurrentWindow().setFocus();
-				}
-			} catch {
-				return;
+			if (res.status === "ok") {
+				setText("");
+				setIsPublish(true);
+			} else {
+				setError(res.error);
 			}
 		});
 	};
+
+	const submit = async () => {
+		if (currentUser) {
+			const signer = await commands.hasSigner(currentUser);
+
+			if (signer.status === "ok") {
+				if (!signer.data) {
+					const newPopup = await LumeWindow.openPopup(
+						`/set-signer?account=${currentUser}`,
+						undefined,
+						false,
+					);
+
+					setPopup(newPopup);
+					return;
+				}
+
+				publish();
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (!popup) return;
+
+		const unlisten = popup.listen("signer-updated", () => {
+			publish();
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, [popup]);
+
+	useEffect(() => {
+		if (isPublish) {
+			const timer = setTimeout(() => setIsPublish((prev) => !prev), 5000);
+
+			return () => {
+				clearTimeout(timer);
+			};
+		}
+	}, [isPublish]);
 
 	useEffect(() => {
 		if (initialValue?.length) {
 			setText(initialValue);
 		}
 	}, [initialValue]);
+
+	useEffect(() => {
+		if (accounts?.length) {
+			setCurrentUser(accounts[0]);
+		}
+	}, [accounts]);
 
 	return (
 		<div className="flex flex-col w-full h-full">
@@ -229,21 +319,24 @@ function Screen() {
 								setIndex(0);
 							}
 						}}
+						disabled={isPending}
 					>
 						{renderer}
 					</RichTextarea>
-					{pos
-						? createPortal(
-								<Menu
-									top={pos.top}
-									left={pos.left}
-									users={filtered}
-									index={index}
-									insert={insert}
-								/>,
-								document.body,
-							)
-						: null}
+					{pos ? (
+						createPortal(
+							<MentionPopup
+								top={pos.top}
+								left={pos.left}
+								users={filtered}
+								index={index}
+								insert={insert}
+							/>,
+							document.body,
+						)
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 			{warning.enable ? (
@@ -289,20 +382,44 @@ function Screen() {
 				data-tauri-drag-region
 				className="flex items-center w-full h-16 gap-4 px-4 border-t divide-x divide-black/5 dark:divide-white/5 shrink-0 border-black/5 dark:border-white/5"
 			>
-				<button
-					type="button"
-					onClick={() => publish()}
-					className="inline-flex items-center justify-center h-8 gap-1 px-2.5 text-sm font-medium rounded-lg bg-black/10 w-max hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
-				>
-					{isPending ? (
-						<Spinner className="size-4" />
-					) : (
-						<Feather className="size-4" weight="fill" />
-					)}
-					Publish
-				</button>
-				<div className="inline-flex items-center flex-1 gap-2 pl-4">
-					<MediaButton setText={setText} setAttaches={setAttaches} />
+				<div className="inline-flex items-center gap-3">
+					<button
+						type="button"
+						onClick={() => submit()}
+						className={cn(
+							"inline-flex items-center justify-center h-8 gap-1 px-2.5 text-sm font-medium rounded-lg w-max",
+							isPublish
+								? "bg-green-500 hover:bg-green-600 dark:hover:bg-green-400 text-white"
+								: "bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20",
+						)}
+					>
+						{isPending ? (
+							<Spinner className="size-4" />
+						) : (
+							<PublishIcon className="size-4" />
+						)}
+						{isPublish ? "Published" : "Publish"}
+					</button>
+					{currentUser ? (
+						<button
+							type="button"
+							onClick={(e) => showContextMenu(e)}
+							className="inline-flex items-center gap-1.5"
+						>
+							<User.Provider pubkey={currentUser}>
+								<User.Root>
+									<User.Avatar className="size-6 rounded-full" />
+								</User.Root>
+							</User.Provider>
+							<CaretDown
+								className="mt-px size-3 text-neutral-500"
+								weight="bold"
+							/>
+						</button>
+					) : null}
+				</div>
+				<div className="inline-flex items-center flex-1 gap-2 pl-2">
+					<MediaButton setText={setText} />
 					<WarningButton setWarning={setWarning} />
 					<PowButton setDifficulty={setDifficulty} />
 				</div>
@@ -311,7 +428,7 @@ function Screen() {
 	);
 }
 
-function Menu({
+function MentionPopup({
 	users,
 	index,
 	top,
