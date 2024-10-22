@@ -23,7 +23,7 @@ function Screen() {
 	const { isLoading, data } = useQuery({
 		queryKey: ["notification", id],
 		queryFn: async () => {
-			const res = await commands.getNotifications();
+			const res = await commands.getNotifications(id);
 
 			if (res.status === "error") {
 				throw new Error(res.error);

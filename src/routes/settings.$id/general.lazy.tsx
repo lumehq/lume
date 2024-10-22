@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState, useTransition } from 'react'
 
 type Theme = 'auto' | 'light' | 'dark'
 
-export const Route = createLazyFileRoute('/_settings/general')({
+export const Route = createLazyFileRoute('/settings/$id/general')({
   component: Screen,
 })
 

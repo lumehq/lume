@@ -1,17 +1,17 @@
 import { commands } from "@/commands.gen";
 import { Spinner, User } from "@/components";
-import { ArrowRight } from "@phosphor-icons/react";
+import { Lock } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState, useTransition } from "react";
 
-export const Route = createLazyFileRoute("/set-signer")({
+export const Route = createLazyFileRoute("/set-signer/$id")({
 	component: Screen,
 });
 
 function Screen() {
-	const { account } = Route.useSearch();
+	const { id } = Route.useParams();
 
 	const [password, setPassword] = useState("");
 	const [isPending, startTransition] = useTransition();
@@ -24,7 +24,7 @@ function Screen() {
 			}
 
 			const window = getCurrentWindow();
-			const res = await commands.setSigner(account, password);
+			const res = await commands.setSigner(id, password);
 
 			if (res.status === "ok") {
 				await window.close();
@@ -35,10 +35,6 @@ function Screen() {
 		});
 	};
 
-	if (!account) {
-		return null;
-	}
-
 	return (
 		<div
 			data-tauri-drag-region
@@ -48,12 +44,13 @@ function Screen() {
 				data-tauri-drag-region
 				className="flex-1 w-full px-10 flex flex-col gap-6 items-center justify-center"
 			>
-				<User.Provider pubkey={account}>
-					<User.Root>
+				<User.Provider pubkey={id}>
+					<User.Root className="flex flex-col text-center gap-2">
 						<User.Avatar className="size-12 rounded-full" />
+						<User.Name className="font-semibold" />
 					</User.Root>
 				</User.Provider>
-				<div className="w-full flex gap-2 items-center justify-center">
+				<div className="w-full flex flex-col gap-2 items-center justify-center">
 					<input
 						name="password"
 						type="password"
@@ -64,19 +61,20 @@ function Screen() {
 						}}
 						disabled={isPending}
 						placeholder="Enter password to unlock"
-						className="px-3 flex-1 rounded-full h-10 text-center bg-transparent border border-black/10 dark:border-white/10 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
+						className="px-3 w-full rounded-lg h-10 text-center bg-transparent border border-black/10 dark:border-white/10 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 					/>
 					<button
 						type="button"
 						onClick={() => unlock()}
 						disabled={isPending}
-						className="shrink-0 size-10 inline-flex items-center justify-center rounded-full bg-blue-500 text-white"
+						className="shrink-0 h-9 w-full rounded-lg inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-400 text-white text-sm font-medium"
 					>
 						{isPending ? (
 							<Spinner className="size-4" />
 						) : (
-							<ArrowRight className="size-4" weight="bold" />
+							<Lock className="size-4" weight="bold" />
 						)}
+						Unlock
 					</button>
 				</div>
 			</div>
@@ -84,7 +82,7 @@ function Screen() {
 				<button
 					type="button"
 					onClick={() => getCurrentWindow().close()}
-					className="text-sm font-medium text-neutral-500"
+					className="text-sm font-medium text-red-500"
 				>
 					Cancel
 				</button>

@@ -5,9 +5,9 @@
 
 
 export const commands = {
-async getRelays() : Promise<Result<Relays, string>> {
+async getRelays(id: string) : Promise<Result<Relays, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_relays") };
+    return { status: "ok", data: await TAURI_INVOKE("get_relays", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -264,9 +264,9 @@ async copyFriend(npub: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getNotifications() : Promise<Result<string[], string>> {
+async getNotifications(id: string) : Promise<Result<string[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_notifications") };
+    return { status: "ok", data: await TAURI_INVOKE("get_notifications", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

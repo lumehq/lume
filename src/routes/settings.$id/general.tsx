@@ -2,7 +2,7 @@ import { commands } from '@/commands.gen'
 import { appSettings } from '@/commons'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_settings/general')({
+export const Route = createFileRoute('/settings/$id/general')({
   beforeLoad: async () => {
     const res = await commands.getUserSettings()
 

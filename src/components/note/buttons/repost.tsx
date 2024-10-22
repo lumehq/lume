@@ -103,7 +103,7 @@ export function NoteRepost({
 				if (signer.status === "ok") {
 					if (!signer.data) {
 						const newPopup = await LumeWindow.openPopup(
-							`/set-signer?account=${account}`,
+							`/set-signer/${account}`,
 							undefined,
 							false,
 						);

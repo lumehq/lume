@@ -4,11 +4,10 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
-use tauri_specta::Event;
 
 use crate::{
     common::{get_all_accounts, get_latest_event, get_tags_content, process_event},
-    NewSettings, Nostr, RichEvent, Settings,
+    Nostr, RichEvent, Settings,
 };
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -598,27 +597,22 @@ pub async fn copy_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
     let client = &state.client;
+    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
-    match client.signer().await {
-        Ok(signer) => {
-            let public_key = signer.public_key().await.unwrap();
-            let filter = Filter::new()
-                .pubkey(public_key)
-                .kinds(vec![
-                    Kind::TextNote,
-                    Kind::Repost,
-                    Kind::Reaction,
-                    Kind::ZapReceipt,
-                ])
-                .limit(200);
+    let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Reaction,
+            Kind::ZapReceipt,
+        ])
+        .limit(200);
 
-            match client.database().query(vec![filter]).await {
-                Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
-                Err(err) => Err(err.to_string()),
-            }
-        }
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -631,29 +625,11 @@ pub fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_user_settings(
-    settings: String,
-    state: State<'_, Nostr>,
-    handle: tauri::AppHandle,
-) -> Result<(), String> {
-    let client = &state.client;
-    let tags = vec![Tag::identifier("lume_user_setting")];
-    let builder = EventBuilder::new(Kind::ApplicationSpecificData, &settings, tags);
+pub async fn set_user_settings(settings: String, state: State<'_, Nostr>) -> Result<(), String> {
+    let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
+    state.settings.lock().unwrap().clone_from(&parsed);
 
-    match client.send_event_builder(builder).await {
-        Ok(_) => {
-            let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
-
-            // Update state
-            state.settings.lock().unwrap().clone_from(&parsed);
-
-            // Emit new changes to frontend
-            NewSettings(parsed).emit(&handle).unwrap();
-
-            Ok(())
-        }
-        Err(err) => Err(err.to_string()),
-    }
+    Ok(())
 }
 
 #[tauri::command]

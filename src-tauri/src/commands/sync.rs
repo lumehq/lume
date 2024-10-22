@@ -153,7 +153,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
 
         // NEG: Sync other metadata
         //
-        let others = Filter::new().authors(public_keys).kinds(vec![
+        let others = Filter::new().authors(public_keys.clone()).kinds(vec![
             Kind::Interests,
             Kind::InterestSet,
             Kind::FollowSet,
@@ -167,6 +167,34 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
         {
             NegentropyEvent {
                 kind: NegentropyKind::Others,
+                total_event: report.received.len() as i32,
+            }
+            .emit(&app_handle)
+            .unwrap();
+        }
+
+        // NEG: Sync notification
+        //
+        let notification = Filter::new()
+            .pubkeys(public_keys)
+            .kinds(vec![
+                Kind::Reaction,
+                Kind::TextNote,
+                Kind::Repost,
+                Kind::ZapReceipt,
+            ])
+            .limit(10000);
+
+        if let Ok(report) = client
+            .reconcile_with(
+                &bootstrap_relays,
+                notification,
+                NegentropyOptions::default(),
+            )
+            .await
+        {
+            NegentropyEvent {
+                kind: NegentropyKind::Notification,
                 total_event: report.received.len() as i32,
             }
             .emit(&app_handle)

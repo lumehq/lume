@@ -203,7 +203,7 @@ function Screen() {
 			if (signer.status === "ok") {
 				if (!signer.data) {
 					const newPopup = await LumeWindow.openPopup(
-						`/set-signer?account=${currentUser}`,
+						`/set-signer/${currentUser}`,
 						undefined,
 						false,
 					);

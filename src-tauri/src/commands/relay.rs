@@ -5,6 +5,7 @@ use specta::Type;
 use std::{
     fs::OpenOptions,
     io::{self, BufRead, Write},
+    str::FromStr,
 };
 use tauri::{path::BaseDirectory, Manager, State};
 
@@ -18,8 +19,9 @@ pub struct Relays {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
+pub async fn get_relays(id: String, state: State<'_, Nostr>) -> Result<Relays, String> {
     let client = &state.client;
+    let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
     let connected_relays = client
         .relays()
@@ -27,9 +29,6 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
         .into_keys()
         .map(|url| url.to_string())
         .collect::<Vec<_>>();
-
-    let signer = client.signer().await.map_err(|e| e.to_string())?;
-    let public_key = signer.public_key().await.map_err(|e| e.to_string())?;
 
     let filter = Filter::new()
         .author(public_key)
@@ -98,13 +97,14 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, String> {
 pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
     let status = client.add_relay(relay).await.map_err(|e| e.to_string())?;
+
     if status {
-        println!("Connecting to relay: {}", relay);
         client
             .connect_relay(relay)
             .await
             .map_err(|e| e.to_string())?;
     }
+
     Ok(status)
 }
 
@@ -112,14 +112,12 @@ pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool,
 #[specta::specta]
 pub async fn remove_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
+
     client
-        .remove_relay(relay)
+        .force_remove_relay(relay)
         .await
         .map_err(|e| e.to_string())?;
-    client
-        .disconnect_relay(relay)
-        .await
-        .map_err(|e| e.to_string())?;
+
     Ok(true)
 }
 

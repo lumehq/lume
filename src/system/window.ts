@@ -151,7 +151,9 @@ export const LumeWindow = {
 	openSettings: async (account: string, path?: string) => {
 		const query = await commands.openWindow({
 			label: "settings",
-			url: path ? `${account}/${path}` : `${account}/general`,
+			url: path
+				? `/settings/${account}/${path}`
+				: `/settings/${account}/general`,
 			title: "Settings",
 			width: 800,
 			height: 500,
