@@ -138,6 +138,13 @@ function Account({ pubkey }: { pubkey: string }) {
 
 			const items = await Promise.all([
 				MenuItem.new({
+					text: "Unlock",
+					enabled: !isActive || true,
+					action: () =>
+						LumeWindow.openPopup(`/set-signer/${pubkey}`, undefined, false),
+				}),
+				PredefinedMenuItem.new({ item: "Separator" }),
+				MenuItem.new({
 					text: "View Profile",
 					action: () => LumeWindow.openProfile(pubkey),
 				}),

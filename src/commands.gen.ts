@@ -464,7 +464,7 @@ async updateColumn(label: string, width: number, height: number, x: number, y: n
     else return { status: "error", error: e  as any };
 }
 },
-async reloadColumn(label: string) : Promise<Result<boolean, string>> {
+async reloadColumn(label: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reload_column", { label }) };
 } catch (e) {

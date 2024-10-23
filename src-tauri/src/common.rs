@@ -51,15 +51,6 @@ pub fn get_latest_event(events: &Events) -> Option<&Event> {
     events.iter().next()
 }
 
-pub fn get_tags_content(event: &Event, kind: TagKind) -> Vec<String> {
-    event
-        .tags
-        .iter()
-        .filter(|t| t.kind() == kind)
-        .filter_map(|t| t.content().map(|content| content.to_string()))
-        .collect()
-}
-
 pub fn create_tags(content: &str) -> Vec<Tag> {
     let mut tags: Vec<Tag> = vec![];
     let mut tag_set: HashSet<String> = HashSet::new();

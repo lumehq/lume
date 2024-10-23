@@ -313,8 +313,14 @@ pub async fn publish(
     let builder =
         EventBuilder::text_note(content, tags).pow(difficulty.unwrap_or(DEFAULT_DIFFICULTY));
 
+    // Sign event
+    let event = client
+        .sign_event_builder(builder)
+        .await
+        .map_err(|err| err.to_string())?;
+
     // Publish
-    match client.send_event_builder(builder).await {
+    match client.send_event(event).await {
         Ok(event_id) => Ok(event_id.to_hex()),
         Err(err) => Err(err.to_string()),
     }

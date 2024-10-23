@@ -28,6 +28,9 @@ pub async fn watch_account(key: String, state: State<'_, Nostr>) -> Result<Strin
 
     keyring.set_password("").map_err(|e| e.to_string())?;
 
+    // Run sync for this account
+    // run_sync_for(public_key, app_handle);
+
     // Update state
     state.accounts.lock().unwrap().push(bech32.clone());
 
@@ -41,27 +44,32 @@ pub async fn import_account(
     password: String,
     state: State<'_, Nostr>,
 ) -> Result<String, String> {
-    let (npub, enc_bech32) = match key.starts_with("ncryptsec") {
+    let client = &state.client;
+
+    let (npub, enc_bech32, signer) = match key.starts_with("ncryptsec") {
         true => {
             let enc = EncryptedSecretKey::from_bech32(key).map_err(|err| err.to_string())?;
             let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
             let secret_key = enc.to_secret_key(password).map_err(|err| err.to_string())?;
             let keys = Keys::new(secret_key);
-            let npub = keys.public_key().to_bech32().unwrap();
+            let npub = keys
+                .public_key()
+                .to_bech32()
+                .map_err(|err| err.to_string())?;
+            let signer = NostrSigner::Keys(keys);
 
-            (npub, enc_bech32)
+            (npub, enc_bech32, signer)
         }
         false => {
             let secret_key = SecretKey::from_bech32(key).map_err(|err| err.to_string())?;
             let keys = Keys::new(secret_key.clone());
             let npub = keys.public_key().to_bech32().unwrap();
-
+            let signer = NostrSigner::Keys(keys);
             let enc = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium)
                 .map_err(|err| err.to_string())?;
-
             let enc_bech32 = enc.to_bech32().map_err(|err| err.to_string())?;
 
-            (npub, enc_bech32)
+            (npub, enc_bech32, signer)
         }
     };
 
@@ -74,6 +82,12 @@ pub async fn import_account(
 
     let pwd = serde_json::to_string(&account).map_err(|e| e.to_string())?;
     keyring.set_password(&pwd).map_err(|e| e.to_string())?;
+
+    // Run sync for this account
+    // run_sync_for(public_key, app_handle);
+
+    // Update signer
+    client.set_signer(Some(signer)).await;
 
     // Update state
     state.accounts.lock().unwrap().push(npub.clone());
@@ -114,6 +128,9 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
                     };
                     let j = serde_json::to_string(&account).map_err(|e| e.to_string())?;
                     let _ = keyring.set_password(&j);
+
+                    // Run sync for this account
+                    // run_sync_for(public_key, app_handle);
 
                     // Update signer
                     let _ = client.set_signer(Some(signer.into())).await;

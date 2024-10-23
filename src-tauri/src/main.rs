@@ -13,7 +13,8 @@ use commands::{
     sync::{run_fast_sync, NegentropyEvent},
     window::*,
 };
-use common::{get_all_accounts, get_tags_content, parse_event};
+use common::{get_all_accounts, parse_event};
+use log::info;
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -94,9 +95,6 @@ pub const FETCH_LIMIT: usize = 50;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
-    #[cfg(debug_assertions)]
-    tracing_subscriber::fmt::init();
-
     let builder = Builder::<tauri::Wry>::new()
         // Then register them (separated by a comma)
         .commands(collect_commands![
@@ -171,10 +169,7 @@ fn main() {
         .export(Typescript::default(), "../src/commands.gen.ts")
         .expect("Failed to export typescript bindings");
 
-    #[cfg(target_os = "macos")]
-    let tauri_builder = tauri::Builder::default().plugin(tauri_nspanel::init());
-
-    #[cfg(not(target_os = "macos"))]
+    let mut ctx = tauri::generate_context!();
     let tauri_builder = tauri::Builder::default();
 
     tauri_builder
@@ -193,13 +188,7 @@ fn main() {
                 .app_config_dir()
                 .expect("Error: app config directory not found.");
 
-            let data_dir = handle
-                .path()
-                .app_data_dir()
-                .expect("Error: app data directory not found.");
-
             let _ = fs::create_dir_all(&config_dir);
-            let _ = fs::create_dir_all(&data_dir);
 
             // Set custom decoration for Windows
             #[cfg(target_os = "windows")]
@@ -225,7 +214,7 @@ fn main() {
 
             let (client, bootstrap_relays) = tauri::async_runtime::block_on(async move {
                 // Setup database
-                let database = NostrLMDB::open(config_dir.join("nostr-lmdb"))
+                let database = NostrLMDB::open(config_dir.join("nostr"))
                     .expect("Error: cannot create database.");
 
                 // Config
@@ -234,7 +223,8 @@ fn main() {
                     .max_avg_latency(Duration::from_millis(800))
                     .automatic_authentication(false)
                     .connection_timeout(Some(Duration::from_secs(20)))
-                    .send_timeout(Some(Duration::from_secs(20)))
+                    .send_timeout(Some(Duration::from_secs(10)))
+                    .wait_for_send(false)
                     .timeout(Duration::from_secs(20));
 
                 // Setup nostr client
@@ -403,21 +393,6 @@ fn main() {
                 });
             });
 
-            // Run local relay thread
-            //tauri::async_runtime::spawn(async move {
-            //    let database = NostrLMDB::open(data_dir.join("local-relay"))
-            //        .expect("Error: cannot create database.");
-            //    let builder = RelayBuilder::default().database(database).port(1984);
-            //
-            //    if let Ok(relay) = LocalRelay::run(builder).await {
-            //        println!("Running local relay: {}", relay.url())
-            //    }
-            //
-            //    loop {
-            //        tokio::time::sleep(Duration::from_secs(60)).await;
-            //    }
-            //});
-
             // Run notification thread
             tauri::async_runtime::spawn(async move {
                 let state = handle_clone.state::<Nostr>();
@@ -465,6 +440,7 @@ fn main() {
                 while let Ok(notification) = notifications.recv().await {
                     match notification {
                         RelayPoolNotification::Message { relay_url, message } => {
+                            info!(target: "relay_events", "message: {}", message.as_pretty_json());
                             if let RelayMessage::Auth { challenge } = message {
                                 match client.auth(challenge, relay_url.clone()).await {
                                     Ok(..) => {
@@ -521,7 +497,17 @@ fn main() {
                                 event,
                             } = message
                             {
-                                let tags = get_tags_content(&event, TagKind::p());
+                                let tags: Vec<String> = event
+                                    .tags
+                                    .public_keys()
+                                    .filter_map(|pk| {
+                                        if let Ok(bech32) = pk.to_bech32() {
+                                            Some(bech32)
+                                        } else {
+                                            None
+                                        }
+                                    })
+                                    .collect();
 
                                 // Handle events from notification subscription
                                 if subscription_id == notification_id
@@ -587,6 +573,7 @@ fn main() {
             Ok(())
         })
         .plugin(prevent_default())
+        .plugin(tauri_plugin_theme::init(ctx.config_mut()))
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -600,7 +587,7 @@ fn main() {
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .run(tauri::generate_context!())
+        .run(ctx)
         .expect("error while running tauri application");
 }
 

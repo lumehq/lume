@@ -26,6 +26,7 @@ export const Route = createLazyFileRoute("/_layout/")({
 });
 
 function Screen() {
+	const { accounts } = Route.useRouteContext();
 	const columns = useStore(appColumns, (state) => state);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -161,7 +162,10 @@ function Screen() {
 				getSystemColumns();
 			} else {
 				const parsed: LumeColumn[] = JSON.parse(prevColumns);
-				appColumns.setState(() => parsed);
+				const fil = parsed.filter((item) =>
+					item.account ? accounts.includes(item.account) : item,
+				);
+				appColumns.setState(() => fil);
 			}
 		} else {
 			window.localStorage.setItem("columns", JSON.stringify(columns));

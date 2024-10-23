@@ -63,6 +63,7 @@
 		"shell:allow-open",
 		"store:default",
 		"prevent-default:default",
+		"theme:default",
 		{
 			"identifier": "http:default",
 			"allow": [

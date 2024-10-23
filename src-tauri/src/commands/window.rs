@@ -100,9 +100,12 @@ pub fn update_column(
 
 #[tauri::command(async)]
 #[specta::specta]
-pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
+pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), String> {
     match app_handle.get_webview(&label) {
-        Some(webview) => Ok(webview.eval("window.location.reload()").is_ok()),
+        Some(webview) => {
+            webview.eval("location.reload(true)").unwrap();
+            Ok(())
+        }
         None => Err("Cannot reload, column not found.".into()),
     }
 }

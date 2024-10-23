@@ -74,6 +74,7 @@ export function Column({ column }: { column: LumeColumn }) {
 			<div className="flex flex-col gap-px size-full">
 				<Header
 					label={column.label}
+					webviewLabel={webviewLabel}
 					name={column.name}
 					account={column.account}
 				/>
@@ -85,9 +86,10 @@ export function Column({ column }: { column: LumeColumn }) {
 
 function Header({
 	label,
+	webviewLabel,
 	name,
 	account,
-}: { label: string; name: string; account?: string }) {
+}: { label: string; webviewLabel: string; name: string; account?: string }) {
 	const [title, setTitle] = useState("");
 	const [isChanged, setIsChanged] = useState(false);
 
@@ -100,7 +102,7 @@ function Header({
 			MenuItem.new({
 				text: "Reload",
 				action: async () => {
-					await commands.reloadColumn(label);
+					await commands.reloadColumn(webviewLabel);
 				},
 			}),
 			PredefinedMenuItem.new({ item: "Separator" }),

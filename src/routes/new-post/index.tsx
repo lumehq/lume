@@ -197,6 +197,10 @@ function Screen() {
 	};
 
 	const submit = async () => {
+		if (!text.length) {
+			return;
+		}
+
 		if (currentUser) {
 			const signer = await commands.hasSigner(currentUser);
 

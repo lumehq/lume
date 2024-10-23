@@ -28,6 +28,7 @@
 		"store:allow-get",
 		"store:allow-set",
 		"store:allow-delete",
+		"theme:default",
 		{
 			"identifier": "http:default",
 			"allow": [

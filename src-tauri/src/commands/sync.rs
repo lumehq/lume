@@ -5,7 +5,7 @@ use std::str::FromStr;
 use tauri::{AppHandle, Manager};
 use tauri_specta::Event as TauriEvent;
 
-use crate::{common::get_tags_content, Nostr};
+use crate::Nostr;
 
 #[derive(Clone, Serialize, Type, TauriEvent)]
 pub struct NegentropyEvent {
@@ -53,7 +53,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
             .limit(4);
 
         if let Ok(report) = client
-            .reconcile_with(&bootstrap_relays, profile, NegentropyOptions::default())
+            .sync_with(&bootstrap_relays, profile, NegentropyOptions::default())
             .await
         {
             NegentropyEvent {
@@ -72,7 +72,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
             .limit(4);
 
         if let Ok(report) = client
-            .reconcile_with(
+            .sync_with(
                 &bootstrap_relays,
                 contact_list.clone(),
                 NegentropyOptions::default(),
@@ -92,16 +92,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
         if let Ok(events) = client.database().query(vec![contact_list]).await {
             let pubkeys: Vec<PublicKey> = events
                 .iter()
-                .flat_map(|ev| {
-                    let tags = get_tags_content(ev, TagKind::p());
-                    tags.into_iter().filter_map(|p| {
-                        if let Ok(pk) = PublicKey::from_hex(p) {
-                            Some(pk)
-                        } else {
-                            None
-                        }
-                    })
-                })
+                .flat_map(|ev| ev.tags.public_keys().copied())
                 .collect();
 
             for chunk in pubkeys.chunks(500) {
@@ -119,7 +110,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
                     .limit(1000);
 
                 if let Ok(report) = client
-                    .reconcile_with(&bootstrap_relays, events, NegentropyOptions::default())
+                    .sync_with(&bootstrap_relays, events, NegentropyOptions::default())
                     .await
                 {
                     NegentropyEvent {
@@ -138,7 +129,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
                     .limit(1000);
 
                 if let Ok(report) = client
-                    .reconcile_with(&bootstrap_relays, metadata, NegentropyOptions::default())
+                    .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
                     .await
                 {
                     NegentropyEvent {
@@ -162,7 +153,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
         ]);
 
         if let Ok(report) = client
-            .reconcile_with(&bootstrap_relays, others, NegentropyOptions::default())
+            .sync_with(&bootstrap_relays, others, NegentropyOptions::default())
             .await
         {
             NegentropyEvent {
@@ -186,7 +177,7 @@ pub fn run_fast_sync(accounts: Vec<String>, app_handle: AppHandle) {
             .limit(10000);
 
         if let Ok(report) = client
-            .reconcile_with(
+            .sync_with(
                 &bootstrap_relays,
                 notification,
                 NegentropyOptions::default(),

@@ -6,7 +6,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
 
 use crate::{
-    common::{get_all_accounts, get_latest_event, get_tags_content, process_event},
+    common::{get_all_accounts, get_latest_event, process_event},
     Nostr, RichEvent, Settings,
 };
 
@@ -182,10 +182,8 @@ pub async fn is_contact(id: String, state: State<'_, Nostr>) -> Result<bool, Str
     match client.database().query(vec![filter]).await {
         Ok(events) => {
             if let Some(event) = events.into_iter().next() {
-                let hex = public_key.to_hex();
-                let pubkeys = get_tags_content(&event, TagKind::p());
-
-                Ok(pubkeys.iter().any(|i| i == &hex))
+                let pubkeys = event.tags.public_keys().collect::<Vec<_>>();
+                Ok(pubkeys.iter().any(|&i| i == &public_key))
             } else {
                 Ok(false)
             }
@@ -270,7 +268,7 @@ pub async fn set_group(
                     .authors(public_keys)
                     .limit(500);
 
-                if let Ok(report) = client.reconcile(filter, NegentropyOptions::default()).await {
+                if let Ok(report) = client.sync(filter, NegentropyOptions::default()).await {
                     println!("Received: {}", report.received.len());
                     handle.emit("synchronized", ()).unwrap();
                 };
@@ -357,7 +355,7 @@ pub async fn set_interest(
                     .hashtags(hashtags)
                     .limit(500);
 
-                if let Ok(report) = client.reconcile(filter, NegentropyOptions::default()).await {
+                if let Ok(report) = client.sync(filter, NegentropyOptions::default()).await {
                     println!("Received: {}", report.received.len());
                     handle.emit("synchronized", ()).unwrap();
                 };
