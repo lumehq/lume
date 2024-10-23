@@ -14,7 +14,6 @@ use commands::{
     window::*,
 };
 use common::{get_all_accounts, parse_event};
-use log::info;
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -169,8 +168,8 @@ fn main() {
         .export(Typescript::default(), "../src/commands.gen.ts")
         .expect("Failed to export typescript bindings");
 
-    let mut ctx = tauri::generate_context!();
     let tauri_builder = tauri::Builder::default();
+    let mut ctx = tauri::generate_context!();
 
     tauri_builder
         .invoke_handler(builder.invoke_handler())
@@ -440,7 +439,6 @@ fn main() {
                 while let Ok(notification) = notifications.recv().await {
                     match notification {
                         RelayPoolNotification::Message { relay_url, message } => {
-                            info!(target: "relay_events", "message: {}", message.as_pretty_json());
                             if let RelayMessage::Auth { challenge } = message {
                                 match client.auth(challenge, relay_url.clone()).await {
                                     Ok(..) => {

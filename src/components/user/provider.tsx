@@ -1,5 +1,5 @@
-import type { Metadata } from "@/types";
 import { useProfile } from "@/system";
+import type { Metadata } from "@/types";
 import { type ReactNode, createContext, useContext } from "react";
 
 const UserContext = createContext<{

@@ -2,15 +2,14 @@ import { experimental_createPersister } from "@tanstack/query-persist-client-cor
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { type } from "@tauri-apps/plugin-os";
+import { createStore } from "@tauri-apps/plugin-store";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { newQueryStorage } from "./commons";
 import type { LumeEvent } from "./system";
 
-import "./app.css"; // global styles
-
-import { createStore } from "@tauri-apps/plugin-store";
 import { routeTree } from "./routes.gen"; // auto generated file
+import "./app.css"; // global styles
 
 const platform = type();
 // @ts-expect-error, required: https://github.com/tauri-apps/plugins-workspace/pull/1860
