@@ -32,50 +32,12 @@ pub struct Mention {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_profile(id: Option<String>, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_profile(id: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    let public_key: PublicKey = match id {
-        Some(user_id) => PublicKey::parse(&user_id).map_err(|e| e.to_string())?,
-        None => {
-            let signer = client.signer().await.map_err(|e| e.to_string())?;
-            signer.public_key().await.map_err(|e| e.to_string())?
-        }
-    };
-
-    let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::Metadata)
-        .limit(1);
-
-    match client.database().query(vec![filter.clone()]).await {
-        Ok(events) => {
-            if let Some(event) = get_latest_event(&events) {
-                if let Ok(metadata) = Metadata::from_json(&event.content) {
-                    Ok(metadata.as_json())
-                } else {
-                    Err("Parse metadata failed".into())
-                }
-            } else {
-                match client
-                    .fetch_events(vec![filter], Some(Duration::from_secs(10)))
-                    .await
-                {
-                    Ok(events) => {
-                        if let Some(event) = get_latest_event(&events) {
-                            if let Ok(metadata) = Metadata::from_json(&event.content) {
-                                Ok(metadata.as_json())
-                            } else {
-                                Err("Metadata is not valid.".into())
-                            }
-                        } else {
-                            Err("Not found.".into())
-                        }
-                    }
-                    Err(e) => Err(e.to_string()),
-                }
-            }
-        }
+    match client.database().profile(public_key).await {
+        Ok(profile) => Ok(profile.metadata().as_json()),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -237,7 +199,7 @@ pub async fn set_group(
     users: Vec<String>,
     state: State<'_, Nostr>,
     handle: tauri::AppHandle,
-) -> Result<String, String> {
+) -> Result<bool, String> {
     let client = &state.client;
     let public_keys: Vec<PublicKey> = users
         .iter()
@@ -257,8 +219,19 @@ pub async fn set_group(
 
     let builder = EventBuilder::follow_set(label, public_keys.clone()).add_tags(tags);
 
-    match client.send_event_builder(builder).await {
-        Ok(report) => {
+    // Sign event
+    let event = client
+        .sign_event_builder(builder)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    // Save to local database
+    match client.database().save_event(&event).await {
+        Ok(status) => {
+            // Add event to queue to broadcast it later.
+            state.send_queue.lock().unwrap().insert(event);
+
+            // Sync event
             tauri::async_runtime::spawn(async move {
                 let state = handle.state::<Nostr>();
                 let client = &state.client;
@@ -274,9 +247,10 @@ pub async fn set_group(
                 };
             });
 
-            Ok(report.id().to_hex())
+            // Return
+            Ok(status)
         }
-        Err(e) => Err(e.to_string()),
+        Err(err) => Err(err.to_string()),
     }
 }
 
@@ -328,7 +302,7 @@ pub async fn set_interest(
     hashtags: Vec<String>,
     state: State<'_, Nostr>,
     handle: tauri::AppHandle,
-) -> Result<String, String> {
+) -> Result<bool, String> {
     let client = &state.client;
     let label = title.to_lowercase().replace(" ", "-");
     let mut tags: Vec<Tag> = vec![Tag::title(title)];
@@ -344,8 +318,19 @@ pub async fn set_interest(
 
     let builder = EventBuilder::interest_set(label, hashtags.clone()).add_tags(tags);
 
-    match client.send_event_builder(builder).await {
-        Ok(report) => {
+    // Sign event
+    let event = client
+        .sign_event_builder(builder)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    // Save to local database
+    match client.database().save_event(&event).await {
+        Ok(status) => {
+            // Add event to queue to broadcast it later.
+            state.send_queue.lock().unwrap().insert(event);
+
+            // Sync event
             tauri::async_runtime::spawn(async move {
                 let state = handle.state::<Nostr>();
                 let client = &state.client;
@@ -361,9 +346,10 @@ pub async fn set_interest(
                 };
             });
 
-            Ok(report.id().to_hex())
+            // Return
+            Ok(status)
         }
-        Err(e) => Err(e.to_string()),
+        Err(err) => Err(err.to_string()),
     }
 }
 
@@ -448,7 +434,7 @@ pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, Stri
     if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
         let nwc = NWC::new(nwc_uri);
         let keyring =
-            Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
+            Entry::new("Lume Safe Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
         keyring.set_password(uri).map_err(|e| e.to_string())?;
         client.set_zapper(nwc).await;
@@ -466,7 +452,7 @@ pub async fn load_wallet(state: State<'_, Nostr>) -> Result<(), String> {
 
     if client.zapper().await.is_err() {
         let keyring =
-            Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
+            Entry::new("Lume Safe Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
         match keyring.get_password() {
             Ok(val) => {
@@ -486,8 +472,7 @@ pub async fn load_wallet(state: State<'_, Nostr>) -> Result<(), String> {
 #[specta::specta]
 pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
-    let keyring =
-        Entry::new("Lume Secret Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
+    let keyring = Entry::new("Lume Safe Storage", "Bitcoin Connect").map_err(|e| e.to_string())?;
 
     match keyring.delete_credential() {
         Ok(_) => {

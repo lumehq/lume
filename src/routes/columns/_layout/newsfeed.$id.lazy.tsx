@@ -29,7 +29,7 @@ export function Screen() {
 		queryKey: ["events", "newsfeed", search.label],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const until = pageParam > 0 ? pageParam.toString() : undefined;
+			const until = pageParam > 0 ? pageParam.toString() : null;
 			const res = await commands.getAllEventsByAuthors(contacts, until);
 
 			if (res.status === "error") {
@@ -76,9 +76,9 @@ export function Screen() {
 	useEffect(() => {
 		events.subscription
 			.emit({
-				label: search.label,
+				label: search.label as string,
 				kind: "Subscribe",
-				event_id: undefined,
+				event_id: null,
 				contacts,
 			})
 			.then(() => console.log("Subscribe: ", search.label));
@@ -86,9 +86,9 @@ export function Screen() {
 		return () => {
 			events.subscription
 				.emit({
-					label: search.label,
+					label: search.label as string,
 					kind: "Unsubscribe",
-					event_id: undefined,
+					event_id: null,
 					contacts,
 				})
 				.then(() => console.log("Unsubscribe: ", search.label));

@@ -26,7 +26,7 @@ function Screen() {
 			if (!key.startsWith("npub") && !key.startsWith("nprofile")) {
 				await message(
 					"You need to enter a valid public key starts with npub or nprofile",
-					{ title: "Login", kind: "info" },
+					{ kind: "info" },
 				);
 				return;
 			}

@@ -24,7 +24,7 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			if (!key.startsWith("nsec1") && !key.startsWith("ncryptsec")) {
+			if (!key.startsWith("nsec") && !key.startsWith("ncryptsec")) {
 				await message(
 					"You need to enter a valid private key starts with nsec or ncryptsec",
 					{ title: "Login", kind: "info" },
@@ -32,15 +32,18 @@ function Screen() {
 				return;
 			}
 
-			if (key.startsWith("nsec1") && !password.length) {
-				await message("You must set password to secure your key", {
+			if (key.startsWith("ncryptsec") && !password.length) {
+				await message("You must enter a password to decrypt your key", {
 					title: "Login",
 					kind: "info",
 				});
 				return;
 			}
 
-			const res = await commands.importAccount(key, password);
+			const res = await commands.importAccount(
+				key,
+				password.length ? password : null,
+			);
 
 			if (res.status === "ok") {
 				navigate({ to: "/", replace: true });
@@ -94,15 +97,13 @@ function Screen() {
 								</button>
 							</div>
 						</div>
-						{key.length ? (
+						{key.startsWith("ncryptsec") ? (
 							<div className="flex flex-col gap-1">
 								<label
 									htmlFor="password"
 									className="text-sm font-medium text-neutral-800 dark:text-neutral-200"
 								>
-									{!key.startsWith("ncryptsec")
-										? "Set password to secure your key"
-										: "Enter password to decrypt your key"}
+									Enter password to decrypt your key
 								</label>
 								<input
 									name="password"

@@ -20,6 +20,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function Screen() {
 	const { queryClient } = Route.useRouteContext();
 
+	/*
 	useEffect(() => {
 		const unlisten = events.newSettings.listen((data) => {
 			appSettings.setState((state) => {
@@ -31,6 +32,7 @@ function Screen() {
 			unlisten.then((f) => f());
 		};
 	}, []);
+	*/
 
 	useEffect(() => {
 		const unlisten = events.negentropyEvent.listen(async (data) => {

@@ -9,7 +9,7 @@ import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-import { memo, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 
 export const Route = createLazyFileRoute("/_layout")({
 	component: Layout,
@@ -80,41 +80,6 @@ function Topbar() {
 	);
 }
 
-const NegentropyBadge = memo(function NegentropyBadge() {
-	const [process, setProcess] = useState(null);
-
-	useEffect(() => {
-		const unlisten = listen("negentropy", async (data) => {
-			if (data.payload === "Ok") {
-				setProcess(null);
-			} else {
-				setProcess(data.payload);
-			}
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
-
-	if (!process) {
-		return null;
-	}
-
-	return (
-		<div className="h-7 w-max px-3 inline-flex items-center justify-center text-[9px] font-medium rounded-full bg-black/5 dark:bg-white/5">
-			{process ? (
-				<span>
-					{process.message}
-					{process.total_event > 0 ? ` / ${process.total_event}` : null}
-				</span>
-			) : (
-				"Syncing"
-			)}
-		</div>
-	);
-});
-
 function Account({ pubkey }: { pubkey: string }) {
 	const navigate = Route.useNavigate();
 	const context = Route.useRouteContext();
@@ -182,6 +147,16 @@ function Account({ pubkey }: { pubkey: string }) {
 		},
 		[pubkey],
 	);
+
+	useEffect(() => {
+		const unlisten = listen("signer-updated", async () => {
+			await context.queryClient.invalidateQueries({ queryKey: ["signer"] });
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
 
 	return (
 		<button

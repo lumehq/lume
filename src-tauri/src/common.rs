@@ -134,7 +134,7 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
 
 pub fn get_all_accounts() -> Vec<String> {
     let search = Search::new().expect("Unexpected.");
-    let results = search.by_service("Lume Secret Storage");
+    let results = search.by_service("Lume Safe Storage");
     let list = List::list_credentials(&results, Limit::All);
     let accounts: HashSet<String> = list
         .split_whitespace()

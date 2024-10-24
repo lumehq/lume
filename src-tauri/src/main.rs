@@ -5,27 +5,21 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{
-    account::*,
-    event::*,
-    metadata::*,
-    relay::*,
-    sync::{run_fast_sync, NegentropyEvent},
-    window::*,
-};
+use commands::{account::*, event::*, metadata::*, relay::*, sync::NegentropyEvent, window::*};
 use common::{get_all_accounts, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
+    collections::HashSet,
     fs,
     io::{self, BufRead},
     str::FromStr,
     sync::Mutex,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
+use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager, WindowEvent};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, collect_events, Builder, Event as TauriEvent};
@@ -37,8 +31,9 @@ pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
     accounts: Mutex<Vec<String>>,
-    subscriptions: Mutex<Vec<SubscriptionId>>,
     bootstrap_relays: Mutex<Vec<Url>>,
+    subscriptions: Mutex<HashSet<SubscriptionId>>,
+    send_queue: Mutex<HashSet<Event>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -73,7 +68,7 @@ impl Default for Settings {
 }
 
 #[derive(Serialize, Deserialize, Type)]
-enum SubKind {
+enum SubscriptionMethod {
     Subscribe,
     Unsubscribe,
 }
@@ -81,13 +76,15 @@ enum SubKind {
 #[derive(Serialize, Deserialize, Type, TauriEvent)]
 struct Subscription {
     label: String,
-    kind: SubKind,
+    kind: SubscriptionMethod,
     event_id: Option<String>,
     contacts: Option<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, Type, Clone, TauriEvent)]
-struct NewSettings(Settings);
+#[derive(Serialize, Deserialize, Type, TauriEvent)]
+struct Sync {
+    id: String,
+}
 
 pub const DEFAULT_DIFFICULTY: u8 = 21;
 pub const FETCH_LIMIT: usize = 50;
@@ -95,7 +92,6 @@ pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
     let builder = Builder::<tauri::Wry>::new()
-        // Then register them (separated by a comma)
         .commands(collect_commands![
             get_relays,
             connect_relay,
@@ -161,7 +157,7 @@ fn main() {
             reopen_lume,
             quit
         ])
-        .events(collect_events![Subscription, NewSettings, NegentropyEvent]);
+        .events(collect_events![Subscription, NegentropyEvent]);
 
     #[cfg(debug_assertions)]
     builder
@@ -179,7 +175,6 @@ fn main() {
             let handle = app.handle();
             let handle_clone = handle.clone();
             let handle_clone_child = handle_clone.clone();
-            let handle_clone_sync = handle_clone_child.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             let config_dir = handle
@@ -200,16 +195,6 @@ fn main() {
             // Set a custom inset to the traffic lights
             #[cfg(target_os = "macos")]
             main_window.set_traffic_lights_inset(7.0, 10.0).unwrap();
-
-            #[cfg(target_os = "macos")]
-            let win = main_window.clone();
-
-            #[cfg(target_os = "macos")]
-            main_window.on_window_event(move |event| {
-                if let tauri::WindowEvent::ThemeChanged(_) = event {
-                    win.set_traffic_lights_inset(7.0, 10.0).unwrap();
-                }
-            });
 
             let (client, bootstrap_relays) = tauri::async_runtime::block_on(async move {
                 // Setup database
@@ -260,17 +245,9 @@ fn main() {
                     }
                 }
 
-                if let Err(e) = client.add_discovery_relay("wss://purplepag.es/").await {
-                    println!("Add discovery relay failed: {}", e)
-                }
-
-                if let Err(e) = client.add_discovery_relay("wss://directory.yabu.me/").await {
-                    println!("Add discovery relay failed: {}", e)
-                }
-
-                if let Err(e) = client.add_discovery_relay("wss://user.kindpag.es/").await {
-                    println!("Add discovery relay failed: {}", e)
-                }
+                let _ = client.add_discovery_relay("wss://purplepag.es/").await;
+                let _ = client.add_discovery_relay("wss://directory.yabu.me/").await;
+                let _ = client.add_discovery_relay("wss://user.kindpag.es/").await;
 
                 // Connect
                 client.connect_with_timeout(Duration::from_secs(10)).await;
@@ -283,19 +260,18 @@ fn main() {
             });
 
             let accounts = get_all_accounts();
-            // Run fast sync for all accounts
-            run_fast_sync(accounts.clone(), handle_clone_sync);
 
             // Create global state
             app.manage(Nostr {
                 client,
                 accounts: Mutex::new(accounts),
                 settings: Mutex::new(Settings::default()),
-                subscriptions: Mutex::new(Vec::new()),
                 bootstrap_relays: Mutex::new(bootstrap_relays),
+                subscriptions: Mutex::new(HashSet::new()),
+                send_queue: Mutex::new(HashSet::new()),
             });
 
-            // Handle subscription
+            // Handle subscription request
             Subscription::listen_any(app, move |event| {
                 let handle = handle_clone_child.to_owned();
                 let payload = event.payload;
@@ -305,7 +281,7 @@ fn main() {
                     let client = &state.client;
 
                     match payload.kind {
-                        SubKind::Subscribe => {
+                        SubscriptionMethod::Subscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
 
                             if !client
@@ -319,7 +295,7 @@ fn main() {
                                     .subscriptions
                                     .lock()
                                     .unwrap()
-                                    .push(subscription_id.clone());
+                                    .insert(subscription_id.clone());
 
                                 println!(
                                     "Total subscriptions: {}",
@@ -371,22 +347,16 @@ fn main() {
                                 }
                             }
                         }
-                        SubKind::Unsubscribe => {
+                        SubscriptionMethod::Unsubscribe => {
                             let subscription_id = SubscriptionId::new(payload.label);
-                            let mut sub_state = state.subscriptions.lock().unwrap().clone();
-
-                            if let Some(pos) = sub_state.iter().position(|x| *x == subscription_id)
-                            {
-                                sub_state.remove(pos);
-                                state.subscriptions.lock().unwrap().clone_from(&sub_state)
-                            }
 
                             println!(
                                 "Total subscriptions: {}",
                                 state.subscriptions.lock().unwrap().len()
                             );
 
-                            client.unsubscribe(subscription_id).await
+                            state.subscriptions.lock().unwrap().remove(&subscription_id);
+                            client.unsubscribe(subscription_id).await;
                         }
                     }
                 });
@@ -569,6 +539,39 @@ fn main() {
             });
 
             Ok(())
+        })
+        .on_window_event(|window, event| match event {
+            WindowEvent::CloseRequested { api, .. } => {
+                api.prevent_close();
+                // Just hide window not close
+                window.hide().unwrap();
+
+                let state = window.state::<Nostr>();
+                let client = &state.client;
+                let queue: Vec<Event> = state
+                    .send_queue
+                    .lock()
+                    .unwrap()
+                    .clone()
+                    .into_iter()
+                    .collect();
+
+                if !queue.is_empty() {
+                    tauri::async_runtime::block_on(async {
+                        println!("Sending total {} events to relays", queue.len());
+                        match client.batch_event(queue, RelaySendOptions::default()).await {
+                            Ok(_) => window.destroy().unwrap(),
+                            Err(_) => window.emit("batch-event", ()).unwrap(),
+                        }
+                    });
+                } else {
+                    window.destroy().unwrap()
+                }
+            }
+            WindowEvent::Focused(_focused) => {
+                // TODO
+            }
+            _ => {}
         })
         .plugin(prevent_default())
         .plugin(tauri_plugin_theme::init(ctx.config_mut()))

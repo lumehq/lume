@@ -290,10 +290,10 @@ pub async fn publish(
     warning: Option<String>,
     difficulty: Option<u8>,
     state: State<'_, Nostr>,
-) -> Result<String, String> {
+) -> Result<bool, String> {
     let client = &state.client;
 
-    // Create tags from content
+    // Create event tags from content
     let mut tags = create_tags(&content);
 
     // Add client tag
@@ -319,9 +319,14 @@ pub async fn publish(
         .await
         .map_err(|err| err.to_string())?;
 
-    // Publish
-    match client.send_event(event).await {
-        Ok(event_id) => Ok(event_id.to_hex()),
+    // Save to local database
+    match client.database().save_event(&event).await {
+        Ok(status) => {
+            // Add event to queue to broadcast it later.
+            state.send_queue.lock().unwrap().insert(event);
+            // Return
+            Ok(status)
+        }
         Err(err) => Err(err.to_string()),
     }
 }
@@ -333,83 +338,81 @@ pub async fn reply(
     to: String,
     root: Option<String>,
     state: State<'_, Nostr>,
-) -> Result<String, String> {
+) -> Result<bool, String> {
     let client = &state.client;
-    let database = client.database();
 
-    let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
+    // Create event tags from content
     let mut tags = create_tags(&content);
 
-    match database.query(vec![Filter::new().id(reply_id)]).await {
-        Ok(events) => {
-            if let Some(event) = events.first() {
-                let relay_hint = if let Some(relays) = database
-                    .event_seen_on_relays(&event.id)
-                    .await
-                    .map_err(|err| err.to_string())?
-                {
-                    relays.into_iter().next().map(UncheckedUrl::new)
-                } else {
-                    None
-                };
-                let t = TagStandard::Event {
-                    event_id: event.id,
-                    relay_url: relay_hint,
-                    marker: Some(Marker::Reply),
-                    public_key: Some(event.pubkey),
-                };
-                let tag = Tag::from(t);
-                tags.push(tag)
+    // Add client tag
+    // TODO: allow user config this setting
+    tags.push(Tag::custom(TagKind::custom("client"), vec!["Lume"]));
+
+    // Get reply event
+    let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
+    let reply_to = match client.database().event_by_id(&reply_id).await {
+        Ok(event) => {
+            if let Some(event) = event {
+                event
             } else {
-                return Err("Reply event is not found.".into());
+                return Err("Event not found in database, cannot reply.".into());
             }
         }
-        Err(err) => return Err(err.to_string()),
+        Err(e) => return Err(e.to_string()),
     };
 
-    if let Some(id) = root {
-        let root_id = match EventId::from_hex(id) {
-            Ok(val) => val,
-            Err(_) => return Err("Event is not valid.".into()),
-        };
-
-        if let Ok(events) = database.query(vec![Filter::new().id(root_id)]).await {
-            if let Some(event) = events.first() {
-                let relay_hint = if let Some(relays) = database
-                    .event_seen_on_relays(&event.id)
-                    .await
-                    .map_err(|err| err.to_string())?
-                {
-                    relays.into_iter().next().map(UncheckedUrl::new)
-                } else {
-                    None
-                };
-                let t = TagStandard::Event {
-                    event_id: event.id,
-                    relay_url: relay_hint,
-                    marker: Some(Marker::Root),
-                    public_key: Some(event.pubkey),
-                };
-                let tag = Tag::from(t);
-                tags.push(tag)
-            }
+    // Get root event if exist
+    let root = match root {
+        Some(id) => {
+            let root_id = EventId::parse(&id).map_err(|err| err.to_string())?;
+            (client.database().event_by_id(&root_id).await).unwrap_or_default()
         }
+        None => None,
     };
 
-    match client.publish_text_note(content, tags).await {
-        Ok(event_id) => Ok(event_id.to_bech32().map_err(|err| err.to_string())?),
+    let builder = EventBuilder::text_note_reply(content, &reply_to, root.as_ref(), None)
+        .add_tags(tags)
+        .pow(DEFAULT_DIFFICULTY);
+
+    // Sign event
+    let event = client
+        .sign_event_builder(builder)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    // Save to local database
+    match client.database().save_event(&event).await {
+        Ok(status) => {
+            // Add event to queue to broadcast it later.
+            state.send_queue.lock().unwrap().insert(event);
+            // Return
+            Ok(status)
+        }
         Err(err) => Err(err.to_string()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
     let event = Event::from_json(raw).map_err(|err| err.to_string())?;
+    let builder = EventBuilder::repost(&event, None);
 
-    match client.repost(&event, None).await {
-        Ok(event_id) => Ok(event_id.to_string()),
+    // Sign event
+    let event = client
+        .sign_event_builder(builder)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    // Save to local database
+    match client.database().save_event(&event).await {
+        Ok(status) => {
+            // Add event to queue to broadcast it later.
+            state.send_queue.lock().unwrap().insert(event);
+            // Return
+            Ok(status)
+        }
         Err(err) => Err(err.to_string()),
     }
 }
