@@ -6,9 +6,7 @@ import { ArrowLeft, ArrowRight, Plus, StackPlus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
 import { listen } from "@tauri-apps/api/event";
-import { resolveResource } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { readTextFile } from "@tauri-apps/plugin-fs";
 import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
 import {
@@ -21,12 +19,12 @@ import {
 import { createPortal } from "react-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-export const Route = createLazyFileRoute("/_layout/")({
+export const Route = createLazyFileRoute("/_app/")({
 	component: Screen,
 });
 
 function Screen() {
-	const { accounts } = Route.useRouteContext();
+	const initialAppColumns = Route.useLoaderData();
 	const columns = useStore(appColumns, (state) => state);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -43,7 +41,7 @@ function Screen() {
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {
-		getCurrentWindow().emit("column_scroll", {});
+		getCurrentWindow().emit("scrolling", {});
 	}, []);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
@@ -62,16 +60,18 @@ function Screen() {
 	const move = useDebouncedCallback(
 		(label: string, direction: "left" | "right") => {
 			const newCols = [...columns];
+			const existColumn = newCols.find((el) => el.label === label);
 
-			const col = newCols.find((el) => el.label === label);
-			const colIndex = newCols.findIndex((el) => el.label === label);
+			if (existColumn) {
+				const colIndex = newCols.findIndex((el) => el.label === label);
 
-			newCols.splice(colIndex, 1);
+				newCols.splice(colIndex, 1);
 
-			if (direction === "left") newCols.splice(colIndex - 1, 0, col);
-			if (direction === "right") newCols.splice(colIndex + 1, 0, col);
+				if (direction === "left") newCols.splice(colIndex - 1, 0, existColumn);
+				if (direction === "right") newCols.splice(colIndex + 1, 0, existColumn);
 
-			appColumns.setState(() => newCols);
+				appColumns.setState(() => newCols);
+			}
 		},
 		150,
 	);
@@ -90,23 +90,6 @@ function Screen() {
 
 	const reset = useDebouncedCallback(() => appColumns.setState(() => []), 150);
 
-	const handleKeyDown = useDebouncedCallback((event) => {
-		if (event.defaultPrevented) return;
-
-		switch (event.code) {
-			case "ArrowLeft":
-				if (emblaApi) emblaApi.scrollPrev();
-				break;
-			case "ArrowRight":
-				if (emblaApi) emblaApi.scrollNext();
-				break;
-			default:
-				break;
-		}
-
-		event.preventDefault();
-	}, 150);
-
 	useEffect(() => {
 		if (emblaApi) {
 			emblaApi.on("scroll", emitScrollEvent);
@@ -119,16 +102,6 @@ function Screen() {
 		};
 	}, [emblaApi, emitScrollEvent]);
 
-	// Listen for keyboard event
-	useEffect(() => {
-		window.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [handleKeyDown]);
-
-	// Listen for columns event
 	useEffect(() => {
 		const unlisten = listen<ColumnEvent>("columns", (data) => {
 			if (data.payload.type === "reset") reset();
@@ -146,31 +119,14 @@ function Screen() {
 	}, []);
 
 	useEffect(() => {
-		async function getSystemColumns() {
-			const systemPath = "resources/columns.json";
-			const resourcePath = await resolveResource(systemPath);
-			const resourceFile = await readTextFile(resourcePath);
-			const cols: LumeColumn[] = JSON.parse(resourceFile);
-
-			appColumns.setState(() => cols.filter((col) => col.default));
+		if (initialAppColumns) {
+			appColumns.setState(() => initialAppColumns);
 		}
+	}, [initialAppColumns]);
 
-		if (!columns.length) {
-			const prevColumns = window.localStorage.getItem("columns");
-
-			if (!prevColumns) {
-				getSystemColumns();
-			} else {
-				const parsed: LumeColumn[] = JSON.parse(prevColumns);
-				const fil = parsed.filter((item) =>
-					item.account ? accounts.includes(item.account) : item,
-				);
-				appColumns.setState(() => fil);
-			}
-		} else {
-			window.localStorage.setItem("columns", JSON.stringify(columns));
-		}
-	}, [columns.length]);
+	useEffect(() => {
+		window.localStorage.setItem("columns", JSON.stringify(columns));
+	}, [columns]);
 
 	return (
 		<div className="size-full">

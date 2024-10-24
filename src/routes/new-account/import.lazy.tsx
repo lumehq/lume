@@ -6,7 +6,7 @@ import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState, useTransition } from "react";
 
-export const Route = createLazyFileRoute("/auth/watch")({
+export const Route = createLazyFileRoute("/new-account/import")({
 	component: Screen,
 });
 
@@ -14,6 +14,7 @@ function Screen() {
 	const navigate = Route.useNavigate();
 
 	const [key, setKey] = useState("");
+	const [password, setPassword] = useState("");
 	const [isPending, startTransition] = useTransition();
 
 	const pasteFromClipboard = async () => {
@@ -23,15 +24,26 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			if (!key.startsWith("npub") && !key.startsWith("nprofile")) {
+			if (!key.startsWith("nsec") && !key.startsWith("ncryptsec")) {
 				await message(
-					"You need to enter a valid public key starts with npub or nprofile",
-					{ kind: "info" },
+					"You need to enter a valid private key starts with nsec or ncryptsec",
+					{ title: "Login", kind: "info" },
 				);
 				return;
 			}
 
-			const res = await commands.watchAccount(key);
+			if (key.startsWith("ncryptsec") && !password.length) {
+				await message("You must enter a password to decrypt your key", {
+					title: "Login",
+					kind: "info",
+				});
+				return;
+			}
+
+			const res = await commands.importAccount(
+				key,
+				password.length ? password : null,
+			);
 
 			if (res.status === "ok") {
 				navigate({ to: "/", replace: true });
@@ -52,7 +64,7 @@ function Screen() {
 			<div className="w-[340px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">
 					<h1 className="leading-tight text-xl font-semibold">
-						Continue with Public Key (Watch Mode)
+						Continue with Secret Key
 					</h1>
 				</div>
 				<div className="flex flex-col gap-5">
@@ -65,13 +77,13 @@ function Screen() {
 								htmlFor="key"
 								className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
 							>
-								Public Key
+								Private Key
 							</label>
 							<div className="relative">
 								<input
 									name="key"
 									type="password"
-									placeholder="npub or nprofile..."
+									placeholder="nsec or ncryptsec..."
 									value={key}
 									onChange={(e) => setKey(e.target.value)}
 									className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-700 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
@@ -85,6 +97,23 @@ function Screen() {
 								</button>
 							</div>
 						</div>
+						{key.startsWith("ncryptsec") ? (
+							<div className="flex flex-col gap-1">
+								<label
+									htmlFor="password"
+									className="text-sm font-medium text-neutral-800 dark:text-neutral-200"
+								>
+									Enter password to decrypt your key
+								</label>
+								<input
+									name="password"
+									type="password"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									className="px-3 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-700 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
+								/>
+							</div>
+						) : null}
 					</Frame>
 					<div className="flex flex-col items-center gap-1">
 						<button

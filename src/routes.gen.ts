@@ -16,9 +16,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SetInterestImport } from './routes/set-interest'
 import { Route as SetGroupImport } from './routes/set-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
-import { Route as LayoutImport } from './routes/_layout'
+import { Route as AppImport } from './routes/_app'
 import { Route as NewPostIndexImport } from './routes/new-post/index'
-import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as AppIndexImport } from './routes/_app/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
 import { Route as SettingsIdWalletImport } from './routes/settings.$id/wallet'
@@ -37,13 +37,11 @@ import { Route as ColumnsLayoutCreateNewsfeedF2fImport } from './routes/columns/
 // Create Virtual Routes
 
 const ColumnsImport = createFileRoute('/columns')()
-const ResetLazyImport = createFileRoute('/reset')()
 const NewLazyImport = createFileRoute('/new')()
 const SettingsIdLazyImport = createFileRoute('/settings/$id')()
-const SetSignerIdLazyImport = createFileRoute('/set-signer/$id')()
-const AuthWatchLazyImport = createFileRoute('/auth/watch')()
-const AuthImportLazyImport = createFileRoute('/auth/import')()
-const AuthConnectLazyImport = createFileRoute('/auth/connect')()
+const NewAccountWatchLazyImport = createFileRoute('/new-account/watch')()
+const NewAccountImportLazyImport = createFileRoute('/new-account/import')()
+const NewAccountConnectLazyImport = createFileRoute('/new-account/connect')()
 const ColumnsLayoutTrendingLazyImport = createFileRoute(
   '/columns/_layout/trending',
 )()
@@ -76,11 +74,6 @@ const ColumnsRoute = ColumnsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ResetLazyRoute = ResetLazyImport.update({
-  path: '/reset',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/reset.lazy').then((d) => d.Route))
-
 const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
@@ -103,47 +96,48 @@ const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   import('./routes/bootstrap-relays.lazy').then((d) => d.Route),
 )
 
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
+const AppRoute = AppImport.update({
+  id: '/_app',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/_layout.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/_app.lazy').then((d) => d.Route))
 
 const NewPostIndexRoute = NewPostIndexImport.update({
   path: '/new-post/',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/new-post/index.lazy').then((d) => d.Route),
+)
 
-const LayoutIndexRoute = LayoutIndexImport.update({
+const AppIndexRoute = AppIndexImport.update({
   path: '/',
-  getParentRoute: () => LayoutRoute,
-} as any).lazy(() => import('./routes/_layout/index.lazy').then((d) => d.Route))
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/_app/index.lazy').then((d) => d.Route))
 
 const SettingsIdLazyRoute = SettingsIdLazyImport.update({
   path: '/settings/$id',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/settings.$id.lazy').then((d) => d.Route))
 
-const SetSignerIdLazyRoute = SetSignerIdLazyImport.update({
-  path: '/set-signer/$id',
+const NewAccountWatchLazyRoute = NewAccountWatchLazyImport.update({
+  path: '/new-account/watch',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/set-signer.$id.lazy').then((d) => d.Route),
+  import('./routes/new-account/watch.lazy').then((d) => d.Route),
 )
 
-const AuthWatchLazyRoute = AuthWatchLazyImport.update({
-  path: '/auth/watch',
+const NewAccountImportLazyRoute = NewAccountImportLazyImport.update({
+  path: '/new-account/import',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/auth/watch.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./routes/new-account/import.lazy').then((d) => d.Route),
+)
 
-const AuthImportLazyRoute = AuthImportLazyImport.update({
-  path: '/auth/import',
+const NewAccountConnectLazyRoute = NewAccountConnectLazyImport.update({
+  path: '/new-account/connect',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/auth/import.lazy').then((d) => d.Route))
-
-const AuthConnectLazyRoute = AuthConnectLazyImport.update({
-  path: '/auth/connect',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/auth/connect.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./routes/new-account/connect.lazy').then((d) => d.Route),
+)
 
 const ZapIdRoute = ZapIdImport.update({
   path: '/zap/$id',
@@ -302,11 +296,11 @@ const ColumnsLayoutCreateNewsfeedF2fRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_layout': {
-      id: '/_layout'
+    '/_app': {
+      id: '/_app'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof LayoutImport
+      preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
     '/bootstrap-relays': {
@@ -337,13 +331,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewLazyImport
       parentRoute: typeof rootRoute
     }
-    '/reset': {
-      id: '/reset'
-      path: '/reset'
-      fullPath: '/reset'
-      preLoaderRoute: typeof ResetLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/columns': {
       id: '/columns'
       path: '/columns'
@@ -365,32 +352,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ZapIdImport
       parentRoute: typeof rootRoute
     }
-    '/auth/connect': {
-      id: '/auth/connect'
-      path: '/auth/connect'
-      fullPath: '/auth/connect'
-      preLoaderRoute: typeof AuthConnectLazyImport
+    '/new-account/connect': {
+      id: '/new-account/connect'
+      path: '/new-account/connect'
+      fullPath: '/new-account/connect'
+      preLoaderRoute: typeof NewAccountConnectLazyImport
       parentRoute: typeof rootRoute
     }
-    '/auth/import': {
-      id: '/auth/import'
-      path: '/auth/import'
-      fullPath: '/auth/import'
-      preLoaderRoute: typeof AuthImportLazyImport
+    '/new-account/import': {
+      id: '/new-account/import'
+      path: '/new-account/import'
+      fullPath: '/new-account/import'
+      preLoaderRoute: typeof NewAccountImportLazyImport
       parentRoute: typeof rootRoute
     }
-    '/auth/watch': {
-      id: '/auth/watch'
-      path: '/auth/watch'
-      fullPath: '/auth/watch'
-      preLoaderRoute: typeof AuthWatchLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/set-signer/$id': {
-      id: '/set-signer/$id'
-      path: '/set-signer/$id'
-      fullPath: '/set-signer/$id'
-      preLoaderRoute: typeof SetSignerIdLazyImport
+    '/new-account/watch': {
+      id: '/new-account/watch'
+      path: '/new-account/watch'
+      fullPath: '/new-account/watch'
+      preLoaderRoute: typeof NewAccountWatchLazyImport
       parentRoute: typeof rootRoute
     }
     '/settings/$id': {
@@ -400,12 +380,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsIdLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/': {
-      id: '/_layout/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof AppImport
     }
     '/new-post/': {
       id: '/new-post/'
@@ -559,16 +539,15 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface LayoutRouteChildren {
-  LayoutIndexRoute: typeof LayoutIndexRoute
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
 }
 
-const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutIndexRoute: LayoutIndexRoute,
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
 }
 
-const LayoutRouteWithChildren =
-  LayoutRoute._addFileChildren(LayoutRouteChildren)
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface ColumnsLayoutCreateNewsfeedRouteChildren {
   ColumnsLayoutCreateNewsfeedF2fRoute: typeof ColumnsLayoutCreateNewsfeedF2fRoute
@@ -656,20 +635,18 @@ const SettingsIdLazyRouteWithChildren = SettingsIdLazyRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '': typeof LayoutRouteWithChildren
+  '': typeof AppRouteWithChildren
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/set-group': typeof SetGroupRoute
   '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
-  '/reset': typeof ResetLazyRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
-  '/auth/connect': typeof AuthConnectLazyRoute
-  '/auth/import': typeof AuthImportLazyRoute
-  '/auth/watch': typeof AuthWatchLazyRoute
-  '/set-signer/$id': typeof SetSignerIdLazyRoute
+  '/new-account/connect': typeof NewAccountConnectLazyRoute
+  '/new-account/import': typeof NewAccountImportLazyRoute
+  '/new-account/watch': typeof NewAccountWatchLazyRoute
   '/settings/$id': typeof SettingsIdLazyRouteWithChildren
-  '/': typeof LayoutIndexRoute
+  '/': typeof AppIndexRoute
   '/new-post': typeof NewPostIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
@@ -698,15 +675,13 @@ export interface FileRoutesByTo {
   '/set-group': typeof SetGroupRoute
   '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
-  '/reset': typeof ResetLazyRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
-  '/auth/connect': typeof AuthConnectLazyRoute
-  '/auth/import': typeof AuthImportLazyRoute
-  '/auth/watch': typeof AuthWatchLazyRoute
-  '/set-signer/$id': typeof SetSignerIdLazyRoute
+  '/new-account/connect': typeof NewAccountConnectLazyRoute
+  '/new-account/import': typeof NewAccountImportLazyRoute
+  '/new-account/watch': typeof NewAccountWatchLazyRoute
   '/settings/$id': typeof SettingsIdLazyRouteWithChildren
-  '/': typeof LayoutIndexRoute
+  '/': typeof AppIndexRoute
   '/new-post': typeof NewPostIndexRoute
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
@@ -732,21 +707,19 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_layout': typeof LayoutRouteWithChildren
+  '/_app': typeof AppRouteWithChildren
   '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/set-group': typeof SetGroupRoute
   '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
-  '/reset': typeof ResetLazyRoute
   '/columns': typeof ColumnsRouteWithChildren
   '/columns/_layout': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
-  '/auth/connect': typeof AuthConnectLazyRoute
-  '/auth/import': typeof AuthImportLazyRoute
-  '/auth/watch': typeof AuthWatchLazyRoute
-  '/set-signer/$id': typeof SetSignerIdLazyRoute
+  '/new-account/connect': typeof NewAccountConnectLazyRoute
+  '/new-account/import': typeof NewAccountImportLazyRoute
+  '/new-account/watch': typeof NewAccountWatchLazyRoute
   '/settings/$id': typeof SettingsIdLazyRouteWithChildren
-  '/_layout/': typeof LayoutIndexRoute
+  '/_app/': typeof AppIndexRoute
   '/new-post/': typeof NewPostIndexRoute
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
@@ -778,13 +751,11 @@ export interface FileRouteTypes {
     | '/set-group'
     | '/set-interest'
     | '/new'
-    | '/reset'
     | '/columns'
     | '/zap/$id'
-    | '/auth/connect'
-    | '/auth/import'
-    | '/auth/watch'
-    | '/set-signer/$id'
+    | '/new-account/connect'
+    | '/new-account/import'
+    | '/new-account/watch'
     | '/settings/$id'
     | '/'
     | '/new-post'
@@ -814,13 +785,11 @@ export interface FileRouteTypes {
     | '/set-group'
     | '/set-interest'
     | '/new'
-    | '/reset'
     | '/columns'
     | '/zap/$id'
-    | '/auth/connect'
-    | '/auth/import'
-    | '/auth/watch'
-    | '/set-signer/$id'
+    | '/new-account/connect'
+    | '/new-account/import'
+    | '/new-account/watch'
     | '/settings/$id'
     | '/'
     | '/new-post'
@@ -846,21 +815,19 @@ export interface FileRouteTypes {
     | '/columns/users/$id'
   id:
     | '__root__'
-    | '/_layout'
+    | '/_app'
     | '/bootstrap-relays'
     | '/set-group'
     | '/set-interest'
     | '/new'
-    | '/reset'
     | '/columns'
     | '/columns/_layout'
     | '/zap/$id'
-    | '/auth/connect'
-    | '/auth/import'
-    | '/auth/watch'
-    | '/set-signer/$id'
+    | '/new-account/connect'
+    | '/new-account/import'
+    | '/new-account/watch'
     | '/settings/$id'
-    | '/_layout/'
+    | '/_app/'
     | '/new-post/'
     | '/columns/_layout/create-newsfeed'
     | '/columns/_layout/global'
@@ -886,35 +853,31 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  LayoutRoute: typeof LayoutRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
   BootstrapRelaysRoute: typeof BootstrapRelaysRoute
   SetGroupRoute: typeof SetGroupRoute
   SetInterestRoute: typeof SetInterestRoute
   NewLazyRoute: typeof NewLazyRoute
-  ResetLazyRoute: typeof ResetLazyRoute
   ColumnsRoute: typeof ColumnsRouteWithChildren
   ZapIdRoute: typeof ZapIdRoute
-  AuthConnectLazyRoute: typeof AuthConnectLazyRoute
-  AuthImportLazyRoute: typeof AuthImportLazyRoute
-  AuthWatchLazyRoute: typeof AuthWatchLazyRoute
-  SetSignerIdLazyRoute: typeof SetSignerIdLazyRoute
+  NewAccountConnectLazyRoute: typeof NewAccountConnectLazyRoute
+  NewAccountImportLazyRoute: typeof NewAccountImportLazyRoute
+  NewAccountWatchLazyRoute: typeof NewAccountWatchLazyRoute
   SettingsIdLazyRoute: typeof SettingsIdLazyRouteWithChildren
   NewPostIndexRoute: typeof NewPostIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  LayoutRoute: LayoutRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
   BootstrapRelaysRoute: BootstrapRelaysRoute,
   SetGroupRoute: SetGroupRoute,
   SetInterestRoute: SetInterestRoute,
   NewLazyRoute: NewLazyRoute,
-  ResetLazyRoute: ResetLazyRoute,
   ColumnsRoute: ColumnsRouteWithChildren,
   ZapIdRoute: ZapIdRoute,
-  AuthConnectLazyRoute: AuthConnectLazyRoute,
-  AuthImportLazyRoute: AuthImportLazyRoute,
-  AuthWatchLazyRoute: AuthWatchLazyRoute,
-  SetSignerIdLazyRoute: SetSignerIdLazyRoute,
+  NewAccountConnectLazyRoute: NewAccountConnectLazyRoute,
+  NewAccountImportLazyRoute: NewAccountImportLazyRoute,
+  NewAccountWatchLazyRoute: NewAccountWatchLazyRoute,
   SettingsIdLazyRoute: SettingsIdLazyRouteWithChildren,
   NewPostIndexRoute: NewPostIndexRoute,
 }
@@ -931,26 +894,24 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_layout",
+        "/_app",
         "/bootstrap-relays",
         "/set-group",
         "/set-interest",
         "/new",
-        "/reset",
         "/columns",
         "/zap/$id",
-        "/auth/connect",
-        "/auth/import",
-        "/auth/watch",
-        "/set-signer/$id",
+        "/new-account/connect",
+        "/new-account/import",
+        "/new-account/watch",
         "/settings/$id",
         "/new-post/"
       ]
     },
-    "/_layout": {
-      "filePath": "_layout.tsx",
+    "/_app": {
+      "filePath": "_app.tsx",
       "children": [
-        "/_layout/"
+        "/_app/"
       ]
     },
     "/bootstrap-relays": {
@@ -964,9 +925,6 @@ export const routeTree = rootRoute
     },
     "/new": {
       "filePath": "new.lazy.tsx"
-    },
-    "/reset": {
-      "filePath": "reset.lazy.tsx"
     },
     "/columns": {
       "filePath": "columns",
@@ -997,17 +955,14 @@ export const routeTree = rootRoute
     "/zap/$id": {
       "filePath": "zap.$id.tsx"
     },
-    "/auth/connect": {
-      "filePath": "auth/connect.lazy.tsx"
+    "/new-account/connect": {
+      "filePath": "new-account/connect.lazy.tsx"
     },
-    "/auth/import": {
-      "filePath": "auth/import.lazy.tsx"
+    "/new-account/import": {
+      "filePath": "new-account/import.lazy.tsx"
     },
-    "/auth/watch": {
-      "filePath": "auth/watch.lazy.tsx"
-    },
-    "/set-signer/$id": {
-      "filePath": "set-signer.$id.lazy.tsx"
+    "/new-account/watch": {
+      "filePath": "new-account/watch.lazy.tsx"
     },
     "/settings/$id": {
       "filePath": "settings.$id.lazy.tsx",
@@ -1018,9 +973,9 @@ export const routeTree = rootRoute
         "/settings/$id/wallet"
       ]
     },
-    "/_layout/": {
-      "filePath": "_layout/index.tsx",
-      "parent": "/_layout"
+    "/_app/": {
+      "filePath": "_app/index.tsx",
+      "parent": "/_app"
     },
     "/new-post/": {
       "filePath": "new-post/index.tsx"

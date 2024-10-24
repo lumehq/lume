@@ -40,6 +40,22 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
+			const signer = await commands.hasSigner(account);
+
+			if (signer.status === "ok") {
+				if (!signer.data) {
+					const res = await commands.setSigner(account);
+
+					if (res.status === "error") {
+						await message(res.error, { kind: "error" });
+						return;
+					}
+				}
+			} else {
+				await message(signer.error, { kind: "error" });
+				return;
+			}
+
 			const res = await commands.setGroup(title, null, null, users);
 
 			if (res.status === "ok") {

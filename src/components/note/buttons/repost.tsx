@@ -1,14 +1,13 @@
 import { commands } from "@/commands.gen";
 import { appSettings, cn, displayNpub } from "@/commons";
 import { RepostIcon, Spinner } from "@/components";
-import { LumeWindow } from "@/system";
 import type { Metadata } from "@/types";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useStore } from "@tanstack/react-store";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
-import type { Window } from "@tauri-apps/api/window";
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { message } from "@tauri-apps/plugin-dialog";
+import { useCallback, useTransition } from "react";
 import { useNoteContext } from "../provider";
 
 export function NoteRepost({
@@ -38,13 +37,12 @@ export function NoteRepost({
 	});
 
 	const [isPending, startTransition] = useTransition();
-	const [popup, setPopup] = useState<Window>(null);
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
 
 		const accounts = await commands.getAccounts();
-		const list = [];
+		const list: Promise<MenuItem>[] = [];
 
 		for (const account of accounts) {
 			const res = await commands.getProfile(account);
@@ -52,7 +50,7 @@ export function NoteRepost({
 
 			if (res.status === "ok") {
 				const profile: Metadata = JSON.parse(res.data);
-				name = profile.display_name ?? profile.name;
+				name = profile.display_name ?? profile.name ?? "unknown";
 			}
 
 			list.push(
@@ -102,14 +100,14 @@ export function NoteRepost({
 
 				if (signer.status === "ok") {
 					if (!signer.data) {
-						const newPopup = await LumeWindow.openPopup(
-							`/set-signer/${account}`,
-							undefined,
-							false,
-						);
+						if (!signer.data) {
+							const res = await commands.setSigner(account);
 
-						setPopup(newPopup);
-						return;
+							if (res.status === "error") {
+								await message(res.error, { kind: "error" });
+								return;
+							}
+						}
 					}
 
 					repost.mutate();
@@ -121,19 +119,6 @@ export function NoteRepost({
 			}
 		});
 	};
-
-	useEffect(() => {
-		if (!visible) return;
-		if (!popup) return;
-
-		const unlisten = popup.listen("signer-updated", async () => {
-			repost.mutate();
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, [popup]);
 
 	if (!visible) return null;
 

@@ -1,7 +1,6 @@
-import { type Result, type RichEvent, commands } from "@/commands.gen";
+import { commands } from "@/commands.gen";
 import type { NostrEvent } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { nip19 } from "nostr-tools";
 import { LumeEvent } from "./event";
 
 export function useEvent(id: string, repost?: string) {
@@ -21,32 +20,14 @@ export function useEvent(id: string, repost?: string) {
 				}
 
 				// Validate ID
-				let normalizeId: string = id
+				const normalizeId: string = id
 					.replace("nostr:", "")
 					.replace(/[^\w\s]/gi, "");
 
-				// Define query
-				let query: Result<RichEvent, string>;
-				let relayHint: string = null;
+				const res = await commands.getEvent(normalizeId);
 
-				if (normalizeId.startsWith("nevent1")) {
-					const decoded = nip19.decode(normalizeId);
-
-					if (decoded.type === "nevent") {
-						relayHint = decoded.data.relays[0];
-						normalizeId = decoded.data.id;
-					}
-				}
-
-				// Build query
-				if (relayHint?.length) {
-					query = await commands.getEventFrom(normalizeId, relayHint);
-				} else {
-					query = await commands.getEvent(normalizeId);
-				}
-
-				if (query.status === "ok") {
-					const data = query.data;
+				if (res.status === "ok") {
+					const data = res.data;
 					const raw: NostrEvent = JSON.parse(data.raw);
 
 					if (data.parsed) {
@@ -55,7 +36,7 @@ export function useEvent(id: string, repost?: string) {
 
 					return new LumeEvent(raw);
 				} else {
-					throw new Error(query.error);
+					throw new Error(res.error);
 				}
 			} catch (e) {
 				throw new Error(String(e));
@@ -64,8 +45,6 @@ export function useEvent(id: string, repost?: string) {
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,
 		refetchOnReconnect: false,
-		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
 	});
 
 	return { isLoading, isError, error, data };

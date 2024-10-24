@@ -5,7 +5,7 @@ import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState, useTransition } from "react";
 
-export const Route = createLazyFileRoute("/auth/connect")({
+export const Route = createLazyFileRoute("/new-account/connect")({
 	component: Screen,
 });
 

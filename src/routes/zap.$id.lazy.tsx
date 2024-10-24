@@ -1,12 +1,11 @@
 import { commands } from "@/commands.gen";
 import { displayNpub } from "@/commons";
 import { User } from "@/components";
-import { LumeWindow } from "@/system";
 import type { Metadata } from "@/types";
 import { CaretDown } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
-import { type Window, getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import CurrencyInput from "react-currency-input-field";
@@ -20,8 +19,7 @@ export const Route = createLazyFileRoute("/zap/$id")({
 function Screen() {
 	const { accounts, event } = Route.useRouteContext();
 
-	const [currentUser, setCurrentUser] = useState<string>(null);
-	const [popup, setPopup] = useState<Window>(null);
+	const [currentUser, setCurrentUser] = useState<string | null>(null);
 	const [amount, setAmount] = useState(21);
 	const [content, setContent] = useState<string>("");
 	const [isCompleted, setIsCompleted] = useState(false);
@@ -30,7 +28,7 @@ function Screen() {
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
 
-		const list = [];
+		const list: Promise<MenuItem>[] = [];
 
 		for (const account of accounts) {
 			const res = await commands.getProfile(account);
@@ -38,7 +36,7 @@ function Screen() {
 
 			if (res.status === "ok") {
 				const profile: Metadata = JSON.parse(res.data);
-				name = profile.display_name ?? profile.name;
+				name = profile.display_name ?? profile.name ?? "unknown";
 			}
 
 			list.push(
@@ -57,51 +55,39 @@ function Screen() {
 
 	const zap = () => {
 		startTransition(async () => {
-			const res = await commands.zapEvent(event.id, amount.toString(), content);
+			if (!currentUser) return;
 
-			if (res.status === "ok") {
-				setIsCompleted(true);
-				// close current window
-				await getCurrentWindow().close();
-			} else {
-				await message(res.error, { kind: "error" });
-				return;
-			}
-		});
-	};
-
-	const submit = async () => {
-		if (currentUser) {
 			const signer = await commands.hasSigner(currentUser);
 
 			if (signer.status === "ok") {
 				if (!signer.data) {
-					const newPopup = await LumeWindow.openPopup(
-						`/set-signer/${currentUser}`,
-						undefined,
-						false,
-					);
+					const res = await commands.setSigner(currentUser);
 
-					setPopup(newPopup);
-					return;
+					if (res.status === "error") {
+						await message(res.error, { kind: "error" });
+						return;
+					}
 				}
 
-				zap();
+				const res = await commands.zapEvent(
+					event.id,
+					amount.toString(),
+					content,
+				);
+
+				if (res.status === "ok") {
+					setIsCompleted(true);
+					// close current window
+					await getCurrentWindow().close();
+				} else {
+					await message(res.error, { kind: "error" });
+					return;
+				}
+			} else {
+				return;
 			}
-		}
-	};
-
-	useEffect(() => {
-		if (!popup) return;
-
-		const unlisten = popup.listen("signer-updated", () => {
-			zap();
 		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, [popup]);
+	};
 
 	useEffect(() => {
 		if (accounts?.length) {
@@ -170,7 +156,7 @@ function Screen() {
 						<div className="inline-flex items-center gap-3">
 							<button
 								type="button"
-								onClick={() => submit()}
+								onClick={() => zap()}
 								className="inline-flex items-center justify-center w-full h-9 text-sm font-semibold rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:hover:bg-blue-400"
 							>
 								{isCompleted ? "Zapped" : isPending ? "Processing..." : "Zap"}

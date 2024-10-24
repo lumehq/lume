@@ -1,17 +1,22 @@
 import { commands } from "@/commands.gen";
-import { cn } from "@/commons";
+import { appColumns, cn } from "@/commons";
 import { PublishIcon } from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
 import { MagnifyingGlass, Plus } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, Outlet, createLazyFileRoute } from "@tanstack/react-router";
+import {
+	Link,
+	Outlet,
+	createLazyFileRoute,
+	useRouter,
+} from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useCallback, useEffect } from "react";
 
-export const Route = createLazyFileRoute("/_layout")({
+export const Route = createLazyFileRoute("/_app")({
 	component: Layout,
 });
 
@@ -83,6 +88,7 @@ function Topbar() {
 function Account({ pubkey }: { pubkey: string }) {
 	const navigate = Route.useNavigate();
 	const context = Route.useRouteContext();
+	const router = useRouter();
 
 	const { data: isActive } = useQuery({
 		queryKey: ["signer", pubkey],
@@ -103,10 +109,9 @@ function Account({ pubkey }: { pubkey: string }) {
 
 			const items = await Promise.all([
 				MenuItem.new({
-					text: "Unlock",
+					text: "Activate",
 					enabled: !isActive || true,
-					action: () =>
-						LumeWindow.openPopup(`/set-signer/${pubkey}`, undefined, false),
+					action: async () => await commands.setSigner(pubkey),
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
@@ -124,17 +129,28 @@ function Account({ pubkey }: { pubkey: string }) {
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
-					text: "Logout",
+					text: "Delete Account",
 					action: async () => {
 						const res = await commands.deleteAccount(pubkey);
 
 						if (res.status === "ok") {
+							router.invalidate();
+
+							// Delete column associate with this account
+							appColumns.setState((prev) =>
+								prev.filter((col) =>
+									col.account ? col.account !== pubkey : col,
+								),
+							);
+
+							// Check remain account
 							const newAccounts = context.accounts.filter(
 								(account) => account !== pubkey,
 							);
 
+							// Redirect to new account screen
 							if (newAccounts.length < 1) {
-								navigate({ to: "/", replace: true });
+								navigate({ to: "/new", replace: true });
 							}
 						}
 					},

@@ -1,5 +1,4 @@
 import { events } from "@/commands.gen";
-import { appSettings } from "@/commons";
 import { Spinner } from "@/components";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
@@ -20,24 +19,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function Screen() {
 	const { queryClient } = Route.useRouteContext();
 
-	/*
-	useEffect(() => {
-		const unlisten = events.newSettings.listen((data) => {
-			appSettings.setState((state) => {
-				return { ...state, ...data.payload };
-			});
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
-	*/
-
 	useEffect(() => {
 		const unlisten = events.negentropyEvent.listen(async (data) => {
 			const queryKey = [data.payload.kind.toLowerCase()];
-			await queryClient.invalidateQueries({ queryKey });
+			console.info("invalidate: ", queryKey);
+
+			await queryClient.refetchQueries({ queryKey });
 		});
 
 		return () => {

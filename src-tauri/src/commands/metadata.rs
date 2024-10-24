@@ -199,7 +199,7 @@ pub async fn set_group(
     users: Vec<String>,
     state: State<'_, Nostr>,
     handle: tauri::AppHandle,
-) -> Result<bool, String> {
+) -> Result<String, String> {
     let client = &state.client;
     let public_keys: Vec<PublicKey> = users
         .iter()
@@ -225,12 +225,8 @@ pub async fn set_group(
         .await
         .map_err(|err| err.to_string())?;
 
-    // Save to local database
-    match client.database().save_event(&event).await {
-        Ok(status) => {
-            // Add event to queue to broadcast it later.
-            state.send_queue.lock().unwrap().insert(event);
-
+    match client.send_event(event).await {
+        Ok(output) => {
             // Sync event
             tauri::async_runtime::spawn(async move {
                 let state = handle.state::<Nostr>();
@@ -247,8 +243,7 @@ pub async fn set_group(
                 };
             });
 
-            // Return
-            Ok(status)
+            Ok(output.to_hex())
         }
         Err(err) => Err(err.to_string()),
     }
@@ -302,7 +297,7 @@ pub async fn set_interest(
     hashtags: Vec<String>,
     state: State<'_, Nostr>,
     handle: tauri::AppHandle,
-) -> Result<bool, String> {
+) -> Result<String, String> {
     let client = &state.client;
     let label = title.to_lowercase().replace(" ", "-");
     let mut tags: Vec<Tag> = vec![Tag::title(title)];
@@ -324,12 +319,8 @@ pub async fn set_interest(
         .await
         .map_err(|err| err.to_string())?;
 
-    // Save to local database
-    match client.database().save_event(&event).await {
-        Ok(status) => {
-            // Add event to queue to broadcast it later.
-            state.send_queue.lock().unwrap().insert(event);
-
+    match client.send_event(event).await {
+        Ok(output) => {
             // Sync event
             tauri::async_runtime::spawn(async move {
                 let state = handle.state::<Nostr>();
@@ -346,8 +337,7 @@ pub async fn set_interest(
                 };
             });
 
-            // Return
-            Ok(status)
+            Ok(output.to_hex())
         }
         Err(err) => Err(err.to_string()),
     }

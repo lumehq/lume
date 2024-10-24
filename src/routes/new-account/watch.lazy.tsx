@@ -1,11 +1,12 @@
 import { commands } from "@/commands.gen";
-import { Frame, GoBack, Spinner } from "@/components";
+import { Frame, GoBack } from "@/components";
+import { Spinner } from "@/components/spinner";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState, useTransition } from "react";
 
-export const Route = createLazyFileRoute("/reset")({
+export const Route = createLazyFileRoute("/new-account/watch")({
 	component: Screen,
 });
 
@@ -13,7 +14,6 @@ function Screen() {
 	const navigate = Route.useNavigate();
 
 	const [key, setKey] = useState("");
-	const [password, setPassword] = useState("");
 	const [isPending, startTransition] = useTransition();
 
 	const pasteFromClipboard = async () => {
@@ -23,29 +23,20 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			if (!key.startsWith("nsec1")) {
+			if (!key.startsWith("npub") && !key.startsWith("nprofile")) {
 				await message(
-					"You need to enter a valid private key starts with nsec",
-					{ title: "Reset Password", kind: "info" },
+					"You need to enter a valid public key starts with npub or nprofile",
+					{ kind: "info" },
 				);
 				return;
 			}
 
-			if (!password.length) {
-				await message("You must set password to secure your key", {
-					title: "Reset Password",
-					kind: "info",
-				});
-				return;
-			}
-
-			const res = await commands.resetPassword(key, password);
+			const res = await commands.watchAccount(key);
 
 			if (res.status === "ok") {
 				navigate({ to: "/", replace: true });
 			} else {
 				await message(res.error, {
-					title: "Import Private Ket",
 					kind: "error",
 				});
 				return;
@@ -56,58 +47,43 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="size-full flex items-center justify-center"
+			className="bg-white/50 dark:bg-black/50 size-full flex items-center justify-center"
 		>
-			<div className="w-[320px] flex flex-col gap-8">
+			<div className="w-[340px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">
 					<h1 className="leading-tight text-xl font-semibold">
-						Reset password
+						Continue with Public Key (Watch Mode)
 					</h1>
 				</div>
-				<div className="flex flex-col gap-3">
+				<div className="flex flex-col gap-5">
 					<Frame
-						className="flex flex-col gap-3 p-3 rounded-xl overflow-hidden"
+						className="flex flex-col gap-3 p-4 rounded-xl overflow-hidden"
 						shadow
 					>
-						<div className="flex flex-col gap-1.5">
+						<div className="flex flex-col gap-2.5">
 							<label
 								htmlFor="key"
-								className="text-sm font-medium text-neutral-800 dark:text-neutral-200"
+								className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
 							>
-								Private Key
+								Public Key
 							</label>
 							<div className="relative">
 								<input
 									name="key"
 									type="password"
-									placeholder="nsec..."
+									placeholder="npub or nprofile..."
 									value={key}
 									onChange={(e) => setKey(e.target.value)}
-									className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
+									className="pl-3 pr-12 rounded-lg w-full h-10 bg-transparent border border-neutral-200 dark:border-neutral-700 focus:border-blue-500 focus:outline-none placeholder:text-neutral-400"
 								/>
 								<button
 									type="button"
 									onClick={() => pasteFromClipboard()}
-									className="absolute uppercase top-1/2 right-2 transform -translate-y-1/2 text-xs font-semibold text-blue-500"
+									className="absolute top-1/2 right-2 transform -translate-y-1/2 text-xs font-semibold text-blue-500 dark:text-blue-300"
 								>
 									Paste
 								</button>
 							</div>
-						</div>
-						<div className="flex flex-col gap-1">
-							<label
-								htmlFor="password"
-								className="text-sm font-medium text-neutral-800 dark:text-neutral-200"
-							>
-								Set a new password
-							</label>
-							<input
-								name="password"
-								type="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								className="px-3 rounded-lg h-10 bg-transparent border border-neutral-200 dark:border-neutral-500 focus:border-blue-500 focus:outline-none"
-							/>
 						</div>
 					</Frame>
 					<div className="flex flex-col items-center gap-1">

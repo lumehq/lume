@@ -1,11 +1,14 @@
+use async_utility::thread::sleep;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::{str::FromStr, time::Duration};
-use tauri::{Emitter, State};
+use std::{fs, str::FromStr, time::Duration};
+use tauri::{Emitter, Manager, State};
 
 use crate::{common::get_all_accounts, Nostr};
+
+use super::sync::sync_account;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -21,15 +24,26 @@ pub fn get_accounts() -> Vec<String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn watch_account(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn watch_account(
+    id: String,
+    state: State<'_, Nostr>,
+    app_handle: tauri::AppHandle,
+) -> Result<String, String> {
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
     let npub = public_key.to_bech32().map_err(|e| e.to_string())?;
     let keyring = Entry::new("Lume Safe Storage", &npub).map_err(|e| e.to_string())?;
 
     // Set empty password
     keyring.set_password("").map_err(|e| e.to_string())?;
+
+    // Run sync for this account
+    sync_account(public_key, app_handle);
+
     // Update state
     state.accounts.lock().unwrap().push(npub.clone());
+
+    // Fake loading
+    sleep(Duration::from_secs(4)).await;
 
     Ok(npub)
 }
@@ -40,6 +54,7 @@ pub async fn import_account(
     key: String,
     password: Option<String>,
     state: State<'_, Nostr>,
+    app_handle: tauri::AppHandle,
 ) -> Result<String, String> {
     let client = &state.client;
 
@@ -54,10 +69,8 @@ pub async fn import_account(
     let hex = secret_key.to_secret_hex();
     let keys = Keys::new(secret_key);
 
-    let npub = keys
-        .public_key()
-        .to_bech32()
-        .map_err(|err| err.to_string())?;
+    let public_key = keys.public_key();
+    let npub = public_key.to_bech32().map_err(|err| err.to_string())?;
 
     let signer = NostrSigner::Keys(keys);
     let keyring = Entry::new("Lume Safe Storage", &npub).map_err(|e| e.to_string())?;
@@ -73,6 +86,13 @@ pub async fn import_account(
 
     // Update signer
     client.set_signer(Some(signer)).await;
+
+    // Run sync for this account
+    sync_account(public_key, app_handle);
+
+    // Fake loading
+    sleep(Duration::from_secs(4)).await;
+
     // Update state
     state.accounts.lock().unwrap().push(npub.clone());
 
@@ -81,7 +101,11 @@ pub async fn import_account(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn connect_account(
+    uri: String,
+    state: State<'_, Nostr>,
+    app_handle: tauri::AppHandle,
+) -> Result<String, String> {
     let client = &state.client;
 
     match NostrConnectURI::parse(uri.clone()) {
@@ -93,6 +117,9 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
             // Get remote user
             let remote_user = bunker_uri.signer_public_key().unwrap();
             let remote_npub = remote_user.to_bech32().unwrap();
+
+            // Run sync for this account
+            sync_account(remote_user, app_handle);
 
             match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None) {
                 Ok(signer) => {
@@ -117,6 +144,7 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
 
                     // Update signer
                     let _ = client.set_signer(Some(signer.into())).await;
+
                     // Update state
                     state.accounts.lock().unwrap().push(remote_npub.clone());
 
@@ -172,6 +200,24 @@ pub fn delete_account(id: String) -> Result<(), String> {
 
 #[tauri::command]
 #[specta::specta]
+pub async fn is_new_account(id: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
+    let config_dir = app_handle.path().config_dir().map_err(|e| e.to_string())?;
+    let exist = fs::metadata(config_dir.join(id)).is_ok();
+
+    Ok(!exist)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn toggle_new_account(id: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+    let config_dir = app_handle.path().config_dir().map_err(|e| e.to_string())?;
+    fs::File::create(config_dir.join(id)).unwrap();
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn has_signer(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
@@ -200,6 +246,11 @@ pub async fn set_signer(
     let account = match keyring.get_password() {
         Ok(pw) => {
             let account: Account = serde_json::from_str(&pw).map_err(|e| e.to_string())?;
+
+            if account.secret_key.is_empty() {
+                return Err("Watch Only account".into());
+            };
+
             account
         }
         Err(e) => return Err(e.to_string()),

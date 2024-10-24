@@ -5,7 +5,14 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{account::*, event::*, metadata::*, relay::*, sync::NegentropyEvent, window::*};
+use commands::{
+    account::*,
+    event::*,
+    metadata::*,
+    relay::*,
+    sync::{sync_all, NegentropyEvent},
+    window::*,
+};
 use common::{get_all_accounts, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
@@ -19,7 +26,7 @@ use std::{
     sync::Mutex,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager, WindowEvent};
+use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, collect_events, Builder, Event as TauriEvent};
@@ -33,7 +40,6 @@ pub struct Nostr {
     accounts: Mutex<Vec<String>>,
     bootstrap_relays: Mutex<Vec<Url>>,
     subscriptions: Mutex<HashSet<SubscriptionId>>,
-    send_queue: Mutex<HashSet<Event>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -86,7 +92,7 @@ struct Sync {
     id: String,
 }
 
-pub const DEFAULT_DIFFICULTY: u8 = 21;
+pub const DEFAULT_DIFFICULTY: u8 = 0;
 pub const FETCH_LIMIT: usize = 50;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
@@ -105,6 +111,8 @@ fn main() {
             get_private_key,
             delete_account,
             reset_password,
+            is_new_account,
+            toggle_new_account,
             has_signer,
             set_signer,
             get_profile,
@@ -175,6 +183,7 @@ fn main() {
             let handle = app.handle();
             let handle_clone = handle.clone();
             let handle_clone_child = handle_clone.clone();
+            let handle_clone_child_child = handle_clone_child.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             let config_dir = handle
@@ -260,6 +269,8 @@ fn main() {
             });
 
             let accounts = get_all_accounts();
+            // Run sync for all accounts
+            sync_all(accounts.clone(), handle_clone_child_child);
 
             // Create global state
             app.manage(Nostr {
@@ -268,7 +279,6 @@ fn main() {
                 settings: Mutex::new(Settings::default()),
                 bootstrap_relays: Mutex::new(bootstrap_relays),
                 subscriptions: Mutex::new(HashSet::new()),
-                send_queue: Mutex::new(HashSet::new()),
             });
 
             // Handle subscription request
@@ -539,39 +549,6 @@ fn main() {
             });
 
             Ok(())
-        })
-        .on_window_event(|window, event| match event {
-            WindowEvent::CloseRequested { api, .. } => {
-                api.prevent_close();
-                // Just hide window not close
-                window.hide().unwrap();
-
-                let state = window.state::<Nostr>();
-                let client = &state.client;
-                let queue: Vec<Event> = state
-                    .send_queue
-                    .lock()
-                    .unwrap()
-                    .clone()
-                    .into_iter()
-                    .collect();
-
-                if !queue.is_empty() {
-                    tauri::async_runtime::block_on(async {
-                        println!("Sending total {} events to relays", queue.len());
-                        match client.batch_event(queue, RelaySendOptions::default()).await {
-                            Ok(_) => window.destroy().unwrap(),
-                            Err(_) => window.emit("batch-event", ()).unwrap(),
-                        }
-                    });
-                } else {
-                    window.destroy().unwrap()
-                }
-            }
-            WindowEvent::Focused(_focused) => {
-                // TODO
-            }
-            _ => {}
         })
         .plugin(prevent_default())
         .plugin(tauri_plugin_theme::init(ctx.config_mut()))

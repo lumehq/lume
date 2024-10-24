@@ -290,7 +290,7 @@ pub async fn publish(
     warning: Option<String>,
     difficulty: Option<u8>,
     state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<String, String> {
     let client = &state.client;
 
     // Create event tags from content
@@ -320,13 +320,8 @@ pub async fn publish(
         .map_err(|err| err.to_string())?;
 
     // Save to local database
-    match client.database().save_event(&event).await {
-        Ok(status) => {
-            // Add event to queue to broadcast it later.
-            state.send_queue.lock().unwrap().insert(event);
-            // Return
-            Ok(status)
-        }
+    match client.send_event(event).await {
+        Ok(output) => Ok(output.to_hex()),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -338,7 +333,7 @@ pub async fn reply(
     to: String,
     root: Option<String>,
     state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<String, String> {
     let client = &state.client;
 
     // Create event tags from content
@@ -380,39 +375,20 @@ pub async fn reply(
         .await
         .map_err(|err| err.to_string())?;
 
-    // Save to local database
-    match client.database().save_event(&event).await {
-        Ok(status) => {
-            // Add event to queue to broadcast it later.
-            state.send_queue.lock().unwrap().insert(event);
-            // Return
-            Ok(status)
-        }
+    match client.send_event(event).await {
+        Ok(output) => Ok(output.to_hex()),
         Err(err) => Err(err.to_string()),
     }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let event = Event::from_json(raw).map_err(|err| err.to_string())?;
-    let builder = EventBuilder::repost(&event, None);
 
-    // Sign event
-    let event = client
-        .sign_event_builder(builder)
-        .await
-        .map_err(|err| err.to_string())?;
-
-    // Save to local database
-    match client.database().save_event(&event).await {
-        Ok(status) => {
-            // Add event to queue to broadcast it later.
-            state.send_queue.lock().unwrap().insert(event);
-            // Return
-            Ok(status)
-        }
+    match client.repost(&event, None).await {
+        Ok(output) => Ok(output.to_hex()),
         Err(err) => Err(err.to_string()),
     }
 }

@@ -61,10 +61,10 @@ export interface LumeColumn {
 
 export interface ColumnEvent {
 	type: "reset" | "add" | "remove" | "update" | "move" | "set_title";
-	label?: string;
-	title?: string;
-	column?: LumeColumn;
-	direction?: "left" | "right";
+	column: LumeColumn;
+	label: string;
+	title: string;
+	direction: "left" | "right";
 }
 
 export interface Relays {

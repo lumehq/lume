@@ -52,9 +52,26 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
+			const signer = await commands.hasSigner(account);
+
+			if (signer.status === "ok") {
+				if (!signer.data) {
+					const res = await commands.setSigner(account);
+
+					if (res.status === "error") {
+						await message(res.error, { kind: "error" });
+						return;
+					}
+				}
+			} else {
+				await message(signer.error, { kind: "error" });
+				return;
+			}
+
 			const content = hashtags.map((tag) =>
 				tag.toLowerCase().replace(" ", "-").replace("#", ""),
 			);
+
 			const res = await commands.setInterest(title, null, null, content);
 
 			if (res.status === "ok") {

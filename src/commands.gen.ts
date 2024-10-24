@@ -96,6 +96,22 @@ async resetPassword(key: string, password: string) : Promise<Result<null, string
     else return { status: "error", error: e  as any };
 }
 },
+async isNewAccount(id: string) : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_new_account", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async toggleNewAccount(id: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("toggle_new_account", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async hasSigner(id: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("has_signer", { id }) };
@@ -168,7 +184,7 @@ async getAllProfiles() : Promise<Result<Mention[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async setGroup(title: string, description: string | null, image: string | null, users: string[]) : Promise<Result<boolean, string>> {
+async setGroup(title: string, description: string | null, image: string | null, users: string[]) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_group", { title, description, image, users }) };
 } catch (e) {
@@ -192,7 +208,7 @@ async getAllGroups() : Promise<Result<RichEvent[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async setInterest(title: string, description: string | null, image: string | null, hashtags: string[]) : Promise<Result<boolean, string>> {
+async setInterest(title: string, description: string | null, image: string | null, hashtags: string[]) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_interest", { title, description, image, hashtags }) };
 } catch (e) {
@@ -384,7 +400,7 @@ async search(query: string) : Promise<Result<RichEvent[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async publish(content: string, warning: string | null, difficulty: number | null) : Promise<Result<boolean, string>> {
+async publish(content: string, warning: string | null, difficulty: number | null) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("publish", { content, warning, difficulty }) };
 } catch (e) {
@@ -392,7 +408,7 @@ async publish(content: string, warning: string | null, difficulty: number | null
     else return { status: "error", error: e  as any };
 }
 },
-async reply(content: string, to: string, root: string | null) : Promise<Result<boolean, string>> {
+async reply(content: string, to: string, root: string | null) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reply", { content, to, root }) };
 } catch (e) {
@@ -400,7 +416,7 @@ async reply(content: string, to: string, root: string | null) : Promise<Result<b
     else return { status: "error", error: e  as any };
 }
 },
-async repost(raw: string) : Promise<Result<boolean, string>> {
+async repost(raw: string) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("repost", { raw }) };
 } catch (e) {

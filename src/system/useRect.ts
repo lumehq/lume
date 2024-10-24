@@ -23,7 +23,7 @@ const useEffectInEvent = <K extends keyof WindowEventMap>(
 const useTauriInEvent = (set: () => void) => {
 	useEffect(() => {
 		if (set) {
-			const unlisten = listen("column_scroll", () => {
+			const unlisten = listen("scrolling", () => {
 				set();
 			});
 
