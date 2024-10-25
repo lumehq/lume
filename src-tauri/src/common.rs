@@ -34,14 +34,12 @@ const NOSTR_EVENTS: [&str; 10] = [
     "Nostr:nevent1",
 ];
 
-const NOSTR_MENTIONS: [&str; 10] = [
+const NOSTR_MENTIONS: [&str; 8] = [
     "@npub1",
     "nostr:npub1",
     "nostr:nprofile1",
-    "nostr:naddr1",
     "npub1",
     "nprofile1",
-    "naddr1",
     "Nostr:npub1",
     "Nostr:nprofile1",
     "Nostr:naddr1",

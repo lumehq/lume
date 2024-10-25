@@ -5,6 +5,22 @@
 
 
 export const commands = {
+async syncAccount(id: string, reader: TAURI_CHANNEL<number>) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("sync_account", { id, reader }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async isAccountSync(id: string) : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_account_sync", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getRelays(id: string) : Promise<Result<Relays, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_relays", { id }) };
@@ -91,22 +107,6 @@ async deleteAccount(id: string) : Promise<Result<null, string>> {
 async resetPassword(key: string, password: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reset_password", { key, password }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async isNewAccount(id: string) : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("is_new_account", { id }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async toggleNewAccount(id: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("toggle_new_account", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -312,9 +312,9 @@ async verifyNip05(id: string, nip05: string) : Promise<Result<boolean, string>> 
     else return { status: "error", error: e  as any };
 }
 },
-async getEventMeta(content: string) : Promise<Result<Meta, null>> {
+async getMetaFromEvent(content: string) : Promise<Result<Meta, null>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_event_meta", { content }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_meta_from_event", { content }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -323,14 +323,6 @@ async getEventMeta(content: string) : Promise<Result<Meta, null>> {
 async getEvent(id: string) : Promise<Result<RichEvent, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_event", { id }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getEventFrom(id: string, relayHint: string) : Promise<Result<RichEvent, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_event_from", { id, relayHint }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

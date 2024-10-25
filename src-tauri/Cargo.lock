@@ -44,6 +44,7 @@ dependencies = [
  "tauri-plugin-window-state",
  "tauri-specta",
  "tokio",
+ "tracing-subscriber",
  "url",
 ]
 
@@ -3479,7 +3480,7 @@ checksum = "0676bb32a98c1a483ce53e500a81ad9c3d5b3f7c920c28c24e9cb0980d0b5bc8"
 [[package]]
 name = "nostr"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "aes",
  "base64 0.22.1",
@@ -3509,7 +3510,7 @@ dependencies = [
 [[package]]
 name = "nostr-database"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "async-trait",
  "flatbuffers",
@@ -3523,7 +3524,7 @@ dependencies = [
 [[package]]
 name = "nostr-lmdb"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "heed",
  "nostr",
@@ -3536,7 +3537,7 @@ dependencies = [
 [[package]]
 name = "nostr-relay-pool"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "async-utility",
  "async-wsocket",
@@ -3554,7 +3555,7 @@ dependencies = [
 [[package]]
 name = "nostr-sdk"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "async-utility",
  "atomic-destructor",
@@ -3574,7 +3575,7 @@ dependencies = [
 [[package]]
 name = "nostr-signer"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "async-utility",
  "nostr",
@@ -3587,7 +3588,7 @@ dependencies = [
 [[package]]
 name = "nostr-zapper"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "async-trait",
  "nostr",
@@ -3605,6 +3606,16 @@ dependencies = [
  "serde",
  "tauri-winrt-notification",
  "zbus 4.4.0",
+]
+
+[[package]]
+name = "nu-ansi-term"
+version = "0.46.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77a8165726e8236064dbb45459242600304b42a5ea24ee2948e18e023bf7ba84"
+dependencies = [
+ "overload",
+ "winapi",
 ]
 
 [[package]]
@@ -3721,7 +3732,7 @@ dependencies = [
 [[package]]
 name = "nwc"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#a8114e090b333e6ca50fb80d8afc1ced4229ee33"
+source = "git+https://github.com/rust-nostr/nostr#a398775dd1013482f785816e6b9fe99f7668416a"
 dependencies = [
  "async-utility",
  "nostr",
@@ -3992,6 +4003,12 @@ dependencies = [
  "libc",
  "windows-sys 0.59.0",
 ]
+
+[[package]]
+name = "overload"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
 name = "page_size"
@@ -5317,6 +5334,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "sharded-slab"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
+dependencies = [
+ "lazy_static",
+]
+
+[[package]]
 name = "share-picker"
 version = "0.1.0"
 source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#63896be8a49bf048c502daa2315d621c7a4d5c24"
@@ -6332,6 +6358,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "thread_local"
+version = "1.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8b9ef9bad013ada3808854ceac7b46812a6465ba368859a37e2100283d2d719c"
+dependencies = [
+ "cfg-if",
+ "once_cell",
+]
+
+[[package]]
 name = "tiff"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6606,6 +6642,32 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c06d3da6113f116aaee68e4d601191614c9053067f9ab7f6edbcb161237daa54"
 dependencies = [
  "once_cell",
+ "valuable",
+]
+
+[[package]]
+name = "tracing-log"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee855f1f400bd0e5c02d150ae5de3840039a3f54b025156404e34c23c03f47c3"
+dependencies = [
+ "log",
+ "once_cell",
+ "tracing-core",
+]
+
+[[package]]
+name = "tracing-subscriber"
+version = "0.3.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad0f048c97dbd9faa9b7df56362b8ebcaa52adb06b498c050d2f4e32f90a7a8b"
+dependencies = [
+ "nu-ansi-term",
+ "sharded-slab",
+ "smallvec",
+ "thread_local",
+ "tracing-core",
+ "tracing-log",
 ]
 
 [[package]]
@@ -6812,6 +6874,12 @@ dependencies = [
  "num-traits",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "valuable"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "830b7e5d4d90034032940e4ace0d9a9a057e7a45cd94e6c007832e39edb82f6d"
 
 [[package]]
 name = "vcpkg"

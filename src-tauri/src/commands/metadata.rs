@@ -237,7 +237,7 @@ pub async fn set_group(
                     .authors(public_keys)
                     .limit(500);
 
-                if let Ok(report) = client.sync(filter, NegentropyOptions::default()).await {
+                if let Ok(report) = client.sync(filter, SyncOptions::default()).await {
                     println!("Received: {}", report.received.len());
                     handle.emit("synchronized", ()).unwrap();
                 };
@@ -331,7 +331,7 @@ pub async fn set_interest(
                     .hashtags(hashtags)
                     .limit(500);
 
-                if let Ok(report) = client.sync(filter, NegentropyOptions::default()).await {
+                if let Ok(report) = client.sync(filter, SyncOptions::default()).await {
                     println!("Received: {}", report.received.len());
                     handle.emit("synchronized", ()).unwrap();
                 };
@@ -560,15 +560,12 @@ pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Ve
     let client = &state.client;
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
-    let filter = Filter::new()
-        .pubkey(public_key)
-        .kinds(vec![
-            Kind::TextNote,
-            Kind::Repost,
-            Kind::Reaction,
-            Kind::ZapReceipt,
-        ])
-        .limit(200);
+    let filter = Filter::new().pubkey(public_key).kinds(vec![
+        Kind::TextNote,
+        Kind::Repost,
+        Kind::Reaction,
+        Kind::ZapReceipt,
+    ]);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),

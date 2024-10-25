@@ -21,9 +21,15 @@ export function Images({ urls }: { urls: string[] }) {
 			let newUrls: string[];
 
 			if (urls.length === 1) {
-				newUrls = urls.map(
-					(url) => `${service}?url=${url}&ll&af&default=1&n=-1`,
-				);
+				newUrls = urls.map((url) => {
+					if (url.includes("_next/")) {
+						return url;
+					}
+					if (url.includes("bsky.network")) {
+						return url;
+					}
+					return `${service}?url=${url}&ll&af&default=1&n=-1`;
+				});
 			} else {
 				newUrls = urls.map(
 					(url) => `${service}?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
@@ -83,10 +89,6 @@ export function Images({ urls }: { urls: string[] }) {
 					className="max-h-[400px] w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 					onClick={() => urls[0]}
 					onKeyDown={() => urls[0]}
-					onError={({ currentTarget }) => {
-						currentTarget.onerror = null;
-						currentTarget.src = "/404.jpg";
-					}}
 				/>
 			</div>
 		);
@@ -162,10 +164,6 @@ function LazyImage({ url, inView }: { url: string; inView: boolean }) {
 				onClick={() => open(url)}
 				onKeyDown={() => open(url)}
 				onLoad={setLoaded}
-				onError={({ currentTarget }) => {
-					currentTarget.onerror = null;
-					currentTarget.src = "/404.jpg";
-				}}
 			/>
 		</div>
 	);

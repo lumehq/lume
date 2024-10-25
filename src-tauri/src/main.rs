@@ -5,14 +5,7 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{
-    account::*,
-    event::*,
-    metadata::*,
-    relay::*,
-    sync::{sync_all, NegentropyEvent},
-    window::*,
-};
+use commands::{account::*, event::*, metadata::*, relay::*, sync::*, window::*};
 use common::{get_all_accounts, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
@@ -97,8 +90,12 @@ pub const FETCH_LIMIT: usize = 50;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
+    tracing_subscriber::fmt::init();
+
     let builder = Builder::<tauri::Wry>::new()
         .commands(collect_commands![
+            sync_account,
+            is_account_sync,
             get_relays,
             connect_relay,
             remove_relay,
@@ -111,8 +108,6 @@ fn main() {
             get_private_key,
             delete_account,
             reset_password,
-            is_new_account,
-            toggle_new_account,
             has_signer,
             set_signer,
             get_profile,
@@ -138,9 +133,8 @@ fn main() {
             get_user_settings,
             set_user_settings,
             verify_nip05,
-            get_event_meta,
+            get_meta_from_event,
             get_event,
-            get_event_from,
             get_replies,
             subscribe_to,
             get_all_events_by_author,

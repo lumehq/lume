@@ -11,13 +11,14 @@ export const LumeWindow = {
 			column,
 		});
 	},
-	openLaunchpad: async () => {
+	openLaunchpad: async (account: string) => {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
 				label: "launchpad",
 				name: "Launchpad",
-				url: "/columns/launchpad",
+				url: `/columns/launchpad/${account}`,
+				account,
 			},
 		});
 	},

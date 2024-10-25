@@ -1,6 +1,7 @@
 import { commands } from "@/commands.gen";
 import type { NostrEvent } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { nip19 } from "nostr-tools";
 import { LumeEvent } from "./event";
 
 export function useEvent(id: string, repost?: string) {
@@ -10,7 +11,7 @@ export function useEvent(id: string, repost?: string) {
 			try {
 				if (repost?.length) {
 					const nostrEvent: NostrEvent = JSON.parse(repost);
-					const res = await commands.getEventMeta(nostrEvent.content);
+					const res = await commands.getMetaFromEvent(nostrEvent.content);
 
 					if (res.status === "ok") {
 						nostrEvent.meta = res.data;
@@ -19,12 +20,17 @@ export function useEvent(id: string, repost?: string) {
 					return new LumeEvent(nostrEvent);
 				}
 
-				// Validate ID
-				const normalizeId: string = id
-					.replace("nostr:", "")
-					.replace(/[^\w\s]/gi, "");
+				let normalizedId = id.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 
-				const res = await commands.getEvent(normalizeId);
+				if (normalizedId.startsWith("nevent")) {
+					const decoded = nip19.decode(normalizedId);
+
+					if (decoded.type === "nevent") {
+						normalizedId = decoded.data.id;
+					}
+				}
+
+				const res = await commands.getEvent(normalizedId);
 
 				if (res.status === "ok") {
 					const data = res.data;

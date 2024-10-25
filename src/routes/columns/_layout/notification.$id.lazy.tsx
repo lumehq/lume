@@ -52,7 +52,11 @@ function Screen() {
 
 				if (rootId) {
 					if (reactions.has(rootId)) {
-						reactions.get(rootId).push(event);
+						const ev = reactions.get(rootId);
+
+						if (ev) {
+							ev.push(event);
+						}
 					} else {
 						reactions.set(rootId, [event]);
 					}
@@ -64,7 +68,11 @@ function Screen() {
 
 				if (rootId) {
 					if (zaps.has(rootId)) {
-						zaps.get(rootId).push(event);
+						const ev = zaps.get(rootId);
+
+						if (ev) {
+							ev.push(event);
+						}
 					} else {
 						zaps.set(rootId, [event]);
 					}

@@ -1,8 +1,11 @@
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::str::FromStr;
-use tauri::{AppHandle, Manager};
+use std::{
+    fs::{self, File},
+    str::FromStr,
+};
+use tauri::{ipc::Channel, AppHandle, Manager, State};
 use tauri_specta::Event as TauriEvent;
 
 use crate::Nostr;
@@ -45,70 +48,19 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
         let client = &state.client;
         let bootstrap_relays = state.bootstrap_relays.lock().unwrap().clone();
 
-        // NEG: Sync metadata
-        //
-        let metadata = Filter::new().authors(public_keys.clone()).kinds(vec![
-            Kind::Metadata,
-            Kind::ContactList,
-            Kind::Interests,
-            Kind::InterestSet,
-            Kind::FollowSet,
-            Kind::EventDeletion,
-            Kind::TextNote,
-            Kind::Repost,
-            Kind::Custom(30315),
-        ]);
-
-        if let Ok(report) = client
-            .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
-            .await
-        {
-            NegentropyEvent {
-                kind: NegentropyKind::Others,
-                total_event: report.received.len() as i32,
-            }
-            .emit(&app_handle)
-            .unwrap();
-        }
-
-        // NEG: Sync notification
-        //
-        let notification = Filter::new()
-            .pubkeys(public_keys)
-            .kinds(vec![
-                Kind::TextNote,
-                Kind::Repost,
-                Kind::Reaction,
-                Kind::ZapReceipt,
-            ])
-            .limit(5000);
-
-        if let Ok(report) = client
-            .sync_with(
-                &bootstrap_relays,
-                notification,
-                NegentropyOptions::default(),
-            )
-            .await
-        {
-            NegentropyEvent {
-                kind: NegentropyKind::Notification,
-                total_event: report.received.len() as i32,
-            }
-            .emit(&app_handle)
-            .unwrap();
-        }
-
         // NEG: Sync events for all pubkeys in local database
         //
-        let pubkey_filter = Filter::new().kinds(vec![
-            Kind::ContactList,
-            Kind::Repost,
-            Kind::TextNote,
-            Kind::FollowSet,
-        ]);
-
-        if let Ok(events) = client.database().query(vec![pubkey_filter]).await {
+        if let Ok(events) = client
+            .database()
+            .query(vec![Filter::new().kinds(vec![
+                Kind::ContactList,
+                Kind::FollowSet,
+                Kind::MuteList,
+                Kind::Repost,
+                Kind::TextNote,
+            ])])
+            .await
+        {
             let pubkeys: Vec<PublicKey> = events
                 .iter()
                 .flat_map(|ev| ev.tags.public_keys().copied())
@@ -126,15 +78,15 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
                 let events = Filter::new()
                     .authors(authors.clone())
                     .kinds(vec![Kind::TextNote, Kind::Repost])
-                    .limit(5000);
+                    .limit(1000);
 
-                if let Ok(report) = client
-                    .sync_with(&bootstrap_relays, events, NegentropyOptions::default())
+                if let Ok(output) = client
+                    .sync_with(&bootstrap_relays, events, SyncOptions::default())
                     .await
                 {
                     NegentropyEvent {
                         kind: NegentropyKind::Events,
-                        total_event: report.received.len() as i32,
+                        total_event: output.received.len() as i32,
                     }
                     .emit(&app_handle)
                     .unwrap();
@@ -144,124 +96,35 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
                 //
                 let metadata = Filter::new()
                     .authors(authors)
-                    .kinds(vec![Kind::Metadata, Kind::ContactList]);
+                    .kinds(vec![
+                        Kind::Metadata,
+                        Kind::ContactList,
+                        Kind::Interests,
+                        Kind::InterestSet,
+                        Kind::FollowSet,
+                        Kind::MuteList,
+                        Kind::RelaySet,
+                    ])
+                    .limit(1000);
 
-                if let Ok(report) = client
-                    .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
+                if let Ok(output) = client
+                    .sync_with(&bootstrap_relays, metadata, SyncOptions::default())
                     .await
                 {
                     NegentropyEvent {
                         kind: NegentropyKind::Metadata,
-                        total_event: report.received.len() as i32,
+                        total_event: output.received.len() as i32,
                     }
                     .emit(&app_handle)
                     .unwrap();
                 }
             }
         }
-    });
-}
 
-pub fn sync_account(public_key: PublicKey, app_handle: AppHandle) {
-    tauri::async_runtime::spawn(async move {
-        let state = app_handle.state::<Nostr>();
-        let client = &state.client;
-        let bootstrap_relays = state.bootstrap_relays.lock().unwrap().clone();
-
-        // NEG: Sync all user's metadata
-        //
-        let metadata = Filter::new().author(public_key).kinds(vec![
-            Kind::Metadata,
-            Kind::ContactList,
-            Kind::Interests,
-            Kind::InterestSet,
-            Kind::FollowSet,
-            Kind::RelayList,
-            Kind::RelaySet,
-            Kind::EventDeletion,
-            Kind::Custom(30315),
-        ]);
-
-        if let Ok(report) = client
-            .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
-            .await
-        {
-            NegentropyEvent {
-                kind: NegentropyKind::Metadata,
-                total_event: report.received.len() as i32,
-            }
-            .emit(&app_handle)
-            .unwrap();
-        }
-
-        if let Ok(contact_list) = client.database().contacts_public_keys(public_key).await {
-            // NEG: Sync all contact's metadata
-            //
-            let metadata = Filter::new()
-                .authors(contact_list.clone())
-                .kinds(vec![Kind::Metadata, Kind::RelaySet, Kind::Custom(30315)])
-                .limit(1000);
-
-            if let Ok(report) = client
-                .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
-                .await
-            {
-                NegentropyEvent {
-                    kind: NegentropyKind::Metadata,
-                    total_event: report.received.len() as i32,
-                }
-                .emit(&app_handle)
-                .unwrap();
-            }
-
-            // NEG: Sync all contact's events
-            //
-            let metadata = Filter::new()
-                .authors(contact_list.clone())
-                .kinds(vec![Kind::TextNote, Kind::Repost])
-                .limit(1000);
-
-            if let Ok(report) = client
-                .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
-                .await
-            {
-                NegentropyEvent {
-                    kind: NegentropyKind::Events,
-                    total_event: report.received.len() as i32,
-                }
-                .emit(&app_handle)
-                .unwrap();
-            }
-
-            // NEG: Sync all contact's other metadata
-            //
-            let metadata = Filter::new()
-                .authors(contact_list)
-                .kinds(vec![
-                    Kind::Interests,
-                    Kind::InterestSet,
-                    Kind::FollowSet,
-                    Kind::EventDeletion,
-                ])
-                .limit(1000);
-
-            if let Ok(report) = client
-                .sync_with(&bootstrap_relays, metadata, NegentropyOptions::default())
-                .await
-            {
-                NegentropyEvent {
-                    kind: NegentropyKind::Metadata,
-                    total_event: report.received.len() as i32,
-                }
-                .emit(&app_handle)
-                .unwrap();
-            }
-        }
-
-        // NEG: Sync all user's metadata
+        // NEG: Sync notification
         //
         let notification = Filter::new()
-            .pubkey(public_key)
+            .pubkeys(public_keys.clone())
             .kinds(vec![
                 Kind::TextNote,
                 Kind::Repost,
@@ -270,20 +133,188 @@ pub fn sync_account(public_key: PublicKey, app_handle: AppHandle) {
             ])
             .limit(500);
 
-        if let Ok(report) = client
-            .sync_with(
-                &bootstrap_relays,
-                notification,
-                NegentropyOptions::default(),
-            )
+        if let Ok(output) = client
+            .sync_with(&bootstrap_relays, notification, SyncOptions::default())
             .await
         {
             NegentropyEvent {
                 kind: NegentropyKind::Notification,
-                total_event: report.received.len() as i32,
+                total_event: output.received.len() as i32,
+            }
+            .emit(&app_handle)
+            .unwrap();
+        }
+
+        // NEG: Sync metadata
+        //
+        let metadata = Filter::new().authors(public_keys.clone()).kinds(vec![
+            Kind::Metadata,
+            Kind::ContactList,
+            Kind::Interests,
+            Kind::InterestSet,
+            Kind::FollowSet,
+            Kind::RelayList,
+            Kind::MuteList,
+            Kind::EventDeletion,
+            Kind::Bookmarks,
+            Kind::BookmarkSet,
+            Kind::Emojis,
+            Kind::EmojiSet,
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Custom(30315),
+        ]);
+
+        if let Ok(output) = client
+            .sync_with(&bootstrap_relays, metadata, SyncOptions::default())
+            .await
+        {
+            NegentropyEvent {
+                kind: NegentropyKind::Others,
+                total_event: output.received.len() as i32,
             }
             .emit(&app_handle)
             .unwrap();
         }
     });
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn is_account_sync(id: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
+    let config_dir = app_handle
+        .path()
+        .app_config_dir()
+        .map_err(|e| e.to_string())?;
+    let exist = fs::metadata(config_dir.join(id)).is_ok();
+
+    Ok(exist)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn sync_account(
+    id: String,
+    state: State<'_, Nostr>,
+    reader: Channel<f64>,
+    app_handle: tauri::AppHandle,
+) -> Result<(), String> {
+    let client = &state.client;
+    let bootstrap_relays = state.bootstrap_relays.lock().unwrap().clone();
+
+    let public_key = PublicKey::from_bech32(&id).map_err(|e| e.to_string())?;
+
+    let filter = Filter::new().author(public_key).kinds(vec![
+        Kind::Metadata,
+        Kind::ContactList,
+        Kind::Interests,
+        Kind::InterestSet,
+        Kind::FollowSet,
+        Kind::RelayList,
+        Kind::MuteList,
+        Kind::EventDeletion,
+        Kind::Bookmarks,
+        Kind::BookmarkSet,
+        Kind::TextNote,
+        Kind::Repost,
+        Kind::Custom(30315),
+    ]);
+
+    let (tx, mut rx) = SyncProgress::channel();
+    let opts = SyncOptions::default().progress(tx);
+
+    tauri::async_runtime::spawn(async move {
+        while (rx.changed().await).is_ok() {
+            let SyncProgress { total, current } = *rx.borrow_and_update();
+
+            if total > 0 {
+                reader
+                    .send((current as f64 / total as f64) * 100.0)
+                    .unwrap()
+            }
+        }
+    });
+
+    if let Ok(output) = client
+        .sync_with(&bootstrap_relays, filter, opts.clone())
+        .await
+    {
+        println!("Success: {:?}", output.success);
+        println!("Failed: {:?}", output.failed);
+
+        let event_pubkeys = client
+            .database()
+            .query(vec![Filter::new().kinds(vec![
+                Kind::ContactList,
+                Kind::FollowSet,
+                Kind::MuteList,
+                Kind::Repost,
+                Kind::TextNote,
+            ])])
+            .await
+            .map_err(|e| e.to_string())?;
+
+        if !event_pubkeys.is_empty() {
+            let pubkeys: Vec<PublicKey> = event_pubkeys
+                .iter()
+                .flat_map(|ev| ev.tags.public_keys().copied())
+                .collect();
+
+            let filter = Filter::new()
+                .authors(pubkeys)
+                .kinds(vec![
+                    Kind::Metadata,
+                    Kind::TextNote,
+                    Kind::Repost,
+                    Kind::EventDeletion,
+                    Kind::Interests,
+                    Kind::InterestSet,
+                    Kind::FollowSet,
+                    Kind::RelayList,
+                    Kind::MuteList,
+                    Kind::EventDeletion,
+                    Kind::Bookmarks,
+                    Kind::BookmarkSet,
+                    Kind::Custom(30315),
+                ])
+                .limit(10000);
+
+            if let Ok(output) = client
+                .sync_with(&bootstrap_relays, filter, opts.clone())
+                .await
+            {
+                println!("Success: {:?}", output.success);
+                println!("Failed: {:?}", output.failed);
+            }
+        };
+    }
+
+    let event_ids = client
+        .database()
+        .query(vec![Filter::new().kinds(vec![
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Bookmarks,
+            Kind::BookmarkSet,
+        ])])
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !event_ids.is_empty() {
+        let ids: Vec<EventId> = event_ids.iter().map(|ev| ev.id).collect();
+        let filter = Filter::new().events(ids);
+
+        if let Ok(output) = client.sync_with(&bootstrap_relays, filter, opts).await {
+            println!("Success: {:?}", output.success);
+            println!("Failed: {:?}", output.failed);
+        }
+    }
+
+    let config_dir = app_handle
+        .path()
+        .app_config_dir()
+        .map_err(|e| e.to_string())?;
+    let _ = File::create(config_dir.join(id));
+
+    Ok(())
 }

@@ -48,6 +48,7 @@ linkify = "0.10.0"
 regex = "1.10.4"
 keyring = { version = "3", features = ["apple-native", "windows-native"] }
 keyring-search = "1.2.0"
+tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 border = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }

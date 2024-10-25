@@ -51,9 +51,6 @@ const ColumnsLayoutSearchLazyImport = createFileRoute(
 const ColumnsLayoutOnboardingLazyImport = createFileRoute(
   '/columns/_layout/onboarding',
 )()
-const ColumnsLayoutLaunchpadLazyImport = createFileRoute(
-  '/columns/_layout/launchpad',
-)()
 const ColumnsLayoutUsersIdLazyImport = createFileRoute(
   '/columns/_layout/users/$id',
 )()
@@ -62,6 +59,9 @@ const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
 )()
 const ColumnsLayoutNotificationIdLazyImport = createFileRoute(
   '/columns/_layout/notification/$id',
+)()
+const ColumnsLayoutLaunchpadIdLazyImport = createFileRoute(
+  '/columns/_layout/launchpad/$id',
 )()
 const ColumnsLayoutEventsIdLazyImport = createFileRoute(
   '/columns/_layout/events/$id',
@@ -171,15 +171,6 @@ const ColumnsLayoutOnboardingLazyRoute =
     import('./routes/columns/_layout/onboarding.lazy').then((d) => d.Route),
   )
 
-const ColumnsLayoutLaunchpadLazyRoute = ColumnsLayoutLaunchpadLazyImport.update(
-  {
-    path: '/launchpad',
-    getParentRoute: () => ColumnsLayoutRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/columns/_layout/launchpad.lazy').then((d) => d.Route),
-)
-
 const SettingsIdWalletRoute = SettingsIdWalletImport.update({
   path: '/wallet',
   getParentRoute: () => SettingsIdLazyRoute,
@@ -243,6 +234,14 @@ const ColumnsLayoutNotificationIdLazyRoute =
     import('./routes/columns/_layout/notification.$id.lazy').then(
       (d) => d.Route,
     ),
+  )
+
+const ColumnsLayoutLaunchpadIdLazyRoute =
+  ColumnsLayoutLaunchpadIdLazyImport.update({
+    path: '/launchpad/$id',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/launchpad.$id.lazy').then((d) => d.Route),
   )
 
 const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
@@ -436,13 +435,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsIdWalletImport
       parentRoute: typeof SettingsIdLazyImport
     }
-    '/columns/_layout/launchpad': {
-      id: '/columns/_layout/launchpad'
-      path: '/launchpad'
-      fullPath: '/columns/launchpad'
-      preLoaderRoute: typeof ColumnsLayoutLaunchpadLazyImport
-      parentRoute: typeof ColumnsLayoutImport
-    }
     '/columns/_layout/onboarding': {
       id: '/columns/_layout/onboarding'
       path: '/onboarding'
@@ -513,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutEventsIdLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/launchpad/$id': {
+      id: '/columns/_layout/launchpad/$id'
+      path: '/launchpad/$id'
+      fullPath: '/columns/launchpad/$id'
+      preLoaderRoute: typeof ColumnsLayoutLaunchpadIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/notification/$id': {
       id: '/columns/_layout/notification/$id'
       path: '/notification/$id'
@@ -569,7 +568,6 @@ const ColumnsLayoutCreateNewsfeedRouteWithChildren =
 interface ColumnsLayoutRouteChildren {
   ColumnsLayoutCreateNewsfeedRoute: typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   ColumnsLayoutGlobalRoute: typeof ColumnsLayoutGlobalRoute
-  ColumnsLayoutLaunchpadLazyRoute: typeof ColumnsLayoutLaunchpadLazyRoute
   ColumnsLayoutOnboardingLazyRoute: typeof ColumnsLayoutOnboardingLazyRoute
   ColumnsLayoutSearchLazyRoute: typeof ColumnsLayoutSearchLazyRoute
   ColumnsLayoutTrendingLazyRoute: typeof ColumnsLayoutTrendingLazyRoute
@@ -578,6 +576,7 @@ interface ColumnsLayoutRouteChildren {
   ColumnsLayoutNewsfeedIdRoute: typeof ColumnsLayoutNewsfeedIdRoute
   ColumnsLayoutStoriesIdRoute: typeof ColumnsLayoutStoriesIdRoute
   ColumnsLayoutEventsIdLazyRoute: typeof ColumnsLayoutEventsIdLazyRoute
+  ColumnsLayoutLaunchpadIdLazyRoute: typeof ColumnsLayoutLaunchpadIdLazyRoute
   ColumnsLayoutNotificationIdLazyRoute: typeof ColumnsLayoutNotificationIdLazyRoute
   ColumnsLayoutRepliesIdLazyRoute: typeof ColumnsLayoutRepliesIdLazyRoute
   ColumnsLayoutUsersIdLazyRoute: typeof ColumnsLayoutUsersIdLazyRoute
@@ -587,7 +586,6 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
   ColumnsLayoutCreateNewsfeedRoute:
     ColumnsLayoutCreateNewsfeedRouteWithChildren,
   ColumnsLayoutGlobalRoute: ColumnsLayoutGlobalRoute,
-  ColumnsLayoutLaunchpadLazyRoute: ColumnsLayoutLaunchpadLazyRoute,
   ColumnsLayoutOnboardingLazyRoute: ColumnsLayoutOnboardingLazyRoute,
   ColumnsLayoutSearchLazyRoute: ColumnsLayoutSearchLazyRoute,
   ColumnsLayoutTrendingLazyRoute: ColumnsLayoutTrendingLazyRoute,
@@ -596,6 +594,7 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
   ColumnsLayoutNewsfeedIdRoute: ColumnsLayoutNewsfeedIdRoute,
   ColumnsLayoutStoriesIdRoute: ColumnsLayoutStoriesIdRoute,
   ColumnsLayoutEventsIdLazyRoute: ColumnsLayoutEventsIdLazyRoute,
+  ColumnsLayoutLaunchpadIdLazyRoute: ColumnsLayoutLaunchpadIdLazyRoute,
   ColumnsLayoutNotificationIdLazyRoute: ColumnsLayoutNotificationIdLazyRoute,
   ColumnsLayoutRepliesIdLazyRoute: ColumnsLayoutRepliesIdLazyRoute,
   ColumnsLayoutUsersIdLazyRoute: ColumnsLayoutUsersIdLazyRoute,
@@ -654,7 +653,6 @@ export interface FileRoutesByFullPath {
   '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
-  '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
   '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
@@ -665,6 +663,7 @@ export interface FileRoutesByFullPath {
   '/columns/newsfeed/$id': typeof ColumnsLayoutNewsfeedIdRoute
   '/columns/stories/$id': typeof ColumnsLayoutStoriesIdRoute
   '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
+  '/columns/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
   '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
@@ -689,7 +688,6 @@ export interface FileRoutesByTo {
   '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
-  '/columns/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
   '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
@@ -700,6 +698,7 @@ export interface FileRoutesByTo {
   '/columns/newsfeed/$id': typeof ColumnsLayoutNewsfeedIdRoute
   '/columns/stories/$id': typeof ColumnsLayoutStoriesIdRoute
   '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
+  '/columns/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
   '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
@@ -727,7 +726,6 @@ export interface FileRoutesById {
   '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
-  '/columns/_layout/launchpad': typeof ColumnsLayoutLaunchpadLazyRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/_layout/search': typeof ColumnsLayoutSearchLazyRoute
   '/columns/_layout/trending': typeof ColumnsLayoutTrendingLazyRoute
@@ -738,6 +736,7 @@ export interface FileRoutesById {
   '/columns/_layout/newsfeed/$id': typeof ColumnsLayoutNewsfeedIdRoute
   '/columns/_layout/stories/$id': typeof ColumnsLayoutStoriesIdRoute
   '/columns/_layout/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
+  '/columns/_layout/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/_layout/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
   '/columns/_layout/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/_layout/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
@@ -765,7 +764,6 @@ export interface FileRouteTypes {
     | '/settings/$id/profile'
     | '/settings/$id/relay'
     | '/settings/$id/wallet'
-    | '/columns/launchpad'
     | '/columns/onboarding'
     | '/columns/search'
     | '/columns/trending'
@@ -776,6 +774,7 @@ export interface FileRouteTypes {
     | '/columns/newsfeed/$id'
     | '/columns/stories/$id'
     | '/columns/events/$id'
+    | '/columns/launchpad/$id'
     | '/columns/notification/$id'
     | '/columns/replies/$id'
     | '/columns/users/$id'
@@ -799,7 +798,6 @@ export interface FileRouteTypes {
     | '/settings/$id/profile'
     | '/settings/$id/relay'
     | '/settings/$id/wallet'
-    | '/columns/launchpad'
     | '/columns/onboarding'
     | '/columns/search'
     | '/columns/trending'
@@ -810,6 +808,7 @@ export interface FileRouteTypes {
     | '/columns/newsfeed/$id'
     | '/columns/stories/$id'
     | '/columns/events/$id'
+    | '/columns/launchpad/$id'
     | '/columns/notification/$id'
     | '/columns/replies/$id'
     | '/columns/users/$id'
@@ -835,7 +834,6 @@ export interface FileRouteTypes {
     | '/settings/$id/profile'
     | '/settings/$id/relay'
     | '/settings/$id/wallet'
-    | '/columns/_layout/launchpad'
     | '/columns/_layout/onboarding'
     | '/columns/_layout/search'
     | '/columns/_layout/trending'
@@ -846,6 +844,7 @@ export interface FileRouteTypes {
     | '/columns/_layout/newsfeed/$id'
     | '/columns/_layout/stories/$id'
     | '/columns/_layout/events/$id'
+    | '/columns/_layout/launchpad/$id'
     | '/columns/_layout/notification/$id'
     | '/columns/_layout/replies/$id'
     | '/columns/_layout/users/$id'
@@ -938,7 +937,6 @@ export const routeTree = rootRoute
       "children": [
         "/columns/_layout/create-newsfeed",
         "/columns/_layout/global",
-        "/columns/_layout/launchpad",
         "/columns/_layout/onboarding",
         "/columns/_layout/search",
         "/columns/_layout/trending",
@@ -947,6 +945,7 @@ export const routeTree = rootRoute
         "/columns/_layout/newsfeed/$id",
         "/columns/_layout/stories/$id",
         "/columns/_layout/events/$id",
+        "/columns/_layout/launchpad/$id",
         "/columns/_layout/notification/$id",
         "/columns/_layout/replies/$id",
         "/columns/_layout/users/$id"
@@ -1008,10 +1007,6 @@ export const routeTree = rootRoute
       "filePath": "settings.$id/wallet.tsx",
       "parent": "/settings/$id"
     },
-    "/columns/_layout/launchpad": {
-      "filePath": "columns/_layout/launchpad.lazy.tsx",
-      "parent": "/columns/_layout"
-    },
     "/columns/_layout/onboarding": {
       "filePath": "columns/_layout/onboarding.lazy.tsx",
       "parent": "/columns/_layout"
@@ -1050,6 +1045,10 @@ export const routeTree = rootRoute
     },
     "/columns/_layout/events/$id": {
       "filePath": "columns/_layout/events.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/launchpad/$id": {
+      "filePath": "columns/_layout/launchpad.$id.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/notification/$id": {

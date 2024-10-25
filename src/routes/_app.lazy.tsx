@@ -60,26 +60,24 @@ function Topbar() {
 				data-tauri-drag-region
 				className="relative z-[200] flex-1 flex items-center justify-end gap-4"
 			>
-				{accounts?.length ? (
-					<div className="inline-flex items-center gap-2">
-						<button
-							type="button"
-							onClick={() => LumeWindow.openEditor()}
-							className="inline-flex items-center justify-center h-7 gap-1 px-2 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
-						>
-							<PublishIcon className="size-4" />
-							New Post
-						</button>
-						<button
-							type="button"
-							onClick={() => LumeWindow.openSearch()}
-							className="inline-flex items-center justify-center size-7 bg-black/5 dark:bg-white/5 rounded-full hover:bg-blue-500 hover:text-white"
-						>
-							<MagnifyingGlass className="size-4" />
-						</button>
-					</div>
-				) : null}
-				<div id="toolbar" className="inline-flex items-center gap-2" />
+				<div className="inline-flex items-center gap-2">
+					<button
+						type="button"
+						onClick={() => LumeWindow.openEditor()}
+						className="inline-flex items-center justify-center h-7 gap-1 px-2 text-sm font-medium bg-black/5 dark:bg-white/5 rounded-full w-max hover:bg-blue-500 hover:text-white"
+					>
+						<PublishIcon className="size-4" />
+						New Post
+					</button>
+					<button
+						type="button"
+						onClick={() => LumeWindow.openSearch()}
+						className="inline-flex items-center justify-center size-7 bg-black/5 dark:bg-white/5 rounded-full hover:bg-blue-500 hover:text-white"
+					>
+						<MagnifyingGlass className="size-4" />
+					</button>
+				</div>
+				<div id="toolbar" className="inline-flex items-center gap-1" />
 			</div>
 		</div>
 	);

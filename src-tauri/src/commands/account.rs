@@ -1,14 +1,11 @@
-use async_utility::thread::sleep;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::{fs, str::FromStr, time::Duration};
-use tauri::{Emitter, Manager, State};
+use std::{str::FromStr, time::Duration};
+use tauri::{Emitter, State};
 
 use crate::{common::get_all_accounts, Nostr};
-
-use super::sync::sync_account;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -24,11 +21,8 @@ pub fn get_accounts() -> Vec<String> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn watch_account(
-    id: String,
-    state: State<'_, Nostr>,
-    app_handle: tauri::AppHandle,
-) -> Result<String, String> {
+pub async fn watch_account(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+    let client = &state.client;
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
     let npub = public_key.to_bech32().map_err(|e| e.to_string())?;
     let keyring = Entry::new("Lume Safe Storage", &npub).map_err(|e| e.to_string())?;
@@ -36,14 +30,14 @@ pub async fn watch_account(
     // Set empty password
     keyring.set_password("").map_err(|e| e.to_string())?;
 
-    // Run sync for this account
-    sync_account(public_key, app_handle);
-
     // Update state
-    state.accounts.lock().unwrap().push(npub.clone());
+    let mut accounts = state.accounts.lock().unwrap().clone();
+    accounts.push(npub.clone());
 
-    // Fake loading
-    sleep(Duration::from_secs(4)).await;
+    // Get user's profile
+    let _ = client
+        .fetch_metadata(public_key, Some(Duration::from_secs(4)))
+        .await;
 
     Ok(npub)
 }
@@ -54,7 +48,6 @@ pub async fn import_account(
     key: String,
     password: Option<String>,
     state: State<'_, Nostr>,
-    app_handle: tauri::AppHandle,
 ) -> Result<String, String> {
     let client = &state.client;
 
@@ -87,25 +80,21 @@ pub async fn import_account(
     // Update signer
     client.set_signer(Some(signer)).await;
 
-    // Run sync for this account
-    sync_account(public_key, app_handle);
-
-    // Fake loading
-    sleep(Duration::from_secs(4)).await;
-
     // Update state
-    state.accounts.lock().unwrap().push(npub.clone());
+    let mut accounts = state.accounts.lock().unwrap().clone();
+    accounts.push(npub.clone());
+
+    // Get user's profile
+    let _ = client
+        .fetch_metadata(public_key, Some(Duration::from_secs(4)))
+        .await;
 
     Ok(npub)
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn connect_account(
-    uri: String,
-    state: State<'_, Nostr>,
-    app_handle: tauri::AppHandle,
-) -> Result<String, String> {
+pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
 
     match NostrConnectURI::parse(uri.clone()) {
@@ -117,9 +106,6 @@ pub async fn connect_account(
             // Get remote user
             let remote_user = bunker_uri.signer_public_key().unwrap();
             let remote_npub = remote_user.to_bech32().unwrap();
-
-            // Run sync for this account
-            sync_account(remote_user, app_handle);
 
             match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None) {
                 Ok(signer) => {
@@ -146,7 +132,13 @@ pub async fn connect_account(
                     let _ = client.set_signer(Some(signer.into())).await;
 
                     // Update state
-                    state.accounts.lock().unwrap().push(remote_npub.clone());
+                    let mut accounts = state.accounts.lock().unwrap().clone();
+                    accounts.push(remote_npub.clone());
+
+                    // Get user's profile
+                    let _ = client
+                        .fetch_metadata(remote_user, Some(Duration::from_secs(4)))
+                        .await;
 
                     Ok(remote_npub)
                 }
@@ -194,24 +186,6 @@ pub fn get_private_key(id: String) -> Result<String, String> {
 pub fn delete_account(id: String) -> Result<(), String> {
     let keyring = Entry::new("Lume Safe Storage", &id).map_err(|e| e.to_string())?;
     let _ = keyring.delete_credential();
-
-    Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn is_new_account(id: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
-    let config_dir = app_handle.path().config_dir().map_err(|e| e.to_string())?;
-    let exist = fs::metadata(config_dir.join(id)).is_ok();
-
-    Ok(!exist)
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn toggle_new_account(id: String, app_handle: tauri::AppHandle) -> Result<(), String> {
-    let config_dir = app_handle.path().config_dir().map_err(|e| e.to_string())?;
-    fs::File::create(config_dir.join(id)).unwrap();
 
     Ok(())
 }

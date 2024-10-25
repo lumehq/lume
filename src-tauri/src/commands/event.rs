@@ -1,11 +1,10 @@
-use futures::future::join_all;
 use nostr_sdk::prelude::*;
 use serde::Serialize;
 use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-use crate::common::{create_tags, get_latest_event, parse_event, process_event, Meta};
+use crate::common::{create_tags, parse_event, process_event, Meta};
 use crate::{Nostr, DEFAULT_DIFFICULTY, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
@@ -16,21 +15,13 @@ pub struct RichEvent {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_event_meta(content: String) -> Result<Meta, ()> {
-    let meta = parse_event(&content).await;
-    Ok(meta)
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent, String> {
     let client = &state.client;
-    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
-    let filter = Filter::new().id(event_id);
+    let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
 
-    match client.database().query(vec![filter.clone()]).await {
+    match client.database().event_by_id(&event_id).await {
         Ok(events) => {
-            if let Some(event) = get_latest_event(&events) {
+            if let Some(event) = events {
                 let raw = event.as_json();
                 let parsed = if event.kind == Kind::TextNote {
                     Some(parse_event(&event.content).await)
@@ -40,26 +31,7 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
                 Ok(RichEvent { raw, parsed })
             } else {
-                match client
-                    .fetch_events(vec![filter], Some(Duration::from_secs(10)))
-                    .await
-                {
-                    Ok(events) => {
-                        if let Some(event) = get_latest_event(&events) {
-                            let raw = event.as_json();
-                            let parsed = if event.kind == Kind::TextNote {
-                                Some(parse_event(&event.content).await)
-                            } else {
-                                None
-                            };
-
-                            Ok(RichEvent { raw, parsed })
-                        } else {
-                            Err("Not found.".into())
-                        }
-                    }
-                    Err(err) => Err(err.to_string()),
-                }
+                Err("Event not found".to_string())
             }
         }
         Err(err) => Err(err.to_string()),
@@ -68,35 +40,8 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_event_from(
-    id: String,
-    _relay_hint: String,
-    state: State<'_, Nostr>,
-) -> Result<RichEvent, String> {
-    let client = &state.client;
-    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
-    let filter = Filter::new().id(event_id);
-
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
-        .await
-    {
-        Ok(events) => {
-            if let Some(event) = events.first() {
-                let raw = event.as_json();
-                let parsed = if event.kind == Kind::TextNote {
-                    Some(parse_event(&event.content).await)
-                } else {
-                    None
-                };
-
-                Ok(RichEvent { raw, parsed })
-            } else {
-                Err("Cannot found this event with current relay list".into())
-            }
-        }
-        Err(err) => Err(err.to_string()),
-    }
+pub async fn get_meta_from_event(content: String) -> Result<Meta, ()> {
+    Ok(parse_event(&content).await)
 }
 
 #[tauri::command]
@@ -110,21 +55,7 @@ pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<Rich
         .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
-        Ok(events) => {
-            let futures = events.iter().map(|ev| async move {
-                let raw = ev.as_json();
-                let parsed = if ev.kind == Kind::TextNote {
-                    Some(parse_event(&ev.content).await)
-                } else {
-                    None
-                };
-
-                RichEvent { raw, parsed }
-            });
-            let rich_events = join_all(futures).await;
-
-            Ok(rich_events)
-        }
+        Ok(events) => Ok(process_event(client, events).await),
         Err(err) => Err(err.to_string()),
     }
 }

@@ -4,19 +4,35 @@ import { Spinner, User } from "@/components";
 import { LumeWindow } from "@/system";
 import type { LumeColumn, NostrEvent } from "@/types";
 import { ArrowClockwise, Plus } from "@phosphor-icons/react";
+import * as Progress from "@radix-ui/react-progress";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { Channel } from "@tauri-apps/api/core";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-export const Route = createLazyFileRoute("/columns/_layout/launchpad")({
+export const Route = createLazyFileRoute("/columns/_layout/launchpad/$id")({
 	component: Screen,
 });
 
 function Screen() {
+	const { id } = Route.useParams();
+	const { data: isSync } = useQuery({
+		queryKey: ["is-sync", id],
+		queryFn: async () => {
+			const res = await commands.isAccountSync(id);
+
+			if (res.status === "ok") {
+				return res.data;
+			} else {
+				return false;
+			}
+		},
+	});
+
 	return (
 		<ScrollArea.Root
 			type={"scroll"}
@@ -24,10 +40,15 @@ function Screen() {
 			className="overflow-hidden size-full"
 		>
 			<ScrollArea.Viewport className="relative h-full px-3 pb-3">
-				<Groups />
-				<Interests />
-				<Accounts />
-				<Core />
+				{!isSync ? (
+					<SyncProgress />
+				) : (
+					<>
+						<Groups />
+						<Interests />
+						<Core />
+					</>
+				)}
 			</ScrollArea.Viewport>
 			<ScrollArea.Scrollbar
 				className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
@@ -40,8 +61,74 @@ function Screen() {
 	);
 }
 
+function SyncProgress() {
+	const { id } = Route.useParams();
+	const { queryClient } = Route.useRouteContext();
+
+	const [error, setError] = useState("");
+	const [progress, setProgress] = useState(0);
+
+	useEffect(() => {
+		(async () => {
+			if (progress >= 100) {
+				await queryClient.invalidateQueries();
+			}
+		})();
+	}, [progress]);
+
+	useEffect(() => {
+		const channel = new Channel<number>();
+
+		channel.onmessage = (message) => {
+			setProgress(message);
+		};
+
+		(async () => {
+			const res = await commands.syncAccount(id, channel);
+
+			if (res.status === "error") {
+				setError(res.error);
+			}
+		})();
+	}, []);
+
+	return (
+		<div className="size-full">
+			<div className="flex flex-col gap-3">
+				<div className="h-32 flex flex-col items-center justify-center rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
+					<div className="w-2/3 flex flex-col gap-2">
+						<Progress.Root
+							className="relative overflow-hidden bg-black/20 dark:bg-white/20 rounded-full w-full h-1"
+							style={{
+								transform: "translateZ(0)",
+							}}
+							value={progress}
+						>
+							<Progress.Indicator
+								className="bg-blue-500 size-full transition-transform duration-[660ms] ease-[cubic-bezier(0.65, 0, 0.35, 1)]"
+								style={{ transform: `translateX(-${100 - progress}%)` }}
+							/>
+						</Progress.Root>
+						<span className="text-center text-xs">
+							{error ? error : "Syncing in Progress..."}
+						</span>
+					</div>
+				</div>
+				<a
+					href="https://github.com/hoytech/strfry/blob/nextneg/docs/negentropy.md"
+					target="_blank"
+					className="text-center !underline text-xs font-medium text-blue-500"
+					rel="noreferrer"
+				>
+					Learn more about Negentropy
+				</a>
+			</div>
+		</div>
+	);
+}
+
 function Groups() {
-	const { isLoading, data, refetch, isRefetching } = useQuery({
+	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
 		queryKey: ["others", "groups"],
 		queryFn: async () => {
 			const res = await commands.getAllGroups();
@@ -72,7 +159,7 @@ function Groups() {
 					className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
 				>
 					<div className="px-2 pt-2">
-						<div className="p-3 h-16 bg-neutral-100 rounded-lg flex flex-wrap items-center justify-center gap-2 overflow-y-auto">
+						<div className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex flex-wrap items-center justify-center gap-2 overflow-y-auto">
 							{item.tags
 								.filter((tag) => tag[0] === "p")
 								.map((tag) => (
@@ -148,12 +235,16 @@ function Groups() {
 						<Spinner className="size-4" />
 						Loading...
 					</div>
-				) : !data.length ? (
+				) : isError ? (
+					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
+						<p className="text-center">{error?.message ?? "Error"}</p>
+					</div>
+				) : !data?.length ? (
 					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
 						<p className="text-center">You don't have any groups yet.</p>
 					</div>
 				) : (
-					data.map((item) => renderItem(item))
+					data?.map((item) => renderItem(item))
 				)}
 			</div>
 		</div>
@@ -161,7 +252,7 @@ function Groups() {
 }
 
 function Interests() {
-	const { isLoading, data, refetch, isRefetching } = useQuery({
+	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
 		queryKey: ["others", "interests"],
 		queryFn: async () => {
 			const res = await commands.getAllInterests();
@@ -193,7 +284,7 @@ function Interests() {
 					className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
 				>
 					<div className="px-2 pt-2">
-						<div className="p-3 h-16 bg-neutral-100 rounded-lg flex flex-wrap items-center justify-center gap-4 overflow-y-auto">
+						<div className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex flex-wrap items-center justify-center gap-4 overflow-y-auto">
 							{item.tags
 								.filter((tag) => tag[0] === "t")
 								.map((tag) => (
@@ -267,87 +358,16 @@ function Interests() {
 						<Spinner className="size-4" />
 						Loading...
 					</div>
-				) : !data.length ? (
+				) : isError ? (
+					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
+						<p className="text-center">{error?.message ?? "Error"}</p>
+					</div>
+				) : !data?.length ? (
 					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
 						<p className="text-center">You don't have any interests yet.</p>
 					</div>
 				) : (
-					data.map((item) => renderItem(item))
-				)}
-			</div>
-		</div>
-	);
-}
-
-function Accounts() {
-	const { isLoading, data: accounts } = useQuery({
-		queryKey: ["accounts"],
-		queryFn: async () => {
-			const res = await commands.getAccounts();
-			return res;
-		},
-		refetchOnWindowFocus: false,
-	});
-
-	return (
-		<div className="mb-12 flex flex-col gap-3">
-			<div className="flex items-center justify-between px-2">
-				<h3 className="font-semibold">Accounts</h3>
-			</div>
-			<div className="flex flex-col gap-3">
-				{isLoading ? (
-					<div className="inline-flex items-center gap-1.5 text-sm">
-						<Spinner className="size-4" />
-						Loading...
-					</div>
-				) : (
-					accounts.map((account) => (
-						<div
-							key={account}
-							className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
-						>
-							<div className="px-2 pt-2">
-								<User.Provider pubkey={account}>
-									<User.Root className="inline-flex items-center gap-2">
-										<User.Avatar className="size-7 rounded-full" />
-										<User.Name className="text-xs font-medium" />
-									</User.Root>
-								</User.Provider>
-							</div>
-							<div className="flex flex-col gap-2 p-2">
-								<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
-									<div className="text-sm font-medium">Newsfeed</div>
-									<button
-										type="button"
-										onClick={() => LumeWindow.openNewsfeed(account)}
-										className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
-									>
-										Add
-									</button>
-								</div>
-								<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
-									<div className="text-sm font-medium">Stories</div>
-									<button
-										type="button"
-										onClick={() => LumeWindow.openStory(account)}
-										className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
-									>
-										Add
-									</button>
-								</div>
-								<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
-									<div className="text-sm font-medium">Notification</div>
-									<button
-										type="button"
-										onClick={() => LumeWindow.openNotification(account)}
-										className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
-									>
-										Add
-									</button>
-								</div>
-							</div>
-						</div>
-					))
+					data?.map((item) => renderItem(item))
 				)}
 			</div>
 		</div>
@@ -355,8 +375,9 @@ function Accounts() {
 }
 
 function Core() {
-	const { isLoading, data } = useQuery({
-		queryKey: ["other-columns"],
+	const { id } = Route.useParams();
+	const { data } = useQuery({
+		queryKey: ["core-columns"],
 		queryFn: async () => {
 			const systemPath = "resources/columns.json";
 			const resourcePath = await resolveResource(systemPath);
@@ -373,38 +394,56 @@ function Core() {
 	return (
 		<div className="flex flex-col gap-3">
 			<div className="flex items-center justify-between px-2">
-				<h3 className="font-semibold">Others</h3>
+				<h3 className="font-semibold">Core</h3>
 			</div>
-			<div className="flex flex-col gap-3">
-				{isLoading ? (
-					<div className="inline-flex items-center gap-1.5 text-sm">
-						<Spinner className="size-4" />
-						Loading...
+			<div className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
+				<div className="flex flex-col gap-2 p-2">
+					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+						<div className="text-sm font-medium">Newsfeed</div>
+						<button
+							type="button"
+							onClick={() => LumeWindow.openNewsfeed(id)}
+							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+						>
+							Add
+						</button>
 					</div>
-				) : (
-					data.map((column) => (
+					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+						<div className="text-sm font-medium">Stories</div>
+						<button
+							type="button"
+							onClick={() => LumeWindow.openStory(id)}
+							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+						>
+							Add
+						</button>
+					</div>
+					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+						<div className="text-sm font-medium">Notification</div>
+						<button
+							type="button"
+							onClick={() => LumeWindow.openNotification(id)}
+							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+						>
+							Add
+						</button>
+					</div>
+					{data?.map((column) => (
 						<div
 							key={column.label}
-							className="group flex px-4 items-center justify-between h-16 rounded-xl bg-white dark:bg-black border-[.5px] border-neutral-300 dark:border-neutral-700"
+							className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800"
 						>
-							<div className="text-sm">
-								<div className="mb-px leading-tight font-semibold">
-									{column.name}
-								</div>
-								<div className="leading-tight text-neutral-500 dark:text-neutral-400">
-									{column.description}
-								</div>
-							</div>
+							<div className="text-sm font-medium">{column.name}</div>
 							<button
 								type="button"
 								onClick={() => LumeWindow.openColumn(column)}
-								className="text-xs font-semibold w-16 h-7 hidden group-hover:inline-flex items-center justify-center rounded-full bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-black/10"
+								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 							>
 								Add
 							</button>
 						</div>
-					))
-				)}
+					))}
+				</div>
 			</div>
 		</div>
 	);

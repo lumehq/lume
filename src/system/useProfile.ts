@@ -16,17 +16,17 @@ export function useProfile(pubkey: string, embed?: string) {
 				return metadata;
 			}
 
-			let normalizeId = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
+			let normalizedId = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 
-			if (normalizeId.startsWith("nprofile")) {
-				const decoded = nip19.decode(normalizeId);
+			if (normalizedId.startsWith("nprofile")) {
+				const decoded = nip19.decode(normalizedId);
 
 				if (decoded.type === "nprofile") {
-					normalizeId = decoded.data.pubkey;
+					normalizedId = decoded.data.pubkey;
 				}
 			}
 
-			const query = await commands.getProfile(normalizeId);
+			const query = await commands.getProfile(normalizedId);
 
 			if (query.status === "ok") {
 				return JSON.parse(query.data) as Metadata;

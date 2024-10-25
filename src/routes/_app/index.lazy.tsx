@@ -1,14 +1,15 @@
-import { appColumns } from "@/commons";
+import { commands } from "@/commands.gen";
+import { appColumns, displayNpub } from "@/commons";
 import { Column, Spinner } from "@/components";
 import { LumeWindow } from "@/system";
-import type { ColumnEvent, LumeColumn } from "@/types";
-import { ArrowLeft, ArrowRight, Plus, StackPlus } from "@phosphor-icons/react";
+import type { ColumnEvent, LumeColumn, Metadata } from "@/types";
+import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
 import { listen } from "@tauri-apps/api/event";
+import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import useEmblaCarousel from "embla-carousel-react";
-import { nanoid } from "nanoid";
 import {
 	type ReactNode,
 	useCallback,
@@ -45,11 +46,14 @@ function Screen() {
 	}, []);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
-		column.label = `${column.label}-${nanoid()}`; // update col label
-		appColumns.setState((prev) => [column, ...prev]);
+		const exist = columns.find((col) => col.label === column.label);
 
-		if (emblaApi) {
-			emblaApi.scrollTo(0, true);
+		if (!exist) {
+			appColumns.setState((prev) => [column, ...prev]);
+
+			if (emblaApi) {
+				emblaApi.scrollTo(0, true);
+			}
 		}
 	}, 150);
 
@@ -141,43 +145,75 @@ function Screen() {
 							<Column key={column.label} column={column} />
 						))
 					)}
-					<div className="shrink-0 p-2 h-full w-[440px]">
-						<div className="size-full flex items-center justify-center">
-							<button
-								type="button"
-								onClick={() => LumeWindow.openLaunchpad()}
-								className="inline-flex items-center justify-center gap-1 rounded-full text-sm font-medium h-8 w-max pl-2 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
-							>
-								<Plus className="size-4" />
-								Add Column
-							</button>
-						</div>
-					</div>
+					<OpenLaunchpad />
 				</div>
 			</div>
 			<Toolbar>
 				<button
 					type="button"
-					onClick={() => LumeWindow.openLaunchpad()}
-					className="inline-flex items-center justify-center rounded-full size-7 hover:bg-black/5 dark:hover:bg-white/5"
-				>
-					<StackPlus className="size-4" />
-				</button>
-				<button
-					type="button"
 					onClick={() => scrollPrev()}
 					className="inline-flex items-center justify-center rounded-full size-7 hover:bg-black/5 dark:hover:bg-white/5"
 				>
-					<ArrowLeft className="size-4" />
+					<ArrowLeft className="size-4" weight="bold" />
 				</button>
 				<button
 					type="button"
 					onClick={() => scrollNext()}
 					className="inline-flex items-center justify-center rounded-full size-7 hover:bg-black/5 dark:hover:bg-white/5"
 				>
-					<ArrowRight className="size-4" />
+					<ArrowRight className="size-4" weight="bold" />
 				</button>
 			</Toolbar>
+		</div>
+	);
+}
+
+function OpenLaunchpad() {
+	const { accounts } = Route.useRouteContext();
+
+	const showContextMenu = useCallback(
+		async (e: React.MouseEvent) => {
+			e.preventDefault();
+
+			const list: Promise<MenuItem>[] = [];
+
+			for (const account of accounts) {
+				const res = await commands.getProfile(account);
+				let name = "unknown";
+
+				if (res.status === "ok") {
+					const profile: Metadata = JSON.parse(res.data);
+					name = profile.display_name ?? profile.name ?? "unknown";
+				}
+
+				list.push(
+					MenuItem.new({
+						text: `Open Launchpad for ${name} (${displayNpub(account, 16)})`,
+						action: () => LumeWindow.openLaunchpad(account),
+					}),
+				);
+			}
+
+			const items = await Promise.all(list);
+			const menu = await Menu.new({ items });
+
+			await menu.popup().catch((e) => console.error(e));
+		},
+		[accounts],
+	);
+
+	return (
+		<div className="shrink-0 p-2 h-full w-[440px]">
+			<div className="size-full flex items-center justify-center">
+				<button
+					type="button"
+					onClick={(e) => showContextMenu(e)}
+					className="inline-flex items-center justify-center gap-1 rounded-full text-sm font-medium h-8 w-max pl-2.5 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
+				>
+					<Plus className="size-3" weight="bold" />
+					Add Column
+				</button>
+			</div>
 		</div>
 	);
 }

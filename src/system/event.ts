@@ -157,7 +157,7 @@ export class LumeEvent {
 	}
 
 	static async build(event: NostrEvent) {
-		const query = await commands.getEventMeta(event.content);
+		const query = await commands.getMetaFromEvent(event.content);
 
 		if (query.status === "ok") {
 			event.meta = query.data;

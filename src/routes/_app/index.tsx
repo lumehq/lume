@@ -1,26 +1,37 @@
-import type { LumeColumn } from '@/types'
-import { createFileRoute } from '@tanstack/react-router'
-import { resolveResource } from '@tauri-apps/api/path'
-import { readTextFile } from '@tauri-apps/plugin-fs'
+import type { LumeColumn } from "@/types";
+import { createFileRoute } from "@tanstack/react-router";
+import { nanoid } from "nanoid";
 
-export const Route = createFileRoute('/_app/')({
-  loader: async ({ context }) => {
-    const prevColumns = window.localStorage.getItem('columns')
+export const Route = createFileRoute("/_app/")({
+	loader: async ({ context }) => {
+		const accounts = context.accounts;
+		const prevColumns = window.localStorage.getItem("columns");
 
-    if (!prevColumns) {
-      const resourcePath = await resolveResource('resources/columns.json')
-      const resourceFile = await readTextFile(resourcePath)
-      const content: LumeColumn[] = JSON.parse(resourceFile)
-      const initialAppColumns = content.filter((col) => col.default)
+		let initialAppColumns: LumeColumn[] = [];
 
-      return initialAppColumns
-    } else {
-      const parsed: LumeColumn[] = JSON.parse(prevColumns)
-      const initialAppColumns = parsed.filter((item) =>
-        item.account ? context.accounts.includes(item.account) : item,
-      )
+		if (!prevColumns || prevColumns.length < 1) {
+			initialAppColumns.push({
+				label: "onboarding",
+				name: "Onboarding",
+				url: "/columns/onboarding",
+			});
 
-      return initialAppColumns
-    }
-  },
-})
+			for (const account of accounts) {
+				initialAppColumns.push({
+					label: `launchpad-${nanoid()}`,
+					name: "Launchpad",
+					url: `/columns/launchpad/${account}`,
+					account,
+				});
+			}
+		} else {
+			const parsed: LumeColumn[] = JSON.parse(prevColumns);
+
+			initialAppColumns = parsed.filter((item) =>
+				item.account ? context.accounts.includes(item.account) : item,
+			);
+		}
+
+		return initialAppColumns;
+	},
+});

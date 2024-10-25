@@ -1,4 +1,4 @@
 wss://relay.damus.io,
 wss://relay.nostr.net,
+wss://relay.primal.net,
 wss://nostr.fmt.wiz.biz,
-wss://offchain.pub,
