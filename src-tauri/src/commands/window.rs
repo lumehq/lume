@@ -5,16 +5,17 @@ use border::WebviewWindowExt as BorderWebviewWindowExt;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use tauri::utils::config::WindowEffectsConfig;
+use tauri::webview::PageLoadEvent;
 use tauri::window::Effect;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
-use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
+use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl, Window};
 use tauri::{WebviewBuilder, WebviewWindowBuilder};
 #[cfg(target_os = "windows")]
 use tauri_plugin_decorum::WebviewWindowExt;
 
 #[derive(Serialize, Deserialize, Type)]
-pub struct Window {
+pub struct NewWindow {
     label: String,
     title: String,
     url: String,
@@ -38,29 +39,39 @@ pub struct Column {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<String, String> {
-    match app_handle.get_window("main") {
-        Some(main_window) => match app_handle.get_webview(&column.label) {
-            Some(_) => Ok(column.label),
-            None => {
-                let path = PathBuf::from(column.url);
-                let webview_url = WebviewUrl::App(path);
+pub async fn create_column(
+    column: Column,
+    app_handle: tauri::AppHandle,
+    main_window: Window,
+) -> Result<String, String> {
+    match app_handle.get_webview(&column.label) {
+        Some(_) => Ok(column.label),
+        None => {
+            let path = PathBuf::from(column.url);
+            let webview_url = WebviewUrl::App(path);
 
-                let builder = WebviewBuilder::new(column.label, webview_url)
-                    .incognito(true)
-                    .transparent(true);
+            let builder = WebviewBuilder::new(column.label, webview_url)
+                .incognito(true)
+                .transparent(true)
+                .on_page_load(|webview, payload| match payload.event() {
+                    PageLoadEvent::Started => {
+                        let url = payload.url();
+                        println!("#TODO, preload: {}", url)
+                    }
+                    PageLoadEvent::Finished => {
+                        println!("{} finished loading", payload.url());
+                    }
+                });
 
-                match main_window.add_child(
-                    builder,
-                    LogicalPosition::new(column.x, column.y),
-                    LogicalSize::new(column.width, column.height),
-                ) {
-                    Ok(webview) => Ok(webview.label().into()),
-                    Err(e) => Err(e.to_string()),
-                }
+            match main_window.add_child(
+                builder,
+                LogicalPosition::new(column.x, column.y),
+                LogicalSize::new(column.width, column.height),
+            ) {
+                Ok(webview) => Ok(webview.label().into()),
+                Err(e) => Err(e.to_string()),
             }
-        },
-        None => Err("Window not found".into()),
+        }
     }
 }
 
@@ -113,8 +124,7 @@ pub async fn reload_column(label: String, app_handle: tauri::AppHandle) -> Resul
 
 #[tauri::command]
 #[specta::specta]
-#[cfg(target_os = "macos")]
-pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<String, String> {
+pub fn open_window(window: NewWindow, app_handle: tauri::AppHandle) -> Result<String, String> {
     if let Some(current_window) = app_handle.get_window(&window.label) {
         if current_window.is_visible().unwrap_or_default() {
             let _ = current_window.set_focus();

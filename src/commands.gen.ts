@@ -488,7 +488,7 @@ async closeColumn(label: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async openWindow(window: Window) : Promise<Result<string, string>> {
+async openWindow(window: NewWindow) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("open_window", { window }) };
 } catch (e) {
@@ -520,13 +520,13 @@ export type Mention = { pubkey: string; avatar: string; display_name: string; na
 export type Meta = { content: string; images: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type NegentropyEvent = { kind: NegentropyKind; total_event: number }
 export type NegentropyKind = "Profile" | "Metadata" | "Events" | "EventIds" | "Global" | "Notification" | "Others"
+export type NewWindow = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean; closable: boolean }
 export type Profile = { name: string; display_name: string; about: string | null; picture: string; banner: string | null; nip05: string | null; lud16: string | null; website: string | null }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; trusted_only: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; transparent: boolean }
 export type Subscription = { label: string; kind: SubscriptionMethod; event_id: string | null; contacts: string[] | null }
 export type SubscriptionMethod = "Subscribe" | "Unsubscribe"
-export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean; closable: boolean }
 
 /** tauri-specta globals **/
 
