@@ -31,7 +31,28 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
                 Ok(RichEvent { raw, parsed })
             } else {
-                Err("Event not found".to_string())
+                match client
+                    .fetch_events(
+                        vec![Filter::new().id(event_id)],
+                        Some(Duration::from_secs(5)),
+                    )
+                    .await
+                {
+                    Ok(events) => {
+                        if let Some(event) = events.iter().next() {
+                            let raw = event.as_json();
+                            let parsed = if event.kind == Kind::TextNote {
+                                Some(parse_event(&event.content).await)
+                            } else {
+                                None
+                            };
+                            Ok(RichEvent { raw, parsed })
+                        } else {
+                            Err("Event not found.".into())
+                        }
+                    }
+                    Err(err) => Err(err.to_string()),
+                }
             }
         }
         Err(err) => Err(err.to_string()),
@@ -49,13 +70,16 @@ pub async fn get_meta_from_event(content: String) -> Result<Meta, ()> {
 pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
-    let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
+
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
+        .event(event_id);
 
     match client
         .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, true).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -98,7 +122,7 @@ pub async fn get_all_events_by_author(
         .limit(limit as usize);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -129,7 +153,7 @@ pub async fn get_all_events_by_authors(
         .authors(authors);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -158,7 +182,7 @@ pub async fn get_all_events_by_hashtags(
         .fetch_events(vec![filter], Some(Duration::from_secs(5)))
         .await
     {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -182,7 +206,7 @@ pub async fn get_local_events(
         .until(as_of);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -205,11 +229,8 @@ pub async fn get_global_events(
         .limit(FETCH_LIMIT)
         .until(as_of);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
-        .await
-    {
-        Ok(events) => Ok(process_event(client, events).await),
+    match client.database().query(vec![filter]).await {
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -334,7 +355,13 @@ pub async fn is_reposted(id: String, state: State<'_, Nostr>) -> Result<bool, St
 
     let authors: Vec<PublicKey> = accounts
         .iter()
-        .map(|acc| PublicKey::from_str(acc).unwrap())
+        .filter_map(|acc| {
+            if let Ok(pk) = PublicKey::from_str(acc) {
+                Some(pk)
+            } else {
+                None
+            }
+        })
         .collect();
 
     let filter = Filter::new()
@@ -452,7 +479,7 @@ pub async fn search(query: String, state: State<'_, Nostr>) -> Result<Vec<RichEv
     let filter = Filter::new().search(query);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(e) => Err(e.to_string()),
     }
 }

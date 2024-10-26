@@ -167,7 +167,7 @@ export class LumeEvent {
 		}
 	}
 
-	static from(raw: string, parsed?: Meta) {
+	static from(raw: string, parsed?: Meta | null) {
 		const nostrEvent: NostrEvent = JSON.parse(raw);
 
 		if (parsed) {

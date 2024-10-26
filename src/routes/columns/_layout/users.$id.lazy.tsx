@@ -6,7 +6,7 @@ import { Kind } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useCallback, useRef } from "react";
+import { type RefObject, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/users/$id")({
@@ -36,14 +36,17 @@ function Screen() {
 		(event: LumeEvent) => {
 			if (!event) return;
 			switch (event.kind) {
-				case Kind.Repost:
+				case Kind.Repost: {
+					const repostId = event.repostId;
+
 					return (
 						<RepostNote
-							key={event.id}
+							key={repostId + event.id}
 							event={event}
 							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
 						/>
 					);
+				}
 				default:
 					return (
 						<TextNote
@@ -65,9 +68,12 @@ function Screen() {
 		>
 			<ScrollArea.Viewport
 				ref={ref}
-				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
-				<Virtualizer scrollRef={ref} overscan={0}>
+				<Virtualizer
+					scrollRef={ref as unknown as RefObject<HTMLElement>}
+					overscan={0}
+				>
 					<User.Provider pubkey={id}>
 						<User.Root className="relative">
 							<User.Cover className="object-cover w-full h-44 rounded-t-lg gradient-mask-b-0" />
@@ -88,7 +94,7 @@ function Screen() {
 								<Spinner className="size-5" />
 								<span className="text-sm font-medium">Loading...</span>
 							</div>
-						) : !events.length ? (
+						) : !events?.length ? (
 							<div className="flex items-center justify-center">
 								Yo. You're catching up on all the things happening around you.
 							</div>

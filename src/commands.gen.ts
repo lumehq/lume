@@ -495,12 +495,6 @@ async openWindow(window: Window) : Promise<Result<string, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
-},
-async reopenLume() : Promise<void> {
-    await TAURI_INVOKE("reopen_lume");
-},
-async quit() : Promise<void> {
-    await TAURI_INVOKE("quit");
 }
 }
 

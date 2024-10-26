@@ -10,7 +10,7 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { nip19 } from "nostr-tools";
-import { type ReactNode, memo, useMemo, useRef } from "react";
+import { type ReactNode, type RefObject, memo, useMemo, useRef } from "react";
 import reactStringReplace from "react-string-replace";
 import { Virtualizer } from "virtua";
 
@@ -29,7 +29,10 @@ function Screen() {
 			className="overflow-hidden size-full"
 		>
 			<ScrollArea.Viewport ref={ref} className="relative h-full px-3 pb-3">
-				<Virtualizer scrollRef={ref} overscan={0}>
+				<Virtualizer
+					scrollRef={ref as unknown as RefObject<HTMLElement>}
+					overscan={0}
+				>
 					{!contacts ? (
 						<div className="w-full h-24 flex items-center justify-center">
 							<Spinner className="size-4" />
@@ -77,7 +80,7 @@ function StoryItem({ contact }: { contact: string }) {
 	const ref = useRef<HTMLDivElement>(null);
 
 	return (
-		<div className="mb-3 flex flex-col w-full h-[300px] bg-white dark:bg-black rounded-xl border-[.5px] border-neutral-300 dark:border-neutral-700">
+		<div className="mb-3 flex flex-col w-full h-[300px] bg-white dark:bg-neutral-800 rounded-xl border-[.5px] border-neutral-300 dark:border-neutral-700">
 			<div className="h-12 shrink-0 px-2 flex items-center justify-between border-b border-neutral-100 dark:border-white/5">
 				<User.Provider pubkey={contact}>
 					<User.Root className="inline-flex items-center gap-2">
@@ -102,7 +105,10 @@ function StoryItem({ contact }: { contact: string }) {
 				className="flex-1 min-h-0 overflow-hidden size-full"
 			>
 				<ScrollArea.Viewport ref={ref} className="relative h-full px-2 pt-2">
-					<Virtualizer scrollRef={ref} overscan={0}>
+					<Virtualizer
+						scrollRef={ref as unknown as RefObject<HTMLElement>}
+						overscan={0}
+					>
 						{isLoading ? (
 							<div className="w-full h-[calc(300px-48px)] flex items-center justify-center text-sm">
 								<Spinner className="size-4" />
@@ -111,7 +117,7 @@ function StoryItem({ contact }: { contact: string }) {
 							<div className="w-full h-[calc(300px-48px)] flex items-center justify-center text-sm">
 								{error.message}
 							</div>
-						) : !events.length ? (
+						) : !events?.length ? (
 							<div className="w-full h-[calc(300px-48px)] flex items-center justify-center text-sm">
 								This user didn't have any new notes in the last few days.
 							</div>

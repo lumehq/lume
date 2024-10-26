@@ -143,29 +143,33 @@ pub fn get_all_accounts() -> Vec<String> {
     accounts.into_iter().collect()
 }
 
-pub async fn process_event(client: &Client, events: Events) -> Vec<RichEvent> {
+pub async fn process_event(client: &Client, events: Events, is_reply: bool) -> Vec<RichEvent> {
     // Remove event thread if event is TextNote
-    let events: Vec<Event> = events
-        .into_iter()
-        .filter_map(|ev| {
-            if ev.kind == Kind::TextNote {
-                let tags = ev
-                    .tags
-                    .iter()
-                    .filter(|t| t.is_reply() || t.is_root())
-                    .filter_map(|t| t.content())
-                    .collect::<Vec<_>>();
+    let events: Vec<Event> = if !is_reply {
+        events
+            .into_iter()
+            .filter_map(|ev| {
+                if ev.kind == Kind::TextNote {
+                    let tags = ev
+                        .tags
+                        .iter()
+                        .filter(|t| t.is_reply() || t.is_root())
+                        .filter_map(|t| t.content())
+                        .collect::<Vec<_>>();
 
-                if tags.is_empty() {
-                    Some(ev)
+                    if tags.is_empty() {
+                        Some(ev)
+                    } else {
+                        None
+                    }
                 } else {
-                    None
+                    Some(ev)
                 }
-            } else {
-                Some(ev)
-            }
-        })
-        .collect();
+            })
+            .collect()
+    } else {
+        events.into_iter().collect()
+    };
 
     // Get deletion request by event's authors
     let ids: Vec<EventId> = events.iter().map(|ev| ev.id).collect();

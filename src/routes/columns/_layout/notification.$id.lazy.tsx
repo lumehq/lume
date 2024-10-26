@@ -10,7 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { nip19 } from "nostr-tools";
-import { type ReactNode, useEffect, useMemo, useRef } from "react";
+import {
+	type ReactNode,
+	type RefObject,
+	useEffect,
+	useMemo,
+	useRef,
+} from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/notification/$id")({
@@ -110,7 +116,7 @@ function Screen() {
 		<div className="px-3 h-full overflow-y-auto">
 			<Tabs.Root
 				defaultValue="replies"
-				className="flex flex-col h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="flex flex-col h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
 				<Tabs.List className="h-11 shrink-0 flex items-center">
 					<Tabs.Trigger
@@ -138,62 +144,74 @@ function Screen() {
 					className="min-h-0 flex-1 overflow-x-hidden"
 				>
 					<Tab value="replies">
-						{data.texts.map((event) => (
-							<TextNote key={event.id} event={event} />
-						))}
+						{!data?.texts ? (
+							<div>Empty</div>
+						) : (
+							data.texts.map((event) => (
+								<TextNote key={event.id} event={event} />
+							))
+						)}
 					</Tab>
 					<Tab value="reactions">
-						{[...data.reactions.entries()].map(([root, events]) => (
-							<div
-								key={root}
-								className="p-3 w-full border-b-[.5px] border-neutral-300 dark:border-neutral-700 hover:border-blue-500"
-							>
-								<div className="flex flex-col flex-1 min-w-0 gap-2">
-									<div className="flex items-center gap-2 pb-2">
-										<RootNote id={root} />
-									</div>
-									<div className="flex flex-wrap items-center gap-3">
-										{events.map((event) => (
-											<User.Provider key={event.id} pubkey={event.pubkey}>
-												<User.Root className="shrink-0 flex rounded-full h-7 bg-neutral-100 dark:bg-neutral-900 p-[2px]">
-													<User.Avatar className="flex-1 rounded-full size-6" />
-													<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-6">
-														{event.kind === Kind.Reaction ? (
-															event.content === "+" ? (
-																"👍"
+						{!data?.reactions ? (
+							<div>Empty</div>
+						) : (
+							[...data.reactions.entries()].map(([root, events]) => (
+								<div
+									key={root}
+									className="p-3 w-full border-b-[.5px] border-neutral-300 dark:border-neutral-700 hover:border-blue-500"
+								>
+									<div className="flex flex-col flex-1 min-w-0 gap-2">
+										<div className="flex items-center gap-2 pb-2">
+											<RootNote id={root} />
+										</div>
+										<div className="flex flex-wrap items-center gap-3">
+											{events.map((event) => (
+												<User.Provider key={event.id} pubkey={event.pubkey}>
+													<User.Root className="shrink-0 flex rounded-full h-7 bg-neutral-100 dark:bg-neutral-900 p-[2px]">
+														<User.Avatar className="flex-1 rounded-full size-6" />
+														<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-6">
+															{event.kind === Kind.Reaction ? (
+																event.content === "+" ? (
+																	"👍"
+																) : (
+																	event.content
+																)
 															) : (
-																event.content
-															)
-														) : (
-															<RepostIcon className="text-teal-400 size-4 dark:text-teal-600" />
-														)}
-													</div>
-												</User.Root>
-											</User.Provider>
-										))}
+																<RepostIcon className="text-teal-400 size-4 dark:text-teal-600" />
+															)}
+														</div>
+													</User.Root>
+												</User.Provider>
+											))}
+										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							))
+						)}
 					</Tab>
 					<Tab value="zaps">
-						{[...data.zaps.entries()].map(([root, events]) => (
-							<div
-								key={root}
-								className="p-3 w-full border-b-[.5px] border-neutral-300 dark:border-neutral-700 hover:border-blue-500"
-							>
-								<div className="flex flex-col flex-1 min-w-0 gap-2">
-									<div className="flex items-center gap-2 pb-2">
-										<RootNote id={root} />
-									</div>
-									<div className="flex flex-wrap items-center gap-3">
-										{events.map((event) => (
-											<ZapReceipt key={event.id} event={event} />
-										))}
+						{!data?.zaps ? (
+							<div>Empty</div>
+						) : (
+							[...data.zaps.entries()].map(([root, events]) => (
+								<div
+									key={root}
+									className="p-3 w-full border-b-[.5px] border-neutral-300 dark:border-neutral-700 hover:border-blue-500"
+								>
+									<div className="flex flex-col flex-1 min-w-0 gap-2">
+										<div className="flex items-center gap-2 pb-2">
+											<RootNote id={root} />
+										</div>
+										<div className="flex flex-wrap items-center gap-3">
+											{events.map((event) => (
+												<ZapReceipt key={event.id} event={event} />
+											))}
+										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							))
+						)}
 					</Tab>
 					<ScrollArea.Scrollbar
 						className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
@@ -208,13 +226,15 @@ function Screen() {
 	);
 }
 
-function Tab({ value, children }: { value: string; children: ReactNode[] }) {
+function Tab({ value, children }: { value: string; children: ReactNode }) {
 	const ref = useRef<HTMLDivElement>(null);
 
 	return (
 		<Tabs.Content value={value} className="size-full">
 			<ScrollArea.Viewport ref={ref} className="h-full">
-				<Virtualizer scrollRef={ref}>{children}</Virtualizer>
+				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
+					{children}
+				</Virtualizer>
 			</ScrollArea.Viewport>
 		</Tabs.Content>
 	);
@@ -311,10 +331,16 @@ function TextNote({ event }: { event: LumeEvent }) {
 }
 
 function ZapReceipt({ event }: { event: LumeEvent }) {
-	const amount = useMemo(
-		() => decodeZapInvoice(event.tags).bitcoinFormatted ?? "0",
-		[event.id],
-	);
+	const amount = useMemo(() => {
+		const decoded = decodeZapInvoice(event.tags);
+
+		if (decoded) {
+			return decoded.bitcoinFormatted;
+		} else {
+			return "0";
+		}
+	}, [event.id]);
+
 	const sender = useMemo(
 		() => event.tags.find((tag) => tag[0] === "P")?.[1],
 		[event.id],

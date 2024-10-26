@@ -7,7 +7,13 @@ import { MagnifyingGlass } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
-import { useCallback, useRef, useState, useTransition } from "react";
+import {
+	type RefObject,
+	useCallback,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/search")({
@@ -97,7 +103,7 @@ function Screen() {
 
 	return (
 		<div className="px-3 h-full">
-			<div className="flex flex-col gap-3 size-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700">
+			<div className="flex flex-col gap-3 size-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700">
 				<div className="h-9 shrink-0 pt-6 px-3 flex items-center gap-2">
 					<input
 						name="search"
@@ -127,7 +133,7 @@ function Screen() {
 					className="overflow-hidden size-full flex-1"
 				>
 					<ScrollArea.Viewport ref={ref} className="relative h-full">
-						<Virtualizer scrollRef={ref}>
+						<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 							{isPending ? (
 								<div className="w-full h-[200px] flex gap-2 items-center justify-center">
 									<Spinner />

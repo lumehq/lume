@@ -20,7 +20,7 @@ export const Route = createLazyFileRoute("/columns/_layout/launchpad/$id")({
 
 function Screen() {
 	const { id } = Route.useParams();
-	const { data: isSync } = useQuery({
+	const { isLoading, data: isSync } = useQuery({
 		queryKey: ["is-sync", id],
 		queryFn: async () => {
 			const res = await commands.isAccountSync(id);
@@ -40,7 +40,9 @@ function Screen() {
 			className="overflow-hidden size-full"
 		>
 			<ScrollArea.Viewport className="relative h-full px-3 pb-3">
-				{!isSync ? (
+				{isLoading ? (
+					<Spinner className="size-4" />
+				) : !isSync ? (
 					<SyncProgress />
 				) : (
 					<>

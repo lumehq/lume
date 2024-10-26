@@ -4,14 +4,20 @@ import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useState,
+} from "react";
 import { User } from "./user";
 
 export function Column({ column }: { column: LumeColumn }) {
 	const webviewLabel = useMemo(() => `column-${column.label}`, [column.label]);
 
 	const [rect, ref] = useRect();
-	const [_error, setError] = useState<string>(null);
+	const [_error, setError] = useState<string>("");
 
 	useEffect(() => {
 		(async () => {
@@ -33,10 +39,8 @@ export function Column({ column }: { column: LumeColumn }) {
 		})();
 	}, [rect]);
 
-	useEffect(() => {
-		const isCreated = window.sessionStorage.getItem(webviewLabel);
-
-		if (!isCreated) {
+	useLayoutEffect(() => {
+		if (ref.current) {
 			const initialRect = ref.current.getBoundingClientRect();
 
 			commands
@@ -51,7 +55,6 @@ export function Column({ column }: { column: LumeColumn }) {
 				.then((res) => {
 					if (res.status === "ok") {
 						console.log("webview is created: ", webviewLabel);
-						window.sessionStorage.setItem(webviewLabel, "");
 					} else {
 						setError(res.error);
 					}
@@ -172,7 +175,11 @@ function Header({
 					<div
 						contentEditable
 						suppressContentEditableWarning={true}
-						onBlur={(e) => setTitle(e.currentTarget.textContent)}
+						onBlur={(e) => {
+							if (e.currentTarget.textContent) {
+								setTitle(e.currentTarget.textContent);
+							}
+						}}
 						className="text-[12px] font-semibold focus:outline-none"
 					>
 						{name}

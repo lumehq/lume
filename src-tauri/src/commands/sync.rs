@@ -2,6 +2,7 @@ use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{
+    collections::HashSet,
     fs::{self, File},
     str::FromStr,
 };
@@ -52,19 +53,17 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
         //
         if let Ok(events) = client
             .database()
-            .query(vec![Filter::new().kinds(vec![
-                Kind::ContactList,
-                Kind::FollowSet,
-                Kind::MuteList,
-                Kind::Repost,
-                Kind::TextNote,
-            ])])
+            .query(vec![Filter::new()
+                .authors(public_keys)
+                .kinds(vec![Kind::ContactList, Kind::FollowSet])])
             .await
         {
-            let pubkeys: Vec<PublicKey> = events
+            let set: HashSet<PublicKey> = events
                 .iter()
                 .flat_map(|ev| ev.tags.public_keys().copied())
                 .collect();
+
+            let pubkeys: Vec<PublicKey> = set.into_iter().collect();
 
             for chunk in pubkeys.chunks(500) {
                 if chunk.is_empty() {
@@ -78,10 +77,10 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
                 let events = Filter::new()
                     .authors(authors.clone())
                     .kinds(vec![Kind::TextNote, Kind::Repost])
-                    .limit(1000);
+                    .limit(500);
 
                 if let Ok(output) = client
-                    .sync_with(&bootstrap_relays, events, SyncOptions::default())
+                    .sync_with(&bootstrap_relays, events, &SyncOptions::default())
                     .await
                 {
                     NegentropyEvent {
@@ -94,21 +93,20 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
 
                 // NEG: Sync metadata
                 //
-                let metadata = Filter::new()
-                    .authors(authors)
+                let events = Filter::new()
+                    .authors(authors.clone())
                     .kinds(vec![
                         Kind::Metadata,
-                        Kind::ContactList,
-                        Kind::Interests,
                         Kind::InterestSet,
+                        Kind::Interests,
                         Kind::FollowSet,
-                        Kind::MuteList,
-                        Kind::RelaySet,
+                        Kind::EventDeletion,
+                        Kind::Custom(30315),
                     ])
-                    .limit(1000);
+                    .limit(500);
 
                 if let Ok(output) = client
-                    .sync_with(&bootstrap_relays, metadata, SyncOptions::default())
+                    .sync_with(&bootstrap_relays, events, &SyncOptions::default())
                     .await
                 {
                     NegentropyEvent {
@@ -119,62 +117,6 @@ pub fn sync_all(accounts: Vec<String>, app_handle: AppHandle) {
                     .unwrap();
                 }
             }
-        }
-
-        // NEG: Sync notification
-        //
-        let notification = Filter::new()
-            .pubkeys(public_keys.clone())
-            .kinds(vec![
-                Kind::TextNote,
-                Kind::Repost,
-                Kind::Reaction,
-                Kind::ZapReceipt,
-            ])
-            .limit(500);
-
-        if let Ok(output) = client
-            .sync_with(&bootstrap_relays, notification, SyncOptions::default())
-            .await
-        {
-            NegentropyEvent {
-                kind: NegentropyKind::Notification,
-                total_event: output.received.len() as i32,
-            }
-            .emit(&app_handle)
-            .unwrap();
-        }
-
-        // NEG: Sync metadata
-        //
-        let metadata = Filter::new().authors(public_keys.clone()).kinds(vec![
-            Kind::Metadata,
-            Kind::ContactList,
-            Kind::Interests,
-            Kind::InterestSet,
-            Kind::FollowSet,
-            Kind::RelayList,
-            Kind::MuteList,
-            Kind::EventDeletion,
-            Kind::Bookmarks,
-            Kind::BookmarkSet,
-            Kind::Emojis,
-            Kind::EmojiSet,
-            Kind::TextNote,
-            Kind::Repost,
-            Kind::Custom(30315),
-        ]);
-
-        if let Ok(output) = client
-            .sync_with(&bootstrap_relays, metadata, SyncOptions::default())
-            .await
-        {
-            NegentropyEvent {
-                kind: NegentropyKind::Others,
-                total_event: output.received.len() as i32,
-            }
-            .emit(&app_handle)
-            .unwrap();
         }
     });
 }
@@ -235,10 +177,7 @@ pub async fn sync_account(
         }
     });
 
-    if let Ok(output) = client
-        .sync_with(&bootstrap_relays, filter, opts.clone())
-        .await
-    {
+    if let Ok(output) = client.sync_with(&bootstrap_relays, filter, &opts).await {
         println!("Success: {:?}", output.success);
         println!("Failed: {:?}", output.failed);
 
@@ -279,35 +218,11 @@ pub async fn sync_account(
                 ])
                 .limit(10000);
 
-            if let Ok(output) = client
-                .sync_with(&bootstrap_relays, filter, opts.clone())
-                .await
-            {
+            if let Ok(output) = client.sync_with(&bootstrap_relays, filter, &opts).await {
                 println!("Success: {:?}", output.success);
                 println!("Failed: {:?}", output.failed);
             }
         };
-    }
-
-    let event_ids = client
-        .database()
-        .query(vec![Filter::new().kinds(vec![
-            Kind::TextNote,
-            Kind::Repost,
-            Kind::Bookmarks,
-            Kind::BookmarkSet,
-        ])])
-        .await
-        .map_err(|e| e.to_string())?;
-
-    if !event_ids.is_empty() {
-        let ids: Vec<EventId> = event_ids.iter().map(|ev| ev.id).collect();
-        let filter = Filter::new().events(ids);
-
-        if let Ok(output) = client.sync_with(&bootstrap_relays, filter, opts).await {
-            println!("Success: {:?}", output.success);
-            println!("Failed: {:?}", output.failed);
-        }
     }
 
     let config_dir = app_handle

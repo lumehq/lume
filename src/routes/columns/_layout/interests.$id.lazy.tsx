@@ -7,7 +7,7 @@ import { ArrowDown } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useCallback, useRef } from "react";
+import { type RefObject, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/interests/$id")({
@@ -30,7 +30,7 @@ export function Screen() {
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const tags = hashtags.map((tag) => tag.toLowerCase().replace("#", ""));
-			const until = pageParam > 0 ? pageParam.toString() : undefined;
+			const until = pageParam > 0 ? pageParam.toString() : null;
 			const res = await commands.getAllEventsByHashtags(tags, until);
 
 			if (res.status === "error") {
@@ -39,7 +39,13 @@ export function Screen() {
 
 			return toLumeEvents(res.data);
 		},
-		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
+		getNextPageParam: (lastPage) => {
+			const lastEvent = lastPage.at(-1);
+
+			if (lastEvent) {
+				return lastEvent.created_at - 1;
+			}
+		},
 		select: (data) => data?.pages.flat(),
 		refetchOnWindowFocus: false,
 	});
@@ -50,14 +56,17 @@ export function Screen() {
 		(event: LumeEvent) => {
 			if (!event) return;
 			switch (event.kind) {
-				case Kind.Repost:
+				case Kind.Repost: {
+					const repostId = event.repostId;
+
 					return (
 						<RepostNote
-							key={event.id}
+							key={repostId + event.id}
 							event={event}
 							className="border-b-[.5px] border-neutral-300 dark:border-neutral-700"
 						/>
 					);
+				}
 				default:
 					return (
 						<TextNote
@@ -79,9 +88,9 @@ export function Screen() {
 		>
 			<ScrollArea.Viewport
 				ref={ref}
-				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
-				<Virtualizer scrollRef={ref}>
+				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
 						<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
 							<div className="w-max h-8 pl-2 pr-3 inline-flex items-center justify-center gap-1.5 rounded-full shadow-lg text-sm font-medium text-white bg-black dark:text-black dark:bg-white">
@@ -95,7 +104,7 @@ export function Screen() {
 							<Spinner className="size-4" />
 							<span className="text-sm font-medium">Loading...</span>
 						</div>
-					) : !data.length ? (
+					) : !data?.length ? (
 						<div className="mb-3 flex items-center justify-center h-20 text-sm">
 							🎉 Yo. You're catching up on all latest notes.
 						</div>

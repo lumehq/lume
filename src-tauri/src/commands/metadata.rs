@@ -36,8 +36,34 @@ pub async fn get_profile(id: String, state: State<'_, Nostr>) -> Result<String, 
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    match client.database().profile(public_key).await {
-        Ok(profile) => Ok(profile.metadata().as_json()),
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::Metadata)
+        .limit(1);
+
+    match client.database().query(vec![filter.clone()]).await {
+        Ok(events) => {
+            if let Some(event) = events.iter().next() {
+                let metadata = Metadata::from_json(&event.content).map_err(|e| e.to_string())?;
+                Ok(metadata.as_json())
+            } else {
+                match client
+                    .fetch_events(vec![filter], Some(Duration::from_secs(5)))
+                    .await
+                {
+                    Ok(events) => {
+                        if let Some(event) = events.iter().next() {
+                            let metadata =
+                                Metadata::from_json(&event.content).map_err(|e| e.to_string())?;
+                            Ok(metadata.as_json())
+                        } else {
+                            Err("Profile not found.".into())
+                        }
+                    }
+                    Err(err) => Err(err.to_string()),
+                }
+            }
+        }
         Err(e) => Err(e.to_string()),
     }
 }
@@ -203,7 +229,13 @@ pub async fn set_group(
     let client = &state.client;
     let public_keys: Vec<PublicKey> = users
         .iter()
-        .map(|u| PublicKey::from_str(u).unwrap())
+        .filter_map(|u| {
+            if let Ok(pk) = PublicKey::from_str(u) {
+                Some(pk)
+            } else {
+                None
+            }
+        })
         .collect();
     let label = title.to_lowercase().replace(" ", "-");
     let mut tags: Vec<Tag> = vec![Tag::title(title)];
@@ -237,7 +269,7 @@ pub async fn set_group(
                     .authors(public_keys)
                     .limit(500);
 
-                if let Ok(report) = client.sync(filter, SyncOptions::default()).await {
+                if let Ok(report) = client.sync(filter, &SyncOptions::default()).await {
                     println!("Received: {}", report.received.len());
                     handle.emit("synchronized", ()).unwrap();
                 };
@@ -283,7 +315,7 @@ pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, S
     let filter = Filter::new().kind(Kind::FollowSet).authors(authors);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -331,7 +363,7 @@ pub async fn set_interest(
                     .hashtags(hashtags)
                     .limit(500);
 
-                if let Ok(report) = client.sync(filter, SyncOptions::default()).await {
+                if let Ok(report) = client.sync(filter, &SyncOptions::default()).await {
                     println!("Received: {}", report.received.len());
                     handle.emit("synchronized", ()).unwrap();
                 };
@@ -381,7 +413,7 @@ pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>
         .authors(authors);
 
     match client.database().query(vec![filter]).await {
-        Ok(events) => Ok(process_event(client, events).await),
+        Ok(events) => Ok(process_event(client, events, false).await),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -560,14 +592,20 @@ pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Ve
     let client = &state.client;
     let public_key = PublicKey::from_str(&id).map_err(|e| e.to_string())?;
 
-    let filter = Filter::new().pubkey(public_key).kinds(vec![
-        Kind::TextNote,
-        Kind::Repost,
-        Kind::Reaction,
-        Kind::ZapReceipt,
-    ]);
+    let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Reaction,
+            Kind::ZapReceipt,
+        ])
+        .limit(200);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
+        .await
+    {
         Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
     }

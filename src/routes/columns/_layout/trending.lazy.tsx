@@ -4,7 +4,7 @@ import { Kind, type NostrEvent } from "@/types";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useCallback, useRef } from "react";
+import { type RefObject, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/trending")({
@@ -71,15 +71,18 @@ function Screen() {
 		>
 			<ScrollArea.Viewport
 				ref={ref}
-				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
-				<Virtualizer scrollRef={ref} overscan={1}>
+				<Virtualizer
+					scrollRef={ref as unknown as RefObject<HTMLElement>}
+					overscan={1}
+				>
 					{isLoading ? (
 						<div className="flex items-center justify-center w-full h-16 gap-2">
 							<Spinner className="size-4" />
 							<span className="text-sm font-medium">Loading...</span>
 						</div>
-					) : !data.length ? (
+					) : !data?.length ? (
 						<div className="mb-3 flex items-center justify-center h-20 text-sm">
 							🎉 Yo. You're catching up on all latest notes.
 						</div>

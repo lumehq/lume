@@ -6,7 +6,7 @@ import {
 	useRouter,
 	useRouterState,
 } from "@tanstack/react-router";
-import { useRef } from "react";
+import { type RefObject, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/replies/$id")({
@@ -20,7 +20,7 @@ function Screen() {
 
 	return (
 		<div className="px-3 h-full">
-			<div className="size-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700">
+			<div className="size-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700">
 				<div className="h-full flex flex-col">
 					<div className="h-10 shrink-0 border-b border-black/5 dark:border-white/5 flex items-center justify-between px-2">
 						<button
@@ -38,10 +38,14 @@ function Screen() {
 						className="overflow-hidden size-full flex-1"
 					>
 						<ScrollArea.Viewport ref={ref} className="h-full p-3">
-							<Virtualizer scrollRef={ref}>
-								{events.map((event) => (
-									<ReplyNote key={event.id} event={event} />
-								))}
+							<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
+								{!events ? (
+									<div>Empty</div>
+								) : (
+									events.map((event) => (
+										<ReplyNote key={event.id} event={event} />
+									))
+								)}
 							</Virtualizer>
 						</ScrollArea.Viewport>
 						<ScrollArea.Scrollbar

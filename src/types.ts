@@ -26,7 +26,7 @@ export interface NostrEvent {
 	tags: string[][];
 	content: string;
 	sig: string;
-	meta: Meta;
+	meta: Meta | null;
 }
 
 export interface EventWithReplies extends NostrEvent {

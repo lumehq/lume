@@ -10,6 +10,7 @@ use tauri::window::Effect;
 use tauri::TitleBarStyle;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
 use tauri::{WebviewBuilder, WebviewWindowBuilder};
+#[cfg(target_os = "windows")]
 use tauri_plugin_decorum::WebviewWindowExt;
 
 #[derive(Serialize, Deserialize, Type)]
@@ -35,9 +36,9 @@ pub struct Column {
     height: f32,
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 #[specta::specta]
-pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<String, String> {
+pub async fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<String, String> {
     match app_handle.get_window("main") {
         Some(main_window) => match app_handle.get_webview(&column.label) {
             Some(_) => Ok(column.label),
@@ -63,18 +64,18 @@ pub fn create_column(column: Column, app_handle: tauri::AppHandle) -> Result<Str
     }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 #[specta::specta]
-pub fn close_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
+pub async fn close_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
         Some(webview) => Ok(webview.close().is_ok()),
         None => Err("Cannot close, column not found.".into()),
     }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 #[specta::specta]
-pub fn update_column(
+pub async fn update_column(
     label: String,
     width: f32,
     height: f32,
@@ -98,9 +99,9 @@ pub fn update_column(
     }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 #[specta::specta]
-pub fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+pub async fn reload_column(label: String, app_handle: tauri::AppHandle) -> Result<(), String> {
     match app_handle.get_webview(&label) {
         Some(webview) => {
             webview.eval("location.reload(true)").unwrap();
@@ -124,6 +125,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<Strin
 
         Ok(current_window.label().to_string())
     } else {
+        #[cfg(target_os = "macos")]
         let new_window = WebviewWindowBuilder::new(
             &app_handle,
             &window.label,
@@ -147,27 +149,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<Strin
         .build()
         .unwrap();
 
-        // Restore native border
-        new_window.add_border(None);
-
-        Ok(new_window.label().to_string())
-    }
-}
-
-#[tauri::command(async)]
-#[specta::specta]
-#[cfg(target_os = "windows")]
-pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<String, String> {
-    if let Some(current_window) = app_handle.get_window(&window.label) {
-        if current_window.is_visible().unwrap_or_default() {
-            let _ = current_window.set_focus();
-        } else {
-            let _ = current_window.show();
-            let _ = current_window.set_focus();
-        };
-
-        Ok(current_window.label().to_string())
-    } else {
+        #[cfg(target_os = "windows")]
         let new_window = WebviewWindowBuilder::new(
             &app_handle,
             &window.label,
@@ -191,57 +173,13 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<Strin
         .unwrap();
 
         // Set decoration
-        new_window.create_overlay_titlebar().unwrap();
-
-        Ok(new_window.label().to_string())
-    }
-
-    Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn reopen_lume(app: tauri::AppHandle) {
-    if let Some(window) = app.get_window("main") {
-        if window.is_visible().unwrap_or_default() {
-            let _ = window.set_focus();
-        } else {
-            let _ = window.show();
-            let _ = window.set_focus();
-        };
-    } else {
-        let window =
-            WebviewWindowBuilder::from_config(&app, app.config().app.windows.first().unwrap())
-                .unwrap()
-                .build()
-                .unwrap();
-
-        // Set decoration
         #[cfg(target_os = "windows")]
-        window.create_overlay_titlebar().unwrap();
+        new_window.create_overlay_titlebar().unwrap();
 
         // Restore native border
         #[cfg(target_os = "macos")]
-        window.add_border(None);
+        new_window.add_border(None);
 
-        // Set a custom inset to the traffic lights
-        #[cfg(target_os = "macos")]
-        window.set_traffic_lights_inset(7.0, 10.0).unwrap();
-
-        #[cfg(target_os = "macos")]
-        let win = window.clone();
-
-        #[cfg(target_os = "macos")]
-        window.on_window_event(move |event| {
-            if let tauri::WindowEvent::ThemeChanged(_) = event {
-                win.set_traffic_lights_inset(7.0, 10.0).unwrap();
-            }
-        });
+        Ok(new_window.label().to_string())
     }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn quit() {
-    std::process::exit(0)
 }

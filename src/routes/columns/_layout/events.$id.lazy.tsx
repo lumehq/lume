@@ -6,7 +6,7 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useEffect, useRef } from "react";
+import { type RefObject, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/events/$id")({
@@ -35,7 +35,7 @@ function Screen() {
 				ref={ref}
 				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
-				<Virtualizer scrollRef={ref}>
+				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 					<RootEvent />
 					<ReplyList />
 				</Virtualizer>
@@ -64,10 +64,10 @@ function RootEvent() {
 		);
 	}
 
-	if (isError) {
+	if (isError || !event) {
 		return (
 			<div className="flex items-center gap-2 text-sm text-red-500">
-				{error.message}
+				{error?.message || "Event not found within your current relay set"}
 			</div>
 		);
 	}
@@ -181,15 +181,21 @@ function ReplyList() {
 
 	useEffect(() => {
 		events.subscription
-			.emit({ label, kind: "Subscribe", event_id: id })
+			.emit({
+				label: label || id,
+				kind: "Subscribe",
+				event_id: id,
+				contacts: null,
+			})
 			.then(() => console.log("Subscribe: ", label));
 
 		return () => {
 			events.subscription
 				.emit({
-					label,
+					label: label || id,
 					kind: "Unsubscribe",
 					event_id: id,
+					contacts: null,
 				})
 				.then(() => console.log("Unsubscribe: ", label));
 		};
@@ -229,7 +235,7 @@ function ReplyList() {
 				</div>
 			) : (
 				<div className="flex flex-col gap-3">
-					{!data.length ? (
+					{!data?.length ? (
 						<div className="flex items-center justify-center w-full">
 							<div className="flex flex-col items-center justify-center gap-2 py-4">
 								<h3 className="text-3xl">👋</h3>

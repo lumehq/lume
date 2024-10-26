@@ -156,8 +156,6 @@ fn main() {
             reload_column,
             close_column,
             open_window,
-            reopen_lume,
-            quit
         ])
         .events(collect_events![Subscription, NegentropyEvent]);
 
@@ -207,12 +205,12 @@ fn main() {
                 // Config
                 let opts = Options::new()
                     .gossip(true)
-                    .max_avg_latency(Duration::from_millis(800))
+                    .max_avg_latency(Duration::from_millis(500))
                     .automatic_authentication(false)
                     .connection_timeout(Some(Duration::from_secs(20)))
                     .send_timeout(Some(Duration::from_secs(10)))
                     .wait_for_send(false)
-                    .timeout(Duration::from_secs(20));
+                    .timeout(Duration::from_secs(12));
 
                 // Setup nostr client
                 let client = ClientBuilder::default()
@@ -370,29 +368,31 @@ fn main() {
             tauri::async_runtime::spawn(async move {
                 let state = handle_clone.state::<Nostr>();
                 let client = &state.client;
-                let accounts = state.accounts.lock().unwrap().clone();
+                let accounts = get_all_accounts();
 
-                let public_keys: Vec<PublicKey> = accounts
-                    .iter()
-                    .filter_map(|acc| {
-                        if let Ok(pk) = PublicKey::from_str(acc) {
-                            Some(pk)
-                        } else {
-                            None
-                        }
-                    })
-                    .collect();
+                if !accounts.is_empty() {
+                    let public_keys: Vec<PublicKey> = accounts
+                        .iter()
+                        .filter_map(|acc| {
+                            if let Ok(pk) = PublicKey::from_str(acc) {
+                                Some(pk)
+                            } else {
+                                None
+                            }
+                        })
+                        .collect();
 
-                // Subscribe for new notification
-                if let Ok(e) = client
-                    .subscribe_with_id(
-                        SubscriptionId::new(NOTIFICATION_SUB_ID),
-                        vec![Filter::new().pubkeys(public_keys).since(Timestamp::now())],
-                        None,
-                    )
-                    .await
-                {
-                    println!("Subscribed for notification on {} relays", e.success.len())
+                    // Subscribe for new notification
+                    if let Ok(e) = client
+                        .subscribe_with_id(
+                            SubscriptionId::new(NOTIFICATION_SUB_ID),
+                            vec![Filter::new().pubkeys(public_keys).since(Timestamp::now())],
+                            None,
+                        )
+                        .await
+                    {
+                        println!("Subscribed for notification on {} relays", e.success.len())
+                    }
                 }
 
                 let allow_notification = match handle_clone.notification().request_permission() {
@@ -408,7 +408,6 @@ fn main() {
 
                 let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
                 let mut notifications = client.pool().notifications();
-                let mut new_events: Vec<EventId> = Vec::new();
 
                 while let Ok(notification) = notifications.recv().await {
                     match notification {
@@ -425,17 +424,6 @@ fn main() {
                                             if let Err(e) = relay.resubscribe(opts).await {
                                                 println!("Error: {}", e);
                                             }
-
-                                            // Workaround for https://github.com/rust-nostr/nostr/issues/509
-                                            // TODO: remove
-                                            let _ = client
-                                                .fetch_events(
-                                                    vec![Filter::new()
-                                                        .kind(Kind::TextNote)
-                                                        .limit(0)],
-                                                    Some(Duration::from_secs(5)),
-                                                )
-                                                .await;
 
                                             if allow_notification {
                                                 if let Err(e) = &handle_clone
@@ -469,22 +457,8 @@ fn main() {
                                 event,
                             } = message
                             {
-                                let tags: Vec<String> = event
-                                    .tags
-                                    .public_keys()
-                                    .filter_map(|pk| {
-                                        if let Ok(bech32) = pk.to_bech32() {
-                                            Some(bech32)
-                                        } else {
-                                            None
-                                        }
-                                    })
-                                    .collect();
-
                                 // Handle events from notification subscription
-                                if subscription_id == notification_id
-                                    && tags.iter().any(|item| accounts.iter().any(|i| i == item))
-                                {
+                                if subscription_id == notification_id {
                                     // Send native notification
                                     if allow_notification {
                                         let author = client
@@ -501,37 +475,22 @@ fn main() {
                                             &handle_clone,
                                         );
                                     }
-                                }
+                                } else {
+                                    let payload = RichEvent {
+                                        raw: event.as_json(),
+                                        parsed: if event.kind == Kind::TextNote {
+                                            Some(parse_event(&event.content).await)
+                                        } else {
+                                            None
+                                        },
+                                    };
 
-                                let payload = RichEvent {
-                                    raw: event.as_json(),
-                                    parsed: if event.kind == Kind::TextNote {
-                                        Some(parse_event(&event.content).await)
-                                    } else {
-                                        None
-                                    },
-                                };
-
-                                handle_clone
-                                    .emit_to(
+                                    if let Err(e) = handle_clone.emit_to(
                                         EventTarget::labeled(subscription_id.to_string()),
                                         "event",
                                         payload,
-                                    )
-                                    .unwrap();
-
-                                if state
-                                    .subscriptions
-                                    .lock()
-                                    .unwrap()
-                                    .iter()
-                                    .any(|i| i == &subscription_id)
-                                {
-                                    new_events.push(event.id);
-
-                                    if new_events.len() > 5 {
-                                        handle_clone.emit("synchronized", ()).unwrap();
-                                        new_events.clear();
+                                    ) {
+                                        println!("Emitter error: {}", e)
                                     }
                                 }
                             };
