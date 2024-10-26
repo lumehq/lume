@@ -1,7 +1,9 @@
 use std::path::PathBuf;
+use std::str::FromStr;
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
+use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use tauri::utils::config::WindowEffectsConfig;
@@ -13,6 +15,9 @@ use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl, Window};
 use tauri::{WebviewBuilder, WebviewWindowBuilder};
 #[cfg(target_os = "windows")]
 use tauri_plugin_decorum::WebviewWindowExt;
+
+use crate::common::get_last_segment;
+use crate::Nostr;
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct NewWindow {
@@ -55,8 +60,101 @@ pub async fn create_column(
                 .transparent(true)
                 .on_page_load(|webview, payload| match payload.event() {
                     PageLoadEvent::Started => {
-                        let url = payload.url();
-                        println!("#TODO, preload: {}", url)
+                        if let Ok(id) = get_last_segment(payload.url()) {
+                            if let Ok(public_key) = PublicKey::from_str(&id) {
+                                let is_newsfeed = payload.url().to_string().contains("newsfeed");
+
+                                tauri::async_runtime::spawn(async move {
+                                    let state = webview.state::<Nostr>();
+                                    let client = &state.client;
+                                    let relays = &state.bootstrap_relays.lock().unwrap().clone();
+
+                                    if is_newsfeed {
+                                        if let Ok(contact_list) =
+                                            client.database().contacts_public_keys(public_key).await
+                                        {
+                                            let opts = SyncOptions::default();
+                                            let subscription_id =
+                                                SubscriptionId::new(webview.label());
+                                            let filter =
+                                                Filter::new().authors(contact_list).kinds(vec![
+                                                    Kind::TextNote,
+                                                    Kind::Repost,
+                                                    Kind::EventDeletion,
+                                                ]);
+
+                                            if let Err(e) = client
+                                                .subscribe_with_id(
+                                                    subscription_id,
+                                                    vec![filter.clone().since(Timestamp::now())],
+                                                    None,
+                                                )
+                                                .await
+                                            {
+                                                println!("Subscription error: {}", e);
+                                            }
+
+                                            if let Ok(output) = client
+                                                .sync_with(relays, filter.limit(1000), &opts)
+                                                .await
+                                            {
+                                                println!("Success: {:?}", output.success.len());
+                                            }
+                                        }
+                                    } else {
+                                        let opts = SyncOptions::default();
+                                        let filter = Filter::new()
+                                            .author(public_key)
+                                            .kinds(vec![
+                                                Kind::Interests,
+                                                Kind::InterestSet,
+                                                Kind::FollowSet,
+                                                Kind::Bookmarks,
+                                                Kind::BookmarkSet,
+                                                Kind::TextNote,
+                                                Kind::Repost,
+                                                Kind::Custom(30315),
+                                            ])
+                                            .limit(500);
+
+                                        if let Ok(output) =
+                                            client.sync_with(relays, filter, &opts).await
+                                        {
+                                            println!("Success: {:?}", output.success.len());
+                                        }
+                                    }
+                                });
+                            } else if let Ok(event_id) = EventId::from_str(&id) {
+                                tauri::async_runtime::spawn(async move {
+                                    let state = webview.state::<Nostr>();
+                                    let client = &state.client;
+                                    let relays = &state.bootstrap_relays.lock().unwrap().clone();
+
+                                    let opts = SyncOptions::default();
+                                    let subscription_id = SubscriptionId::new(webview.label());
+                                    let filter = Filter::new()
+                                        .event(event_id)
+                                        .kinds(vec![Kind::TextNote, Kind::Custom(1111)]);
+
+                                    if let Err(e) = client
+                                        .subscribe_with_id(
+                                            subscription_id,
+                                            vec![filter.clone().since(Timestamp::now())],
+                                            None,
+                                        )
+                                        .await
+                                    {
+                                        println!("Subscription error: {}", e);
+                                    }
+
+                                    if let Ok(output) =
+                                        client.sync_with(relays, filter, &opts).await
+                                    {
+                                        println!("Success: {:?}", output.success.len());
+                                    }
+                                });
+                            }
+                        }
                     }
                     PageLoadEvent::Finished => {
                         println!("{} finished loading", payload.url());
@@ -80,7 +178,7 @@ pub async fn create_column(
 pub async fn close_column(label: String, app_handle: tauri::AppHandle) -> Result<bool, String> {
     match app_handle.get_webview(&label) {
         Some(webview) => Ok(webview.close().is_ok()),
-        None => Err("Cannot close, column not found.".into()),
+        None => Err(format!("Cannot close, column not found: {}", label)),
     }
 }
 

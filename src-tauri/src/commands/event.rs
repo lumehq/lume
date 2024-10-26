@@ -86,28 +86,6 @@ pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<Rich
 
 #[tauri::command]
 #[specta::specta]
-pub async fn subscribe_to(id: String, state: State<'_, Nostr>) -> Result<(), String> {
-    let client = &state.client;
-
-    let subscription_id = SubscriptionId::new(&id);
-    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
-
-    let filter = Filter::new()
-        .kinds(vec![Kind::TextNote])
-        .event(event_id)
-        .since(Timestamp::now());
-
-    match client
-        .subscribe_with_id(subscription_id, vec![filter], None)
-        .await
-    {
-        Ok(_) => Ok(()),
-        Err(e) => Err(e.to_string()),
-    }
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn get_all_events_by_author(
     public_key: String,
     limit: i32,
@@ -178,10 +156,7 @@ pub async fn get_all_events_by_hashtags(
         .until(as_of)
         .hashtags(hashtags);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
-        .await
-    {
+    match client.database().query(vec![filter]).await {
         Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }

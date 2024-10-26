@@ -4,18 +4,10 @@ import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import {
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-	useMemo,
-	useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { User } from "./user";
 
 export function Column({ column }: { column: LumeColumn }) {
-	const webviewLabel = useMemo(() => `column-${column.label}`, [column.label]);
-
 	const [rect, ref] = useRect();
 	const [_error, setError] = useState<string>("");
 
@@ -23,7 +15,7 @@ export function Column({ column }: { column: LumeColumn }) {
 		(async () => {
 			if (rect) {
 				const res = await commands.updateColumn(
-					webviewLabel,
+					column.label,
 					rect.width,
 					rect.height,
 					rect.x,
@@ -31,7 +23,7 @@ export function Column({ column }: { column: LumeColumn }) {
 				);
 
 				if (res.status === "ok") {
-					console.log("webview is updated: ", webviewLabel);
+					console.log("webview is updated: ", column.label);
 				} else {
 					console.log("webview error: ", res.error);
 				}
@@ -40,12 +32,13 @@ export function Column({ column }: { column: LumeColumn }) {
 	}, [rect]);
 
 	useLayoutEffect(() => {
+		console.log(column.label);
 		if (ref.current) {
 			const initialRect = ref.current.getBoundingClientRect();
 
 			commands
 				.createColumn({
-					label: webviewLabel,
+					label: column.label,
 					x: initialRect.x,
 					y: initialRect.y,
 					width: initialRect.width,
@@ -54,16 +47,16 @@ export function Column({ column }: { column: LumeColumn }) {
 				})
 				.then((res) => {
 					if (res.status === "ok") {
-						console.log("webview is created: ", webviewLabel);
+						console.log("webview is created: ", column.label);
 					} else {
 						setError(res.error);
 					}
 				});
 
 			return () => {
-				commands.closeColumn(webviewLabel).then((res) => {
+				commands.closeColumn(column.label).then((res) => {
 					if (res.status === "ok") {
-						console.log("webview is closed: ", webviewLabel);
+						console.log("webview is closed: ", column.label);
 					} else {
 						console.log("webview error: ", res.error);
 					}
@@ -77,7 +70,6 @@ export function Column({ column }: { column: LumeColumn }) {
 			<div className="flex flex-col gap-px size-full">
 				<Header
 					label={column.label}
-					webviewLabel={webviewLabel}
 					name={column.name}
 					account={column.account}
 				/>
@@ -89,10 +81,9 @@ export function Column({ column }: { column: LumeColumn }) {
 
 function Header({
 	label,
-	webviewLabel,
 	name,
 	account,
-}: { label: string; webviewLabel: string; name: string; account?: string }) {
+}: { label: string; name: string; account?: string }) {
 	const [title, setTitle] = useState("");
 	const [isChanged, setIsChanged] = useState(false);
 
@@ -105,7 +96,7 @@ function Header({
 			MenuItem.new({
 				text: "Reload",
 				action: async () => {
-					await commands.reloadColumn(webviewLabel);
+					await commands.reloadColumn(label);
 				},
 			}),
 			PredefinedMenuItem.new({ item: "Separator" }),

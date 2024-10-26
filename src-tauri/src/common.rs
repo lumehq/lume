@@ -143,6 +143,14 @@ pub fn get_all_accounts() -> Vec<String> {
     accounts.into_iter().collect()
 }
 
+pub fn get_last_segment(url: &Url) -> Result<String, String> {
+    url.path_segments()
+        .ok_or("No segments".to_string())?
+        .last()
+        .ok_or("No items".into())
+        .map(String::from)
+}
+
 pub async fn process_event(client: &Client, events: Events, is_reply: bool) -> Vec<RichEvent> {
     // Remove event thread if event is TextNote
     let events: Vec<Event> = if !is_reply {

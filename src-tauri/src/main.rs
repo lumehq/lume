@@ -12,7 +12,6 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
-    collections::HashSet,
     fs,
     io::{self, BufRead},
     str::FromStr,
@@ -22,7 +21,7 @@ use std::{
 use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
-use tauri_specta::{collect_commands, collect_events, Builder, Event as TauriEvent};
+use tauri_specta::{collect_commands, Builder, Event as TauriEvent};
 
 pub mod commands;
 pub mod common;
@@ -32,7 +31,6 @@ pub struct Nostr {
     settings: Mutex<Settings>,
     accounts: Mutex<Vec<String>>,
     bootstrap_relays: Mutex<Vec<Url>>,
-    subscriptions: Mutex<HashSet<SubscriptionId>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -66,20 +64,6 @@ impl Default for Settings {
     }
 }
 
-#[derive(Serialize, Deserialize, Type)]
-enum SubscriptionMethod {
-    Subscribe,
-    Unsubscribe,
-}
-
-#[derive(Serialize, Deserialize, Type, TauriEvent)]
-struct Subscription {
-    label: String,
-    kind: SubscriptionMethod,
-    event_id: Option<String>,
-    contacts: Option<Vec<String>>,
-}
-
 #[derive(Serialize, Deserialize, Type, TauriEvent)]
 struct Sync {
     id: String,
@@ -92,72 +76,69 @@ pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 fn main() {
     tracing_subscriber::fmt::init();
 
-    let builder = Builder::<tauri::Wry>::new()
-        .commands(collect_commands![
-            sync_account,
-            is_account_sync,
-            get_relays,
-            connect_relay,
-            remove_relay,
-            get_bootstrap_relays,
-            save_bootstrap_relays,
-            get_accounts,
-            watch_account,
-            import_account,
-            connect_account,
-            get_private_key,
-            delete_account,
-            reset_password,
-            has_signer,
-            set_signer,
-            get_profile,
-            set_profile,
-            get_contact_list,
-            set_contact_list,
-            is_contact,
-            toggle_contact,
-            get_all_profiles,
-            set_group,
-            get_group,
-            get_all_groups,
-            set_interest,
-            get_interest,
-            get_all_interests,
-            set_wallet,
-            load_wallet,
-            remove_wallet,
-            zap_profile,
-            zap_event,
-            copy_friend,
-            get_notifications,
-            get_user_settings,
-            set_user_settings,
-            verify_nip05,
-            get_meta_from_event,
-            get_event,
-            get_replies,
-            subscribe_to,
-            get_all_events_by_author,
-            get_all_events_by_authors,
-            get_all_events_by_hashtags,
-            get_local_events,
-            get_global_events,
-            search,
-            publish,
-            reply,
-            repost,
-            is_reposted,
-            request_delete,
-            is_deleted_event,
-            event_to_bech32,
-            user_to_bech32,
-            create_column,
-            update_column,
-            reload_column,
-            close_column,
-            open_window,
-        ])
-        .events(collect_events![Subscription, NegentropyEvent]);
+    let builder = Builder::<tauri::Wry>::new().commands(collect_commands![
+        sync_account,
+        is_account_sync,
+        get_relays,
+        connect_relay,
+        remove_relay,
+        get_bootstrap_relays,
+        save_bootstrap_relays,
+        get_accounts,
+        watch_account,
+        import_account,
+        connect_account,
+        get_private_key,
+        delete_account,
+        reset_password,
+        has_signer,
+        set_signer,
+        get_profile,
+        set_profile,
+        get_contact_list,
+        set_contact_list,
+        is_contact,
+        toggle_contact,
+        get_all_profiles,
+        set_group,
+        get_group,
+        get_all_groups,
+        set_interest,
+        get_interest,
+        get_all_interests,
+        set_wallet,
+        load_wallet,
+        remove_wallet,
+        zap_profile,
+        zap_event,
+        copy_friend,
+        get_notifications,
+        get_user_settings,
+        set_user_settings,
+        verify_nip05,
+        get_meta_from_event,
+        get_event,
+        get_replies,
+        get_all_events_by_author,
+        get_all_events_by_authors,
+        get_all_events_by_hashtags,
+        get_local_events,
+        get_global_events,
+        search,
+        publish,
+        reply,
+        repost,
+        is_reposted,
+        request_delete,
+        is_deleted_event,
+        event_to_bech32,
+        user_to_bech32,
+        create_column,
+        update_column,
+        reload_column,
+        close_column,
+        open_window,
+    ]);
 
     #[cfg(debug_assertions)]
     builder
@@ -170,12 +151,8 @@ fn main() {
     tauri_builder
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
-            builder.mount_events(app);
-
             let handle = app.handle();
             let handle_clone = handle.clone();
-            let handle_clone_child = handle_clone.clone();
-            let handle_clone_child_child = handle_clone_child.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             let config_dir = handle
@@ -261,8 +238,6 @@ fn main() {
             });
 
             let accounts = get_all_accounts();
-            // Run sync for all accounts
-            sync_all(accounts.clone(), handle_clone_child_child);
 
             // Create global state
             app.manage(Nostr {
@@ -270,98 +245,6 @@ fn main() {
                 accounts: Mutex::new(accounts),
                 settings: Mutex::new(Settings::default()),
                 bootstrap_relays: Mutex::new(bootstrap_relays),
-                subscriptions: Mutex::new(HashSet::new()),
-            });
-
-            // Handle subscription request
-            Subscription::listen_any(app, move |event| {
-                let handle = handle_clone_child.to_owned();
-                let payload = event.payload;
-
-                tauri::async_runtime::spawn(async move {
-                    let state = handle.state::<Nostr>();
-                    let client = &state.client;
-
-                    match payload.kind {
-                        SubscriptionMethod::Subscribe => {
-                            let subscription_id = SubscriptionId::new(payload.label);
-
-                            if !client
-                                .pool()
-                                .subscriptions()
-                                .await
-                                .contains_key(&subscription_id)
-                            {
-                                // Update state
-                                state
-                                    .subscriptions
-                                    .lock()
-                                    .unwrap()
-                                    .insert(subscription_id.clone());
-
-                                println!(
-                                    "Total subscriptions: {}",
-                                    state.subscriptions.lock().unwrap().len()
-                                );
-
-                                if let Some(id) = payload.event_id {
-                                    let event_id = EventId::from_str(&id).unwrap();
-                                    let filter =
-                                        Filter::new().event(event_id).since(Timestamp::now());
-
-                                    if let Err(e) = client
-                                        .subscribe_with_id(
-                                            subscription_id.clone(),
-                                            vec![filter],
-                                            None,
-                                        )
-                                        .await
-                                    {
-                                        println!("Subscription error: {}", e)
-                                    }
-                                }
-
-                                if let Some(ids) = payload.contacts {
-                                    let authors: Vec<PublicKey> = ids
-                                        .iter()
-                                        .filter_map(|item| {
-                                            if let Ok(pk) = PublicKey::from_str(item) {
-                                                Some(pk)
-                                            } else {
-                                                None
-                                            }
-                                        })
-                                        .collect();
-
-                                    if let Err(e) = client
-                                        .subscribe_with_id(
-                                            subscription_id,
-                                            vec![Filter::new()
-                                                .kinds(vec![Kind::TextNote, Kind::Repost])
-                                                .authors(authors)
-                                                .since(Timestamp::now())],
-                                            None,
-                                        )
-                                        .await
-                                    {
-                                        println!("Subscription error: {}", e)
-                                    }
-                                }
-                            }
-                        }
-                        SubscriptionMethod::Unsubscribe => {
-                            let subscription_id = SubscriptionId::new(payload.label);
-
-                            println!(
-                                "Total subscriptions: {}",
-                                state.subscriptions.lock().unwrap().len()
-                            );
-
-                            state.subscriptions.lock().unwrap().remove(&subscription_id);
-                            client.unsubscribe(subscription_id).await;
-                        }
-                    }
-                });
             });
 
             // Run notification thread
