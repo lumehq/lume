@@ -1,18 +1,15 @@
-use std::path::PathBuf;
-use std::str::FromStr;
-
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri::utils::config::WindowEffectsConfig;
-use tauri::webview::PageLoadEvent;
-use tauri::window::Effect;
+use std::{path::PathBuf, str::FromStr};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
-use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl, Window};
-use tauri::{WebviewBuilder, WebviewWindowBuilder};
+use tauri::{
+    utils::config::WindowEffectsConfig, webview::PageLoadEvent, window::Effect, LogicalPosition,
+    LogicalSize, Manager, WebviewBuilder, WebviewUrl, WebviewWindowBuilder, Window,
+};
 #[cfg(target_os = "windows")]
 use tauri_plugin_decorum::WebviewWindowExt;
 
