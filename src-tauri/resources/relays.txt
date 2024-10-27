@@ -1,3 +1,4 @@
 wss://relay.damus.io,
 wss://relay.primal.net,
+wss://relay.nostr.band,
 wss://nostr.fmt.wiz.biz,

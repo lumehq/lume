@@ -200,9 +200,9 @@ async getGroup(id: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getAllGroups() : Promise<Result<RichEvent[], string>> {
+async getAllGroups(id: string) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_all_groups") };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_groups", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -224,9 +224,9 @@ async getInterest(id: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getAllInterests() : Promise<Result<RichEvent[], string>> {
+async getAllInterests(id: string) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_all_interests") };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_interests", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

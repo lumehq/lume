@@ -21,7 +21,7 @@ use std::{
 use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
-use tauri_specta::{collect_commands, Builder, Event as TauriEvent};
+use tauri_specta::{collect_commands, Builder};
 
 pub mod commands;
 pub mod common;
@@ -62,11 +62,6 @@ impl Default for Settings {
             transparent: true,
         }
     }
-}
-
-#[derive(Serialize, Deserialize, Type, TauriEvent)]
-struct Sync {
-    id: String,
 }
 
 pub const DEFAULT_DIFFICULTY: u8 = 0;
@@ -181,13 +176,13 @@ fn main() {
 
                 // Config
                 let opts = Options::new()
-                    .gossip(true)
-                    .max_avg_latency(Duration::from_millis(500))
-                    .automatic_authentication(false)
-                    .connection_timeout(Some(Duration::from_secs(20)))
+                    .gossip(false)
+                    .max_avg_latency(Duration::from_millis(300))
+                    .automatic_authentication(true)
+                    .connection_timeout(Some(Duration::from_secs(5)))
                     .send_timeout(Some(Duration::from_secs(10)))
                     .wait_for_send(false)
-                    .timeout(Duration::from_secs(12));
+                    .timeout(Duration::from_secs(5));
 
                 // Setup nostr client
                 let client = ClientBuilder::default()
@@ -266,7 +261,7 @@ fn main() {
                         .collect();
 
                     // Subscribe for new notification
-                    if let Ok(e) = client
+                    if let Err(e) = client
                         .subscribe_with_id(
                             SubscriptionId::new(NOTIFICATION_SUB_ID),
                             vec![Filter::new().pubkeys(public_keys).since(Timestamp::now())],
@@ -274,7 +269,7 @@ fn main() {
                         )
                         .await
                     {
-                        println!("Subscribed for notification on {} relays", e.success.len())
+                        println!("Error: {}", e)
                     }
                 }
 
@@ -290,54 +285,14 @@ fn main() {
                 };
 
                 let notification_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
-                let mut notifications = client.pool().notifications();
 
-                while let Ok(notification) = notifications.recv().await {
-                    match notification {
-                        RelayPoolNotification::Message { relay_url, message } => {
-                            if let RelayMessage::Auth { challenge } = message {
-                                match client.auth(challenge, relay_url.clone()).await {
-                                    Ok(..) => {
-                                        if let Ok(relay) = client.relay(&relay_url).await {
-                                            let msg =
-                                                format!("Authenticated to {} relay.", relay_url);
-                                            let opts = RelaySendOptions::new()
-                                                .skip_send_confirmation(true);
-
-                                            if let Err(e) = relay.resubscribe(opts).await {
-                                                println!("Error: {}", e);
-                                            }
-
-                                            if allow_notification {
-                                                if let Err(e) = &handle_clone
-                                                    .notification()
-                                                    .builder()
-                                                    .body(&msg)
-                                                    .title("Lume")
-                                                    .show()
-                                                {
-                                                    println!("Error: {}", e);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Err(e) => {
-                                        if allow_notification {
-                                            if let Err(e) = &handle_clone
-                                                .notification()
-                                                .builder()
-                                                .body(e.to_string())
-                                                .title("Lume")
-                                                .show()
-                                            {
-                                                println!("Error: {}", e);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else if let RelayMessage::Event {
-                                subscription_id,
+                let _ = client
+                    .handle_notifications(|notification| async {
+                        #[allow(clippy::collapsible_match)]
+                        if let RelayPoolNotification::Message { message, .. } = notification {
+                            if let RelayMessage::Event {
                                 event,
+                                subscription_id,
                             } = message
                             {
                                 // Handle events from notification subscription
@@ -358,7 +313,7 @@ fn main() {
                                             &handle_clone,
                                         );
                                     }
-                                } else {
+                                } else if event.kind != Kind::RelayList {
                                     let payload = RichEvent {
                                         raw: event.as_json(),
                                         parsed: if event.kind == Kind::TextNote {
@@ -376,12 +331,11 @@ fn main() {
                                         println!("Emitter error: {}", e)
                                     }
                                 }
-                            };
+                            }
                         }
-                        RelayPoolNotification::Shutdown => break,
-                        _ => (),
-                    }
-                }
+                        Ok(false)
+                    })
+                    .await;
             });
 
             Ok(())

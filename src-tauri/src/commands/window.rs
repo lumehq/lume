@@ -64,15 +64,14 @@ pub async fn create_column(
                                 tauri::async_runtime::spawn(async move {
                                     let state = webview.state::<Nostr>();
                                     let client = &state.client;
-                                    let relays = &state.bootstrap_relays.lock().unwrap().clone();
 
                                     if is_newsfeed {
                                         if let Ok(contact_list) =
                                             client.database().contacts_public_keys(public_key).await
                                         {
-                                            let opts = SyncOptions::default();
                                             let subscription_id =
                                                 SubscriptionId::new(webview.label());
+
                                             let filter =
                                                 Filter::new().authors(contact_list).kinds(vec![
                                                     Kind::TextNote,
@@ -90,34 +89,6 @@ pub async fn create_column(
                                             {
                                                 println!("Subscription error: {}", e);
                                             }
-
-                                            if let Ok(output) = client
-                                                .sync_with(relays, filter.limit(1000), &opts)
-                                                .await
-                                            {
-                                                println!("Success: {:?}", output.success.len());
-                                            }
-                                        }
-                                    } else {
-                                        let opts = SyncOptions::default();
-                                        let filter = Filter::new()
-                                            .author(public_key)
-                                            .kinds(vec![
-                                                Kind::Interests,
-                                                Kind::InterestSet,
-                                                Kind::FollowSet,
-                                                Kind::Bookmarks,
-                                                Kind::BookmarkSet,
-                                                Kind::TextNote,
-                                                Kind::Repost,
-                                                Kind::Custom(30315),
-                                            ])
-                                            .limit(500);
-
-                                        if let Ok(output) =
-                                            client.sync_with(relays, filter, &opts).await
-                                        {
-                                            println!("Success: {:?}", output.success.len());
                                         }
                                     }
                                 });
@@ -125,10 +96,9 @@ pub async fn create_column(
                                 tauri::async_runtime::spawn(async move {
                                     let state = webview.state::<Nostr>();
                                     let client = &state.client;
-                                    let relays = &state.bootstrap_relays.lock().unwrap().clone();
 
-                                    let opts = SyncOptions::default();
                                     let subscription_id = SubscriptionId::new(webview.label());
+
                                     let filter = Filter::new()
                                         .event(event_id)
                                         .kinds(vec![Kind::TextNote, Kind::Custom(1111)]);
@@ -142,12 +112,6 @@ pub async fn create_column(
                                         .await
                                     {
                                         println!("Subscription error: {}", e);
-                                    }
-
-                                    if let Ok(output) =
-                                        client.sync_with(relays, filter, &opts).await
-                                    {
-                                        println!("Success: {:?}", output.success.len());
                                     }
                                 });
                             }

@@ -31,11 +31,10 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
                 Ok(RichEvent { raw, parsed })
             } else {
+                let filter = Filter::new().id(event_id);
+
                 match client
-                    .fetch_events(
-                        vec![Filter::new().id(event_id)],
-                        Some(Duration::from_secs(5)),
-                    )
+                    .fetch_events(vec![filter], Some(Duration::from_secs(3)))
                     .await
                 {
                     Ok(events) => {
@@ -48,7 +47,7 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
                             };
                             Ok(RichEvent { raw, parsed })
                         } else {
-                            Err("Event not found.".into())
+                            Err(format!("Cannot found the event with ID {}", id))
                         }
                     }
                     Err(err) => Err(err.to_string()),
@@ -99,7 +98,10 @@ pub async fn get_all_events_by_author(
         .author(author)
         .limit(limit as usize);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
@@ -130,7 +132,10 @@ pub async fn get_all_events_by_authors(
         .until(as_of)
         .authors(authors);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }
@@ -156,7 +161,10 @@ pub async fn get_all_events_by_hashtags(
         .until(as_of)
         .hashtags(hashtags);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => Ok(process_event(client, events, false).await),
         Err(err) => Err(err.to_string()),
     }

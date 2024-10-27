@@ -4,35 +4,19 @@ import { Spinner, User } from "@/components";
 import { LumeWindow } from "@/system";
 import type { LumeColumn, NostrEvent } from "@/types";
 import { ArrowClockwise, Plus } from "@phosphor-icons/react";
-import * as Progress from "@radix-ui/react-progress";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Channel } from "@tauri-apps/api/core";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 export const Route = createLazyFileRoute("/columns/_layout/launchpad/$id")({
 	component: Screen,
 });
 
 function Screen() {
-	const { id } = Route.useParams();
-	const { isLoading, data: isSync } = useQuery({
-		queryKey: ["is-sync", id],
-		queryFn: async () => {
-			const res = await commands.isAccountSync(id);
-
-			if (res.status === "ok") {
-				return res.data;
-			} else {
-				return false;
-			}
-		},
-	});
-
 	return (
 		<ScrollArea.Root
 			type={"scroll"}
@@ -40,17 +24,9 @@ function Screen() {
 			className="overflow-hidden size-full"
 		>
 			<ScrollArea.Viewport className="relative h-full px-3 pb-3">
-				{isLoading ? (
-					<Spinner className="size-4" />
-				) : !isSync ? (
-					<SyncProgress />
-				) : (
-					<>
-						<Groups />
-						<Interests />
-						<Core />
-					</>
-				)}
+				<Groups />
+				<Interests />
+				<Core />
 			</ScrollArea.Viewport>
 			<ScrollArea.Scrollbar
 				className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
@@ -63,6 +39,7 @@ function Screen() {
 	);
 }
 
+/*
 function SyncProgress() {
 	const { id } = Route.useParams();
 	const { queryClient } = Route.useRouteContext();
@@ -128,12 +105,14 @@ function SyncProgress() {
 		</div>
 	);
 }
+*/
 
 function Groups() {
+	const { id } = Route.useParams();
 	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
-		queryKey: ["others", "groups"],
+		queryKey: ["others", "groups", id],
 		queryFn: async () => {
-			const res = await commands.getAllGroups();
+			const res = await commands.getAllGroups(id);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);
@@ -254,10 +233,11 @@ function Groups() {
 }
 
 function Interests() {
+	const { id } = Route.useParams();
 	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
-		queryKey: ["others", "interests"],
+		queryKey: ["others", "interests", id],
 		queryFn: async () => {
-			const res = await commands.getAllInterests();
+			const res = await commands.getAllInterests(id);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);

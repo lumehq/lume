@@ -6,7 +6,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
 
 use crate::{
-    common::{get_all_accounts, get_latest_event, process_event},
+    common::{get_latest_event, process_event},
     Nostr, RichEvent, Settings,
 };
 
@@ -36,36 +36,12 @@ pub async fn get_profile(id: String, state: State<'_, Nostr>) -> Result<String, 
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::Metadata)
-        .limit(1);
+    let metadata = client
+        .fetch_metadata(public_key, Some(Duration::from_secs(3)))
+        .await
+        .map_err(|e| e.to_string())?;
 
-    match client.database().query(vec![filter.clone()]).await {
-        Ok(events) => {
-            if let Some(event) = events.iter().next() {
-                let metadata = Metadata::from_json(&event.content).map_err(|e| e.to_string())?;
-                Ok(metadata.as_json())
-            } else {
-                match client
-                    .fetch_events(vec![filter], Some(Duration::from_secs(5)))
-                    .await
-                {
-                    Ok(events) => {
-                        if let Some(event) = events.iter().next() {
-                            let metadata =
-                                Metadata::from_json(&event.content).map_err(|e| e.to_string())?;
-                            Ok(metadata.as_json())
-                        } else {
-                            Err("Profile not found.".into())
-                        }
-                    }
-                    Err(err) => Err(err.to_string()),
-                }
-            }
-        }
-        Err(e) => Err(e.to_string()),
-    }
+    Ok(metadata.as_json())
 }
 
 #[tauri::command]
@@ -102,7 +78,10 @@ pub async fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec
 
     let mut contact_list: Vec<String> = Vec::new();
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => {
             if let Some(event) = events.into_iter().next() {
                 for tag in event.tags.into_iter() {
@@ -288,7 +267,10 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
     let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
     let filter = Filter::new().kind(Kind::FollowSet).id(event_id);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => match get_latest_event(&events) {
             Some(ev) => Ok(ev.as_json()),
             None => Err("Not found.".to_string()),
@@ -299,22 +281,15 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_all_groups(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
+pub async fn get_all_groups(id: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let accounts = get_all_accounts();
-    let authors: Vec<PublicKey> = accounts
-        .iter()
-        .filter_map(|acc| {
-            if let Ok(pk) = PublicKey::from_str(acc) {
-                Some(pk)
-            } else {
-                None
-            }
-        })
-        .collect();
-    let filter = Filter::new().kind(Kind::FollowSet).authors(authors);
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
+    let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => Ok(process_event(client, events, false).await),
         Err(e) => Err(e.to_string()),
     }
@@ -384,7 +359,10 @@ pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String,
         .kinds(vec![Kind::Interests, Kind::InterestSet])
         .id(event_id);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => match get_latest_event(&events) {
             Some(ev) => Ok(ev.as_json()),
             None => Err("Not found.".to_string()),
@@ -395,24 +373,20 @@ pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String,
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_all_interests(state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
+pub async fn get_all_interests(
+    id: String,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let accounts = get_all_accounts();
-    let authors: Vec<PublicKey> = accounts
-        .iter()
-        .filter_map(|acc| {
-            if let Ok(pk) = PublicKey::from_str(acc) {
-                Some(pk)
-            } else {
-                None
-            }
-        })
-        .collect();
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
     let filter = Filter::new()
         .kinds(vec![Kind::InterestSet, Kind::Interests])
-        .authors(authors);
+        .author(public_key);
 
-    match client.database().query(vec![filter]).await {
+    match client
+        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+    {
         Ok(events) => Ok(process_event(client, events, false).await),
         Err(e) => Err(e.to_string()),
     }
@@ -600,7 +574,7 @@ pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Ve
             Kind::Reaction,
             Kind::ZapReceipt,
         ])
-        .limit(200);
+        .limit(500);
 
     match client
         .fetch_events(vec![filter], Some(Duration::from_secs(5)))
