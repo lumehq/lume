@@ -13,14 +13,14 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SetInterestImport } from './routes/set-interest'
-import { Route as SetGroupImport } from './routes/set-group'
 import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as AppImport } from './routes/_app'
 import { Route as NewPostIndexImport } from './routes/new-post/index'
 import { Route as AppIndexImport } from './routes/_app/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
+import { Route as IdSetInterestImport } from './routes/$id.set-interest'
+import { Route as IdSetGroupImport } from './routes/$id.set-group'
 import { Route as SettingsIdWalletImport } from './routes/settings.$id/wallet'
 import { Route as SettingsIdRelayImport } from './routes/settings.$id/relay'
 import { Route as SettingsIdProfileImport } from './routes/settings.$id/profile'
@@ -78,16 +78,6 @@ const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
-
-const SetInterestRoute = SetInterestImport.update({
-  path: '/set-interest',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/set-interest.lazy').then((d) => d.Route))
-
-const SetGroupRoute = SetGroupImport.update({
-  path: '/set-group',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/set-group.lazy').then((d) => d.Route))
 
 const BootstrapRelaysRoute = BootstrapRelaysImport.update({
   path: '/bootstrap-relays',
@@ -148,6 +138,18 @@ const ColumnsLayoutRoute = ColumnsLayoutImport.update({
   id: '/_layout',
   getParentRoute: () => ColumnsRoute,
 } as any)
+
+const IdSetInterestRoute = IdSetInterestImport.update({
+  path: '/$id/set-interest',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/$id.set-interest.lazy').then((d) => d.Route),
+)
+
+const IdSetGroupRoute = IdSetGroupImport.update({
+  path: '/$id/set-group',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/$id.set-group.lazy').then((d) => d.Route))
 
 const ColumnsLayoutTrendingLazyRoute = ColumnsLayoutTrendingLazyImport.update({
   path: '/trending',
@@ -309,25 +311,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BootstrapRelaysImport
       parentRoute: typeof rootRoute
     }
-    '/set-group': {
-      id: '/set-group'
-      path: '/set-group'
-      fullPath: '/set-group'
-      preLoaderRoute: typeof SetGroupImport
-      parentRoute: typeof rootRoute
-    }
-    '/set-interest': {
-      id: '/set-interest'
-      path: '/set-interest'
-      fullPath: '/set-interest'
-      preLoaderRoute: typeof SetInterestImport
-      parentRoute: typeof rootRoute
-    }
     '/new': {
       id: '/new'
       path: '/new'
       fullPath: '/new'
       preLoaderRoute: typeof NewLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/$id/set-group': {
+      id: '/$id/set-group'
+      path: '/$id/set-group'
+      fullPath: '/$id/set-group'
+      preLoaderRoute: typeof IdSetGroupImport
+      parentRoute: typeof rootRoute
+    }
+    '/$id/set-interest': {
+      id: '/$id/set-interest'
+      path: '/$id/set-interest'
+      fullPath: '/$id/set-interest'
+      preLoaderRoute: typeof IdSetInterestImport
       parentRoute: typeof rootRoute
     }
     '/columns': {
@@ -636,9 +638,9 @@ const SettingsIdLazyRouteWithChildren = SettingsIdLazyRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '': typeof AppRouteWithChildren
   '/bootstrap-relays': typeof BootstrapRelaysRoute
-  '/set-group': typeof SetGroupRoute
-  '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
+  '/$id/set-group': typeof IdSetGroupRoute
+  '/$id/set-interest': typeof IdSetInterestRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
   '/new-account/connect': typeof NewAccountConnectLazyRoute
@@ -671,9 +673,9 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/bootstrap-relays': typeof BootstrapRelaysRoute
-  '/set-group': typeof SetGroupRoute
-  '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
+  '/$id/set-group': typeof IdSetGroupRoute
+  '/$id/set-interest': typeof IdSetInterestRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
   '/new-account/connect': typeof NewAccountConnectLazyRoute
@@ -708,9 +710,9 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_app': typeof AppRouteWithChildren
   '/bootstrap-relays': typeof BootstrapRelaysRoute
-  '/set-group': typeof SetGroupRoute
-  '/set-interest': typeof SetInterestRoute
   '/new': typeof NewLazyRoute
+  '/$id/set-group': typeof IdSetGroupRoute
+  '/$id/set-interest': typeof IdSetInterestRoute
   '/columns': typeof ColumnsRouteWithChildren
   '/columns/_layout': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
@@ -747,9 +749,9 @@ export interface FileRouteTypes {
   fullPaths:
     | ''
     | '/bootstrap-relays'
-    | '/set-group'
-    | '/set-interest'
     | '/new'
+    | '/$id/set-group'
+    | '/$id/set-interest'
     | '/columns'
     | '/zap/$id'
     | '/new-account/connect'
@@ -781,9 +783,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/bootstrap-relays'
-    | '/set-group'
-    | '/set-interest'
     | '/new'
+    | '/$id/set-group'
+    | '/$id/set-interest'
     | '/columns'
     | '/zap/$id'
     | '/new-account/connect'
@@ -816,9 +818,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/bootstrap-relays'
-    | '/set-group'
-    | '/set-interest'
     | '/new'
+    | '/$id/set-group'
+    | '/$id/set-interest'
     | '/columns'
     | '/columns/_layout'
     | '/zap/$id'
@@ -854,9 +856,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   BootstrapRelaysRoute: typeof BootstrapRelaysRoute
-  SetGroupRoute: typeof SetGroupRoute
-  SetInterestRoute: typeof SetInterestRoute
   NewLazyRoute: typeof NewLazyRoute
+  IdSetGroupRoute: typeof IdSetGroupRoute
+  IdSetInterestRoute: typeof IdSetInterestRoute
   ColumnsRoute: typeof ColumnsRouteWithChildren
   ZapIdRoute: typeof ZapIdRoute
   NewAccountConnectLazyRoute: typeof NewAccountConnectLazyRoute
@@ -869,9 +871,9 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   BootstrapRelaysRoute: BootstrapRelaysRoute,
-  SetGroupRoute: SetGroupRoute,
-  SetInterestRoute: SetInterestRoute,
   NewLazyRoute: NewLazyRoute,
+  IdSetGroupRoute: IdSetGroupRoute,
+  IdSetInterestRoute: IdSetInterestRoute,
   ColumnsRoute: ColumnsRouteWithChildren,
   ZapIdRoute: ZapIdRoute,
   NewAccountConnectLazyRoute: NewAccountConnectLazyRoute,
@@ -895,9 +897,9 @@ export const routeTree = rootRoute
       "children": [
         "/_app",
         "/bootstrap-relays",
-        "/set-group",
-        "/set-interest",
         "/new",
+        "/$id/set-group",
+        "/$id/set-interest",
         "/columns",
         "/zap/$id",
         "/new-account/connect",
@@ -916,14 +918,14 @@ export const routeTree = rootRoute
     "/bootstrap-relays": {
       "filePath": "bootstrap-relays.tsx"
     },
-    "/set-group": {
-      "filePath": "set-group.tsx"
-    },
-    "/set-interest": {
-      "filePath": "set-interest.tsx"
-    },
     "/new": {
       "filePath": "new.lazy.tsx"
+    },
+    "/$id/set-group": {
+      "filePath": "$id.set-group.tsx"
+    },
+    "/$id/set-interest": {
+      "filePath": "$id.set-interest.tsx"
     },
     "/columns": {
       "filePath": "columns",

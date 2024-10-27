@@ -47,7 +47,17 @@ pub async fn create_column(
     main_window: Window,
 ) -> Result<String, String> {
     match app_handle.get_webview(&column.label) {
-        Some(_) => Ok(column.label),
+        Some(webview) => {
+            if let Err(e) = webview.set_size(LogicalSize::new(column.width, column.height)) {
+                return Err(e.to_string());
+            }
+
+            if let Err(e) = webview.set_position(LogicalPosition::new(column.x, column.y)) {
+                return Err(e.to_string());
+            }
+
+            Ok(column.label)
+        }
         None => {
             let path = PathBuf::from(column.url);
             let webview_url = WebviewUrl::App(path);
@@ -145,28 +155,15 @@ pub async fn close_column(label: String, app_handle: tauri::AppHandle) -> Result
 
 #[tauri::command]
 #[specta::specta]
-pub async fn update_column(
-    label: String,
-    width: f32,
-    height: f32,
-    x: f32,
-    y: f32,
-    app_handle: tauri::AppHandle,
-) -> Result<(), String> {
-    match app_handle.get_webview(&label) {
-        Some(webview) => {
-            if let Err(e) = webview.set_size(LogicalSize::new(width, height)) {
-                return Err(e.to_string());
-            }
+pub async fn close_all_columns(app_handle: tauri::AppHandle) -> Result<(), String> {
+    let mut webviews = app_handle.webviews();
+    webviews.remove("main");
 
-            if let Err(e) = webview.set_position(LogicalPosition::new(x, y)) {
-                return Err(e.to_string());
-            }
-
-            Ok(())
-        }
-        None => Err("Cannot update, column not found.".into()),
+    for webview in webviews.values() {
+        webview.close().unwrap()
     }
+
+    Ok(())
 }
 
 #[tauri::command]

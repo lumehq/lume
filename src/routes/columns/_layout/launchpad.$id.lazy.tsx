@@ -3,7 +3,7 @@ import { cn, toLumeEvents } from "@/commons";
 import { Spinner, User } from "@/components";
 import { LumeWindow } from "@/system";
 import type { LumeColumn, NostrEvent } from "@/types";
-import { ArrowClockwise, Plus } from "@phosphor-icons/react";
+import { ArrowClockwise, ArrowRight, Plus } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -24,7 +24,7 @@ function Screen() {
 			className="overflow-hidden size-full"
 		>
 			<ScrollArea.Viewport className="relative h-full px-3 pb-3">
-				<Groups />
+				<Newsfeeds />
 				<Interests />
 				<Core />
 			</ScrollArea.Viewport>
@@ -39,80 +39,12 @@ function Screen() {
 	);
 }
 
-/*
-function SyncProgress() {
-	const { id } = Route.useParams();
-	const { queryClient } = Route.useRouteContext();
-
-	const [error, setError] = useState("");
-	const [progress, setProgress] = useState(0);
-
-	useEffect(() => {
-		(async () => {
-			if (progress >= 100) {
-				await queryClient.invalidateQueries();
-			}
-		})();
-	}, [progress]);
-
-	useEffect(() => {
-		const channel = new Channel<number>();
-
-		channel.onmessage = (message) => {
-			setProgress(message);
-		};
-
-		(async () => {
-			const res = await commands.syncAccount(id, channel);
-
-			if (res.status === "error") {
-				setError(res.error);
-			}
-		})();
-	}, []);
-
-	return (
-		<div className="size-full">
-			<div className="flex flex-col gap-3">
-				<div className="h-32 flex flex-col items-center justify-center rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
-					<div className="w-2/3 flex flex-col gap-2">
-						<Progress.Root
-							className="relative overflow-hidden bg-black/20 dark:bg-white/20 rounded-full w-full h-1"
-							style={{
-								transform: "translateZ(0)",
-							}}
-							value={progress}
-						>
-							<Progress.Indicator
-								className="bg-blue-500 size-full transition-transform duration-[660ms] ease-[cubic-bezier(0.65, 0, 0.35, 1)]"
-								style={{ transform: `translateX(-${100 - progress}%)` }}
-							/>
-						</Progress.Root>
-						<span className="text-center text-xs">
-							{error ? error : "Syncing in Progress..."}
-						</span>
-					</div>
-				</div>
-				<a
-					href="https://github.com/hoytech/strfry/blob/nextneg/docs/negentropy.md"
-					target="_blank"
-					className="text-center !underline text-xs font-medium text-blue-500"
-					rel="noreferrer"
-				>
-					Learn more about Negentropy
-				</a>
-			</div>
-		</div>
-	);
-}
-*/
-
-function Groups() {
+function Newsfeeds() {
 	const { id } = Route.useParams();
 	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
-		queryKey: ["others", "groups", id],
+		queryKey: ["others", "newsfeeds", id],
 		queryFn: async () => {
-			const res = await commands.getAllGroups(id);
+			const res = await commands.getAllNewsfeeds(id);
 
 			if (res.status === "ok") {
 				const data = toLumeEvents(res.data);
@@ -131,8 +63,14 @@ function Groups() {
 	const renderItem = useCallback(
 		(item: NostrEvent) => {
 			const name =
-				item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
-			const label = item.tags.find((tag) => tag[0] === "d")?.[1] || nanoid();
+				item.kind === 3
+					? "Contacts"
+					: item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
+
+			const label =
+				item.kind === 3
+					? `newsfeed-${id.slice(0, 5)}`
+					: item.tags.find((tag) => tag[0] === "d")?.[1] || nanoid();
 
 			return (
 				<div
@@ -140,19 +78,34 @@ function Groups() {
 					className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
 				>
 					<div className="px-2 pt-2">
-						<div className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex flex-wrap items-center justify-center gap-2 overflow-y-auto">
-							{item.tags
-								.filter((tag) => tag[0] === "p")
-								.map((tag) => (
-									<div key={tag[1]}>
-										<User.Provider pubkey={tag[1]}>
-											<User.Root>
-												<User.Avatar className="size-8 rounded-full" />
-											</User.Root>
-										</User.Provider>
-									</div>
-								))}
-						</div>
+						<ScrollArea.Root
+							type={"scroll"}
+							scrollHideDelay={300}
+							className="overflow-hidden size-full"
+						>
+							<ScrollArea.Viewport className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+								<div className="flex flex-wrap items-center justify-center gap-2">
+									{item.tags
+										.filter((tag) => tag[0] === "p")
+										.map((tag) => (
+											<div key={tag[1]}>
+												<User.Provider pubkey={tag[1]}>
+													<User.Root>
+														<User.Avatar className="size-8 rounded-full" />
+													</User.Root>
+												</User.Provider>
+											</div>
+										))}
+								</div>
+							</ScrollArea.Viewport>
+							<ScrollArea.Scrollbar
+								className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
+								orientation="vertical"
+							>
+								<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+							</ScrollArea.Scrollbar>
+							<ScrollArea.Corner className="bg-transparent" />
+						</ScrollArea.Root>
 					</div>
 					<div className="p-2 flex items-center justify-between">
 						<div className="inline-flex items-center gap-2">
@@ -170,10 +123,14 @@ function Groups() {
 									LumeWindow.openColumn({
 										label,
 										name,
-										url: `/columns/groups/${item.id}`,
+										account: id,
+										url:
+											item.kind === 3
+												? `/columns/newsfeed/${id}`
+												: `/columns/groups/${item.id}`,
 									})
 								}
-								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white"
+								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-100 group-hover:bg-blue-600 dark:group-hover:bg-blue-400 group-hover:text-white"
 							>
 								Add
 							</button>
@@ -188,7 +145,7 @@ function Groups() {
 	return (
 		<div className="mb-12 flex flex-col gap-3">
 			<div className="flex items-center justify-between px-2">
-				<h3 className="font-semibold">Groups</h3>
+				<h3 className="font-semibold">Newsfeeds</h3>
 				<div className="inline-flex items-center justify-center gap-2">
 					<button
 						type="button"
@@ -202,7 +159,7 @@ function Groups() {
 					</button>
 					<button
 						type="button"
-						onClick={() => LumeWindow.openPopup("/set-group", "New group")}
+						onClick={() => LumeWindow.openPopup(`${id}/set-group`, "New group")}
 						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 					>
 						<Plus className="size-3" weight="bold" />
@@ -227,6 +184,10 @@ function Groups() {
 				) : (
 					data?.map((item) => renderItem(item))
 				)}
+				<div className="h-12 px-3 flex items-center justify-between items-betwe bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400">
+					<span className="text-sm font-medium">Discover newsfeeds</span>
+					<ArrowRight className="size-4" weight="bold" />
+				</div>
 			</div>
 		</div>
 	);
@@ -266,15 +227,30 @@ function Interests() {
 					className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
 				>
 					<div className="px-2 pt-2">
-						<div className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex flex-wrap items-center justify-center gap-4 overflow-y-auto">
-							{item.tags
-								.filter((tag) => tag[0] === "t")
-								.map((tag) => (
-									<div key={tag[1]} className="text-sm font-medium">
-										{tag[1]}
-									</div>
-								))}
-						</div>
+						<ScrollArea.Root
+							type={"scroll"}
+							scrollHideDelay={300}
+							className="overflow-hidden size-full"
+						>
+							<ScrollArea.Viewport className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+								<div className="flex flex-wrap items-center justify-center gap-2">
+									{item.tags
+										.filter((tag) => tag[0] === "t")
+										.map((tag) => (
+											<div key={tag[1]} className="text-sm font-medium">
+												{tag[1].includes("#") ? tag[1] : `#${tag[1]}`}
+											</div>
+										))}
+								</div>
+							</ScrollArea.Viewport>
+							<ScrollArea.Scrollbar
+								className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
+								orientation="vertical"
+							>
+								<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+							</ScrollArea.Scrollbar>
+							<ScrollArea.Corner className="bg-transparent" />
+						</ScrollArea.Root>
 					</div>
 					<div className="p-3 flex items-center justify-between">
 						<div className="inline-flex items-center gap-2">
@@ -292,10 +268,11 @@ function Interests() {
 									LumeWindow.openColumn({
 										label,
 										name,
+										account: id,
 										url: `/columns/interests/${item.id}`,
 									})
 								}
-								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white"
+								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-100 group-hover:bg-blue-600 dark:group-hover:bg-blue-400 group-hover:text-white"
 							>
 								Add
 							</button>
@@ -325,7 +302,7 @@ function Interests() {
 					<button
 						type="button"
 						onClick={() =>
-							LumeWindow.openPopup("/set-interest", "New interest")
+							LumeWindow.openPopup(`${id}/set-interest`, "New interest")
 						}
 						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 					>
@@ -351,6 +328,10 @@ function Interests() {
 				) : (
 					data?.map((item) => renderItem(item))
 				)}
+				<div className="h-12 px-3 flex items-center justify-between items-betwe bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400">
+					<span className="text-sm font-medium">Discover interests</span>
+					<ArrowRight className="size-4" weight="bold" />
+				</div>
 			</div>
 		</div>
 	);
@@ -380,16 +361,6 @@ function Core() {
 			</div>
 			<div className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
 				<div className="flex flex-col gap-2 p-2">
-					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
-						<div className="text-sm font-medium">Newsfeed</div>
-						<button
-							type="button"
-							onClick={() => LumeWindow.openNewsfeed(id)}
-							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
-						>
-							Add
-						</button>
-					</div>
 					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
 						<div className="text-sm font-medium">Stories</div>
 						<button

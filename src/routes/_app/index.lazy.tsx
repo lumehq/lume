@@ -4,11 +4,12 @@ import { Column, Spinner } from "@/components";
 import { LumeWindow } from "@/system";
 import type { ColumnEvent, LumeColumn, Metadata } from "@/types";
 import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
 import { useStore } from "@tanstack/react-store";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { message } from "@tauri-apps/plugin-dialog";
 import useEmblaCarousel from "embla-carousel-react";
 import {
 	type ReactNode,
@@ -26,6 +27,7 @@ export const Route = createLazyFileRoute("/_app/")({
 
 function Screen() {
 	const initialAppColumns = Route.useLoaderData();
+	const router = useRouter();
 	const columns = useStore(appColumns, (state) => state);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -45,6 +47,19 @@ function Screen() {
 		getCurrentWindow().emit("scrolling", {});
 	}, []);
 
+	const remove = useCallback(
+		async (label: string) => {
+			const res = await commands.closeColumn(label);
+
+			if (res.status === "ok") {
+				appColumns.setState((prev) => prev.filter((t) => t.label !== label));
+			} else {
+				await message(res.error, { kind: "errror" });
+			}
+		},
+		[columns],
+	);
+
 	const add = useDebouncedCallback((column: LumeColumn) => {
 		const exist = columns.find((col) => col.label === column.label);
 
@@ -55,10 +70,6 @@ function Screen() {
 				emblaApi.scrollTo(0, true);
 			}
 		}
-	}, 150);
-
-	const remove = useDebouncedCallback((label: string) => {
-		appColumns.setState((prev) => prev.filter((t) => t.label !== label));
 	}, 150);
 
 	const move = useDebouncedCallback(
@@ -119,6 +130,16 @@ function Screen() {
 
 		return () => {
 			unlisten.then((f) => f());
+		};
+	}, []);
+
+	useEffect(() => {
+		const unsubscribeFn = router.subscribe("onBeforeNavigate", async () => {
+			await commands.closeAllColumns();
+		});
+
+		return () => {
+			unsubscribeFn();
 		};
 	}, []);
 

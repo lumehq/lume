@@ -97,7 +97,7 @@ fn main() {
         get_all_profiles,
         set_group,
         get_group,
-        get_all_groups,
+        get_all_newsfeeds,
         set_interest,
         get_interest,
         get_all_interests,
@@ -129,9 +129,9 @@ fn main() {
         event_to_bech32,
         user_to_bech32,
         create_column,
-        update_column,
         reload_column,
         close_column,
+        close_all_columns,
         open_window,
     ]);
 
@@ -288,48 +288,46 @@ fn main() {
 
                 let _ = client
                     .handle_notifications(|notification| async {
-                        #[allow(clippy::collapsible_match)]
-                        if let RelayPoolNotification::Message { message, .. } = notification {
-                            if let RelayMessage::Event {
-                                event,
-                                subscription_id,
-                            } = message
-                            {
-                                // Handle events from notification subscription
-                                if subscription_id == notification_id {
-                                    // Send native notification
-                                    if allow_notification {
-                                        let author = client
-                                            .database()
-                                            .profile(event.pubkey)
-                                            .await
-                                            .unwrap_or_else(|_| {
-                                                DatabaseProfile::new(event.pubkey, Metadata::new())
-                                            });
+                        if let RelayPoolNotification::Event {
+                            event,
+                            subscription_id,
+                            ..
+                        } = notification
+                        {
+                            // Handle events from notification subscription
+                            if subscription_id == notification_id {
+                                // Send native notification
+                                if allow_notification {
+                                    let author = client
+                                        .database()
+                                        .profile(event.pubkey)
+                                        .await
+                                        .unwrap_or_else(|_| {
+                                            DatabaseProfile::new(event.pubkey, Metadata::new())
+                                        });
 
-                                        send_event_notification(
-                                            &event,
-                                            author.metadata(),
-                                            &handle_clone,
-                                        );
-                                    }
-                                } else if event.kind != Kind::RelayList {
-                                    let payload = RichEvent {
-                                        raw: event.as_json(),
-                                        parsed: if event.kind == Kind::TextNote {
-                                            Some(parse_event(&event.content).await)
-                                        } else {
-                                            None
-                                        },
-                                    };
+                                    send_event_notification(
+                                        &event,
+                                        author.metadata(),
+                                        &handle_clone,
+                                    );
+                                }
+                            } else if event.kind != Kind::RelayList {
+                                let payload = RichEvent {
+                                    raw: event.as_json(),
+                                    parsed: if event.kind == Kind::TextNote {
+                                        Some(parse_event(&event.content).await)
+                                    } else {
+                                        None
+                                    },
+                                };
 
-                                    if let Err(e) = handle_clone.emit_to(
-                                        EventTarget::labeled(subscription_id.to_string()),
-                                        "event",
-                                        payload,
-                                    ) {
-                                        println!("Emitter error: {}", e)
-                                    }
+                                if let Err(e) = handle_clone.emit_to(
+                                    EventTarget::labeled(subscription_id.to_string()),
+                                    "event",
+                                    payload,
+                                ) {
+                                    println!("Emitter error: {}", e)
                                 }
                             }
                         }

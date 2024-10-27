@@ -200,9 +200,9 @@ async getGroup(id: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getAllGroups(id: string) : Promise<Result<RichEvent[], string>> {
+async getAllNewsfeeds(id: string) : Promise<Result<RichEvent[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_all_groups", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_newsfeeds", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -456,14 +456,6 @@ async createColumn(column: Column) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async updateColumn(label: string, width: number, height: number, x: number, y: number) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("update_column", { label, width, height, x, y }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async reloadColumn(label: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("reload_column", { label }) };
@@ -475,6 +467,14 @@ async reloadColumn(label: string) : Promise<Result<null, string>> {
 async closeColumn(label: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("close_column", { label }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async closeAllColumns() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("close_all_columns") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

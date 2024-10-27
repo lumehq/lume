@@ -8,13 +8,13 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState, useTransition } from "react";
 
-export const Route = createLazyFileRoute("/set-group")({
+export const Route = createLazyFileRoute("/$id/set-group")({
 	component: Screen,
 });
 
 function Screen() {
 	const contacts = Route.useLoaderData();
-	const { account } = Route.useSearch();
+	const { id } = Route.useParams();
 	const { queryClient } = Route.useRouteContext();
 
 	const [title, setTitle] = useState("");
@@ -40,11 +40,11 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			const signer = await commands.hasSigner(account);
+			const signer = await commands.hasSigner(id);
 
 			if (signer.status === "ok") {
 				if (!signer.data) {
-					const res = await commands.setSigner(account);
+					const res = await commands.setSigner(id);
 
 					if (res.status === "error") {
 						await message(res.error, { kind: "error" });
@@ -63,7 +63,7 @@ function Screen() {
 
 				// Invalidate cache
 				await queryClient.invalidateQueries({
-					queryKey: ["mygroups", account],
+					queryKey: ["others", "newsfeeds", id],
 				});
 
 				// Create column in the main window
@@ -72,6 +72,7 @@ function Screen() {
 					column: {
 						label: res.data,
 						name: title,
+						account: id,
 						url: `/columns/groups/${res.data}`,
 					},
 				});

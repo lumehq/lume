@@ -15,7 +15,7 @@ export const LumeWindow = {
 		await getCurrentWindow().emit("columns", {
 			type: "add",
 			column: {
-				label: "launchpad",
+				label: `launchpad-${account.slice(0, 5)}`,
 				name: "Launchpad",
 				url: `/columns/launchpad/${account}`,
 				account,

@@ -23,7 +23,7 @@ const TOPICS = [
 	},
 ];
 
-export const Route = createLazyFileRoute("/set-interest")({
+export const Route = createLazyFileRoute("/$id/set-interest")({
 	component: Screen,
 });
 
@@ -33,7 +33,7 @@ function Screen() {
 	const [hashtags, setHashtags] = useState<string[]>([]);
 	const [isPending, startTransition] = useTransition();
 
-	const { account } = Route.useSearch();
+	const { id } = Route.useParams();
 	const { queryClient } = Route.useRouteContext();
 
 	const toggleHashtag = (tag: string) => {
@@ -52,11 +52,11 @@ function Screen() {
 
 	const submit = () => {
 		startTransition(async () => {
-			const signer = await commands.hasSigner(account);
+			const signer = await commands.hasSigner(id);
 
 			if (signer.status === "ok") {
 				if (!signer.data) {
-					const res = await commands.setSigner(account);
+					const res = await commands.setSigner(id);
 
 					if (res.status === "error") {
 						await message(res.error, { kind: "error" });
@@ -79,7 +79,7 @@ function Screen() {
 
 				// Invalidate cache
 				await queryClient.invalidateQueries({
-					queryKey: ["myinterests", account],
+					queryKey: ["interests", id],
 				});
 
 				// Create column in the main window
@@ -88,6 +88,7 @@ function Screen() {
 					column: {
 						label: res.data,
 						name: title,
+						account: id,
 						url: `/columns/interests/${res.data}`,
 					},
 				});

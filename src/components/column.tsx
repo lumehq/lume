@@ -4,66 +4,31 @@ import type { LumeColumn } from "@/types";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { User } from "./user";
 
 export function Column({ column }: { column: LumeColumn }) {
 	const [rect, ref] = useRect();
-	const [_error, setError] = useState<string>("");
+	const [error, setError] = useState("");
 
 	useEffect(() => {
 		(async () => {
 			if (rect) {
-				const res = await commands.updateColumn(
-					column.label,
-					rect.width,
-					rect.height,
-					rect.x,
-					rect.y,
-				);
+				const res = await commands.createColumn({
+					label: column.label,
+					x: rect.x,
+					y: rect.y,
+					width: rect.width,
+					height: rect.height,
+					url: `${column.url}?label=${column.label}&name=${column.name}`,
+				});
 
-				if (res.status === "ok") {
-					console.log("webview is updated: ", column.label);
-				} else {
-					console.log("webview error: ", res.error);
+				if (res.status === "error") {
+					setError(res.error);
 				}
 			}
 		})();
 	}, [rect]);
-
-	useLayoutEffect(() => {
-		console.log(column.label);
-		if (ref.current) {
-			const initialRect = ref.current.getBoundingClientRect();
-
-			commands
-				.createColumn({
-					label: column.label,
-					x: initialRect.x,
-					y: initialRect.y,
-					width: initialRect.width,
-					height: initialRect.height,
-					url: `${column.url}?label=${column.label}&name=${column.name}`,
-				})
-				.then((res) => {
-					if (res.status === "ok") {
-						console.log("webview is created: ", column.label);
-					} else {
-						setError(res.error);
-					}
-				});
-
-			return () => {
-				commands.closeColumn(column.label).then((res) => {
-					if (res.status === "ok") {
-						console.log("webview is closed: ", column.label);
-					} else {
-						console.log("webview error: ", res.error);
-					}
-				});
-			};
-		}
-	}, []);
 
 	return (
 		<div className="h-full w-[440px] shrink-0 border-r border-black/5 dark:border-white/5">
@@ -73,7 +38,13 @@ export function Column({ column }: { column: LumeColumn }) {
 					name={column.name}
 					account={column.account}
 				/>
-				<div ref={ref} className="flex-1 size-full" />
+				<div ref={ref} className="flex-1 size-full">
+					<div className="size-full flex flex-col items-center justify-center">
+						<div className="text-red-500 text-sm break-all">
+							{error?.length ? error : null}
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

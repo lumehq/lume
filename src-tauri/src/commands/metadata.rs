@@ -281,18 +281,33 @@ pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_all_groups(id: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
+pub async fn get_all_newsfeeds(
+    id: String,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
-    let filter = Filter::new().kind(Kind::FollowSet).author(public_key);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+    let groups = Filter::new().kind(Kind::FollowSet).author(public_key);
+    let contacts = Filter::new()
+        .kind(Kind::ContactList)
+        .author(public_key)
+        .limit(1);
+
+    let remote_events = client
+        .fetch_events(vec![groups], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(process_event(client, events, false).await),
-        Err(e) => Err(e.to_string()),
-    }
+        .map_err(|e| e.to_string())?;
+
+    let contact_events = client
+        .fetch_events(vec![contacts], Some(Duration::from_secs(3)))
+        .await
+        .map_err(|e| e.to_string())?;
+
+    let events = remote_events.merge(contact_events);
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
 }
 
 #[tauri::command]
