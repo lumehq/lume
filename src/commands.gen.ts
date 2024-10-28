@@ -128,9 +128,9 @@ async setSigner(id: string) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async getProfile(id: string) : Promise<Result<string, string>> {
+async getProfile(id: string, cacheOnly: boolean) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_profile", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_profile", { id, cacheOnly }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

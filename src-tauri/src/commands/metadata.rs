@@ -32,9 +32,23 @@ pub struct Mention {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_profile(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_profile(
+    id: String,
+    cache_only: bool,
+    state: State<'_, Nostr>,
+) -> Result<String, String> {
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
+
+    if cache_only {
+        let profile = client
+            .database()
+            .profile(public_key)
+            .await
+            .map_err(|e| e.to_string())?;
+
+        return Ok(profile.metadata().as_json());
+    };
 
     let metadata = client
         .fetch_metadata(public_key, Some(Duration::from_secs(3)))

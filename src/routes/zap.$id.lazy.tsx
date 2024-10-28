@@ -31,12 +31,12 @@ function Screen() {
 		const list: Promise<MenuItem>[] = [];
 
 		for (const account of accounts) {
-			const res = await commands.getProfile(account);
+			const res = await commands.getProfile(account, true);
 			let name = "unknown";
 
 			if (res.status === "ok") {
 				const profile: Metadata = JSON.parse(res.data);
-				name = profile.display_name ?? profile.name ?? "unknown";
+				name = profile.display_name ?? profile.name ?? "anon";
 			}
 
 			list.push(

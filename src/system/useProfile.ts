@@ -26,7 +26,7 @@ export function useProfile(pubkey: string, embed?: string) {
 				}
 			}
 
-			const query = await commands.getProfile(normalizedId);
+			const query = await commands.getProfile(normalizedId, false);
 
 			if (query.status === "ok") {
 				return JSON.parse(query.data) as Metadata;
