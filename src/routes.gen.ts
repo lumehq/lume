@@ -70,16 +70,19 @@ const ColumnsLayoutEventsIdLazyImport = createFileRoute(
 // Create/Update Routes
 
 const ColumnsRoute = ColumnsImport.update({
+  id: '/columns',
   path: '/columns',
   getParentRoute: () => rootRoute,
 } as any)
 
 const NewLazyRoute = NewLazyImport.update({
+  id: '/new',
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
 
 const BootstrapRelaysRoute = BootstrapRelaysImport.update({
+  id: '/bootstrap-relays',
   path: '/bootstrap-relays',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -92,6 +95,7 @@ const AppRoute = AppImport.update({
 } as any).lazy(() => import('./routes/_app.lazy').then((d) => d.Route))
 
 const NewPostIndexRoute = NewPostIndexImport.update({
+  id: '/new-post/',
   path: '/new-post/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -99,16 +103,19 @@ const NewPostIndexRoute = NewPostIndexImport.update({
 )
 
 const AppIndexRoute = AppIndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
 } as any).lazy(() => import('./routes/_app/index.lazy').then((d) => d.Route))
 
 const SettingsIdLazyRoute = SettingsIdLazyImport.update({
+  id: '/settings/$id',
   path: '/settings/$id',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/settings.$id.lazy').then((d) => d.Route))
 
 const NewAccountWatchLazyRoute = NewAccountWatchLazyImport.update({
+  id: '/new-account/watch',
   path: '/new-account/watch',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -116,6 +123,7 @@ const NewAccountWatchLazyRoute = NewAccountWatchLazyImport.update({
 )
 
 const NewAccountImportLazyRoute = NewAccountImportLazyImport.update({
+  id: '/new-account/import',
   path: '/new-account/import',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -123,6 +131,7 @@ const NewAccountImportLazyRoute = NewAccountImportLazyImport.update({
 )
 
 const NewAccountConnectLazyRoute = NewAccountConnectLazyImport.update({
+  id: '/new-account/connect',
   path: '/new-account/connect',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -130,6 +139,7 @@ const NewAccountConnectLazyRoute = NewAccountConnectLazyImport.update({
 )
 
 const ZapIdRoute = ZapIdImport.update({
+  id: '/zap/$id',
   path: '/zap/$id',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/zap.$id.lazy').then((d) => d.Route))
@@ -140,6 +150,7 @@ const ColumnsLayoutRoute = ColumnsLayoutImport.update({
 } as any)
 
 const IdSetInterestRoute = IdSetInterestImport.update({
+  id: '/$id/set-interest',
   path: '/$id/set-interest',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -147,11 +158,13 @@ const IdSetInterestRoute = IdSetInterestImport.update({
 )
 
 const IdSetGroupRoute = IdSetGroupImport.update({
+  id: '/$id/set-group',
   path: '/$id/set-group',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/$id.set-group.lazy').then((d) => d.Route))
 
 const ColumnsLayoutTrendingLazyRoute = ColumnsLayoutTrendingLazyImport.update({
+  id: '/trending',
   path: '/trending',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -159,6 +172,7 @@ const ColumnsLayoutTrendingLazyRoute = ColumnsLayoutTrendingLazyImport.update({
 )
 
 const ColumnsLayoutSearchLazyRoute = ColumnsLayoutSearchLazyImport.update({
+  id: '/search',
   path: '/search',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -167,6 +181,7 @@ const ColumnsLayoutSearchLazyRoute = ColumnsLayoutSearchLazyImport.update({
 
 const ColumnsLayoutOnboardingLazyRoute =
   ColumnsLayoutOnboardingLazyImport.update({
+    id: '/onboarding',
     path: '/onboarding',
     getParentRoute: () => ColumnsLayoutRoute,
   } as any).lazy(() =>
@@ -174,6 +189,7 @@ const ColumnsLayoutOnboardingLazyRoute =
   )
 
 const SettingsIdWalletRoute = SettingsIdWalletImport.update({
+  id: '/wallet',
   path: '/wallet',
   getParentRoute: () => SettingsIdLazyRoute,
 } as any).lazy(() =>
@@ -181,6 +197,7 @@ const SettingsIdWalletRoute = SettingsIdWalletImport.update({
 )
 
 const SettingsIdRelayRoute = SettingsIdRelayImport.update({
+  id: '/relay',
   path: '/relay',
   getParentRoute: () => SettingsIdLazyRoute,
 } as any).lazy(() =>
@@ -188,6 +205,7 @@ const SettingsIdRelayRoute = SettingsIdRelayImport.update({
 )
 
 const SettingsIdProfileRoute = SettingsIdProfileImport.update({
+  id: '/profile',
   path: '/profile',
   getParentRoute: () => SettingsIdLazyRoute,
 } as any).lazy(() =>
@@ -195,6 +213,7 @@ const SettingsIdProfileRoute = SettingsIdProfileImport.update({
 )
 
 const SettingsIdGeneralRoute = SettingsIdGeneralImport.update({
+  id: '/general',
   path: '/general',
   getParentRoute: () => SettingsIdLazyRoute,
 } as any).lazy(() =>
@@ -202,17 +221,20 @@ const SettingsIdGeneralRoute = SettingsIdGeneralImport.update({
 )
 
 const ColumnsLayoutGlobalRoute = ColumnsLayoutGlobalImport.update({
+  id: '/global',
   path: '/global',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any)
 
 const ColumnsLayoutCreateNewsfeedRoute =
   ColumnsLayoutCreateNewsfeedImport.update({
+    id: '/create-newsfeed',
     path: '/create-newsfeed',
     getParentRoute: () => ColumnsLayoutRoute,
   } as any)
 
 const ColumnsLayoutUsersIdLazyRoute = ColumnsLayoutUsersIdLazyImport.update({
+  id: '/users/$id',
   path: '/users/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -221,6 +243,7 @@ const ColumnsLayoutUsersIdLazyRoute = ColumnsLayoutUsersIdLazyImport.update({
 
 const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
   {
+    id: '/replies/$id',
     path: '/replies/$id',
     getParentRoute: () => ColumnsLayoutRoute,
   } as any,
@@ -230,6 +253,7 @@ const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
 
 const ColumnsLayoutNotificationIdLazyRoute =
   ColumnsLayoutNotificationIdLazyImport.update({
+    id: '/notification/$id',
     path: '/notification/$id',
     getParentRoute: () => ColumnsLayoutRoute,
   } as any).lazy(() =>
@@ -240,6 +264,7 @@ const ColumnsLayoutNotificationIdLazyRoute =
 
 const ColumnsLayoutLaunchpadIdLazyRoute =
   ColumnsLayoutLaunchpadIdLazyImport.update({
+    id: '/launchpad/$id',
     path: '/launchpad/$id',
     getParentRoute: () => ColumnsLayoutRoute,
   } as any).lazy(() =>
@@ -247,6 +272,7 @@ const ColumnsLayoutLaunchpadIdLazyRoute =
   )
 
 const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
+  id: '/events/$id',
   path: '/events/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -254,6 +280,7 @@ const ColumnsLayoutEventsIdLazyRoute = ColumnsLayoutEventsIdLazyImport.update({
 )
 
 const ColumnsLayoutStoriesIdRoute = ColumnsLayoutStoriesIdImport.update({
+  id: '/stories/$id',
   path: '/stories/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -261,6 +288,7 @@ const ColumnsLayoutStoriesIdRoute = ColumnsLayoutStoriesIdImport.update({
 )
 
 const ColumnsLayoutNewsfeedIdRoute = ColumnsLayoutNewsfeedIdImport.update({
+  id: '/newsfeed/$id',
   path: '/newsfeed/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -268,6 +296,7 @@ const ColumnsLayoutNewsfeedIdRoute = ColumnsLayoutNewsfeedIdImport.update({
 )
 
 const ColumnsLayoutInterestsIdRoute = ColumnsLayoutInterestsIdImport.update({
+  id: '/interests/$id',
   path: '/interests/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -275,6 +304,7 @@ const ColumnsLayoutInterestsIdRoute = ColumnsLayoutInterestsIdImport.update({
 )
 
 const ColumnsLayoutGroupsIdRoute = ColumnsLayoutGroupsIdImport.update({
+  id: '/groups/$id',
   path: '/groups/$id',
   getParentRoute: () => ColumnsLayoutRoute,
 } as any).lazy(() =>
@@ -283,12 +313,14 @@ const ColumnsLayoutGroupsIdRoute = ColumnsLayoutGroupsIdImport.update({
 
 const ColumnsLayoutCreateNewsfeedUsersRoute =
   ColumnsLayoutCreateNewsfeedUsersImport.update({
+    id: '/users',
     path: '/users',
     getParentRoute: () => ColumnsLayoutCreateNewsfeedRoute,
   } as any)
 
 const ColumnsLayoutCreateNewsfeedF2fRoute =
   ColumnsLayoutCreateNewsfeedF2fImport.update({
+    id: '/f2f',
     path: '/f2f',
     getParentRoute: () => ColumnsLayoutCreateNewsfeedRoute,
   } as any)
