@@ -30,10 +30,6 @@ pub async fn watch_account(id: String, state: State<'_, Nostr>) -> Result<String
     // Set empty password
     keyring.set_password("").map_err(|e| e.to_string())?;
 
-    // Update state
-    let mut accounts = state.accounts.lock().unwrap().clone();
-    accounts.push(npub.clone());
-
     // Get user's profile
     let _ = client
         .fetch_metadata(public_key, Some(Duration::from_secs(4)))
@@ -79,10 +75,6 @@ pub async fn import_account(
 
     // Update signer
     client.set_signer(Some(signer)).await;
-
-    // Update state
-    let mut accounts = state.accounts.lock().unwrap().clone();
-    accounts.push(npub.clone());
 
     // Get user's profile
     let _ = client
@@ -130,10 +122,6 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
 
                     // Update signer
                     let _ = client.set_signer(Some(signer.into())).await;
-
-                    // Update state
-                    let mut accounts = state.accounts.lock().unwrap().clone();
-                    accounts.push(remote_npub.clone());
 
                     // Get user's profile
                     let _ = client

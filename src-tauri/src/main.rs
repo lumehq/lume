@@ -29,8 +29,6 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     settings: Mutex<Settings>,
-    accounts: Mutex<Vec<String>>,
-    bootstrap_relays: Mutex<Vec<Url>>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -169,7 +167,7 @@ fn main() {
             #[cfg(target_os = "macos")]
             main_window.set_traffic_lights_inset(7.0, 10.0).unwrap();
 
-            let (client, bootstrap_relays) = tauri::async_runtime::block_on(async move {
+            let client = tauri::async_runtime::block_on(async move {
                 // Setup database
                 let database = NostrLMDB::open(config_dir.join("nostr"))
                     .expect("Error: cannot create database.");
@@ -225,21 +223,13 @@ fn main() {
                 // Connect
                 client.connect_with_timeout(Duration::from_secs(10)).await;
 
-                // Get all bootstrap relays
-                let bootstrap_relays: Vec<Url> =
-                    client.pool().all_relays().await.into_keys().collect();
-
-                (client, bootstrap_relays)
+                client
             });
-
-            let accounts = get_all_accounts();
 
             // Create global state
             app.manage(Nostr {
                 client,
-                accounts: Mutex::new(accounts),
                 settings: Mutex::new(Settings::default()),
-                bootstrap_relays: Mutex::new(bootstrap_relays),
             });
 
             // Run notification thread

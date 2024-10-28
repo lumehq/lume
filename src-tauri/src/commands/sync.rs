@@ -25,8 +25,6 @@ pub async fn sync_account(
     app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
     let client = &state.client;
-    let bootstrap_relays = state.bootstrap_relays.lock().unwrap().clone();
-
     let public_key = PublicKey::from_bech32(&id).map_err(|e| e.to_string())?;
 
     let filter = Filter::new().author(public_key).kinds(vec![
@@ -60,7 +58,7 @@ pub async fn sync_account(
         }
     });
 
-    if let Ok(output) = client.sync_with(&bootstrap_relays, filter, &opts).await {
+    if let Ok(output) = client.sync(filter, &opts).await {
         println!("Success: {:?}", output.success);
         println!("Failed: {:?}", output.failed);
 
@@ -101,7 +99,7 @@ pub async fn sync_account(
                 ])
                 .limit(10000);
 
-            if let Ok(output) = client.sync_with(&bootstrap_relays, filter, &opts).await {
+            if let Ok(output) = client.sync(filter, &opts).await {
                 println!("Success: {:?}", output.success);
                 println!("Failed: {:?}", output.failed);
             }

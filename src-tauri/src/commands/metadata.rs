@@ -50,10 +50,21 @@ pub async fn get_profile(
         return Ok(profile.metadata().as_json());
     };
 
-    let metadata = client
-        .fetch_metadata(public_key, Some(Duration::from_secs(3)))
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::Metadata)
+        .limit(1);
+
+    let mut metadata = Metadata::new();
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(5)))
         .await
         .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        metadata = Metadata::from_json(&event.content).map_err(|e| e.to_string())?;
+    }
 
     Ok(metadata.as_json())
 }

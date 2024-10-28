@@ -19,42 +19,44 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
     let client = &state.client;
     let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
 
-    match client.database().event_by_id(&event_id).await {
-        Ok(events) => {
-            if let Some(event) = events {
-                let raw = event.as_json();
-                let parsed = if event.kind == Kind::TextNote {
-                    Some(parse_event(&event.content).await)
-                } else {
-                    None
-                };
+    let events = client
+        .database()
+        .event_by_id(&event_id)
+        .await
+        .map_err(|err| err.to_string())?;
 
-                Ok(RichEvent { raw, parsed })
+    if let Some(event) = events {
+        let raw = event.as_json();
+        let parsed = if event.kind == Kind::TextNote {
+            Some(parse_event(&event.content).await)
+        } else {
+            None
+        };
+
+        Ok(RichEvent { raw, parsed })
+    } else {
+        let filter = Filter::new().id(event_id);
+        let mut rich_event = RichEvent {
+            raw: "".to_string(),
+            parsed: None,
+        };
+
+        let mut rx = client
+            .stream_events(vec![filter], Some(Duration::from_secs(5)))
+            .await
+            .map_err(|e| e.to_string())?;
+
+        while let Some(event) = rx.next().await {
+            let raw = event.as_json();
+            let parsed = if event.kind == Kind::TextNote {
+                Some(parse_event(&event.content).await)
             } else {
-                let filter = Filter::new().id(event_id);
-
-                match client
-                    .fetch_events(vec![filter], Some(Duration::from_secs(3)))
-                    .await
-                {
-                    Ok(events) => {
-                        if let Some(event) = events.iter().next() {
-                            let raw = event.as_json();
-                            let parsed = if event.kind == Kind::TextNote {
-                                Some(parse_event(&event.content).await)
-                            } else {
-                                None
-                            };
-                            Ok(RichEvent { raw, parsed })
-                        } else {
-                            Err(format!("Cannot found the event with ID {}", id))
-                        }
-                    }
-                    Err(err) => Err(err.to_string()),
-                }
-            }
+                None
+            };
+            rich_event = RichEvent { raw, parsed }
         }
-        Err(err) => Err(err.to_string()),
+
+        Ok(rich_event)
     }
 }
 
@@ -332,25 +334,15 @@ pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<String, Stri
 #[specta::specta]
 pub async fn is_reposted(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
-    let accounts = state.accounts.lock().unwrap().clone();
+    let signer = client.signer().await.map_err(|err| err.to_string())?;
+    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
 
     let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
-
-    let authors: Vec<PublicKey> = accounts
-        .iter()
-        .filter_map(|acc| {
-            if let Ok(pk) = PublicKey::from_str(acc) {
-                Some(pk)
-            } else {
-                None
-            }
-        })
-        .collect();
 
     let filter = Filter::new()
         .event(event_id)
         .kind(Kind::Repost)
-        .authors(authors);
+        .author(public_key);
 
     match client.database().query(vec![filter]).await {
         Ok(events) => Ok(!events.is_empty()),
