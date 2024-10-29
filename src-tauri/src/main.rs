@@ -12,23 +12,30 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
 use std::{
+    collections::HashSet,
     fs,
     io::{self, BufRead},
     str::FromStr,
-    sync::Mutex,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Emitter, EventTarget, Manager};
+use tauri::{path::BaseDirectory, Emitter, EventTarget, Listener, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, Builder};
+use tokio::{sync::Mutex, sync::RwLock, time::sleep};
 
 pub mod commands;
 pub mod common;
 
 pub struct Nostr {
     client: Client,
+    queue: RwLock<HashSet<PublicKey>>,
     settings: Mutex<Settings>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Payload {
+    id: String,
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -146,6 +153,7 @@ fn main() {
         .setup(move |app| {
             let handle = app.handle();
             let handle_clone = handle.clone();
+            let handle_clone_child = handle_clone.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             let config_dir = handle
@@ -174,7 +182,7 @@ fn main() {
 
                 // Config
                 let opts = Options::new()
-                    .gossip(false)
+                    .gossip(true)
                     .max_avg_latency(Duration::from_millis(300))
                     .automatic_authentication(true)
                     .connection_timeout(Some(Duration::from_secs(5)))
@@ -229,7 +237,38 @@ fn main() {
             // Create global state
             app.manage(Nostr {
                 client,
+                queue: RwLock::new(HashSet::new()),
                 settings: Mutex::new(Settings::default()),
+            });
+
+            // Listen for request metadata
+            app.listen_any("request_metadata", move |event| {
+                let payload = event.payload();
+                let parsed_payload: Payload = serde_json::from_str(payload).expect("Parse failed");
+                let handle = handle_clone_child.clone();
+
+                tauri::async_runtime::spawn(async move {
+                    let state = handle.state::<Nostr>();
+                    let client = &state.client;
+
+                    if let Ok(public_key) = PublicKey::parse(parsed_payload.id) {
+                        let mut write_queue = state.queue.write().await;
+                        write_queue.insert(public_key);
+                    }
+
+                    sleep(Duration::from_millis(300)).await;
+
+                    let read_queue = state.queue.read().await;
+                    let authors: Vec<PublicKey> = read_queue.iter().copied().collect();
+                    let filter = Filter::new().authors(authors).kind(Kind::Metadata);
+                    let opts = SubscribeAutoCloseOptions::default()
+                        .filter(FilterOptions::WaitDurationAfterEOSE(Duration::from_secs(3)));
+
+                    if client.subscribe(vec![filter], Some(opts)).await.is_ok() {
+                        let mut write_queue = state.queue.write().await;
+                        write_queue.clear();
+                    }
+                });
             });
 
             // Run notification thread
@@ -278,46 +317,52 @@ fn main() {
 
                 let _ = client
                     .handle_notifications(|notification| async {
-                        if let RelayPoolNotification::Event {
-                            event,
-                            subscription_id,
-                            ..
-                        } = notification
-                        {
-                            // Handle events from notification subscription
-                            if subscription_id == notification_id {
-                                // Send native notification
-                                if allow_notification {
-                                    let author = client
-                                        .database()
-                                        .profile(event.pubkey)
-                                        .await
-                                        .unwrap_or_else(|_| {
-                                            DatabaseProfile::new(event.pubkey, Metadata::new())
-                                        });
+                        #[allow(clippy::collapsible_match)]
+                        if let RelayPoolNotification::Message { message, .. } = notification {
+                            if let RelayMessage::Event {
+                                event,
+                                subscription_id,
+                                ..
+                            } = message
+                            {
+                                if subscription_id == notification_id {
+                                    // Send native notification
+                                    if allow_notification {
+                                        let author = client
+                                            .database()
+                                            .profile(event.pubkey)
+                                            .await
+                                            .unwrap_or_else(|_| {
+                                                DatabaseProfile::new(event.pubkey, Metadata::new())
+                                            });
 
-                                    send_event_notification(
-                                        &event,
-                                        author.metadata(),
-                                        &handle_clone,
-                                    );
-                                }
-                            } else if event.kind != Kind::RelayList {
-                                let payload = RichEvent {
-                                    raw: event.as_json(),
-                                    parsed: if event.kind == Kind::TextNote {
-                                        Some(parse_event(&event.content).await)
-                                    } else {
-                                        None
-                                    },
-                                };
+                                        send_event_notification(
+                                            &event,
+                                            author.metadata(),
+                                            &handle_clone,
+                                        );
+                                    }
+                                } else if event.kind == Kind::Metadata {
+                                    if let Err(e) = handle_clone.emit("metadata", event.as_json()) {
+                                        println!("Emitter error: {}", e)
+                                    }
+                                } else if event.kind != Kind::RelayList {
+                                    let payload = RichEvent {
+                                        raw: event.as_json(),
+                                        parsed: if event.kind == Kind::TextNote {
+                                            Some(parse_event(&event.content).await)
+                                        } else {
+                                            None
+                                        },
+                                    };
 
-                                if let Err(e) = handle_clone.emit_to(
-                                    EventTarget::labeled(subscription_id.to_string()),
-                                    "event",
-                                    payload,
-                                ) {
-                                    println!("Emitter error: {}", e)
+                                    if let Err(e) = handle_clone.emit_to(
+                                        EventTarget::labeled(subscription_id.to_string()),
+                                        "event",
+                                        payload,
+                                    ) {
+                                        println!("Emitter error: {}", e)
+                                    }
                                 }
                             }
                         }

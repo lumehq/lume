@@ -1,10 +1,9 @@
-import type { RichEvent } from "@/commands.gen";
 import { Spinner } from "@/components";
+import type { Metadata, NostrEvent } from "@/types";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
-import { listen } from "@tauri-apps/api/event";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { OsType } from "@tauri-apps/plugin-os";
-import { nip19 } from "nostr-tools";
 import { useEffect } from "react";
 
 interface RouterContext {
@@ -22,16 +21,16 @@ function Screen() {
 	const { queryClient } = Route.useRouteContext();
 
 	useEffect(() => {
-		const unlisten = listen<RichEvent>("event", async (data) => {
-			const event = JSON.parse(data.payload.raw);
+		const unlisten = getCurrentWindow().listen<string>(
+			"metadata",
+			async (data) => {
+				const payload = data.payload;
+				const event: NostrEvent = JSON.parse(payload);
+				const metadata: Metadata = JSON.parse(event.content);
 
-			if (event.kind === 0) {
-				const npub = nip19.npubEncode(event.pubkey);
-				await queryClient.invalidateQueries({
-					queryKey: ["profile", npub, event.pubkey],
-				});
-			}
-		});
+				queryClient.setQueryData(["profile", event.pubkey], () => metadata);
+			},
+		);
 
 		return () => {
 			unlisten.then((f) => f());

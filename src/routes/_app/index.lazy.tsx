@@ -199,7 +199,7 @@ function OpenLaunchpad() {
 			const list: Promise<MenuItem>[] = [];
 
 			for (const account of accounts) {
-				const res = await commands.getProfile(account, true);
+				const res = await commands.getProfile(account);
 				let name = "unknown";
 
 				if (res.status === "ok") {

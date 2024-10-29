@@ -32,41 +32,28 @@ pub struct Mention {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_profile(
-    id: String,
-    cache_only: bool,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
+pub async fn get_profile(id: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
-
-    if cache_only {
-        let profile = client
-            .database()
-            .profile(public_key)
-            .await
-            .map_err(|e| e.to_string())?;
-
-        return Ok(profile.metadata().as_json());
-    };
 
     let filter = Filter::new()
         .author(public_key)
         .kind(Kind::Metadata)
         .limit(1);
 
-    let mut metadata = Metadata::new();
-
-    let mut rx = client
-        .stream_events(vec![filter], Some(Duration::from_secs(5)))
+    let events = client
+        .database()
+        .query(vec![filter])
         .await
         .map_err(|e| e.to_string())?;
 
-    while let Some(event) = rx.next().await {
-        metadata = Metadata::from_json(&event.content).map_err(|e| e.to_string())?;
+    match events.first() {
+        Some(event) => match Metadata::from_json(&event.content) {
+            Ok(metadata) => Ok(metadata.as_json()),
+            Err(e) => Err(e.to_string()),
+        },
+        None => Err("Metadata not found".into()),
     }
-
-    Ok(metadata.as_json())
 }
 
 #[tauri::command]
@@ -627,15 +614,15 @@ pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Ve
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
-    Ok(state.settings.lock().unwrap().clone())
+pub async fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
+    Ok(state.settings.lock().await.clone())
 }
 
 #[tauri::command]
 #[specta::specta]
 pub async fn set_user_settings(settings: String, state: State<'_, Nostr>) -> Result<(), String> {
     let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
-    state.settings.lock().unwrap().clone_from(&parsed);
+    state.settings.lock().await.clone_from(&parsed);
 
     Ok(())
 }

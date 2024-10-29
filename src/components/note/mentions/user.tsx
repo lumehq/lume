@@ -5,7 +5,7 @@ import { memo } from "react";
 export const MentionUser = memo(function MentionUser({
 	pubkey,
 }: { pubkey: string }) {
-	const { isLoading, isError, profile } = useProfile(pubkey);
+	const { isLoading, profile } = useProfile(pubkey);
 
 	return (
 		<button
@@ -14,10 +14,8 @@ export const MentionUser = memo(function MentionUser({
 			className="break-words text-start text-blue-500 hover:text-blue-600"
 		>
 			{isLoading
-				? "@anon"
-				: isError
-					? displayNpub(pubkey, 16)
-					: `@${profile?.name || profile?.display_name || displayNpub(pubkey, 16)}`}
+				? displayNpub(pubkey, 16)
+				: `@${profile?.name || profile?.display_name || displayNpub(pubkey, 16)}`}
 		</button>
 	);
 });

@@ -3,7 +3,7 @@ import type {
 	MaybePromise,
 	PersistedQuery,
 } from "@tanstack/query-persist-client-core";
-import { Store } from "@tanstack/store";
+import { Store } from "@tanstack/react-store";
 import { ask, message, open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";

@@ -5445,11 +5445,6 @@
           "const": "store:allow-clear"
         },
         {
-          "description": "Enables the create_store command without any pre-configured scope.",
-          "type": "string",
-          "const": "store:allow-create-store"
-        },
-        {
           "description": "Enables the delete command without any pre-configured scope.",
           "type": "string",
           "const": "store:allow-delete"
@@ -5463,6 +5458,11 @@
           "description": "Enables the get command without any pre-configured scope.",
           "type": "string",
           "const": "store:allow-get"
+        },
+        {
+          "description": "Enables the get_store command without any pre-configured scope.",
+          "type": "string",
+          "const": "store:allow-get-store"
         },
         {
           "description": "Enables the has command without any pre-configured scope.",
@@ -5483,6 +5483,11 @@
           "description": "Enables the load command without any pre-configured scope.",
           "type": "string",
           "const": "store:allow-load"
+        },
+        {
+          "description": "Enables the reload command without any pre-configured scope.",
+          "type": "string",
+          "const": "store:allow-reload"
         },
         {
           "description": "Enables the reset command without any pre-configured scope.",
@@ -5510,11 +5515,6 @@
           "const": "store:deny-clear"
         },
         {
-          "description": "Denies the create_store command without any pre-configured scope.",
-          "type": "string",
-          "const": "store:deny-create-store"
-        },
-        {
           "description": "Denies the delete command without any pre-configured scope.",
           "type": "string",
           "const": "store:deny-delete"
@@ -5528,6 +5528,11 @@
           "description": "Denies the get command without any pre-configured scope.",
           "type": "string",
           "const": "store:deny-get"
+        },
+        {
+          "description": "Denies the get_store command without any pre-configured scope.",
+          "type": "string",
+          "const": "store:deny-get-store"
         },
         {
           "description": "Denies the has command without any pre-configured scope.",
@@ -5548,6 +5553,11 @@
           "description": "Denies the load command without any pre-configured scope.",
           "type": "string",
           "const": "store:deny-load"
+        },
+        {
+          "description": "Denies the reload command without any pre-configured scope.",
+          "type": "string",
+          "const": "store:deny-reload"
         },
         {
           "description": "Denies the reset command without any pre-configured scope.",

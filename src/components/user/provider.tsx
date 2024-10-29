@@ -2,26 +2,27 @@ import { useProfile } from "@/system";
 import type { Metadata } from "@/types";
 import { type ReactNode, createContext, useContext } from "react";
 
-const UserContext = createContext<{
+interface UserContext {
 	pubkey: string;
-	profile: Metadata;
-	isError: boolean;
+	profile: Metadata | undefined;
 	isLoading: boolean;
-}>(null);
+}
+
+const UserContext = createContext<UserContext | null>(null);
 
 export function UserProvider({
 	pubkey,
 	children,
-	embedProfile,
+	data,
 }: {
 	pubkey: string;
 	children: ReactNode;
-	embedProfile?: string;
+	data?: string;
 }) {
-	const { isLoading, isError, profile } = useProfile(pubkey, embedProfile);
+	const { isLoading, profile } = useProfile(pubkey, data);
 
 	return (
-		<UserContext.Provider value={{ pubkey, profile, isError, isLoading }}>
+		<UserContext.Provider value={{ pubkey, isLoading, profile }}>
 			{children}
 		</UserContext.Provider>
 	);
