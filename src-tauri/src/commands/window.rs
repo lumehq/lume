@@ -82,17 +82,19 @@ pub async fn create_column(
                                             let subscription_id =
                                                 SubscriptionId::new(webview.label());
 
-                                            let filter =
-                                                Filter::new().authors(contact_list).kinds(vec![
+                                            let filter = Filter::new()
+                                                .authors(contact_list)
+                                                .kinds(vec![
                                                     Kind::TextNote,
                                                     Kind::Repost,
                                                     Kind::EventDeletion,
-                                                ]);
+                                                ])
+                                                .since(Timestamp::now());
 
                                             if let Err(e) = client
                                                 .subscribe_with_id(
                                                     subscription_id,
-                                                    vec![filter.clone().since(Timestamp::now())],
+                                                    vec![filter],
                                                     None,
                                                 )
                                                 .await
@@ -111,7 +113,8 @@ pub async fn create_column(
 
                                     let filter = Filter::new()
                                         .event(event_id)
-                                        .kinds(vec![Kind::TextNote, Kind::Custom(1111)]);
+                                        .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
+                                        .since(Timestamp::now());
 
                                     if let Err(e) = client
                                         .subscribe_with_id(

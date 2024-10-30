@@ -88,13 +88,11 @@ function Newsfeeds() {
 									{item.tags
 										.filter((tag) => tag[0] === "p")
 										.map((tag) => (
-											<div key={tag[1]}>
-												<User.Provider pubkey={tag[1]}>
-													<User.Root>
-														<User.Avatar className="size-8 rounded-full" />
-													</User.Root>
-												</User.Provider>
-											</div>
+											<User.Provider key={tag[1]} pubkey={tag[1]}>
+												<User.Root>
+													<User.Avatar className="size-8 rounded-full" />
+												</User.Root>
+											</User.Provider>
 										))}
 								</div>
 							</ScrollArea.Viewport>

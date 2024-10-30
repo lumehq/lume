@@ -5,10 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
 
-use crate::{
-    common::{get_latest_event, process_event},
-    Nostr, RichEvent,
-};
+use crate::{common::process_event, Nostr, RichEvent};
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Mention {
@@ -71,35 +68,15 @@ pub async fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::ContactList)
-        .limit(1);
-
-    let mut contact_list: Vec<String> = Vec::new();
-
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+    let contact_list = client
+        .database()
+        .contacts_public_keys(public_key)
         .await
-    {
-        Ok(events) => {
-            if let Some(event) = events.into_iter().next() {
-                for tag in event.tags.into_iter() {
-                    if let Some(TagStandard::PublicKey {
-                        public_key,
-                        uppercase: false,
-                        ..
-                    }) = tag.to_standardized()
-                    {
-                        contact_list.push(public_key.to_hex())
-                    }
-                }
-            }
+        .map_err(|e| e.to_string())?;
 
-            Ok(contact_list)
-        }
-        Err(e) => Err(e.to_string()),
-    }
+    let pubkeys: Vec<String> = contact_list.into_iter().map(|pk| pk.to_hex()).collect();
+
+    Ok(pubkeys)
 }
 
 #[tauri::command]
@@ -120,21 +97,9 @@ pub async fn is_contact(id: String, state: State<'_, Nostr>) -> Result<bool, Str
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
 
-    let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::ContactList)
-        .limit(1);
-
-    match client.database().query(vec![filter]).await {
-        Ok(events) => {
-            if let Some(event) = events.into_iter().next() {
-                let pubkeys = event.tags.public_keys().collect::<Vec<_>>();
-                Ok(pubkeys.iter().any(|&i| i == &public_key))
-            } else {
-                Ok(false)
-            }
-        }
-        Err(e) => Err(e.to_string()),
+    match client.database().contacts_public_keys(public_key).await {
+        Ok(public_keys) => Ok(public_keys.iter().any(|i| i == &public_key)),
+        Err(_) => Ok(false),
     }
 }
 
@@ -244,16 +209,15 @@ pub async fn set_group(
 pub async fn get_group(id: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
-    let filter = Filter::new().kind(Kind::FollowSet).id(event_id);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
-        .await
-    {
-        Ok(events) => match get_latest_event(&events) {
-            Some(ev) => Ok(ev.as_json()),
-            None => Err("Not found.".to_string()),
-        },
+    match client.database().event_by_id(&event_id).await {
+        Ok(event) => {
+            if let Some(ev) = event {
+                Ok(ev.as_json())
+            } else {
+                Err("Event not found".into())
+            }
+        }
         Err(e) => Err(e.to_string()),
     }
 }
@@ -273,10 +237,16 @@ pub async fn get_all_newsfeeds(
         .author(public_key)
         .limit(1);
 
-    let remote_events = client
-        .fetch_events(vec![groups], Some(Duration::from_secs(3)))
+    let mut remote_events = Events::new(&[groups.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![groups], Some(Duration::from_secs(3)))
         .await
         .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        remote_events.insert(event);
+    }
 
     let contact_events = client
         .fetch_events(vec![contacts], Some(Duration::from_secs(3)))
@@ -349,18 +319,15 @@ pub async fn set_interest(
 pub async fn get_interest(id: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
     let event_id = EventId::from_str(&id).map_err(|e| e.to_string())?;
-    let filter = Filter::new()
-        .kinds(vec![Kind::Interests, Kind::InterestSet])
-        .id(event_id);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
-        .await
-    {
-        Ok(events) => match get_latest_event(&events) {
-            Some(ev) => Ok(ev.as_json()),
-            None => Err("Not found.".to_string()),
-        },
+    match client.database().event_by_id(&event_id).await {
+        Ok(event) => {
+            if let Some(ev) = event {
+                Ok(ev.as_json())
+            } else {
+                Err("Event not found".into())
+            }
+        }
         Err(e) => Err(e.to_string()),
     }
 }
@@ -373,17 +340,25 @@ pub async fn get_all_interests(
 ) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
     let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
+
     let filter = Filter::new()
         .kinds(vec![Kind::InterestSet, Kind::Interests])
         .author(public_key);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(process_event(client, events, false).await),
-        Err(e) => Err(e.to_string()),
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
     }
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
 }
 
 #[tauri::command]
@@ -570,13 +545,20 @@ pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Ve
         ])
         .limit(500);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
-        Err(err) => Err(err.to_string()),
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
     }
+
+    let alt_events = events.into_iter().map(|ev| ev.as_json()).collect();
+
+    Ok(alt_events)
 }
 
 #[tauri::command]

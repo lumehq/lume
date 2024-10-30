@@ -147,6 +147,7 @@ fn main() {
             let handle = app.handle();
             let handle_clone = handle.clone();
             let handle_clone_child = handle_clone.clone();
+            let handle_clone_event = handle_clone_child.clone();
             let main_window = app.get_webview_window("main").unwrap();
 
             let config_dir = handle
@@ -175,12 +176,9 @@ fn main() {
 
                 // Config
                 let opts = Options::new()
-                    .gossip(false)
+                    .gossip(true)
                     .max_avg_latency(Duration::from_millis(300))
                     .automatic_authentication(true)
-                    .connection_timeout(Some(Duration::from_secs(5)))
-                    .send_timeout(Some(Duration::from_secs(10)))
-                    .wait_for_send(false)
                     .timeout(Duration::from_secs(5));
 
                 // Setup nostr client
@@ -217,14 +215,68 @@ fn main() {
                     }
                 }
 
-                let _ = client.add_discovery_relay("wss://purplepag.es/").await;
-                let _ = client.add_discovery_relay("wss://directory.yabu.me/").await;
                 let _ = client.add_discovery_relay("wss://user.kindpag.es/").await;
 
                 // Connect
                 client.connect_with_timeout(Duration::from_secs(10)).await;
 
                 client
+            });
+
+            // Trigger some actions for window events
+            main_window.on_window_event(move |event| match event {
+                tauri::WindowEvent::Focused(focused) => {
+                    if !focused {
+                        let handle = handle_clone_event.clone();
+
+                        tauri::async_runtime::spawn(async move {
+                            let state = handle.state::<Nostr>();
+                            let client = &state.client;
+
+                            let filter = Filter::new().kinds(vec![
+                                Kind::TextNote,
+                                Kind::Repost,
+                                Kind::ContactList,
+                                Kind::FollowSet,
+                            ]);
+
+                            // Get all public keys in database
+                            if let Ok(events) = client.database().query(vec![filter]).await {
+                                let public_keys: HashSet<PublicKey> = events
+                                    .iter()
+                                    .flat_map(|ev| ev.tags.public_keys().copied())
+                                    .collect();
+                                let pk_vec: Vec<PublicKey> = public_keys.into_iter().collect();
+
+                                for chunk in pk_vec.chunks(500) {
+                                    if chunk.is_empty() {
+                                        return;
+                                    }
+
+                                    let authors = chunk.to_owned();
+                                    let filter = Filter::new()
+                                        .authors(authors)
+                                        .kinds(vec![
+                                            Kind::Metadata,
+                                            Kind::TextNote,
+                                            Kind::FollowSet,
+                                            Kind::Interests,
+                                            Kind::InterestSet,
+                                        ])
+                                        .limit(2000);
+
+                                    let opts = SyncOptions::default();
+
+                                    if let Err(e) = client.sync(filter, &opts).await {
+                                        println!("Sync error: {}", e)
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+                tauri::WindowEvent::Moved(_size) => {}
+                _ => {}
             });
 
             // Create global state
@@ -276,24 +328,27 @@ fn main() {
                 let accounts = get_all_accounts();
 
                 if !accounts.is_empty() {
+                    let subscription_id = SubscriptionId::new(NOTIFICATION_SUB_ID);
+
                     let public_keys: Vec<PublicKey> = accounts
                         .iter()
-                        .filter_map(|acc| {
-                            if let Ok(pk) = PublicKey::from_str(acc) {
-                                Some(pk)
-                            } else {
-                                None
-                            }
-                        })
+                        .filter_map(|acc| PublicKey::from_str(acc).ok())
                         .collect();
+
+                    let filter = Filter::new()
+                        .pubkeys(public_keys)
+                        .kinds(vec![
+                            Kind::TextNote,
+                            Kind::Repost,
+                            Kind::Reaction,
+                            Kind::ZapReceipt,
+                            Kind::Custom(1111),
+                        ])
+                        .since(Timestamp::now());
 
                     // Subscribe for new notification
                     if let Err(e) = client
-                        .subscribe_with_id(
-                            SubscriptionId::new(NOTIFICATION_SUB_ID),
-                            vec![Filter::new().pubkeys(public_keys).since(Timestamp::now())],
-                            None,
-                        )
+                        .subscribe_with_id(subscription_id, vec![filter], None)
                         .await
                     {
                         println!("Error: {}", e)

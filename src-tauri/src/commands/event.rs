@@ -77,13 +77,20 @@ pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<Rich
         .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
         .event(event_id);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(5)))
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(process_event(client, events, true).await),
-        Err(err) => Err(err.to_string()),
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
     }
+
+    let alt_events = process_event(client, events, true).await;
+
+    Ok(alt_events)
 }
 
 #[tauri::command]
@@ -101,13 +108,20 @@ pub async fn get_all_events_by_author(
         .author(author)
         .limit(limit as usize);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(process_event(client, events, false).await),
-        Err(err) => Err(err.to_string()),
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
     }
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
 }
 
 #[tauri::command]
@@ -120,28 +134,35 @@ pub async fn get_all_events_by_authors(
     let client = &state.client;
 
     let as_of = match until {
-        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
+        Some(until) => Timestamp::from_str(&until).unwrap_or(Timestamp::now()),
         None => Timestamp::now(),
     };
 
     let authors: Vec<PublicKey> = public_keys
         .iter()
-        .map(|pk| PublicKey::from_str(pk).map_err(|err| err.to_string()))
-        .collect::<Result<Vec<_>, _>>()?;
+        .filter_map(|pk| PublicKey::from_str(pk).ok())
+        .collect();
 
     let filter = Filter::new()
+        .authors(authors)
         .kinds(vec![Kind::TextNote, Kind::Repost])
         .limit(FETCH_LIMIT)
-        .until(as_of)
-        .authors(authors);
+        .until(as_of);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(process_event(client, events, false).await),
-        Err(err) => Err(err.to_string()),
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
     }
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
 }
 
 #[tauri::command]
@@ -164,13 +185,20 @@ pub async fn get_all_events_by_hashtags(
         .until(as_of)
         .hashtags(hashtags);
 
-    match client
-        .fetch_events(vec![filter], Some(Duration::from_secs(3)))
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
         .await
-    {
-        Ok(events) => Ok(process_event(client, events, false).await),
-        Err(err) => Err(err.to_string()),
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
     }
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
 }
 
 #[tauri::command]
