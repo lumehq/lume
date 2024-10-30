@@ -1,8 +1,9 @@
-import { appSettings, cn } from "@/commons";
+import { cn } from "@/commons";
 import { ZapIcon } from "@/components";
+import { settingsQueryOptions } from "@/routes/__root";
 import { LumeWindow } from "@/system";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
-import { useStore } from "@tanstack/react-store";
 import { useNoteContext } from "../provider";
 
 export function NoteZap({
@@ -10,10 +11,10 @@ export function NoteZap({
 	smol = false,
 }: { label?: boolean; smol?: boolean }) {
 	const search = useSearch({ strict: false });
-	const visible = useStore(appSettings, (state) => state.display_zap_button);
+	const settings = useSuspenseQuery(settingsQueryOptions);
 	const event = useNoteContext();
 
-	if (!visible) return null;
+	if (!settings.data.display_zap_button) return null;
 
 	return (
 		<button

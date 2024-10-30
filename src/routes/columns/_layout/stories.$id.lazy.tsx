@@ -1,5 +1,5 @@
 import { commands } from "@/commands.gen";
-import { replyTime, toLumeEvents } from "@/commons";
+import { replyAt, toLumeEvents } from "@/commons";
 import { Note, Spinner, User } from "@/components";
 import { Hashtag } from "@/components/note/mentions/hashtag";
 import { MentionUser } from "@/components/note/mentions/user";
@@ -155,7 +155,7 @@ const StoryEvent = memo(function StoryEvent({ event }: { event: LumeEvent }) {
 					</div>
 					<div className="flex-1 flex items-center justify-between">
 						<span className="text-sm text-neutral-500">
-							{replyTime(event.created_at)}
+							{replyAt(event.created_at)}
 						</span>
 						<div className="invisible group-hover:visible flex items-center justify-end gap-3">
 							<Note.Reply />

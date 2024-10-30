@@ -1,7 +1,7 @@
 import { type Profile, commands } from "@/commands.gen";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/settings/$id/profile")({
+export const Route = createFileRoute("/$id/set-profile")({
 	beforeLoad: async ({ params }) => {
 		const res = await commands.getProfile(params.id);
 

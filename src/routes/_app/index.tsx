@@ -5,11 +5,11 @@ import { nanoid } from "nanoid";
 export const Route = createFileRoute("/_app/")({
 	loader: async ({ context }) => {
 		const accounts = context.accounts;
-		const prevColumns = window.localStorage.getItem("columns");
+		const prev = await context.store.get("columns");
 
 		let initialAppColumns: LumeColumn[] = [];
 
-		if (!prevColumns || prevColumns.length < 1) {
+		if (!prev) {
 			initialAppColumns.push({
 				label: "onboarding",
 				name: "Onboarding",
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_app/")({
 				});
 			}
 		} else {
-			const parsed: LumeColumn[] = JSON.parse(prevColumns);
+			const parsed: LumeColumn[] = JSON.parse(prev as string);
 
 			initialAppColumns = parsed.filter((item) =>
 				item.account ? context.accounts.includes(item.account) : item,

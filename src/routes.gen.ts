@@ -19,11 +19,11 @@ import { Route as NewPostIndexImport } from './routes/new-post/index'
 import { Route as AppIndexImport } from './routes/_app/index'
 import { Route as ZapIdImport } from './routes/zap.$id'
 import { Route as ColumnsLayoutImport } from './routes/columns/_layout'
+import { Route as IdSetProfileImport } from './routes/$id.set-profile'
 import { Route as IdSetInterestImport } from './routes/$id.set-interest'
 import { Route as IdSetGroupImport } from './routes/$id.set-group'
 import { Route as SettingsIdWalletImport } from './routes/settings.$id/wallet'
 import { Route as SettingsIdRelayImport } from './routes/settings.$id/relay'
-import { Route as SettingsIdProfileImport } from './routes/settings.$id/profile'
 import { Route as SettingsIdGeneralImport } from './routes/settings.$id/general'
 import { Route as ColumnsLayoutGlobalImport } from './routes/columns/_layout/global'
 import { Route as ColumnsLayoutCreateNewsfeedImport } from './routes/columns/_layout/create-newsfeed'
@@ -149,6 +149,14 @@ const ColumnsLayoutRoute = ColumnsLayoutImport.update({
   getParentRoute: () => ColumnsRoute,
 } as any)
 
+const IdSetProfileRoute = IdSetProfileImport.update({
+  id: '/$id/set-profile',
+  path: '/$id/set-profile',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/$id.set-profile.lazy').then((d) => d.Route),
+)
+
 const IdSetInterestRoute = IdSetInterestImport.update({
   id: '/$id/set-interest',
   path: '/$id/set-interest',
@@ -202,14 +210,6 @@ const SettingsIdRelayRoute = SettingsIdRelayImport.update({
   getParentRoute: () => SettingsIdLazyRoute,
 } as any).lazy(() =>
   import('./routes/settings.$id/relay.lazy').then((d) => d.Route),
-)
-
-const SettingsIdProfileRoute = SettingsIdProfileImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => SettingsIdLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings.$id/profile.lazy').then((d) => d.Route),
 )
 
 const SettingsIdGeneralRoute = SettingsIdGeneralImport.update({
@@ -364,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IdSetInterestImport
       parentRoute: typeof rootRoute
     }
+    '/$id/set-profile': {
+      id: '/$id/set-profile'
+      path: '/$id/set-profile'
+      fullPath: '/$id/set-profile'
+      preLoaderRoute: typeof IdSetProfileImport
+      parentRoute: typeof rootRoute
+    }
     '/columns': {
       id: '/columns'
       path: '/columns'
@@ -446,13 +453,6 @@ declare module '@tanstack/react-router' {
       path: '/general'
       fullPath: '/settings/$id/general'
       preLoaderRoute: typeof SettingsIdGeneralImport
-      parentRoute: typeof SettingsIdLazyImport
-    }
-    '/settings/$id/profile': {
-      id: '/settings/$id/profile'
-      path: '/profile'
-      fullPath: '/settings/$id/profile'
-      preLoaderRoute: typeof SettingsIdProfileImport
       parentRoute: typeof SettingsIdLazyImport
     }
     '/settings/$id/relay': {
@@ -651,14 +651,12 @@ const ColumnsRouteWithChildren =
 
 interface SettingsIdLazyRouteChildren {
   SettingsIdGeneralRoute: typeof SettingsIdGeneralRoute
-  SettingsIdProfileRoute: typeof SettingsIdProfileRoute
   SettingsIdRelayRoute: typeof SettingsIdRelayRoute
   SettingsIdWalletRoute: typeof SettingsIdWalletRoute
 }
 
 const SettingsIdLazyRouteChildren: SettingsIdLazyRouteChildren = {
   SettingsIdGeneralRoute: SettingsIdGeneralRoute,
-  SettingsIdProfileRoute: SettingsIdProfileRoute,
   SettingsIdRelayRoute: SettingsIdRelayRoute,
   SettingsIdWalletRoute: SettingsIdWalletRoute,
 }
@@ -673,6 +671,7 @@ export interface FileRoutesByFullPath {
   '/new': typeof NewLazyRoute
   '/$id/set-group': typeof IdSetGroupRoute
   '/$id/set-interest': typeof IdSetInterestRoute
+  '/$id/set-profile': typeof IdSetProfileRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
   '/new-account/connect': typeof NewAccountConnectLazyRoute
@@ -684,7 +683,6 @@ export interface FileRoutesByFullPath {
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/settings/$id/general': typeof SettingsIdGeneralRoute
-  '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -708,6 +706,7 @@ export interface FileRoutesByTo {
   '/new': typeof NewLazyRoute
   '/$id/set-group': typeof IdSetGroupRoute
   '/$id/set-interest': typeof IdSetInterestRoute
+  '/$id/set-profile': typeof IdSetProfileRoute
   '/columns': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
   '/new-account/connect': typeof NewAccountConnectLazyRoute
@@ -719,7 +718,6 @@ export interface FileRoutesByTo {
   '/columns/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/global': typeof ColumnsLayoutGlobalRoute
   '/settings/$id/general': typeof SettingsIdGeneralRoute
-  '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -745,6 +743,7 @@ export interface FileRoutesById {
   '/new': typeof NewLazyRoute
   '/$id/set-group': typeof IdSetGroupRoute
   '/$id/set-interest': typeof IdSetInterestRoute
+  '/$id/set-profile': typeof IdSetProfileRoute
   '/columns': typeof ColumnsRouteWithChildren
   '/columns/_layout': typeof ColumnsLayoutRouteWithChildren
   '/zap/$id': typeof ZapIdRoute
@@ -757,7 +756,6 @@ export interface FileRoutesById {
   '/columns/_layout/create-newsfeed': typeof ColumnsLayoutCreateNewsfeedRouteWithChildren
   '/columns/_layout/global': typeof ColumnsLayoutGlobalRoute
   '/settings/$id/general': typeof SettingsIdGeneralRoute
-  '/settings/$id/profile': typeof SettingsIdProfileRoute
   '/settings/$id/relay': typeof SettingsIdRelayRoute
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
@@ -784,6 +782,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/$id/set-group'
     | '/$id/set-interest'
+    | '/$id/set-profile'
     | '/columns'
     | '/zap/$id'
     | '/new-account/connect'
@@ -795,7 +794,6 @@ export interface FileRouteTypes {
     | '/columns/create-newsfeed'
     | '/columns/global'
     | '/settings/$id/general'
-    | '/settings/$id/profile'
     | '/settings/$id/relay'
     | '/settings/$id/wallet'
     | '/columns/onboarding'
@@ -818,6 +816,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/$id/set-group'
     | '/$id/set-interest'
+    | '/$id/set-profile'
     | '/columns'
     | '/zap/$id'
     | '/new-account/connect'
@@ -829,7 +828,6 @@ export interface FileRouteTypes {
     | '/columns/create-newsfeed'
     | '/columns/global'
     | '/settings/$id/general'
-    | '/settings/$id/profile'
     | '/settings/$id/relay'
     | '/settings/$id/wallet'
     | '/columns/onboarding'
@@ -853,6 +851,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/$id/set-group'
     | '/$id/set-interest'
+    | '/$id/set-profile'
     | '/columns'
     | '/columns/_layout'
     | '/zap/$id'
@@ -865,7 +864,6 @@ export interface FileRouteTypes {
     | '/columns/_layout/create-newsfeed'
     | '/columns/_layout/global'
     | '/settings/$id/general'
-    | '/settings/$id/profile'
     | '/settings/$id/relay'
     | '/settings/$id/wallet'
     | '/columns/_layout/onboarding'
@@ -891,6 +889,7 @@ export interface RootRouteChildren {
   NewLazyRoute: typeof NewLazyRoute
   IdSetGroupRoute: typeof IdSetGroupRoute
   IdSetInterestRoute: typeof IdSetInterestRoute
+  IdSetProfileRoute: typeof IdSetProfileRoute
   ColumnsRoute: typeof ColumnsRouteWithChildren
   ZapIdRoute: typeof ZapIdRoute
   NewAccountConnectLazyRoute: typeof NewAccountConnectLazyRoute
@@ -906,6 +905,7 @@ const rootRouteChildren: RootRouteChildren = {
   NewLazyRoute: NewLazyRoute,
   IdSetGroupRoute: IdSetGroupRoute,
   IdSetInterestRoute: IdSetInterestRoute,
+  IdSetProfileRoute: IdSetProfileRoute,
   ColumnsRoute: ColumnsRouteWithChildren,
   ZapIdRoute: ZapIdRoute,
   NewAccountConnectLazyRoute: NewAccountConnectLazyRoute,
@@ -932,6 +932,7 @@ export const routeTree = rootRoute
         "/new",
         "/$id/set-group",
         "/$id/set-interest",
+        "/$id/set-profile",
         "/columns",
         "/zap/$id",
         "/new-account/connect",
@@ -958,6 +959,9 @@ export const routeTree = rootRoute
     },
     "/$id/set-interest": {
       "filePath": "$id.set-interest.tsx"
+    },
+    "/$id/set-profile": {
+      "filePath": "$id.set-profile.tsx"
     },
     "/columns": {
       "filePath": "columns",
@@ -1001,7 +1005,6 @@ export const routeTree = rootRoute
       "filePath": "settings.$id.lazy.tsx",
       "children": [
         "/settings/$id/general",
-        "/settings/$id/profile",
         "/settings/$id/relay",
         "/settings/$id/wallet"
       ]
@@ -1027,10 +1030,6 @@ export const routeTree = rootRoute
     },
     "/settings/$id/general": {
       "filePath": "settings.$id/general.tsx",
-      "parent": "/settings/$id"
-    },
-    "/settings/$id/profile": {
-      "filePath": "settings.$id/profile.tsx",
       "parent": "/settings/$id"
     },
     "/settings/$id/relay": {

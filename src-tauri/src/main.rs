@@ -22,7 +22,7 @@ use tauri::{path::BaseDirectory, Emitter, EventTarget, Listener, Manager};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, Builder};
-use tokio::{sync::Mutex, sync::RwLock, time::sleep};
+use tokio::{sync::RwLock, time::sleep};
 
 pub mod commands;
 pub mod common;
@@ -30,7 +30,7 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     queue: RwLock<HashSet<PublicKey>>,
-    settings: Mutex<Settings>,
+    settings: RwLock<Settings>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -40,37 +40,30 @@ pub struct Payload {
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Settings {
-    proxy: Option<String>,
-    image_resize_service: Option<String>,
-    use_relay_hint: bool,
+    resize_service: bool,
     content_warning: bool,
-    trusted_only: bool,
     display_avatar: bool,
     display_zap_button: bool,
     display_repost_button: bool,
     display_media: bool,
-    transparent: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
         Self {
-            proxy: None,
-            image_resize_service: Some("https://wsrv.nl".to_string()),
-            use_relay_hint: true,
             content_warning: true,
-            trusted_only: false,
+            resize_service: true,
             display_avatar: true,
             display_zap_button: true,
             display_repost_button: true,
             display_media: true,
-            transparent: true,
         }
     }
 }
 
 pub const DEFAULT_DIFFICULTY: u8 = 0;
 pub const FETCH_LIMIT: usize = 50;
+pub const QUEUE_DELAY: u64 = 300;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
@@ -113,8 +106,6 @@ fn main() {
         zap_event,
         copy_friend,
         get_notifications,
-        get_user_settings,
-        set_user_settings,
         verify_nip05,
         get_meta_from_event,
         get_event,
@@ -138,6 +129,8 @@ fn main() {
         close_column,
         close_all_columns,
         open_window,
+        get_app_settings,
+        set_app_settings,
     ]);
 
     #[cfg(debug_assertions)]
@@ -182,7 +175,7 @@ fn main() {
 
                 // Config
                 let opts = Options::new()
-                    .gossip(true)
+                    .gossip(false)
                     .max_avg_latency(Duration::from_millis(300))
                     .automatic_authentication(true)
                     .connection_timeout(Some(Duration::from_secs(5)))
@@ -238,7 +231,7 @@ fn main() {
             app.manage(Nostr {
                 client,
                 queue: RwLock::new(HashSet::new()),
-                settings: Mutex::new(Settings::default()),
+                settings: RwLock::new(Settings::default()),
             });
 
             // Listen for request metadata
@@ -250,22 +243,27 @@ fn main() {
                 tauri::async_runtime::spawn(async move {
                     let state = handle.state::<Nostr>();
                     let client = &state.client;
+                    let mut write_queue = state.queue.write().await;
 
                     if let Ok(public_key) = PublicKey::parse(parsed_payload.id) {
-                        let mut write_queue = state.queue.write().await;
                         write_queue.insert(public_key);
                     }
 
-                    sleep(Duration::from_millis(300)).await;
+                    sleep(Duration::from_millis(QUEUE_DELAY)).await;
 
                     let read_queue = state.queue.read().await;
+
+                    let filter_opts = FilterOptions::WaitDurationAfterEOSE(Duration::from_secs(2));
+                    let opts = SubscribeAutoCloseOptions::default().filter(filter_opts);
+
+                    let limit = read_queue.len() * 2;
                     let authors: Vec<PublicKey> = read_queue.iter().copied().collect();
-                    let filter = Filter::new().authors(authors).kind(Kind::Metadata);
-                    let opts = SubscribeAutoCloseOptions::default()
-                        .filter(FilterOptions::WaitDurationAfterEOSE(Duration::from_secs(3)));
+                    let filter = Filter::new()
+                        .authors(authors)
+                        .kind(Kind::Metadata)
+                        .limit(limit);
 
                     if client.subscribe(vec![filter], Some(opts)).await.is_ok() {
-                        let mut write_queue = state.queue.write().await;
                         write_queue.clear();
                     }
                 });

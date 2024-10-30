@@ -7,20 +7,8 @@ use tauri::{Emitter, Manager, State};
 
 use crate::{
     common::{get_latest_event, process_event},
-    Nostr, RichEvent, Settings,
+    Nostr, RichEvent,
 };
-
-#[derive(Clone, Serialize, Deserialize, Type)]
-pub struct Profile {
-    name: String,
-    display_name: String,
-    about: Option<String>,
-    picture: String,
-    banner: Option<String>,
-    nip05: Option<String>,
-    lud16: Option<String>,
-    website: Option<String>,
-}
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Mention {
@@ -116,30 +104,9 @@ pub async fn get_contact_list(id: String, state: State<'_, Nostr>) -> Result<Vec
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_profile(profile: Profile, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn set_profile(new_profile: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
-    let mut metadata = Metadata::new()
-        .name(profile.name)
-        .display_name(profile.display_name)
-        .about(profile.about.unwrap_or_default())
-        .nip05(profile.nip05.unwrap_or_default())
-        .lud16(profile.lud16.unwrap_or_default());
-
-    if let Ok(url) = Url::parse(&profile.picture) {
-        metadata = metadata.picture(url)
-    }
-
-    if let Some(b) = profile.banner {
-        if let Ok(url) = Url::parse(&b) {
-            metadata = metadata.banner(url)
-        }
-    }
-
-    if let Some(w) = profile.website {
-        if let Ok(url) = Url::parse(&w) {
-            metadata = metadata.website(url)
-        }
-    }
+    let metadata = Metadata::from_json(new_profile).map_err(|e| e.to_string())?;
 
     match client.set_metadata(&metadata).await {
         Ok(id) => Ok(id.to_string()),
@@ -610,21 +577,6 @@ pub async fn get_notifications(id: String, state: State<'_, Nostr>) -> Result<Ve
         Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
     }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_user_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
-    Ok(state.settings.lock().await.clone())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn set_user_settings(settings: String, state: State<'_, Nostr>) -> Result<(), String> {
-    let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
-    state.settings.lock().await.clone_from(&parsed);
-
-    Ok(())
 }
 
 #[tauri::command]

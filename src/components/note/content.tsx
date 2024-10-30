@@ -1,5 +1,6 @@
-import { appSettings, cn } from "@/commons";
-import { useStore } from "@tanstack/react-store";
+import { cn } from "@/commons";
+import { settingsQueryOptions } from "@/routes/__root";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 import { type ReactNode, useMemo, useState } from "react";
 import reactStringReplace from "react-string-replace";
@@ -21,14 +22,17 @@ export function NoteContent({
 	className?: string;
 }) {
 	const event = useNoteContext();
-	const visible = useStore(appSettings, (state) => state.display_media);
+	const settings = useSuspenseQuery(settingsQueryOptions);
+
 	const content = useMemo(() => {
 		try {
 			// Get parsed meta
 			const { content, hashtags, events, mentions } = event.meta;
 
 			// Define rich content
-			let richContent: ReactNode[] | string = visible ? content : event.content;
+			let richContent: ReactNode[] | string = settings.data.display_media
+				? content
+				: event.content;
 
 			for (const hashtag of hashtags) {
 				const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
@@ -103,7 +107,7 @@ export function NoteContent({
 					>
 						{content}
 					</div>
-					{visible ? (
+					{settings.data.display_media ? (
 						event.meta?.images.length ? (
 							<Images urls={event.meta.images} />
 						) : null

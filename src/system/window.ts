@@ -97,21 +97,12 @@ export const LumeWindow = {
 		});
 	},
 	openEditor: async (reply_to?: string, quote?: string) => {
-		let url: string;
-
-		if (reply_to) {
-			url = `/new-post?reply_to=${reply_to}`;
-		}
-
-		if (quote?.length) {
-			url = `/new-post?quote=${quote}`;
-		}
-
-		if (!reply_to?.length && !quote?.length) {
-			url = "/new-post";
-		}
-
 		const label = `editor-${reply_to ? reply_to : 0}`;
+		const url = reply_to
+			? `/new-post?reply_to=${reply_to}`
+			: quote?.length
+				? `/new-post?quote=${quote}`
+				: "/new-post";
 		const query = await commands.openWindow({
 			label,
 			url,
@@ -145,7 +136,7 @@ export const LumeWindow = {
 				hidden_title: true,
 				closable: true,
 			});
-		} else {
+		} else if (account) {
 			await LumeWindow.openSettings(account, "wallet");
 		}
 	},

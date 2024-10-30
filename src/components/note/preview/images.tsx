@@ -1,23 +1,24 @@
-import { appSettings, cn } from "@/commons";
+import { cn } from "@/commons";
 import { Spinner } from "@/components";
+import { settingsQueryOptions } from "@/routes/__root";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
-import { useStore } from "@tanstack/react-store";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { open } from "@tauri-apps/plugin-shell";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export function Images({ urls }: { urls: string[] }) {
-	const [slidesInView, setSlidesInView] = useState([]);
+	const [slidesInView, setSlidesInView] = useState<number[]>([]);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		dragFree: true,
 		align: "start",
 		watchSlides: false,
 	});
 
-	const service = useStore(appSettings, (state) => state.image_resize_service);
+	const settings = useSuspenseQuery(settingsQueryOptions);
 
 	const imageUrls = useMemo(() => {
-		if (service?.length) {
+		if (settings.data.resize_service) {
 			let newUrls: string[];
 
 			if (urls.length === 1) {
@@ -28,11 +29,12 @@ export function Images({ urls }: { urls: string[] }) {
 					if (url.includes("bsky.network")) {
 						return url;
 					}
-					return `${service}?url=${url}&ll&af&default=1&n=-1`;
+					return `https://wsrv.nl?url=${url}&ll&af&default=1&n=-1`;
 				});
 			} else {
 				newUrls = urls.map(
-					(url) => `${service}?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
+					(url) =>
+						`https://wsrv.nl?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
 				);
 			}
 
@@ -40,7 +42,7 @@ export function Images({ urls }: { urls: string[] }) {
 		} else {
 			return urls;
 		}
-	}, [service]);
+	}, [settings.data.resize_service]);
 
 	const scrollPrev = useCallback(() => {
 		if (emblaApi) emblaApi.scrollPrev();
@@ -50,23 +52,27 @@ export function Images({ urls }: { urls: string[] }) {
 		if (emblaApi) emblaApi.scrollNext();
 	}, [emblaApi]);
 
-	const updateSlidesInView = useCallback((emblaApi) => {
+	const updateSlidesInView = useCallback(() => {
 		setSlidesInView((slidesInView) => {
-			if (slidesInView.length === emblaApi.slideNodes().length) {
-				emblaApi.off("slidesInView", updateSlidesInView);
+			if (slidesInView.length === emblaApi?.slideNodes().length) {
+				emblaApi?.off("slidesInView", updateSlidesInView);
 			}
 
 			const inView = emblaApi
-				.slidesInView()
+				?.slidesInView()
 				.filter((index) => !slidesInView.includes(index));
 
-			return slidesInView.concat(inView);
+			if (inView) {
+				return slidesInView.concat(inView);
+			} else {
+				return slidesInView;
+			}
 		});
-	}, []);
+	}, [emblaApi]);
 
 	useEffect(() => {
 		if (emblaApi && urls.length > 1) {
-			updateSlidesInView(emblaApi);
+			updateSlidesInView();
 
 			emblaApi.on("slidesInView", updateSlidesInView);
 			emblaApi.on("reInit", updateSlidesInView);

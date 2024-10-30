@@ -1,5 +1,5 @@
 import { commands } from "@/commands.gen";
-import { decodeZapInvoice, formatCreatedAt } from "@/commons";
+import { createdAt, decodeZapInvoice } from "@/commons";
 import { Note, RepostIcon, Spinner, User } from "@/components";
 import { LumeEvent, LumeWindow, useEvent } from "@/system";
 import { Kind, type NostrEvent } from "@/types";
@@ -300,7 +300,7 @@ function TextNote({ event }: { event: LumeEvent }) {
 								<div className="flex items-baseline justify-between w-full">
 									<User.Name className="text-sm font-semibold leading-tight" />
 									<span className="text-sm leading-tight text-black/50 dark:text-white/50">
-										{formatCreatedAt(event.created_at)}
+										{createdAt(event.created_at)}
 									</span>
 								</div>
 								<div className="inline-flex items-baseline gap-1 text-xs">

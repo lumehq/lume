@@ -1,10 +1,15 @@
 import { commands } from "@/commands.gen";
-import { appSettings, cn, displayNpub } from "@/commons";
+import { cn, displayNpub } from "@/commons";
 import { RepostIcon, Spinner } from "@/components";
+import { settingsQueryOptions } from "@/routes/__root";
 import type { Metadata } from "@/types";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useStore } from "@tanstack/react-store";
+import {
+	useMutation,
+	useQuery,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useCallback, useTransition } from "react";
@@ -15,7 +20,7 @@ export function NoteRepost({
 	smol = false,
 }: { label?: boolean; smol?: boolean }) {
 	const event = useNoteContext();
-	const visible = useStore(appSettings, (state) => state.display_repost_button);
+	const settings = useSuspenseQuery(settingsQueryOptions);
 	const queryClient = useQueryClient();
 
 	const { isLoading, data: status } = useQuery({
@@ -28,7 +33,7 @@ export function NoteRepost({
 				return false;
 			}
 		},
-		enabled: visible,
+		enabled: settings.data.display_repost_button,
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
@@ -120,7 +125,7 @@ export function NoteRepost({
 		});
 	};
 
-	if (!visible) return null;
+	if (!settings.data.display_repost_button) return null;
 
 	return (
 		<Tooltip.Provider>

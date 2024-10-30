@@ -1,23 +1,20 @@
-import { appSettings } from "@/commons";
-import { useStore } from "@tanstack/react-store";
+import { settingsQueryOptions } from "@/routes/__root";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 export function ImagePreview({ url }: { url: string }) {
-	const [service, visible] = useStore(appSettings, (state) => [
-		state.image_resize_service,
-		state.display_media,
-	]);
+	const settings = useSuspenseQuery(settingsQueryOptions);
 
 	const imageUrl = useMemo(() => {
-		if (service?.length) {
-			const newUrl = `${service}?url=${url}&ll&af&default=1&n=-1`;
+		if (settings.data.resize_service) {
+			const newUrl = `https://wsrv.nl?url=${url}&ll&af&default=1&n=-1`;
 			return newUrl;
 		} else {
 			return url;
 		}
-	}, [service]);
+	}, [settings.data.resize_service]);
 
-	if (!visible) {
+	if (!settings.data.display_media) {
 		return (
 			<a
 				href={url}

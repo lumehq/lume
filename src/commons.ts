@@ -3,7 +3,6 @@ import type {
 	MaybePromise,
 	PersistedQuery,
 } from "@tanstack/query-persist-client-core";
-import { Store } from "@tanstack/react-store";
 import { ask, message, open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
@@ -16,76 +15,79 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { decode } from "light-bolt11-decoder";
 import { twMerge } from "tailwind-merge";
-import type { RichEvent, Settings } from "./commands.gen";
+import type { RichEvent } from "./commands.gen";
 import { LumeEvent } from "./system";
-import type { LumeColumn, NostrEvent } from "./types";
-
-dayjs.extend(relativeTime);
-dayjs.extend(updateLocale);
-
-dayjs.updateLocale("en", {
-	relativeTime: {
-		past: "%s ago",
-		s: "just now",
-		m: "1m",
-		mm: "%dm",
-		h: "1h",
-		hh: "%dh",
-		d: "1d",
-		dd: "%dd",
-	},
-});
+import type { NostrEvent } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
 export const isImagePath = (path: string) => {
-	for (const suffix of ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"]) {
-		if (path.endsWith(suffix)) return true;
+	const exts = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
+
+	for (const suffix of exts) {
+		if (path.endsWith(suffix)) {
+			return true;
+		}
 	}
+
 	return false;
 };
 
-export const isImageUrl = (url: string) => {
-	try {
-		if (!url) return false;
-		const ext = new URL(url).pathname.split(".").pop();
-		return ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"].includes(ext);
-	} catch {
-		return false;
-	}
-};
+export function createdAt(time: number) {
+	// Config for dayjs
+	dayjs.extend(relativeTime);
+	dayjs.extend(updateLocale);
 
-export function formatCreatedAt(time: number, message = false) {
-	let formated: string;
+	// Config locale text
+	dayjs.updateLocale("en", {
+		relativeTime: {
+			past: "%s ago",
+			s: "just now",
+			m: "1m",
+			mm: "%dm",
+			h: "1h",
+			hh: "%dh",
+			d: "1d",
+			dd: "%dd",
+		},
+	});
 
 	const now = dayjs();
 	const inputTime = dayjs.unix(time);
 	const diff = now.diff(inputTime, "hour");
 
-	if (message) {
-		if (diff < 12) {
-			formated = inputTime.format("HH:mm A");
-		} else {
-			formated = inputTime.format("MMM DD");
-		}
+	if (diff < 24) {
+		return inputTime.from(now, true);
 	} else {
-		if (diff < 24) {
-			formated = inputTime.from(now, true);
-		} else {
-			formated = inputTime.format("MMM DD");
-		}
+		return inputTime.format("MMM DD");
 	}
-
-	return formated;
 }
 
-export function replyTime(time: number) {
-	const inputTime = dayjs.unix(time);
-	const formated = inputTime.format("MM-DD-YY HH:mm");
+export function replyAt(time: number) {
+	// Config for dayjs
+	dayjs.extend(relativeTime);
+	dayjs.extend(updateLocale);
 
-	return formated;
+	// Config locale text
+	dayjs.updateLocale("en", {
+		relativeTime: {
+			past: "%s ago",
+			s: "just now",
+			m: "1m",
+			mm: "%dm",
+			h: "1h",
+			hh: "%dh",
+			d: "1d",
+			dd: "%dd",
+		},
+	});
+
+	const inputTime = dayjs.unix(time);
+	const format = inputTime.format("MM-DD-YY HH:mm");
+
+	return format;
 }
 
 export function displayNpub(pubkey: string, len: number) {
@@ -114,7 +116,7 @@ export function displayLongHandle(str: string) {
 	return `${handle.substring(0, 16)}...@${service}`;
 }
 
-// source: https://github.com/synonymdev/bitkit/blob/master/src/utils/displayValues/index.ts
+// Source: https://github.com/synonymdev/bitkit/blob/master/src/utils/displayValues/index.ts
 export function getBitcoinDisplayValues(satoshis: number) {
 	let bitcoinFormatted = new BitcoinUnit(satoshis, "satoshis")
 		.getValue()
@@ -145,20 +147,27 @@ export function getBitcoinDisplayValues(satoshis: number) {
 	};
 }
 
-export function decodeZapInvoice(tags?: string[][]) {
+export function decodeZapInvoice(tags: string[][]) {
 	const invoice = tags.find((tag) => tag[0] === "bolt11")?.[1];
 	if (!invoice) return;
 
 	const decodedInvoice = decode(invoice);
-	const amountSection = decodedInvoice.sections.find(
+	const section = decodedInvoice.sections.find(
 		(s: { name: string }) => s.name === "amount",
 	);
 
-	// @ts-ignore, its fine.
-	const amount = Number.parseInt(amountSection.value) / 1000;
-	const displayValue = getBitcoinDisplayValues(amount);
+	if (!section) {
+		return null;
+	}
 
-	return displayValue;
+	if (section.name === "amount") {
+		const amount = Number.parseInt(section.value) / 1000;
+		const displayValue = getBitcoinDisplayValues(amount);
+
+		return displayValue;
+	} else {
+		return null;
+	}
 }
 
 export async function checkForAppUpdates(silent: boolean) {
@@ -277,18 +286,3 @@ export function newQueryStorage(
 			(await store.delete(key)) as unknown as MaybePromise<void>,
 	};
 }
-
-export const appSettings = new Store<Settings>({
-	proxy: null,
-	image_resize_service: "https://wsrv.nl",
-	use_relay_hint: true,
-	content_warning: true,
-	trusted_only: true,
-	display_avatar: true,
-	display_zap_button: true,
-	display_repost_button: true,
-	display_media: true,
-	transparent: true,
-});
-
-export const appColumns = new Store<LumeColumn[]>([]);

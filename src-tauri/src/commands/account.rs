@@ -5,7 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, State};
 
-use crate::{common::get_all_accounts, Nostr};
+use crate::{common::get_all_accounts, Nostr, Settings};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
 struct Account {
@@ -248,4 +248,22 @@ pub async fn set_signer(
             }
         }
     }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_app_settings(state: State<'_, Nostr>) -> Result<Settings, String> {
+    let settings = state.settings.read().await.clone();
+    Ok(settings)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn set_app_settings(settings: String, state: State<'_, Nostr>) -> Result<(), String> {
+    let parsed: Settings = serde_json::from_str(&settings).map_err(|e| e.to_string())?;
+    let mut settings = state.settings.write().await;
+    // Update state
+    settings.clone_from(&parsed);
+
+    Ok(())
 }

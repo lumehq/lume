@@ -1,6 +1,5 @@
-import { replyTime } from "@/commons";
-import { Note, Spinner } from "@/components";
-import { User } from "@/components/user";
+import { replyAt } from "@/commons";
+import { Note, Spinner, User } from "@/components";
 import { LumeWindow, useEvent } from "@/system";
 import { nip19 } from "nostr-tools";
 import { type ReactNode, memo, useMemo } from "react";
@@ -52,7 +51,7 @@ export const MentionNote = memo(function MentionNote({
 								</div>
 								<div className="flex-1 flex items-center justify-between">
 									<span className="text-sm text-neutral-500">
-										{replyTime(event.created_at)}
+										{replyAt(event.created_at)}
 									</span>
 									<div className="invisible group-hover:visible flex items-center justify-end">
 										<button

@@ -1,5 +1,5 @@
 import { commands } from "@/commands.gen";
-import { appColumns, cn } from "@/commons";
+import { cn } from "@/commons";
 import { PublishIcon } from "@/components";
 import { User } from "@/components/user";
 import { LumeWindow } from "@/system";
@@ -14,6 +14,7 @@ import {
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useCallback, useEffect } from "react";
 
 export const Route = createLazyFileRoute("/_app")({
@@ -107,7 +108,7 @@ function Account({ pubkey }: { pubkey: string }) {
 
 			const items = await Promise.all([
 				MenuItem.new({
-					text: "Activate",
+					text: "Unlock",
 					enabled: !isActive || true,
 					action: async () => await commands.setSigner(pubkey),
 				}),
@@ -117,8 +118,29 @@ function Account({ pubkey }: { pubkey: string }) {
 					action: () => LumeWindow.openProfile(pubkey),
 				}),
 				MenuItem.new({
+					text: "Update Profile",
+					action: () =>
+						LumeWindow.openPopup(
+							`${pubkey}/set-profile`,
+							"Update Profile",
+							true,
+						),
+				}),
+				PredefinedMenuItem.new({ item: "Separator" }),
+				MenuItem.new({
 					text: "Copy Public Key",
 					action: async () => await writeText(pubkey),
+				}),
+				MenuItem.new({
+					text: "Copy Private Key",
+					action: async () => {
+						const res = await commands.getPrivateKey(pubkey);
+						if (res.status === "ok") {
+							await writeText(res.data);
+						} else {
+							await message(res.error, { kind: "error" });
+						}
+					},
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
@@ -127,19 +149,12 @@ function Account({ pubkey }: { pubkey: string }) {
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
-					text: "Delete Account",
+					text: "Logout",
 					action: async () => {
 						const res = await commands.deleteAccount(pubkey);
 
 						if (res.status === "ok") {
 							router.invalidate();
-
-							// Delete column associate with this account
-							appColumns.setState((prev) =>
-								prev.filter((col) =>
-									col.account ? col.account !== pubkey : col,
-								),
-							);
 
 							// Check remain account
 							const newAccounts = context.accounts.filter(
@@ -176,6 +191,7 @@ function Account({ pubkey }: { pubkey: string }) {
 		<button
 			type="button"
 			onClick={(e) => showContextMenu(e)}
+			onContextMenu={(e) => showContextMenu(e)}
 			className="h-10 relative"
 		>
 			<User.Provider pubkey={pubkey}>

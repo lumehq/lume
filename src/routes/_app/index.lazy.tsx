@@ -1,11 +1,10 @@
 import { commands } from "@/commands.gen";
-import { appColumns, displayNpub } from "@/commons";
+import { displayNpub } from "@/commons";
 import { Column, Spinner } from "@/components";
 import { LumeWindow } from "@/system";
 import type { ColumnEvent, LumeColumn, Metadata } from "@/types";
 import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
 import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
-import { useStore } from "@tanstack/react-store";
 import { listen } from "@tauri-apps/api/event";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -26,10 +25,11 @@ export const Route = createLazyFileRoute("/_app/")({
 });
 
 function Screen() {
+	const context = Route.useRouteContext();
 	const initialAppColumns = Route.useLoaderData();
 	const router = useRouter();
-	const columns = useStore(appColumns, (state) => state);
 
+	const [columns, setColumns] = useState<LumeColumn[]>([]);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		watchDrag: false,
 		loop: false,
@@ -52,9 +52,9 @@ function Screen() {
 			const res = await commands.closeColumn(label);
 
 			if (res.status === "ok") {
-				appColumns.setState((prev) => prev.filter((t) => t.label !== label));
+				setColumns((prev) => prev.filter((t) => t.label !== label));
 			} else {
-				await message(res.error, { kind: "errror" });
+				await message(res.error, { kind: "error" });
 			}
 		},
 		[columns],
@@ -64,7 +64,7 @@ function Screen() {
 		const exist = columns.find((col) => col.label === column.label);
 
 		if (!exist) {
-			appColumns.setState((prev) => [column, ...prev]);
+			setColumns((prev) => [column, ...prev]);
 
 			if (emblaApi) {
 				emblaApi.scrollTo(0, true);
@@ -85,7 +85,7 @@ function Screen() {
 				if (direction === "left") newCols.splice(colIndex - 1, 0, existColumn);
 				if (direction === "right") newCols.splice(colIndex + 1, 0, existColumn);
 
-				appColumns.setState(() => newCols);
+				setColumns(() => newCols);
 			}
 		},
 		150,
@@ -100,10 +100,8 @@ function Screen() {
 		const newCols = columns.slice();
 		newCols[currentColIndex] = updatedCol;
 
-		appColumns.setState(() => newCols);
+		setColumns(() => newCols);
 	}, 150);
-
-	const reset = useDebouncedCallback(() => appColumns.setState(() => []), 150);
 
 	useEffect(() => {
 		if (emblaApi) {
@@ -119,7 +117,6 @@ function Screen() {
 
 	useEffect(() => {
 		const unlisten = listen<ColumnEvent>("columns", (data) => {
-			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
 			if (data.payload.type === "remove") remove(data.payload.label);
 			if (data.payload.type === "move")
@@ -145,12 +142,14 @@ function Screen() {
 
 	useEffect(() => {
 		if (initialAppColumns) {
-			appColumns.setState(() => initialAppColumns);
+			setColumns(() => initialAppColumns);
 		}
 	}, [initialAppColumns]);
 
 	useEffect(() => {
-		window.localStorage.setItem("columns", JSON.stringify(columns));
+		(async () => {
+			await context.store.set("columns", JSON.stringify(columns));
+		})();
 	}, [columns]);
 
 	return (

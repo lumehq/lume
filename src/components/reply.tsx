@@ -1,5 +1,5 @@
-import { cn, replyTime } from "@/commons";
-import { Note } from "@/components/note";
+import { cn, replyAt } from "@/commons";
+import { Note, User } from "@/components";
 import { type LumeEvent, LumeWindow } from "@/system";
 import { CaretDown } from "@phosphor-icons/react";
 import { Link, useSearch } from "@tanstack/react-router";
@@ -10,7 +10,6 @@ import { type ReactNode, memo, useCallback, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./note/mentions/hashtag";
 import { MentionUser } from "./note/mentions/user";
-import { User } from "./user";
 
 export const ReplyNote = memo(function ReplyNote({
 	event,
@@ -66,7 +65,7 @@ export const ReplyNote = memo(function ReplyNote({
 						</div>
 						<div className="flex-1 flex items-center justify-between">
 							<span className="text-sm text-neutral-500">
-								{replyTime(event.created_at)}
+								{replyAt(event.created_at)}
 							</span>
 							<div className="flex items-center justify-end">
 								<Note.Reply smol />
@@ -147,7 +146,7 @@ function ChildReply({ event }: { event: LumeEvent }) {
 					</div>
 					<div className="flex-1 flex items-center justify-between">
 						<span className="text-sm text-neutral-500">
-							{replyTime(event.created_at)}
+							{replyAt(event.created_at)}
 						</span>
 						<div className="invisible group-hover:visible flex items-center justify-end">
 							<Note.Reply smol />

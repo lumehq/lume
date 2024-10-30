@@ -1,4 +1,4 @@
-import { cn, formatCreatedAt } from "@/commons";
+import { cn, createdAt } from "@/commons";
 import { useMemo } from "react";
 
 export function UserTime({
@@ -8,11 +8,11 @@ export function UserTime({
 	time: number;
 	className?: string;
 }) {
-	const createdAt = useMemo(() => formatCreatedAt(time), [time]);
+	const displayCreatedAt = useMemo(() => createdAt(time), [time]);
 
 	return (
 		<div className={cn("text-neutral-600 dark:text-neutral-400", className)}>
-			{createdAt}
+			{displayCreatedAt}
 		</div>
 	);
 }

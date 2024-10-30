@@ -36,6 +36,7 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
         Ok(RichEvent { raw, parsed })
     } else {
         let filter = Filter::new().id(event_id);
+
         let mut rich_event = RichEvent {
             raw: "".to_string(),
             parsed: None,

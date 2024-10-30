@@ -136,9 +136,9 @@ async getProfile(id: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async setProfile(profile: Profile) : Promise<Result<string, string>> {
+async setProfile(newProfile: string) : Promise<Result<string, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("set_profile", { profile }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_profile", { newProfile }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -283,22 +283,6 @@ async copyFriend(npub: string) : Promise<Result<boolean, string>> {
 async getNotifications(id: string) : Promise<Result<string[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_notifications", { id }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getUserSettings() : Promise<Result<Settings, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_user_settings") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async setUserSettings(settings: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("set_user_settings", { settings }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -487,6 +471,22 @@ async openWindow(window: NewWindow) : Promise<Result<string, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async getAppSettings() : Promise<Result<Settings, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_app_settings") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async setAppSettings(settings: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("set_app_settings", { settings }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -504,10 +504,9 @@ export type Column = { label: string; url: string; x: number; y: number; width: 
 export type Mention = { pubkey: string; avatar: string; display_name: string; name: string }
 export type Meta = { content: string; images: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type NewWindow = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean; closable: boolean }
-export type Profile = { name: string; display_name: string; about: string | null; picture: string; banner: string | null; nip05: string | null; lud16: string | null; website: string | null }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
-export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; trusted_only: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean; transparent: boolean }
+export type Settings = { resize_service: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
 export type TAURI_CHANNEL<TSend> = null
 
 /** tauri-specta globals **/

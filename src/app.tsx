@@ -45,7 +45,7 @@ broadcastQueryClient({
 
 const router = createRouter({
 	routeTree,
-	context: { queryClient, platform },
+	context: { store, queryClient, platform },
 	Wrap: ({ children }) => {
 		return (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

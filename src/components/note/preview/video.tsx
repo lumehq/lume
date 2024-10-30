@@ -1,10 +1,10 @@
-import { appSettings } from "@/commons";
-import { useStore } from "@tanstack/react-store";
+import { settingsQueryOptions } from "@/routes/__root";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export function VideoPreview({ url }: { url: string }) {
-	const visible = useStore(appSettings, (state) => state.display_media);
+	const settings = useSuspenseQuery(settingsQueryOptions);
 
-	if (!visible) {
+	if (!settings.data.display_zap_button) {
 		return (
 			<a
 				href={url}
