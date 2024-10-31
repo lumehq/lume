@@ -191,9 +191,9 @@ function Newsfeeds() {
 							label: "discover_newsfeeds",
 						})
 					}
-					className="h-12 px-3 flex items-center justify-between bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400"
+					className="h-9 w-full px-3 flex items-center justify-between bg-neutral-200/50 hover:bg-neutral-200 rounded-lg dark:bg-neutral-800/50 dark:hover:bg-neutral-800"
 				>
-					<span className="text-sm font-medium">Discover newsfeeds</span>
+					<span className="text-xs font-medium">Discover newsfeeds</span>
 					<ArrowRight className="size-4" weight="bold" />
 				</button>
 			</div>
@@ -345,9 +345,9 @@ function Interests() {
 							label: "discover_interests",
 						})
 					}
-					className="h-12 px-3 flex items-center justify-between bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400"
+					className="h-9 w-full px-3 flex items-center justify-between bg-neutral-200/50 hover:bg-neutral-200 rounded-lg dark:bg-neutral-800/50 dark:hover:bg-neutral-800"
 				>
-					<span className="text-sm font-medium">Discover interests</span>
+					<span className="text-xs font-medium">Discover interests</span>
 					<ArrowRight className="size-4" weight="bold" />
 				</button>
 			</div>

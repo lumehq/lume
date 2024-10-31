@@ -51,7 +51,7 @@ function Screen() {
 			data?.pages
 				.flat()
 				.filter(
-					(item) => item.tags.filter((tag) => tag[0] === "p")?.length > 0,
+					(item) => item.tags.filter((tag) => tag[0] === "t")?.length > 0,
 				),
 		refetchOnWindowFocus: false,
 	});
@@ -68,7 +68,7 @@ function Screen() {
 			return (
 				<div
 					key={item.id}
-					className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
+					className="mb-3 group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
 				>
 					<div className="px-2 pt-2">
 						<ScrollArea.Root
