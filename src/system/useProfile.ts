@@ -19,7 +19,7 @@ export function useProfile(pubkey: string, data?: string) {
 				case "naddr":
 					return decoded.data.pubkey;
 				default:
-					return pubkey;
+					return normalized;
 			}
 		} catch {
 			return pubkey;

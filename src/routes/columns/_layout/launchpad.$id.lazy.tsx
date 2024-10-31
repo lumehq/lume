@@ -182,10 +182,20 @@ function Newsfeeds() {
 				) : (
 					data?.map((item) => renderItem(item))
 				)}
-				<div className="h-12 px-3 flex items-center justify-between items-betwe bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400">
+				<button
+					type="button"
+					onClick={() =>
+						LumeWindow.openColumn({
+							name: "Newsfeeds",
+							url: "/columns/discover-newsfeeds",
+							label: "discover_newsfeeds",
+						})
+					}
+					className="h-12 px-3 flex items-center justify-between bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400"
+				>
 					<span className="text-sm font-medium">Discover newsfeeds</span>
 					<ArrowRight className="size-4" weight="bold" />
-				</div>
+				</button>
 			</div>
 		</div>
 	);
@@ -326,10 +336,20 @@ function Interests() {
 				) : (
 					data?.map((item) => renderItem(item))
 				)}
-				<div className="h-12 px-3 flex items-center justify-between items-betwe bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400">
+				<button
+					type="button"
+					onClick={() =>
+						LumeWindow.openColumn({
+							name: "Interests",
+							url: "/columns/discover-interests",
+							label: "discover_interests",
+						})
+					}
+					className="h-12 px-3 flex items-center justify-between bg-neutral-200/50 rounded-xl text-blue-600 dark:text-blue-400"
+				>
 					<span className="text-sm font-medium">Discover interests</span>
 					<ArrowRight className="size-4" weight="bold" />
-				</div>
+				</button>
 			</div>
 		</div>
 	);

@@ -5,7 +5,7 @@ use specta::Type;
 use std::{str::FromStr, time::Duration};
 use tauri::{Emitter, Manager, State};
 
-use crate::{common::process_event, Nostr, RichEvent};
+use crate::{common::process_event, Nostr, RichEvent, FETCH_LIMIT};
 
 #[derive(Clone, Serialize, Deserialize, Type)]
 pub struct Mention {
@@ -261,6 +261,35 @@ pub async fn get_all_newsfeeds(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn get_all_local_newsfeeds(
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).unwrap_or(Timestamp::now()),
+        None => Timestamp::now(),
+    };
+
+    let filter = Filter::new()
+        .kind(Kind::FollowSet)
+        .limit(FETCH_LIMIT)
+        .until(as_of);
+
+    let events = client
+        .database()
+        .query(vec![filter])
+        .await
+        .map_err(|err| err.to_string())?;
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn set_interest(
     title: String,
     description: Option<String>,
@@ -355,6 +384,35 @@ pub async fn get_all_interests(
     while let Some(event) = rx.next().await {
         events.insert(event);
     }
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_local_interests(
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).unwrap_or(Timestamp::now()),
+        None => Timestamp::now(),
+    };
+
+    let filter = Filter::new()
+        .kinds(vec![Kind::Interests, Kind::InterestSet])
+        .limit(FETCH_LIMIT)
+        .until(as_of);
+
+    let events = client
+        .database()
+        .query(vec![filter])
+        .await
+        .map_err(|err| err.to_string())?;
 
     let alt_events = process_event(client, events, false).await;
 

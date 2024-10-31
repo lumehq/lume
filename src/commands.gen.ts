@@ -208,6 +208,14 @@ async getAllNewsfeeds(id: string) : Promise<Result<RichEvent[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getAllLocalNewsfeeds(until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_local_newsfeeds", { until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async setInterest(title: string, description: string | null, image: string | null, hashtags: string[]) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_interest", { title, description, image, hashtags }) };
@@ -227,6 +235,14 @@ async getInterest(id: string) : Promise<Result<string, string>> {
 async getAllInterests(id: string) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_all_interests", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getAllLocalInterests(until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_local_interests", { until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
