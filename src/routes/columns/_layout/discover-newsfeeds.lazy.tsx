@@ -117,7 +117,7 @@ function Screen() {
 										url: `/columns/groups/${item.id}`,
 									})
 								}
-								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-100 group-hover:bg-blue-600 dark:group-hover:bg-blue-400 group-hover:text-white"
+								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 							>
 								Add
 							</button>

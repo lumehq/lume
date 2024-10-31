@@ -25,7 +25,7 @@ function Layout() {
 	return (
 		<div className="flex flex-col w-screen h-screen">
 			<Topbar />
-			<div className="flex-1 bg-neutral-100 dark:bg-neutral-900 border-t-[.5px] border-black/20 dark:border-white/20">
+			<div className="flex-1 bg-neutral-100 dark:bg-neutral-900 border-t-[.5px] border-black/20 dark:border-white/30">
 				<Outlet />
 			</div>
 		</div>
