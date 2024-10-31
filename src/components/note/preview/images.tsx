@@ -32,10 +32,15 @@ export function Images({ urls }: { urls: string[] }) {
 					return `https://wsrv.nl?url=${url}&ll&af&default=1&n=-1`;
 				});
 			} else {
-				newUrls = urls.map(
-					(url) =>
-						`https://wsrv.nl?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
-				);
+				newUrls = urls.map((url) => {
+					if (url.includes("_next/")) {
+						return url;
+					}
+					if (url.includes("bsky.network")) {
+						return url;
+					}
+					return `https://wsrv.nl?url=${url}&ll&af&default=1&n=-1`;
+				});
 			}
 
 			return newUrls;

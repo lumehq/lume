@@ -42,11 +42,16 @@ function Screen() {
 		const unlisten = getCurrentWindow().listen<string>(
 			"metadata",
 			async (data) => {
-				const payload = data.payload;
-				const event: NostrEvent = JSON.parse(payload);
+				const event: NostrEvent = JSON.parse(data.payload);
 				const metadata: Metadata = JSON.parse(event.content);
 
+				// Update query cache
 				queryClient.setQueryData(["profile", event.pubkey], () => metadata);
+
+				// Reset query cache
+				await queryClient.invalidateQueries({
+					queryKey: ["profile", event.pubkey],
+				});
 			},
 		);
 

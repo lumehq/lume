@@ -30,6 +30,7 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     queue: RwLock<HashSet<PublicKey>>,
+    is_syncing: RwLock<bool>,
     settings: RwLock<Settings>,
 }
 
@@ -218,9 +219,17 @@ fn main() {
                 let _ = client.add_discovery_relay("wss://user.kindpag.es/").await;
 
                 // Connect
-                client.connect_with_timeout(Duration::from_secs(10)).await;
+                client.connect().await;
 
                 client
+            });
+
+            // Create global state
+            app.manage(Nostr {
+                client,
+                queue: RwLock::new(HashSet::new()),
+                is_syncing: RwLock::new(false),
+                settings: RwLock::new(Settings::default()),
             });
 
             // Trigger some actions for window events
@@ -232,6 +241,36 @@ fn main() {
                         tauri::async_runtime::spawn(async move {
                             let state = handle.state::<Nostr>();
                             let client = &state.client;
+
+                            if *state.is_syncing.read().await {
+                                return;
+                            }
+
+                            let mut is_syncing = state.is_syncing.write().await;
+
+                            // Mark sync in progress
+                            *is_syncing = true;
+
+                            let opts = SyncOptions::default();
+                            let accounts = get_all_accounts();
+
+                            if !accounts.is_empty() {
+                                let public_keys: Vec<PublicKey> = accounts
+                                    .iter()
+                                    .filter_map(|acc| PublicKey::from_str(acc).ok())
+                                    .collect();
+
+                                let filter = Filter::new().pubkeys(public_keys).kinds(vec![
+                                    Kind::TextNote,
+                                    Kind::Repost,
+                                    Kind::Reaction,
+                                    Kind::ZapReceipt,
+                                ]);
+
+                                if let Ok(output) = client.sync(filter, &opts).await {
+                                    println!("Received: {}", output.received.len())
+                                }
+                            }
 
                             let filter = Filter::new().kinds(vec![
                                 Kind::TextNote,
@@ -254,36 +293,43 @@ fn main() {
                                     }
 
                                     let authors = chunk.to_owned();
+
                                     let filter = Filter::new()
-                                        .authors(authors)
+                                        .authors(authors.clone())
                                         .kinds(vec![
                                             Kind::Metadata,
-                                            Kind::TextNote,
                                             Kind::FollowSet,
                                             Kind::Interests,
                                             Kind::InterestSet,
                                         ])
-                                        .limit(2000);
+                                        .limit(1000);
 
-                                    let opts = SyncOptions::default();
+                                    if let Ok(output) = client.sync(filter, &opts).await {
+                                        println!("Received: {}", output.received.len())
+                                    }
 
-                                    if let Err(e) = client.sync(filter, &opts).await {
-                                        println!("Sync error: {}", e)
+                                    let filter = Filter::new()
+                                        .authors(authors)
+                                        .kinds(vec![
+                                            Kind::TextNote,
+                                            Kind::Repost,
+                                            Kind::EventDeletion,
+                                        ])
+                                        .limit(500);
+
+                                    if let Ok(output) = client.sync(filter, &opts).await {
+                                        println!("Received: {}", output.received.len())
                                     }
                                 }
                             }
+
+                            // Mark sync is done
+                            *is_syncing = false;
                         });
                     }
                 }
                 tauri::WindowEvent::Moved(_size) => {}
                 _ => {}
-            });
-
-            // Create global state
-            app.manage(Nostr {
-                client,
-                queue: RwLock::new(HashSet::new()),
-                settings: RwLock::new(Settings::default()),
             });
 
             // Listen for request metadata
@@ -295,28 +341,37 @@ fn main() {
                 tauri::async_runtime::spawn(async move {
                     let state = handle.state::<Nostr>();
                     let client = &state.client;
-                    let mut write_queue = state.queue.write().await;
 
                     if let Ok(public_key) = PublicKey::parse(parsed_payload.id) {
+                        let mut write_queue = state.queue.write().await;
                         write_queue.insert(public_key);
-                    }
+                    };
 
+                    // Wait for [QUEUE_DELAY]
                     sleep(Duration::from_millis(QUEUE_DELAY)).await;
 
                     let read_queue = state.queue.read().await;
 
-                    let filter_opts = FilterOptions::WaitDurationAfterEOSE(Duration::from_secs(2));
-                    let opts = SubscribeAutoCloseOptions::default().filter(filter_opts);
+                    if !read_queue.is_empty() {
+                        let authors: HashSet<PublicKey> = read_queue.iter().copied().collect();
 
-                    let limit = read_queue.len() * 2;
-                    let authors: Vec<PublicKey> = read_queue.iter().copied().collect();
-                    let filter = Filter::new()
-                        .authors(authors)
-                        .kind(Kind::Metadata)
-                        .limit(limit);
+                        let filter = Filter::new()
+                            .authors(authors)
+                            .kind(Kind::Metadata)
+                            .limit(200);
 
-                    if client.subscribe(vec![filter], Some(opts)).await.is_ok() {
+                        let opts = SubscribeAutoCloseOptions::default()
+                            .filter(FilterOptions::WaitDurationAfterEOSE(Duration::from_secs(2)));
+
+                        // Drop queue, you don't need it at this time anymore
+                        drop(read_queue);
+                        // Clear queue
+                        let mut write_queue = state.queue.write().await;
                         write_queue.clear();
+
+                        if let Err(e) = client.subscribe(vec![filter], Some(opts)).await {
+                            println!("Subscribe error: {}", e);
+                        }
                     }
                 });
             });
@@ -351,7 +406,7 @@ fn main() {
                         .subscribe_with_id(subscription_id, vec![filter], None)
                         .await
                     {
-                        println!("Error: {}", e)
+                        println!("Subscribe error: {}", e)
                     }
                 }
 
@@ -397,7 +452,7 @@ fn main() {
                                     }
                                 } else if event.kind == Kind::Metadata {
                                     if let Err(e) = handle_clone.emit("metadata", event.as_json()) {
-                                        println!("Emitter error: {}", e)
+                                        println!("Emit error: {}", e)
                                     }
                                 } else if event.kind != Kind::RelayList {
                                     let payload = RichEvent {
@@ -414,7 +469,7 @@ fn main() {
                                         "event",
                                         payload,
                                     ) {
-                                        println!("Emitter error: {}", e)
+                                        println!("Emit error: {}", e)
                                     }
                                 }
                             }

@@ -29,25 +29,26 @@ export function useProfile(pubkey: string, data?: string) {
 	const { isLoading, data: profile } = useQuery({
 		queryKey: ["profile", hex],
 		queryFn: async () => {
-			if (data) {
+			if (data?.length) {
 				const metadata: Metadata = JSON.parse(data);
 				return metadata;
 			}
 
-			const query = await commands.getProfile(hex);
+			const res = await commands.getProfile(hex);
 
-			if (query.status === "ok") {
-				const metadata: Metadata = JSON.parse(query.data);
+			if (res.status === "ok") {
+				const metadata: Metadata = JSON.parse(res.data);
 				return metadata;
 			} else {
 				await getCurrentWindow().emit("request_metadata", { id: hex });
-				return {};
+				throw new Error(res.error);
 			}
 		},
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		enabled: !!hex,
+		retry: false,
 	});
 
 	return { isLoading, profile };
