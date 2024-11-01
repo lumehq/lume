@@ -402,7 +402,10 @@ pub async fn repost(raw: String, state: State<'_, Nostr>) -> Result<String, Stri
 pub async fn is_reposted(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
     let signer = client.signer().await.map_err(|err| err.to_string())?;
-    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
+    let public_key = signer
+        .get_public_key()
+        .await
+        .map_err(|err| err.to_string())?;
 
     let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
 
@@ -434,8 +437,13 @@ pub async fn request_delete(id: String, state: State<'_, Nostr>) -> Result<(), S
 pub async fn is_deleted_event(id: String, state: State<'_, Nostr>) -> Result<bool, String> {
     let client = &state.client;
     let signer = client.signer().await.map_err(|err| err.to_string())?;
-    let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
+    let public_key = signer
+        .get_public_key()
+        .await
+        .map_err(|err| err.to_string())?;
+
     let event_id = EventId::from_str(&id).map_err(|err| err.to_string())?;
+
     let filter = Filter::new()
         .author(public_key)
         .event(event_id)

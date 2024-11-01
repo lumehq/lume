@@ -1,4 +1,5 @@
 use keyring::Entry;
+use nostr_connect::prelude::*;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -61,7 +62,6 @@ pub async fn import_account(
     let public_key = keys.public_key();
     let npub = public_key.to_bech32().map_err(|err| err.to_string())?;
 
-    let signer = NostrSigner::Keys(keys);
     let keyring = Entry::new("Lume Safe Storage", &npub).map_err(|e| e.to_string())?;
 
     let account = Account {
@@ -74,12 +74,7 @@ pub async fn import_account(
     keyring.set_password(&pwd).map_err(|e| e.to_string())?;
 
     // Update signer
-    client.set_signer(Some(signer)).await;
-
-    // Get user's profile
-    let _ = client
-        .fetch_metadata(public_key, Some(Duration::from_secs(4)))
-        .await;
+    client.set_signer(keys).await;
 
     Ok(npub)
 }
@@ -88,53 +83,40 @@ pub async fn import_account(
 #[specta::specta]
 pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
+    let bunker_uri = NostrConnectURI::parse(&uri).map_err(|err| err.to_string())?;
 
-    match NostrConnectURI::parse(uri.clone()) {
-        Ok(bunker_uri) => {
-            // Local user
-            let app_keys = Keys::generate();
-            let app_secret = app_keys.secret_key().to_secret_hex();
+    // Local user
+    let app_keys = Keys::generate();
+    let app_secret = app_keys.secret_key().to_secret_hex();
 
-            // Get remote user
-            let remote_user = bunker_uri.signer_public_key().unwrap();
-            let remote_npub = remote_user.to_bech32().unwrap();
+    // Get remote user
+    let remote_user = bunker_uri.remote_signer_public_key().unwrap();
+    let remote_npub = remote_user.to_bech32().map_err(|err| err.to_string())?;
 
-            match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None) {
-                Ok(signer) => {
-                    let mut url = Url::parse(&uri).unwrap();
-                    let query: Vec<(String, String)> = url
-                        .query_pairs()
-                        .filter(|(name, _)| name != "secret")
-                        .map(|(name, value)| (name.into_owned(), value.into_owned()))
-                        .collect();
-                    url.query_pairs_mut().clear().extend_pairs(&query);
+    // Init nostr connect
+    let nostr_connect = NostrConnect::new(bunker_uri, app_keys, Duration::from_secs(120), None)
+        .map_err(|err| err.to_string())?;
 
-                    let key = format!("{}_nostrconnect", remote_npub);
-                    let keyring = Entry::new("Lume Safe Storage", &key).unwrap();
-                    let account = Account {
-                        secret_key: app_secret,
-                        nostr_connect: Some(url.to_string()),
-                    };
+    let bunker_uri = nostr_connect
+        .bunker_uri()
+        .await
+        .map_err(|err| err.to_string())?;
 
-                    // Save secret key to keyring
-                    let pwd = serde_json::to_string(&account).map_err(|e| e.to_string())?;
-                    keyring.set_password(&pwd).map_err(|e| e.to_string())?;
+    let keyring = Entry::new("Lume Safe Storage", &remote_npub).map_err(|err| err.to_string())?;
 
-                    // Update signer
-                    let _ = client.set_signer(Some(signer.into())).await;
+    let account = Account {
+        secret_key: app_secret,
+        nostr_connect: Some(bunker_uri.to_string()),
+    };
 
-                    // Get user's profile
-                    let _ = client
-                        .fetch_metadata(remote_user, Some(Duration::from_secs(4)))
-                        .await;
+    // Save secret key to keyring
+    let pwd = serde_json::to_string(&account).map_err(|e| e.to_string())?;
+    keyring.set_password(&pwd).map_err(|e| e.to_string())?;
 
-                    Ok(remote_npub)
-                }
-                Err(err) => Err(err.to_string()),
-            }
-        }
-        Err(err) => Err(err.to_string()),
-    }
+    // Update signer
+    let _ = client.set_signer(nostr_connect).await;
+
+    Ok(remote_npub)
 }
 
 #[tauri::command]
@@ -186,7 +168,7 @@ pub async fn has_signer(id: String, state: State<'_, Nostr>) -> Result<bool, Str
 
     match client.signer().await {
         Ok(signer) => {
-            let signer_key = signer.public_key().await.map_err(|e| e.to_string())?;
+            let signer_key = signer.get_public_key().await.map_err(|e| e.to_string())?;
             let is_match = signer_key == public_key;
 
             Ok(is_match)
@@ -222,10 +204,9 @@ pub async fn set_signer(
         None => {
             let secret_key = SecretKey::from_str(&account.secret_key).map_err(|e| e.to_string())?;
             let keys = Keys::new(secret_key);
-            let signer = NostrSigner::Keys(keys);
 
             // Update signer
-            client.set_signer(Some(signer)).await;
+            client.set_signer(keys).await;
             // Emit to front-end
             handle.emit("signer-updated", ()).unwrap();
 
@@ -235,10 +216,10 @@ pub async fn set_signer(
             let uri = NostrConnectURI::parse(bunker).map_err(|e| e.to_string())?;
             let app_keys = Keys::from_str(&account.secret_key).map_err(|e| e.to_string())?;
 
-            match Nip46Signer::new(uri, app_keys, Duration::from_secs(120), None) {
+            match NostrConnect::new(uri, app_keys, Duration::from_secs(120), None) {
                 Ok(signer) => {
                     // Update signer
-                    client.set_signer(Some(signer.into())).await;
+                    client.set_signer(signer).await;
                     // Emit to front-end
                     handle.emit("signer-updated", ()).unwrap();
 
