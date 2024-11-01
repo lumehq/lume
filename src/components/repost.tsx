@@ -21,13 +21,15 @@ export const RepostNote = memo(function RepostNote({
 			{isLoading ? (
 				<div className="flex items-center justify-center h-20 gap-2">
 					<Spinner />
-					<span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+					<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
 						Loading event...
-					</span>
+					</p>
 				</div>
 			) : isError || !data ? (
 				<div className="flex items-center justify-center h-20">
-					Event not found within your current relay set
+					<p className="text-sm">
+						Repost event not found within your current relay set
+					</p>
 				</div>
 			) : (
 				<Note.Provider event={data}>

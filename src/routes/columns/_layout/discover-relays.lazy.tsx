@@ -108,17 +108,22 @@ function Screen() {
 			<ScrollArea.Viewport ref={ref} className="relative h-full px-3 pb-3">
 				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 					{isLoading ? (
-						<div className="inline-flex items-center gap-1.5">
-							<Spinner className="size-4" />
-							Loading...
+						<div className="flex items-center justify-center h-20 gap-2">
+							<Spinner />
+							<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+								Loading event...
+							</p>
 						</div>
 					) : isError ? (
 						<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
-							<p className="text-center">{error?.message ?? "Error"}</p>
+							<p className="text-sm text-center">{error?.message ?? "Error"}</p>
 						</div>
 					) : !data?.length ? (
 						<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
-							<p className="text-center">Empty.</p>
+							<p className="text-sm text-center">
+								Nothing to show yet, you can use Lume more and comeback lack to
+								see new events.
+							</p>
 						</div>
 					) : (
 						data?.map((item) => renderItem(item))
