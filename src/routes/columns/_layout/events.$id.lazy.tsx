@@ -33,7 +33,7 @@ function Screen() {
 		>
 			<ScrollArea.Viewport
 				ref={ref}
-				className="relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="pb-3 relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
 				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 					<RootEvent />
@@ -57,16 +57,16 @@ function RootEvent() {
 
 	if (isLoading) {
 		return (
-			<div className="flex items-center gap-2 text-sm">
-				<Spinner />
-				Loading...
+			<div className="h-20 flex items-center justify-center gap-2 border-b-[.5px] border-neutral-300 dark:border-neutral-700">
+				<Spinner className="size-4" />
+				<p className="text-sm">Loading...</p>
 			</div>
 		);
 	}
 
 	if (isError || !event) {
 		return (
-			<div className="flex items-center gap-2 text-sm text-red-500">
+			<div className="flex items-center gap-2 text-sm text-red-500 border-b-[.5px] border-neutral-300 dark:border-neutral-700">
 				{error?.message || "Event not found within your current relay set"}
 			</div>
 		);
@@ -80,7 +80,7 @@ function RootEvent() {
 					<Note.Menu />
 				</div>
 				<Note.ContentLarge className="px-3" />
-				<div className="flex items-center gap-2 px-3 mt-6 h-12 rounded-b-xl bg-neutral-50 dark:bg-white/5">
+				<div className="select-text flex items-center gap-2 px-3 mt-6 h-12 bg-neutral-50 dark:bg-white/5">
 					<Note.Reply label />
 					<Note.Repost label />
 					<Note.Zap label />
@@ -94,7 +94,7 @@ function ReplyList() {
 	const { id } = Route.useParams();
 	const { queryClient } = Route.useRouteContext();
 	const { data, isLoading } = useQuery({
-		queryKey: ["reply", id],
+		queryKey: ["replies", id],
 		queryFn: async () => {
 			const res = await commands.getReplies(id);
 
@@ -183,8 +183,10 @@ function ReplyList() {
 			"event",
 			async (data) => {
 				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
+				console.log(event);
+
 				await queryClient.setQueryData(
-					["reply", id],
+					["replies", id],
 					(prevEvents: LumeEvent[]) => {
 						if (!prevEvents) return [event];
 						return [event, ...prevEvents];
@@ -204,11 +206,9 @@ function ReplyList() {
 				All replies
 			</div>
 			{isLoading ? (
-				<div className="flex items-center justify-center w-full mb-3 h-12 bg-black/5 dark:bg-white/5 rounded-xl">
-					<div className="flex items-center justify-center gap-2">
-						<Spinner className="size-4" />
-						<span className="text-sm font-medium">Getting replies...</span>
-					</div>
+				<div className="flex items-center justify-center gap-2">
+					<Spinner className="size-4" />
+					<span className="text-sm font-medium">Getting replies...</span>
 				</div>
 			) : (
 				<div className="flex flex-col gap-3">

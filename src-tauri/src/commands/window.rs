@@ -3,7 +3,7 @@ use border::WebviewWindowExt as BorderWebviewWindowExt;
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use std::{path::PathBuf, str::FromStr};
+use std::path::PathBuf;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::{
@@ -68,7 +68,7 @@ pub async fn create_column(
                 .on_page_load(|webview, payload| match payload.event() {
                     PageLoadEvent::Started => {
                         if let Ok(id) = get_last_segment(payload.url()) {
-                            if let Ok(public_key) = PublicKey::from_str(&id) {
+                            if let Ok(public_key) = PublicKey::parse(&id) {
                                 let is_newsfeed = payload.url().to_string().contains("newsfeed");
 
                                 tauri::async_runtime::spawn(async move {
@@ -104,7 +104,7 @@ pub async fn create_column(
                                         }
                                     }
                                 });
-                            } else if let Ok(event_id) = EventId::from_str(&id) {
+                            } else if let Ok(event_id) = EventId::parse(&id) {
                                 tauri::async_runtime::spawn(async move {
                                     let state = webview.state::<Nostr>();
                                     let client = &state.client;
@@ -117,11 +117,7 @@ pub async fn create_column(
                                         .since(Timestamp::now());
 
                                     if let Err(e) = client
-                                        .subscribe_with_id(
-                                            subscription_id,
-                                            vec![filter.clone().since(Timestamp::now())],
-                                            None,
-                                        )
+                                        .subscribe_with_id(subscription_id, vec![filter], None)
                                         .await
                                     {
                                         println!("Subscription error: {}", e);

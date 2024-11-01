@@ -1,9 +1,9 @@
-import { type Mention, type Result, commands } from "@/commands.gen";
+import { type Mention, commands } from "@/commands.gen";
 import { cn, displayNpub } from "@/commons";
 import { PublishIcon, Spinner } from "@/components";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { useEvent } from "@/system";
+import { LumeWindow, useEvent } from "@/system";
 import type { Metadata } from "@/types";
 import { CaretDown } from "@phosphor-icons/react";
 import { createLazyFileRoute, useAwaited } from "@tanstack/react-router";
@@ -69,7 +69,7 @@ export const Route = createLazyFileRoute("/new-post/")({
 
 function Screen() {
 	const { reply_to } = Route.useSearch();
-	const { accounts, initialValue } = Route.useRouteContext();
+	const { accounts, initialValue, queryClient } = Route.useRouteContext();
 	const { deferMentionList } = Route.useLoaderData();
 	const users = useAwaited({ promise: deferMentionList })[0];
 
@@ -163,19 +163,35 @@ function Screen() {
 				const warn = warning.enable ? warning.reason : null;
 				const diff = difficulty.enable ? difficulty.num : null;
 
-				let res: Result<string, string>;
-
 				if (reply_to?.length) {
-					res = await commands.reply(content, reply_to, null);
-				} else {
-					res = await commands.publish(content, warn, diff);
-				}
+					const res = await commands.reply(content, reply_to);
 
-				if (res.status === "ok") {
-					setText("");
-					setIsPublish(true);
+					if (res.status === "ok") {
+						setText("");
+						setIsPublish(true);
+
+						await queryClient.invalidateQueries({
+							queryKey: ["replies", reply_to],
+						});
+					} else {
+						setError(res.error);
+					}
 				} else {
-					setError(res.error);
+					const res = await commands.publish(content, warn, diff);
+
+					if (res.status === "ok") {
+						setText("");
+						setIsPublish(true);
+
+						await LumeWindow.openColumn({
+							name: "Thread",
+							label: res.data.slice(0, 6),
+							account: currentUser,
+							url: `/columns/events/${res.data}`,
+						});
+					} else {
+						setError(res.error);
+					}
 				}
 			}
 		});
@@ -207,14 +223,15 @@ function Screen() {
 		<div className="flex flex-col w-full h-full">
 			<div data-tauri-drag-region className="h-11 shrink-0" />
 			<div className="flex flex-col flex-1 overflow-y-auto">
+				{error?.length ? (
+					<div className="flex flex-col gap-2 px-3.5 py-3 border-b border-black/5 dark:border-white/5">
+						<p className="text-sm font-medium text-red-600">Error: {error}</p>
+					</div>
+				) : null}
 				{reply_to?.length ? (
-					<div className="flex flex-col gap-2 px-3.5 pb-3 border-b border-black/5 dark:border-white/5">
+					<div className="flex flex-col gap-2 px-3.5 py-3 border-b border-black/5 dark:border-white/5">
 						<span className="text-sm font-semibold">Reply to:</span>
 						<EmbedNote id={reply_to} />
-					</div>
-				) : error?.length ? (
-					<div className="flex flex-col gap-2 px-3.5 pb-3 border-b border-black/5 dark:border-white/5">
-						<p className="text-sm font-medium text-red-600">{error}</p>
 					</div>
 				) : null}
 				<div className="p-4 overflow-y-auto h-full">

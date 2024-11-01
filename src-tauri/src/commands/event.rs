@@ -35,29 +35,29 @@ pub async fn get_event(id: String, state: State<'_, Nostr>) -> Result<RichEvent,
 
         Ok(RichEvent { raw, parsed })
     } else {
-        let filter = Filter::new().id(event_id);
-
-        let mut rich_event = RichEvent {
-            raw: "".to_string(),
-            parsed: None,
-        };
-
+        let filter = Filter::new().id(event_id).limit(1);
+        let mut events = Events::new(&[filter.clone()]);
         let mut rx = client
             .stream_events(vec![filter], Some(Duration::from_secs(5)))
             .await
             .map_err(|e| e.to_string())?;
 
         while let Some(event) = rx.next().await {
+            events.insert(event);
+        }
+
+        if let Some(event) = events.first() {
             let raw = event.as_json();
             let parsed = if event.kind == Kind::TextNote {
                 Some(parse_event(&event.content).await)
             } else {
                 None
             };
-            rich_event = RichEvent { raw, parsed }
-        }
 
-        Ok(rich_event)
+            Ok(RichEvent { raw, parsed })
+        } else {
+            Err("Event not found.".into())
+        }
     }
 }
 
@@ -332,12 +332,7 @@ pub async fn publish(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn reply(
-    content: String,
-    to: String,
-    root: Option<String>,
-    state: State<'_, Nostr>,
-) -> Result<String, String> {
+pub async fn reply(content: String, to: String, state: State<'_, Nostr>) -> Result<String, String> {
     let client = &state.client;
 
     // Create event tags from content
@@ -349,6 +344,7 @@ pub async fn reply(
 
     // Get reply event
     let reply_id = EventId::parse(&to).map_err(|err| err.to_string())?;
+
     let reply_to = match client.database().event_by_id(&reply_id).await {
         Ok(event) => {
             if let Some(event) = event {
@@ -360,12 +356,35 @@ pub async fn reply(
         Err(e) => return Err(e.to_string()),
     };
 
+    // Detect root event from reply
+    let root_ids: Vec<&EventId> = reply_to
+        .tags
+        .filter_standardized(TagKind::e())
+        .filter_map(|t| match t {
+            TagStandard::Event {
+                event_id, marker, ..
+            } => {
+                if let Some(mkr) = marker {
+                    match mkr {
+                        Marker::Root => Some(event_id),
+                        Marker::Reply => Some(event_id),
+                        _ => None,
+                    }
+                } else {
+                    Some(event_id)
+                }
+            }
+            _ => None,
+        })
+        .collect();
+
     // Get root event if exist
-    let root = match root {
-        Some(id) => {
-            let root_id = EventId::parse(&id).map_err(|err| err.to_string())?;
-            (client.database().event_by_id(&root_id).await).unwrap_or_default()
-        }
+    let root = match root_ids.first() {
+        Some(&id) => client
+            .database()
+            .event_by_id(id)
+            .await
+            .map_err(|err| err.to_string())?,
         None => None,
     };
 

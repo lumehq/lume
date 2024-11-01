@@ -457,7 +457,7 @@ fn main() {
                                     if let Err(e) = handle_clone.emit("metadata", event.as_json()) {
                                         println!("Emit error: {}", e)
                                     }
-                                } else if event.kind != Kind::RelayList {
+                                } else if event.kind == Kind::TextNote {
                                     let payload = RichEvent {
                                         raw: event.as_json(),
                                         parsed: if event.kind == Kind::TextNote {

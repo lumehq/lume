@@ -56,7 +56,14 @@ export const MentionNote = memo(function MentionNote({
 									<div className="invisible group-hover:visible flex items-center justify-end">
 										<button
 											type="button"
-											onClick={() => LumeWindow.openEvent(event)}
+											onClick={() =>
+												LumeWindow.openColumn({
+													name: "Thread",
+													label: eventId.slice(0, 6),
+													account: event.pubkey,
+													url: `/columns/events/${eventId}`,
+												})
+											}
 											className="mr-3 text-sm font-medium text-blue-500 hover:text-blue-600"
 										>
 											Show all
