@@ -40,7 +40,7 @@ export function Column({ column }: { column: LumeColumn }) {
 				/>
 				<div ref={ref} className="flex-1 size-full">
 					<div className="size-full flex flex-col items-center justify-center">
-						<div className="text-red-500 text-sm break-all">
+						<div className="invisible text-red-500 text-sm break-all">
 							{error?.length ? error : null}
 						</div>
 					</div>

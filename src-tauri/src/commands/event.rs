@@ -203,6 +203,44 @@ pub async fn get_all_events_by_hashtags(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn get_all_events_from(
+    url: String,
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+
+    let _ = client.add_read_relay(&url).await;
+    let _ = client.connect_relay(&url).await;
+
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
+        None => Timestamp::now(),
+    };
+
+    let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .limit(FETCH_LIMIT)
+        .until(as_of);
+
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events_from(vec![url], vec![filter], Some(Duration::from_secs(3)))
+        .await
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
+    }
+
+    let alt_events = process_event(client, events, false).await;
+
+    Ok(alt_events)
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn get_local_events(
     until: Option<String>,
     state: State<'_, Nostr>,

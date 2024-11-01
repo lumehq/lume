@@ -7,8 +7,7 @@ import { ArrowDown } from "@phosphor-icons/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { listen } from "@tauri-apps/api/event";
-import { type RefObject, useCallback, useEffect, useRef } from "react";
+import { type RefObject, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/columns/_layout/newsfeed/$id")({
@@ -18,7 +17,7 @@ export const Route = createLazyFileRoute("/columns/_layout/newsfeed/$id")({
 export function Screen() {
 	const contacts = Route.useLoaderData();
 	const search = Route.useSearch();
-	const { queryClient } = Route.useRouteContext();
+
 	const {
 		data,
 		isLoading,
@@ -82,18 +81,6 @@ export function Screen() {
 		},
 		[data],
 	);
-
-	useEffect(() => {
-		const unlisten = listen("synchronized", async () => {
-			await queryClient.refetchQueries({
-				queryKey: ["events", "newsfeed", search.label],
-			});
-		});
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
 
 	return (
 		<ScrollArea.Root

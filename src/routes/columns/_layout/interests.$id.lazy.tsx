@@ -26,7 +26,7 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: ["events", "hashtags", params.id],
+		queryKey: ["hashtags", params.id],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const tags = hashtags.map((tag) => tag.toLowerCase().replace("#", ""));

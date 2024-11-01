@@ -51,6 +51,9 @@ const ColumnsLayoutSearchLazyImport = createFileRoute(
 const ColumnsLayoutOnboardingLazyImport = createFileRoute(
   '/columns/_layout/onboarding',
 )()
+const ColumnsLayoutDiscoverRelaysLazyImport = createFileRoute(
+  '/columns/_layout/discover-relays',
+)()
 const ColumnsLayoutDiscoverNewsfeedsLazyImport = createFileRoute(
   '/columns/_layout/discover-newsfeeds',
 )()
@@ -62,6 +65,9 @@ const ColumnsLayoutUsersIdLazyImport = createFileRoute(
 )()
 const ColumnsLayoutRepliesIdLazyImport = createFileRoute(
   '/columns/_layout/replies/$id',
+)()
+const ColumnsLayoutRelaysUrlLazyImport = createFileRoute(
+  '/columns/_layout/relays/$url',
 )()
 const ColumnsLayoutNotificationIdLazyImport = createFileRoute(
   '/columns/_layout/notification/$id',
@@ -202,6 +208,17 @@ const ColumnsLayoutOnboardingLazyRoute =
     import('./routes/columns/_layout/onboarding.lazy').then((d) => d.Route),
   )
 
+const ColumnsLayoutDiscoverRelaysLazyRoute =
+  ColumnsLayoutDiscoverRelaysLazyImport.update({
+    id: '/discover-relays',
+    path: '/discover-relays',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/columns/_layout/discover-relays.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 const ColumnsLayoutDiscoverNewsfeedsLazyRoute =
   ColumnsLayoutDiscoverNewsfeedsLazyImport.update({
     id: '/discover-newsfeeds',
@@ -277,6 +294,16 @@ const ColumnsLayoutRepliesIdLazyRoute = ColumnsLayoutRepliesIdLazyImport.update(
   } as any,
 ).lazy(() =>
   import('./routes/columns/_layout/replies.$id.lazy').then((d) => d.Route),
+)
+
+const ColumnsLayoutRelaysUrlLazyRoute = ColumnsLayoutRelaysUrlLazyImport.update(
+  {
+    id: '/relays/$url',
+    path: '/relays/$url',
+    getParentRoute: () => ColumnsLayoutRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/columns/_layout/relays.$url.lazy').then((d) => d.Route),
 )
 
 const ColumnsLayoutNotificationIdLazyRoute =
@@ -511,6 +538,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutDiscoverNewsfeedsLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/discover-relays': {
+      id: '/columns/_layout/discover-relays'
+      path: '/discover-relays'
+      fullPath: '/columns/discover-relays'
+      preLoaderRoute: typeof ColumnsLayoutDiscoverRelaysLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/onboarding': {
       id: '/columns/_layout/onboarding'
       path: '/onboarding'
@@ -595,6 +629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutNotificationIdLazyImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/relays/$url': {
+      id: '/columns/_layout/relays/$url'
+      path: '/relays/$url'
+      fullPath: '/columns/relays/$url'
+      preLoaderRoute: typeof ColumnsLayoutRelaysUrlLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/replies/$id': {
       id: '/columns/_layout/replies/$id'
       path: '/replies/$id'
@@ -646,6 +687,7 @@ interface ColumnsLayoutRouteChildren {
   ColumnsLayoutGlobalRoute: typeof ColumnsLayoutGlobalRoute
   ColumnsLayoutDiscoverInterestsLazyRoute: typeof ColumnsLayoutDiscoverInterestsLazyRoute
   ColumnsLayoutDiscoverNewsfeedsLazyRoute: typeof ColumnsLayoutDiscoverNewsfeedsLazyRoute
+  ColumnsLayoutDiscoverRelaysLazyRoute: typeof ColumnsLayoutDiscoverRelaysLazyRoute
   ColumnsLayoutOnboardingLazyRoute: typeof ColumnsLayoutOnboardingLazyRoute
   ColumnsLayoutSearchLazyRoute: typeof ColumnsLayoutSearchLazyRoute
   ColumnsLayoutTrendingLazyRoute: typeof ColumnsLayoutTrendingLazyRoute
@@ -656,6 +698,7 @@ interface ColumnsLayoutRouteChildren {
   ColumnsLayoutEventsIdLazyRoute: typeof ColumnsLayoutEventsIdLazyRoute
   ColumnsLayoutLaunchpadIdLazyRoute: typeof ColumnsLayoutLaunchpadIdLazyRoute
   ColumnsLayoutNotificationIdLazyRoute: typeof ColumnsLayoutNotificationIdLazyRoute
+  ColumnsLayoutRelaysUrlLazyRoute: typeof ColumnsLayoutRelaysUrlLazyRoute
   ColumnsLayoutRepliesIdLazyRoute: typeof ColumnsLayoutRepliesIdLazyRoute
   ColumnsLayoutUsersIdLazyRoute: typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -668,6 +711,7 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
     ColumnsLayoutDiscoverInterestsLazyRoute,
   ColumnsLayoutDiscoverNewsfeedsLazyRoute:
     ColumnsLayoutDiscoverNewsfeedsLazyRoute,
+  ColumnsLayoutDiscoverRelaysLazyRoute: ColumnsLayoutDiscoverRelaysLazyRoute,
   ColumnsLayoutOnboardingLazyRoute: ColumnsLayoutOnboardingLazyRoute,
   ColumnsLayoutSearchLazyRoute: ColumnsLayoutSearchLazyRoute,
   ColumnsLayoutTrendingLazyRoute: ColumnsLayoutTrendingLazyRoute,
@@ -678,6 +722,7 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
   ColumnsLayoutEventsIdLazyRoute: ColumnsLayoutEventsIdLazyRoute,
   ColumnsLayoutLaunchpadIdLazyRoute: ColumnsLayoutLaunchpadIdLazyRoute,
   ColumnsLayoutNotificationIdLazyRoute: ColumnsLayoutNotificationIdLazyRoute,
+  ColumnsLayoutRelaysUrlLazyRoute: ColumnsLayoutRelaysUrlLazyRoute,
   ColumnsLayoutRepliesIdLazyRoute: ColumnsLayoutRepliesIdLazyRoute,
   ColumnsLayoutUsersIdLazyRoute: ColumnsLayoutUsersIdLazyRoute,
 }
@@ -735,6 +780,7 @@ export interface FileRoutesByFullPath {
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
   '/columns/discover-interests': typeof ColumnsLayoutDiscoverInterestsLazyRoute
   '/columns/discover-newsfeeds': typeof ColumnsLayoutDiscoverNewsfeedsLazyRoute
+  '/columns/discover-relays': typeof ColumnsLayoutDiscoverRelaysLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
   '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
@@ -747,6 +793,7 @@ export interface FileRoutesByFullPath {
   '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
   '/columns/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
+  '/columns/relays/$url': typeof ColumnsLayoutRelaysUrlLazyRoute
   '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -772,6 +819,7 @@ export interface FileRoutesByTo {
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
   '/columns/discover-interests': typeof ColumnsLayoutDiscoverInterestsLazyRoute
   '/columns/discover-newsfeeds': typeof ColumnsLayoutDiscoverNewsfeedsLazyRoute
+  '/columns/discover-relays': typeof ColumnsLayoutDiscoverRelaysLazyRoute
   '/columns/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/search': typeof ColumnsLayoutSearchLazyRoute
   '/columns/trending': typeof ColumnsLayoutTrendingLazyRoute
@@ -784,6 +832,7 @@ export interface FileRoutesByTo {
   '/columns/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
   '/columns/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
+  '/columns/relays/$url': typeof ColumnsLayoutRelaysUrlLazyRoute
   '/columns/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -812,6 +861,7 @@ export interface FileRoutesById {
   '/settings/$id/wallet': typeof SettingsIdWalletRoute
   '/columns/_layout/discover-interests': typeof ColumnsLayoutDiscoverInterestsLazyRoute
   '/columns/_layout/discover-newsfeeds': typeof ColumnsLayoutDiscoverNewsfeedsLazyRoute
+  '/columns/_layout/discover-relays': typeof ColumnsLayoutDiscoverRelaysLazyRoute
   '/columns/_layout/onboarding': typeof ColumnsLayoutOnboardingLazyRoute
   '/columns/_layout/search': typeof ColumnsLayoutSearchLazyRoute
   '/columns/_layout/trending': typeof ColumnsLayoutTrendingLazyRoute
@@ -824,6 +874,7 @@ export interface FileRoutesById {
   '/columns/_layout/events/$id': typeof ColumnsLayoutEventsIdLazyRoute
   '/columns/_layout/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/_layout/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
+  '/columns/_layout/relays/$url': typeof ColumnsLayoutRelaysUrlLazyRoute
   '/columns/_layout/replies/$id': typeof ColumnsLayoutRepliesIdLazyRoute
   '/columns/_layout/users/$id': typeof ColumnsLayoutUsersIdLazyRoute
 }
@@ -852,6 +903,7 @@ export interface FileRouteTypes {
     | '/settings/$id/wallet'
     | '/columns/discover-interests'
     | '/columns/discover-newsfeeds'
+    | '/columns/discover-relays'
     | '/columns/onboarding'
     | '/columns/search'
     | '/columns/trending'
@@ -864,6 +916,7 @@ export interface FileRouteTypes {
     | '/columns/events/$id'
     | '/columns/launchpad/$id'
     | '/columns/notification/$id'
+    | '/columns/relays/$url'
     | '/columns/replies/$id'
     | '/columns/users/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -888,6 +941,7 @@ export interface FileRouteTypes {
     | '/settings/$id/wallet'
     | '/columns/discover-interests'
     | '/columns/discover-newsfeeds'
+    | '/columns/discover-relays'
     | '/columns/onboarding'
     | '/columns/search'
     | '/columns/trending'
@@ -900,6 +954,7 @@ export interface FileRouteTypes {
     | '/columns/events/$id'
     | '/columns/launchpad/$id'
     | '/columns/notification/$id'
+    | '/columns/relays/$url'
     | '/columns/replies/$id'
     | '/columns/users/$id'
   id:
@@ -926,6 +981,7 @@ export interface FileRouteTypes {
     | '/settings/$id/wallet'
     | '/columns/_layout/discover-interests'
     | '/columns/_layout/discover-newsfeeds'
+    | '/columns/_layout/discover-relays'
     | '/columns/_layout/onboarding'
     | '/columns/_layout/search'
     | '/columns/_layout/trending'
@@ -938,6 +994,7 @@ export interface FileRouteTypes {
     | '/columns/_layout/events/$id'
     | '/columns/_layout/launchpad/$id'
     | '/columns/_layout/notification/$id'
+    | '/columns/_layout/relays/$url'
     | '/columns/_layout/replies/$id'
     | '/columns/_layout/users/$id'
   fileRoutesById: FileRoutesById
@@ -1037,6 +1094,7 @@ export const routeTree = rootRoute
         "/columns/_layout/global",
         "/columns/_layout/discover-interests",
         "/columns/_layout/discover-newsfeeds",
+        "/columns/_layout/discover-relays",
         "/columns/_layout/onboarding",
         "/columns/_layout/search",
         "/columns/_layout/trending",
@@ -1047,6 +1105,7 @@ export const routeTree = rootRoute
         "/columns/_layout/events/$id",
         "/columns/_layout/launchpad/$id",
         "/columns/_layout/notification/$id",
+        "/columns/_layout/relays/$url",
         "/columns/_layout/replies/$id",
         "/columns/_layout/users/$id"
       ]
@@ -1110,6 +1169,10 @@ export const routeTree = rootRoute
       "filePath": "columns/_layout/discover-newsfeeds.lazy.tsx",
       "parent": "/columns/_layout"
     },
+    "/columns/_layout/discover-relays": {
+      "filePath": "columns/_layout/discover-relays.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
     "/columns/_layout/onboarding": {
       "filePath": "columns/_layout/onboarding.lazy.tsx",
       "parent": "/columns/_layout"
@@ -1156,6 +1219,10 @@ export const routeTree = rootRoute
     },
     "/columns/_layout/notification/$id": {
       "filePath": "columns/_layout/notification.$id.lazy.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/relays/$url": {
+      "filePath": "columns/_layout/relays.$url.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/replies/$id": {

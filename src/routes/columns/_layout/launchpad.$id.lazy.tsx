@@ -42,7 +42,7 @@ function Screen() {
 function Newsfeeds() {
 	const { id } = Route.useParams();
 	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
-		queryKey: ["others", "newsfeeds", id],
+		queryKey: ["newsfeeds", id],
 		queryFn: async () => {
 			const res = await commands.getAllNewsfeeds(id);
 
@@ -204,7 +204,7 @@ function Newsfeeds() {
 function Interests() {
 	const { id } = Route.useParams();
 	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
-		queryKey: ["others", "interests", id],
+		queryKey: ["interests", id],
 		queryFn: async () => {
 			const res = await commands.getAllInterests(id);
 
@@ -394,6 +394,22 @@ function Core() {
 						<button
 							type="button"
 							onClick={() => LumeWindow.openNotification(id)}
+							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+						>
+							Add
+						</button>
+					</div>
+					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+						<div className="text-sm font-medium">Relays</div>
+						<button
+							type="button"
+							onClick={() =>
+								LumeWindow.openColumn({
+									name: "Relays",
+									label: "relays",
+									url: "/columns/discover-relays",
+								})
+							}
 							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 						>
 							Add

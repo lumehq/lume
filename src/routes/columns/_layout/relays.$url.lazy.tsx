@@ -10,14 +10,12 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { type RefObject, useCallback, useRef } from "react";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/columns/_layout/groups/$id")({
+export const Route = createLazyFileRoute("/columns/_layout/relays/$url")({
 	component: Screen,
 });
 
 export function Screen() {
-	const group = Route.useLoaderData();
-	const params = Route.useParams();
-
+	const { url } = Route.useParams();
 	const {
 		data,
 		isLoading,
@@ -26,11 +24,12 @@ export function Screen() {
 		hasNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery({
-		queryKey: ["groups", params.id],
+		queryKey: ["relays", url],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : null;
-			const res = await commands.getAllEventsByAuthors(group, until);
+			const relay = decodeURIComponent(url);
+			const res = await commands.getAllEventsFrom(relay, until);
 
 			if (res.status === "error") {
 				throw new Error(res.error);
@@ -46,15 +45,16 @@ export function Screen() {
 			}
 		},
 		select: (data) => data?.pages.flat(),
-		enabled: group?.length > 0,
-		refetchOnWindowFocus: false,
 	});
 
 	const ref = useRef<HTMLDivElement>(null);
 
 	const renderItem = useCallback(
 		(event: LumeEvent) => {
-			if (!event) return;
+			if (!event) {
+				return;
+			}
+
 			switch (event.kind) {
 				case Kind.Repost: {
 					const repostId = event.repostId;
@@ -88,7 +88,7 @@ export function Screen() {
 		>
 			<ScrollArea.Viewport
 				ref={ref}
-				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
 				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (

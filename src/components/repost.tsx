@@ -14,6 +14,8 @@ export const RepostNote = memo(function RepostNote({
 }) {
 	const { isLoading, isError, data } = useEvent(event.repostId, event.content);
 
+	console.log("Repost: ", event);
+
 	return (
 		<Note.Root className={cn("", className)}>
 			{isLoading ? (

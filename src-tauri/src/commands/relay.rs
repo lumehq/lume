@@ -1,4 +1,3 @@
-use crate::Nostr;
 use nostr_sdk::prelude::*;
 use serde::Serialize;
 use specta::Type;
@@ -8,6 +7,8 @@ use std::{
     str::FromStr,
 };
 use tauri::{path::BaseDirectory, Manager, State};
+
+use crate::{Nostr, FETCH_LIMIT};
 
 #[derive(Serialize, Type)]
 pub struct Relays {
@@ -94,31 +95,59 @@ pub async fn get_relays(id: String, state: State<'_, Nostr>) -> Result<Relays, S
 
 #[tauri::command]
 #[specta::specta]
-pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn get_all_relays(
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<String>, String> {
     let client = &state.client;
-    let status = client.add_relay(relay).await.map_err(|e| e.to_string())?;
 
-    if status {
-        client
-            .connect_relay(relay)
-            .await
-            .map_err(|e| e.to_string())?;
-    }
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).unwrap_or(Timestamp::now()),
+        None => Timestamp::now(),
+    };
+
+    let filter = Filter::new()
+        .kind(Kind::RelayList)
+        .limit(FETCH_LIMIT)
+        .until(as_of);
+
+    let events = client
+        .database()
+        .query(vec![filter])
+        .await
+        .map_err(|e| e.to_string())?;
+
+    let alt_events: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
+
+    Ok(alt_events)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn is_relay_connected(relay: String, state: State<'_, Nostr>) -> Result<bool, String> {
+    let client = &state.client;
+    let status = client.add_relay(&relay).await.map_err(|e| e.to_string())?;
 
     Ok(status)
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn remove_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn connect_relay(relay: String, state: State<'_, Nostr>) -> Result<(), String> {
     let client = &state.client;
+    let _ = client.add_relay(&relay).await;
+    let _ = client.connect_relay(&relay).await;
 
-    client
-        .force_remove_relay(relay)
-        .await
-        .map_err(|e| e.to_string())?;
+    Ok(())
+}
 
-    Ok(true)
+#[tauri::command]
+#[specta::specta]
+pub async fn remove_relay(relay: String, state: State<'_, Nostr>) -> Result<(), String> {
+    let client = &state.client;
+    let _ = client.force_remove_relay(relay).await;
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -140,7 +169,7 @@ pub fn get_bootstrap_relays(app: tauri::AppHandle) -> Result<Vec<String>, String
 
 #[tauri::command]
 #[specta::specta]
-pub fn save_bootstrap_relays(relays: &str, app: tauri::AppHandle) -> Result<(), String> {
+pub fn set_bootstrap_relays(relays: String, app: tauri::AppHandle) -> Result<(), String> {
     let relays_path = app
         .path()
         .resolve("resources/relays.txt", BaseDirectory::Resource)

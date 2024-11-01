@@ -5,7 +5,7 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{account::*, event::*, metadata::*, relay::*, sync::*, window::*};
+use commands::{account::*, event::*, metadata::*, relay::*, window::*};
 use common::{get_all_accounts, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
@@ -71,13 +71,13 @@ fn main() {
     tracing_subscriber::fmt::init();
 
     let builder = Builder::<tauri::Wry>::new().commands(collect_commands![
-        sync_account,
-        is_account_sync,
         get_relays,
+        get_all_relays,
+        is_relay_connected,
         connect_relay,
         remove_relay,
         get_bootstrap_relays,
-        save_bootstrap_relays,
+        set_bootstrap_relays,
         get_accounts,
         watch_account,
         import_account,
@@ -116,6 +116,7 @@ fn main() {
         get_all_events_by_author,
         get_all_events_by_authors,
         get_all_events_by_hashtags,
+        get_all_events_from,
         get_local_events,
         get_global_events,
         search,

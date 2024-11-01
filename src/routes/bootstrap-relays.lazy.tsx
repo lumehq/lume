@@ -53,7 +53,7 @@ function Screen() {
 			}
 
 			const merged = relays.join("\r\n");
-			const res = await commands.saveBootstrapRelays(merged);
+			const res = await commands.setBootstrapRelays(merged);
 
 			if (res.status === "ok") {
 				return await relaunch();

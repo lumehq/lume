@@ -5,22 +5,6 @@
 
 
 export const commands = {
-async syncAccount(id: string, reader: TAURI_CHANNEL<number>) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("sync_account", { id, reader }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async isAccountSync(id: string) : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("is_account_sync", { id }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async getRelays(id: string) : Promise<Result<Relays, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_relays", { id }) };
@@ -29,7 +13,23 @@ async getRelays(id: string) : Promise<Result<Relays, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async connectRelay(relay: string) : Promise<Result<boolean, string>> {
+async getAllRelays(until: string | null) : Promise<Result<string[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_relays", { until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async isRelayConnected(relay: string) : Promise<Result<boolean, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("is_relay_connected", { relay }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async connectRelay(relay: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("connect_relay", { relay }) };
 } catch (e) {
@@ -37,7 +37,7 @@ async connectRelay(relay: string) : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async removeRelay(relay: string) : Promise<Result<boolean, string>> {
+async removeRelay(relay: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("remove_relay", { relay }) };
 } catch (e) {
@@ -53,9 +53,9 @@ async getBootstrapRelays() : Promise<Result<string[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async saveBootstrapRelays(relays: string) : Promise<Result<null, string>> {
+async setBootstrapRelays(relays: string) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("save_bootstrap_relays", { relays }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_bootstrap_relays", { relays }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -360,6 +360,14 @@ async getAllEventsByHashtags(hashtags: string[], until: string | null) : Promise
     else return { status: "error", error: e  as any };
 }
 },
+async getAllEventsFrom(url: string, until: string | null) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_events_from", { url, until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
@@ -523,7 +531,6 @@ export type NewWindow = { label: string; title: string; url: string; width: numb
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { resize_service: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
-export type TAURI_CHANNEL<TSend> = null
 
 /** tauri-specta globals **/
 

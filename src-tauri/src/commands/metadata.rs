@@ -3,7 +3,7 @@ use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::{str::FromStr, time::Duration};
-use tauri::{Emitter, Manager, State};
+use tauri::State;
 
 use crate::{common::process_event, Nostr, RichEvent, FETCH_LIMIT};
 
@@ -147,7 +147,6 @@ pub async fn set_group(
     image: Option<String>,
     users: Vec<String>,
     state: State<'_, Nostr>,
-    handle: tauri::AppHandle,
 ) -> Result<String, String> {
     let client = &state.client;
     let public_keys: Vec<PublicKey> = users
@@ -181,25 +180,7 @@ pub async fn set_group(
         .map_err(|err| err.to_string())?;
 
     match client.send_event(event).await {
-        Ok(output) => {
-            // Sync event
-            tauri::async_runtime::spawn(async move {
-                let state = handle.state::<Nostr>();
-                let client = &state.client;
-
-                let filter = Filter::new()
-                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                    .authors(public_keys)
-                    .limit(500);
-
-                if let Ok(report) = client.sync(filter, &SyncOptions::default()).await {
-                    println!("Received: {}", report.received.len());
-                    handle.emit("synchronized", ()).unwrap();
-                };
-            });
-
-            Ok(output.to_hex())
-        }
+        Ok(output) => Ok(output.to_hex()),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -296,7 +277,6 @@ pub async fn set_interest(
     image: Option<String>,
     hashtags: Vec<String>,
     state: State<'_, Nostr>,
-    handle: tauri::AppHandle,
 ) -> Result<String, String> {
     let client = &state.client;
     let label = title.to_lowercase().replace(" ", "-");
@@ -320,25 +300,7 @@ pub async fn set_interest(
         .map_err(|err| err.to_string())?;
 
     match client.send_event(event).await {
-        Ok(output) => {
-            // Sync event
-            tauri::async_runtime::spawn(async move {
-                let state = handle.state::<Nostr>();
-                let client = &state.client;
-
-                let filter = Filter::new()
-                    .kinds(vec![Kind::TextNote, Kind::Repost])
-                    .hashtags(hashtags)
-                    .limit(500);
-
-                if let Ok(report) = client.sync(filter, &SyncOptions::default()).await {
-                    println!("Received: {}", report.received.len());
-                    handle.emit("synchronized", ()).unwrap();
-                };
-            });
-
-            Ok(output.to_hex())
-        }
+        Ok(output) => Ok(output.to_hex()),
         Err(err) => Err(err.to_string()),
     }
 }
