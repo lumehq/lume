@@ -3481,7 +3481,7 @@ checksum = "0676bb32a98c1a483ce53e500a81ad9c3d5b3f7c920c28c24e9cb0980d0b5bc8"
 [[package]]
 name = "nostr"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "aes",
  "async-trait",
@@ -3512,7 +3512,7 @@ dependencies = [
 [[package]]
 name = "nostr-connect"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "async-trait",
  "async-utility",
@@ -3526,7 +3526,7 @@ dependencies = [
 [[package]]
 name = "nostr-database"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "async-trait",
  "flatbuffers",
@@ -3540,7 +3540,7 @@ dependencies = [
 [[package]]
 name = "nostr-lmdb"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "heed",
  "nostr",
@@ -3553,7 +3553,7 @@ dependencies = [
 [[package]]
 name = "nostr-relay-pool"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "async-utility",
  "async-wsocket",
@@ -3571,7 +3571,7 @@ dependencies = [
 [[package]]
 name = "nostr-sdk"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "async-utility",
  "atomic-destructor",
@@ -3590,7 +3590,7 @@ dependencies = [
 [[package]]
 name = "nostr-zapper"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "async-trait",
  "nostr",
@@ -3734,7 +3734,7 @@ dependencies = [
 [[package]]
 name = "nwc"
 version = "0.35.0"
-source = "git+https://github.com/rust-nostr/nostr#7587fba8ee72041689aa46c1436ecfa73d75d381"
+source = "git+https://github.com/rust-nostr/nostr#497c72f5a255c3d0cdf2a837e85c24be3d162fc0"
 dependencies = [
  "async-trait",
  "async-utility",

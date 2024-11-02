@@ -8,6 +8,7 @@ import type { Metadata } from "@/types";
 import { CaretDown } from "@phosphor-icons/react";
 import { createLazyFileRoute, useAwaited } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
 import {
 	useCallback,
@@ -170,9 +171,7 @@ function Screen() {
 						setText("");
 						setIsPublish(true);
 
-						await queryClient.invalidateQueries({
-							queryKey: ["replies", reply_to],
-						});
+						await getCurrentWindow().emit(reply_to, {});
 					} else {
 						setError(res.error);
 					}

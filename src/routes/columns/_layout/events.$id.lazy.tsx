@@ -183,7 +183,6 @@ function ReplyList() {
 			"event",
 			async (data) => {
 				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
-				console.log(event);
 
 				await queryClient.setQueryData(
 					["replies", id],
@@ -194,6 +193,16 @@ function ReplyList() {
 				);
 			},
 		);
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
+
+	useEffect(() => {
+		const unlisten = getCurrentWindow().listen(id, async () => {
+			await queryClient.invalidateQueries({ queryKey: ["replies", id] });
+		});
 
 		return () => {
 			unlisten.then((f) => f());
