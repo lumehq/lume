@@ -62,11 +62,11 @@ function Newsfeeds() {
 
 	const renderItem = useCallback(
 		(item: NostrEvent) => {
+			const users = item.tags.filter((tag) => tag[0] === "p");
 			const name =
 				item.kind === 3
 					? "Contacts"
 					: item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
-
 			const label =
 				item.kind === 3
 					? `newsfeed-${id.slice(0, 5)}`
@@ -78,32 +78,24 @@ function Newsfeeds() {
 					className="group flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800"
 				>
 					<div className="px-2 pt-2">
-						<ScrollArea.Root
-							type={"scroll"}
-							scrollHideDelay={300}
-							className="overflow-hidden size-full"
-						>
-							<ScrollArea.Viewport className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-								<div className="flex flex-wrap items-center justify-center gap-2">
-									{item.tags
-										.filter((tag) => tag[0] === "p")
-										.map((tag) => (
-											<User.Provider key={tag[1]} pubkey={tag[1]}>
-												<User.Root>
-													<User.Avatar className="size-8 rounded-full" />
-												</User.Root>
-											</User.Provider>
-										))}
-								</div>
-							</ScrollArea.Viewport>
-							<ScrollArea.Scrollbar
-								className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
-								orientation="vertical"
-							>
-								<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
-							</ScrollArea.Scrollbar>
-							<ScrollArea.Corner className="bg-transparent" />
-						</ScrollArea.Root>
+						<div className="p-3 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+							<div className="flex flex-wrap items-center justify-center gap-2">
+								{users.slice(0, 5).map((tag) => (
+									<User.Provider key={tag[1]} pubkey={tag[1]}>
+										<User.Root>
+											<User.Avatar className="size-8 rounded-full" />
+										</User.Root>
+									</User.Provider>
+								))}
+								{users.length > 5 ? (
+									<div className="size-8 rounded-full inline-flex items-center justify-center bg-neutral-300 dark:bg-neutral-700">
+										<p className="truncate leading-tight text-[8px] font-medium">
+											+{users.length - 5}
+										</p>
+									</div>
+								) : null}
+							</div>
+						</div>
 					</div>
 					<div className="p-2 flex items-center justify-between">
 						<div className="inline-flex items-center gap-2">
