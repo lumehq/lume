@@ -1,3 +1,4 @@
+import { cn } from "@/commons";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/new")({
@@ -5,10 +6,17 @@ export const Route = createLazyFileRoute("/new")({
 });
 
 function Screen() {
+	const { platform } = Route.useRouteContext();
+
 	return (
 		<div
 			data-tauri-drag-region
-			className="bg-white/50 dark:bg-black/50 relative size-full flex items-center justify-center"
+			className={cn(
+				"relative size-full flex items-center justify-center",
+				platform === "windows"
+					? "bg-neutral-200 dark:bg-neutral-900"
+					: "bg-white/20 dark:bg-black/20",
+			)}
 		>
 			<div className="w-[350px] flex flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center">

@@ -228,12 +228,6 @@ pub fn open_window(window: NewWindow, app_handle: tauri::AppHandle) -> Result<St
         .transparent(true)
         .decorations(false)
         .closable(window.closable)
-        .effects(WindowEffectsConfig {
-            state: None,
-            effects: vec![Effect::Mica],
-            radius: None,
-            color: None,
-        })
         .build()
         .unwrap();
 

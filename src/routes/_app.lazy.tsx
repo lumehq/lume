@@ -22,10 +22,19 @@ export const Route = createLazyFileRoute("/_app")({
 });
 
 function Layout() {
+	const { platform } = Route.useRouteContext();
+
 	return (
 		<div className="flex flex-col w-screen h-screen">
 			<Topbar />
-			<div className="flex-1 bg-neutral-100 dark:bg-neutral-900 border-t-[.5px] border-black/20 dark:border-white/30">
+			<div
+				className={cn(
+					"flex-1 bg-neutral-100 dark:bg-neutral-900 border-t-[.5px]",
+					platform === "windows"
+						? "border-black/10 dark:border-white/10"
+						: "border-black/20 dark:border-white/30",
+				)}
+			>
 				<Outlet />
 			</div>
 		</div>

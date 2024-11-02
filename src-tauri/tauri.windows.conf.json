@@ -10,12 +10,7 @@
 				"minWidth": 480,
 				"minHeight": 700,
 				"transparent": true,
-				"decorations": false,
-				"windowEffects": {
-					"effects": [
-						"mica"
-					]
-				}
+				"decorations": false
 			}
 		]
 	}

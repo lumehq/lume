@@ -1,4 +1,5 @@
 import { commands } from "@/commands.gen";
+import { cn } from "@/commons";
 import { Spinner } from "@/components";
 import type { Metadata, NostrEvent } from "@/types";
 import { type QueryClient, queryOptions } from "@tanstack/react-query";
@@ -36,7 +37,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function Screen() {
-	const { queryClient } = Route.useRouteContext();
+	const { queryClient, platform } = Route.useRouteContext();
 
 	useEffect(() => {
 		const unlisten = getCurrentWindow().listen<string>(
@@ -60,7 +61,16 @@ function Screen() {
 		};
 	}, []);
 
-	return <Outlet />;
+	return (
+		<div
+			className={cn(
+				"size-full",
+				platform === "windows" ? "bg-neutral-100 dark:bg-neutral-900" : "",
+			)}
+		>
+			<Outlet />
+		</div>
+	);
 }
 
 function Pending() {
