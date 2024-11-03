@@ -2,19 +2,12 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"useDefineForClassFields": true,
-		"lib": [
-			"ESNext",
-			"ES2020",
-			"DOM",
-			"DOM.Iterable"
-		],
+		"lib": ["ESNext", "ES2020", "DOM", "DOM.Iterable"],
 		"module": "ESNext",
 		"skipLibCheck": true,
 		"baseUrl": "./",
 		"paths": {
-			"@/*": [
-				"./src/*"
-			]
+			"@/*": ["./src/*"]
 		},
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
@@ -26,11 +19,9 @@
 		"noUnusedLocals": true,
 		"noImplicitAny": false,
 		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
+		"noFallthroughCasesInSwitch": true
 	},
-	"include": [
-		"src"
-	],
+	"include": ["src"],
 	"references": [
 		{
 			"path": "./tsconfig.node.json"

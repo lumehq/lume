@@ -1,14 +1,41 @@
-import { commands } from '@/commands.gen'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { commands } from "@/commands.gen";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { ask } from "@tauri-apps/plugin-dialog";
+import { relaunch } from "@tauri-apps/plugin-process";
+import { check } from "@tauri-apps/plugin-updater";
 
-export const Route = createFileRoute('/_app')({
-  beforeLoad: async () => {
-    const accounts = await commands.getAccounts()
+async function checkForAppUpdates() {
+	const update = await check();
 
-    if (!accounts.length) {
-      throw redirect({ to: '/new', replace: true })
-    }
+	if (update?.available) {
+		const yes = await ask(
+			`Update to ${update.version} is available!\n\nRelease notes: ${update.body}`,
+			{
+				title: "Update Available",
+				kind: "info",
+				okLabel: "Update",
+				cancelLabel: "Cancel",
+			},
+		);
 
-    return { accounts }
-  },
-})
+		if (yes) {
+			await update.downloadAndInstall();
+			await relaunch();
+		}
+
+		return;
+	}
+}
+
+export const Route = createFileRoute("/_app")({
+	beforeLoad: async () => {
+		await checkForAppUpdates();
+		const accounts = await commands.getAccounts();
+
+		if (!accounts.length) {
+			throw redirect({ to: "/new", replace: true });
+		}
+
+		return { accounts };
+	},
+});

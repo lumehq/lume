@@ -4,10 +4,7 @@
 		"enabled": true
 	},
 	"files": {
-		"ignore": [
-			"./src/routes.gen.ts",
-			"./src/commands.gen.ts"
-		]
+		"ignore": ["./src/routes.gen.ts", "./src/commands.gen.ts"]
 	},
 	"linter": {
 		"enabled": true,

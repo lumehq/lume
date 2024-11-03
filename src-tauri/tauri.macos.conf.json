@@ -13,9 +13,7 @@
 				"hiddenTitle": true,
 				"transparent": true,
 				"windowEffects": {
-					"effects": [
-						"underWindowBackground"
-					]
+					"effects": ["underWindowBackground"]
 				}
 			}
 		]

@@ -2,13 +2,8 @@
 	"$schema": "../gen/schemas/desktop-schema.json",
 	"identifier": "window",
 	"description": "Capability for the desktop",
-	"platforms": [
-		"macOS",
-		"windows"
-	],
-	"windows": [
-		"*"
-	],
+	"platforms": ["macOS", "windows"],
+	"windows": ["*"],
 	"permissions": [
 		"core:path:default",
 		"core:event:default",
