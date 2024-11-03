@@ -47,7 +47,7 @@ futures = "0.3.30"
 linkify = "0.10.0"
 regex = "1.10.4"
 keyring = { version = "3", features = ["apple-native", "windows-native"] }
-keyring-search = "1.2.0"
+keyring-search = { git = "https://github.com/reyamir/keyring-search" }
 tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
