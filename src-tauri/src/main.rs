@@ -18,7 +18,11 @@ use std::{
     str::FromStr,
     time::Duration,
 };
-use tauri::{path::BaseDirectory, Emitter, EventTarget, Listener, Manager};
+use tauri::{
+    menu::{Menu, MenuItem},
+    path::BaseDirectory,
+    Emitter, EventTarget, Listener, Manager, WebviewWindowBuilder,
+};
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
 use tauri_specta::{collect_commands, Builder};
@@ -171,6 +175,53 @@ fn main() {
             // Set a custom inset to the traffic lights
             #[cfg(target_os = "macos")]
             main_window.set_traffic_lights_inset(7.0, 10.0).unwrap();
+
+            // Setup tray menu item
+            let open_i = MenuItem::with_id(app, "open", "Open Lume", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+            // Create tray menu
+            let menu = Menu::with_items(app, &[&open_i, &quit_i])?;
+            // Get main tray
+            let tray = app.tray_by_id("main").unwrap();
+            // Set menu
+            tray.set_menu(Some(menu)).unwrap();
+            // Listen to tray events
+            tray.on_menu_event(|handle, event| match event.id().as_ref() {
+                "open" => {
+                    if let Some(window) = handle.get_window("main") {
+                        if window.is_visible().unwrap_or_default() {
+                            let _ = window.set_focus();
+                        } else {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        };
+                    } else {
+                        let window = WebviewWindowBuilder::from_config(
+                            handle,
+                            handle.config().app.windows.first().unwrap(),
+                        )
+                        .unwrap()
+                        .build()
+                        .unwrap();
+
+                        // Set decoration
+                        #[cfg(target_os = "windows")]
+                        window.create_overlay_titlebar().unwrap();
+
+                        // Restore native border
+                        #[cfg(target_os = "macos")]
+                        window.add_border(None);
+
+                        // Set a custom inset to the traffic lights
+                        #[cfg(target_os = "macos")]
+                        window.set_traffic_lights_inset(7.0, 10.0).unwrap();
+                    }
+                }
+                "quit" => {
+                    std::process::exit(0);
+                }
+                _ => {}
+            });
 
             let client = tauri::async_runtime::block_on(async move {
                 // Setup database
@@ -491,8 +542,13 @@ fn main() {
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .run(ctx)
-        .expect("error while running tauri application");
+        .build(ctx)
+        .expect("error while running tauri application")
+        .run(|_app_handle, event| {
+            if let tauri::RunEvent::ExitRequested { api, .. } = event {
+                api.prevent_exit();
+            }
+        });
 }
 
 #[cfg(debug_assertions)]
