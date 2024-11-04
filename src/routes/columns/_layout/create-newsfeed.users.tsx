@@ -93,7 +93,7 @@ function Screen() {
 							data?.map((item) => (
 								<div
 									key={item}
-									className="w-full p-2 mb-2 overflow-hidden bg-white rounded-lg h-max dark:bg-black/20shadow-primary dark:ring-1 ring-neutral-800/50"
+									className="w-full p-2 mb-2 overflow-hidden bg-white rounded-lg h-max dark:bg-black/20 shadow-primary dark:ring-1 ring-neutral-800/50"
 								>
 									<User.Provider pubkey={item}>
 										<User.Root>

@@ -160,7 +160,7 @@ function Header({
 			<button
 				type="button"
 				onClick={(e) => showContextMenu(e)}
-				className="hidden shrink-0 group-hover:inline-flex items-center justify-center size-6 border-[.5px] border-neutral-200 dark:border-neutral-800 shadow shadow-neutral-200/50 dark:shadow-none rounded-full bg-white dark:bg-black"
+				className="hidden shrink-0 group-hover:inline-flex items-center justify-center size-6 bg-white dark:bg-neutral-800 border-[.5px] border-neutral-200 dark:border-neutral-800 shadow shadow-neutral-200/50 dark:shadow-none rounded-full"
 			>
 				<CaretDown className="size-3" weight="bold" />
 			</button>

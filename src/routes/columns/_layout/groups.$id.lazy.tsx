@@ -88,7 +88,7 @@ export function Screen() {
 		>
 			<ScrollArea.Viewport
 				ref={ref}
-				className="relative h-full bg-white dark:bg-black rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
+				className="relative h-full bg-white dark:bg-neutral-800 rounded-t-xl shadow shadow-neutral-300/50 dark:shadow-none border-[.5px] border-neutral-300 dark:border-neutral-700"
 			>
 				<Virtualizer scrollRef={ref as unknown as RefObject<HTMLElement>}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
