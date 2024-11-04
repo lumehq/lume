@@ -30,7 +30,6 @@ pub mod common;
 pub struct Nostr {
     client: Client,
     queue: RwLock<HashSet<PublicKey>>,
-    is_syncing: RwLock<bool>,
     settings: RwLock<Settings>,
 }
 
@@ -68,7 +67,7 @@ pub const QUEUE_DELAY: u64 = 300;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
-    tracing_subscriber::fmt::init();
+    // tracing_subscriber::fmt::init();
 
     let builder = Builder::<tauri::Wry>::new().commands(collect_commands![
         get_relays,
@@ -231,108 +230,7 @@ fn main() {
             app.manage(Nostr {
                 client,
                 queue: RwLock::new(HashSet::new()),
-                is_syncing: RwLock::new(false),
                 settings: RwLock::new(Settings::default()),
-            });
-
-            // Trigger some actions for window events
-            main_window.on_window_event(move |event| match event {
-                tauri::WindowEvent::Focused(focused) => {
-                    if !focused {
-                        let handle = handle_clone_event.clone();
-
-                        tauri::async_runtime::spawn(async move {
-                            let state = handle.state::<Nostr>();
-                            let client = &state.client;
-
-                            if *state.is_syncing.read().await {
-                                return;
-                            }
-
-                            let mut is_syncing = state.is_syncing.write().await;
-
-                            // Mark sync in progress
-                            *is_syncing = true;
-
-                            let opts = SyncOptions::default();
-                            let accounts = get_all_accounts();
-
-                            if !accounts.is_empty() {
-                                let public_keys: Vec<PublicKey> = accounts
-                                    .iter()
-                                    .filter_map(|acc| PublicKey::from_str(acc).ok())
-                                    .collect();
-
-                                let filter = Filter::new().pubkeys(public_keys).kinds(vec![
-                                    Kind::TextNote,
-                                    Kind::Repost,
-                                    Kind::Reaction,
-                                    Kind::ZapReceipt,
-                                ]);
-
-                                if let Ok(output) = client.sync(filter, &opts).await {
-                                    println!("Received: {}", output.received.len())
-                                }
-                            }
-
-                            let filter = Filter::new().kinds(vec![
-                                Kind::TextNote,
-                                Kind::Repost,
-                                Kind::ContactList,
-                                Kind::FollowSet,
-                            ]);
-
-                            // Get all public keys in database
-                            if let Ok(events) = client.database().query(vec![filter]).await {
-                                let public_keys: HashSet<PublicKey> = events
-                                    .iter()
-                                    .flat_map(|ev| ev.tags.public_keys().copied())
-                                    .collect();
-                                let pk_vec: Vec<PublicKey> = public_keys.into_iter().collect();
-
-                                for chunk in pk_vec.chunks(500) {
-                                    if chunk.is_empty() {
-                                        return;
-                                    }
-
-                                    let authors = chunk.to_owned();
-
-                                    let filter = Filter::new()
-                                        .authors(authors.clone())
-                                        .kinds(vec![
-                                            Kind::Metadata,
-                                            Kind::FollowSet,
-                                            Kind::Interests,
-                                            Kind::InterestSet,
-                                        ])
-                                        .limit(1000);
-
-                                    if let Ok(output) = client.sync(filter, &opts).await {
-                                        println!("Received: {}", output.received.len())
-                                    }
-
-                                    let filter = Filter::new()
-                                        .authors(authors)
-                                        .kinds(vec![
-                                            Kind::TextNote,
-                                            Kind::Repost,
-                                            Kind::EventDeletion,
-                                        ])
-                                        .limit(500);
-
-                                    if let Ok(output) = client.sync(filter, &opts).await {
-                                        println!("Received: {}", output.received.len())
-                                    }
-                                }
-                            }
-
-                            // Mark sync is done
-                            *is_syncing = false;
-                        });
-                    }
-                }
-                tauri::WindowEvent::Moved(_size) => {}
-                _ => {}
             });
 
             // Listen for request metadata
@@ -379,7 +277,101 @@ fn main() {
                 });
             });
 
-            // Run notification thread
+            // Run a thread for negentropy
+            tauri::async_runtime::spawn(async move {
+                let state = handle_clone_event.state::<Nostr>();
+                let client = &state.client;
+
+                // Use default sync options
+                let opts = SyncOptions::default();
+
+                // Set interval
+                let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(600));
+
+                loop {
+                    interval.tick().await;
+
+                    let accounts = get_all_accounts();
+                    let public_keys: Vec<PublicKey> = accounts
+                        .iter()
+                        .filter_map(|acc| PublicKey::from_str(acc).ok())
+                        .collect();
+
+                    if !public_keys.is_empty() {
+                        // Create filter for notification
+                        //
+                        let filter = Filter::new().pubkeys(public_keys.clone()).kinds(vec![
+                            Kind::TextNote,
+                            Kind::Repost,
+                            Kind::Reaction,
+                            Kind::ZapReceipt,
+                        ]);
+
+                        // Sync notification
+                        //
+                        if let Ok(output) = client.sync(filter, &opts).await {
+                            println!("Received: {}", output.received.len())
+                        }
+
+                        // Create filter for contact list
+                        //
+                        let filter = Filter::new()
+                            .authors(public_keys)
+                            .kinds(vec![Kind::ContactList, Kind::FollowSet]);
+
+                        // Sync events for contact list
+                        //
+                        if let Ok(events) = client.database().query(vec![filter]).await {
+                            // Get unique public keys
+                            let public_keys: HashSet<PublicKey> = events
+                                .iter()
+                                .flat_map(|ev| ev.tags.public_keys().copied())
+                                .collect();
+
+                            // Convert to vector
+                            let public_keys: Vec<PublicKey> = public_keys.into_iter().collect();
+
+                            for chunk in public_keys.chunks(1000) {
+                                if chunk.is_empty() {
+                                    return;
+                                }
+
+                                let authors = chunk.to_owned();
+
+                                // Create filter for metadata
+                                //
+                                let filter = Filter::new().authors(authors.clone()).kinds(vec![
+                                    Kind::Metadata,
+                                    Kind::FollowSet,
+                                    Kind::Interests,
+                                    Kind::InterestSet,
+                                ]);
+
+                                // Sync metadata
+                                //
+                                if let Ok(output) = client.sync(filter, &opts).await {
+                                    println!("Received: {}", output.received.len())
+                                }
+
+                                // Create filter for text note
+                                //
+                                let filter = Filter::new()
+                                    .authors(authors)
+                                    .kinds(vec![Kind::TextNote, Kind::Repost, Kind::EventDeletion])
+                                    .limit(100);
+
+                                // Sync text note
+                                //
+                                if let Ok(output) = client.sync(filter, &opts).await {
+                                    println!("Received: {}", output.received.len())
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Run a thread for handle notification
             tauri::async_runtime::spawn(async move {
                 let state = handle_clone.state::<Nostr>();
                 let client = &state.client;

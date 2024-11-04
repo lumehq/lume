@@ -30,6 +30,13 @@
 					"$RESOURCE/*"
 				]
 			}
+		},
+		"trayIcon": {
+			"id": "main",
+			"iconAsTemplate": true,
+			"menuOnLeftClick": true,
+			"tooltip": "Lume",
+			"iconPath": "./icons/tray.png"
 		}
 	},
 	"bundle": {
