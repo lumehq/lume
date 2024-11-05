@@ -175,7 +175,6 @@ function ReplyList() {
 
 			return events.filter((ev) => !removeQueues.has(ev.id));
 		},
-		refetchOnWindowFocus: false,
 	});
 
 	useEffect(() => {

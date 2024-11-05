@@ -137,12 +137,14 @@ function Screen() {
 							</p>
 						</div>
 					) : isError ? (
-						<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
-							<p className="text-sm text-center">{error?.message ?? "Error"}</p>
+						<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/20">
+							<p className="text-xs text-center px-4 text-neutral-500 dark:text-neutral-400">
+								{error?.message ?? "Error"}
+							</p>
 						</div>
 					) : !data?.length ? (
-						<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
-							<p className="text-sm text-center">
+						<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/20">
+							<p className="text-xs text-center px-4 text-neutral-500 dark:text-neutral-400">
 								Nothing to show yet, you can use Lume more and comeback lack to
 								see new events.
 							</p>
@@ -150,6 +152,13 @@ function Screen() {
 					) : (
 						data?.map((item) => renderItem(item))
 					)}
+					<div className="mb-3 flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/20">
+						<p className="text-xs text-center px-4 text-neutral-500 dark:text-neutral-400">
+							Lume running sync in the background,
+							<br />
+							the more you use the more event you see.
+						</p>
+					</div>
 					{hasNextPage ? (
 						<button
 							type="button"

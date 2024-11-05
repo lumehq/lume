@@ -13,7 +13,6 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as BootstrapRelaysImport } from './routes/bootstrap-relays'
 import { Route as AppImport } from './routes/_app'
 import { Route as NewPostIndexImport } from './routes/new-post/index'
 import { Route as AppIndexImport } from './routes/_app/index'
@@ -90,14 +89,6 @@ const NewLazyRoute = NewLazyImport.update({
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/new.lazy').then((d) => d.Route))
-
-const BootstrapRelaysRoute = BootstrapRelaysImport.update({
-  id: '/bootstrap-relays',
-  path: '/bootstrap-relays',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/bootstrap-relays.lazy').then((d) => d.Route),
-)
 
 const AppRoute = AppImport.update({
   id: '/_app',
@@ -387,13 +378,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AppImport
-      parentRoute: typeof rootRoute
-    }
-    '/bootstrap-relays': {
-      id: '/bootstrap-relays'
-      path: '/bootstrap-relays'
-      fullPath: '/bootstrap-relays'
-      preLoaderRoute: typeof BootstrapRelaysImport
       parentRoute: typeof rootRoute
     }
     '/new': {
@@ -758,7 +742,6 @@ const SettingsIdLazyRouteWithChildren = SettingsIdLazyRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '': typeof AppRouteWithChildren
-  '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/new': typeof NewLazyRoute
   '/$id/set-group': typeof IdSetGroupRoute
   '/$id/set-interest': typeof IdSetInterestRoute
@@ -797,7 +780,6 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/new': typeof NewLazyRoute
   '/$id/set-group': typeof IdSetGroupRoute
   '/$id/set-interest': typeof IdSetInterestRoute
@@ -838,7 +820,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_app': typeof AppRouteWithChildren
-  '/bootstrap-relays': typeof BootstrapRelaysRoute
   '/new': typeof NewLazyRoute
   '/$id/set-group': typeof IdSetGroupRoute
   '/$id/set-interest': typeof IdSetInterestRoute
@@ -881,7 +862,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
-    | '/bootstrap-relays'
     | '/new'
     | '/$id/set-group'
     | '/$id/set-interest'
@@ -919,7 +899,6 @@ export interface FileRouteTypes {
     | '/columns/users/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/bootstrap-relays'
     | '/new'
     | '/$id/set-group'
     | '/$id/set-interest'
@@ -958,7 +937,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_app'
-    | '/bootstrap-relays'
     | '/new'
     | '/$id/set-group'
     | '/$id/set-interest'
@@ -1000,7 +978,6 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
-  BootstrapRelaysRoute: typeof BootstrapRelaysRoute
   NewLazyRoute: typeof NewLazyRoute
   IdSetGroupRoute: typeof IdSetGroupRoute
   IdSetInterestRoute: typeof IdSetInterestRoute
@@ -1016,7 +993,6 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
-  BootstrapRelaysRoute: BootstrapRelaysRoute,
   NewLazyRoute: NewLazyRoute,
   IdSetGroupRoute: IdSetGroupRoute,
   IdSetInterestRoute: IdSetInterestRoute,
@@ -1043,7 +1019,6 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_app",
-        "/bootstrap-relays",
         "/new",
         "/$id/set-group",
         "/$id/set-interest",
@@ -1062,9 +1037,6 @@ export const routeTree = rootRoute
       "children": [
         "/_app/"
       ]
-    },
-    "/bootstrap-relays": {
-      "filePath": "bootstrap-relays.tsx"
     },
     "/new": {
       "filePath": "new.lazy.tsx"

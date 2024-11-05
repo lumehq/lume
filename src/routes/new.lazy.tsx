@@ -27,32 +27,32 @@ function Screen() {
 				<div className="flex flex-col gap-4">
 					<a
 						href="/new-account/connect"
-						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-800 ring-1 ring-black/5 dark:ring-white/5"
+						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-600 ring-1 ring-black/5 dark:ring-white/5"
 					>
 						<h3 className="mb-1 font-medium">Continue with Nostr Connect</h3>
-						<p className="text-xs text-neutral-500 dark:text-neutral-500">
+						<p className="text-xs text-neutral-500 dark:text-neutral-400">
 							Your account will be handled by a remote signer. Lume will not
 							store your account keys.
 						</p>
 					</a>
 					<a
 						href="/new-account/import"
-						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-800 ring-1 ring-black/5 dark:ring-white/5"
+						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-600 ring-1 ring-black/5 dark:ring-white/5"
 					>
 						<h3 className="mb-1 font-medium">Continue with Secret Key</h3>
-						<p className="text-xs text-neutral-500 dark:text-neutral-500">
+						<p className="text-xs text-neutral-500 dark:text-neutral-400">
 							Lume will store your keys in secure storage. You can provide a
 							password to add extra security.
 						</p>
 					</a>
 					<a
 						href="/new-account/watch"
-						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-800 ring-1 ring-black/5 dark:ring-white/5"
+						className="w-full p-4 rounded-xl hover:shadow-lg hover:ring-0 hover:bg-white dark:hover:bg-neutral-600 ring-1 ring-black/5 dark:ring-white/5"
 					>
 						<h3 className="mb-1 font-medium">
 							Continue with Public Key (Watch Mode)
 						</h3>
-						<p className="text-xs text-neutral-500 dark:text-neutral-500">
+						<p className="text-xs text-neutral-500 dark:text-neutral-400">
 							Use for experience without provide your private key, you can add
 							it later to publish new note.
 						</p>
