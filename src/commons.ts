@@ -21,6 +21,15 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+export function isValidRelayUrl(string: string) {
+	try {
+		const newUrl = new URL(string);
+		return newUrl.protocol === "ws:" || newUrl.protocol === "wss:";
+	} catch (err) {
+		return false;
+	}
+}
+
 export const isImagePath = (path: string) => {
 	const exts = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
 

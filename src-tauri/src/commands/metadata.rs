@@ -383,6 +383,35 @@ pub async fn get_all_local_interests(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn get_relay_list(id: String, state: State<'_, Nostr>) -> Result<String, String> {
+    let client = &state.client;
+    let public_key = PublicKey::parse(&id).map_err(|e| e.to_string())?;
+
+    let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::RelayList)
+        .limit(1);
+
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
+    }
+
+    if let Some(event) = events.first() {
+        Ok(event.as_json())
+    } else {
+        Err("Relay list not found".into())
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn get_all_profiles(state: State<'_, Nostr>) -> Result<Vec<Mention>, String> {
     let client = &state.client;
     let filter = Filter::new().kind(Kind::Metadata);

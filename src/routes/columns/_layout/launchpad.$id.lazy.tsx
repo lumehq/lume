@@ -1,5 +1,5 @@
 import { commands } from "@/commands.gen";
-import { cn, toLumeEvents } from "@/commons";
+import { cn, isValidRelayUrl, toLumeEvents } from "@/commons";
 import { Spinner, User } from "@/components";
 import { LumeWindow } from "@/system";
 import type { LumeColumn, NostrEvent } from "@/types";
@@ -8,9 +8,10 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { resolveResource } from "@tauri-apps/api/path";
+import { message } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
-import { useCallback } from "react";
+import { useCallback, useState, useTransition } from "react";
 
 export const Route = createLazyFileRoute("/columns/_layout/launchpad/$id")({
 	component: Screen,
@@ -25,6 +26,7 @@ function Screen() {
 		>
 			<ScrollArea.Viewport className="relative h-full px-3 pb-3">
 				<Newsfeeds />
+				<Relayfeeds />
 				<Interests />
 				<Core />
 			</ScrollArea.Viewport>
@@ -178,15 +180,188 @@ function Newsfeeds() {
 					type="button"
 					onClick={() =>
 						LumeWindow.openColumn({
-							name: "Newsfeeds",
+							name: "Browse Newsfeeds",
 							url: "/columns/discover-newsfeeds",
 							label: "discover_newsfeeds",
 						})
 					}
 					className="h-9 w-full px-3 flex items-center justify-between bg-neutral-200/50 hover:bg-neutral-200 rounded-lg dark:bg-neutral-800/50 dark:hover:bg-neutral-800"
 				>
-					<span className="text-xs font-medium">Discover newsfeeds</span>
+					<span className="text-xs font-medium">Browse newsfeeds</span>
 					<ArrowRight className="size-4" weight="bold" />
+				</button>
+			</div>
+		</div>
+	);
+}
+
+function Relayfeeds() {
+	const { id } = Route.useParams();
+	const { isLoading, isError, error, data, refetch, isRefetching } = useQuery({
+		queryKey: ["relays", id],
+		queryFn: async () => {
+			const res = await commands.getRelayList(id);
+
+			if (res.status === "ok") {
+				const event: NostrEvent = JSON.parse(res.data);
+				return event;
+			} else {
+				throw new Error(res.error);
+			}
+		},
+		refetchOnWindowFocus: false,
+	});
+
+	return (
+		<div className="mb-12 flex flex-col gap-3">
+			<div className="flex items-center justify-between px-2">
+				<h3 className="font-semibold">Relayfeeds</h3>
+				<div className="inline-flex items-center justify-center gap-2">
+					<button
+						type="button"
+						onClick={() => refetch()}
+						className={cn(
+							"size-7 inline-flex items-center justify-center rounded-full",
+							isRefetching ? "animate-spin" : "",
+						)}
+					>
+						<ArrowClockwise className="size-4" />
+					</button>
+					<button
+						type="button"
+						onClick={() => LumeWindow.openPopup(`${id}/set-group`, "New group")}
+						className="h-7 w-max px-2 inline-flex items-center justify-center gap-1 text-sm font-medium rounded-full bg-neutral-300 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+					>
+						<Plus className="size-3" weight="bold" />
+						New
+					</button>
+				</div>
+			</div>
+			<div className="flex flex-col gap-3">
+				{isLoading ? (
+					<div className="inline-flex items-center gap-1.5">
+						<Spinner className="size-4" />
+						Loading...
+					</div>
+				) : isError ? (
+					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
+						<p className="text-center">{error?.message ?? "Error"}</p>
+					</div>
+				) : !data ? (
+					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
+						<p className="text-center">You don't have any relay list yet.</p>
+					</div>
+				) : (
+					<div className="flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
+						<div className="flex flex-col gap-2 p-2">
+							{data?.tags.map((tag) =>
+								tag[1]?.startsWith("wss://") ? (
+									<div
+										key={tag[1]}
+										className="group px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800"
+									>
+										<div className="flex-1 truncate select-text text-sm font-medium">
+											{tag[1]}
+										</div>
+										<button
+											type="button"
+											onClick={() =>
+												LumeWindow.openColumn({
+													name: tag[1],
+													label: `relays_${tag[1].replace(/[^\w\s]/gi, "")}`,
+													url: `/columns/relays/${encodeURIComponent(tag[1])}`,
+												})
+											}
+											className="h-6 w-16 hidden group-hover:inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+										>
+											Add
+										</button>
+									</div>
+								) : null,
+							)}
+						</div>
+						<div className="p-2 flex items-center">
+							<User.Provider pubkey={data?.pubkey}>
+								<User.Root className="inline-flex items-center gap-2">
+									<User.Avatar className="size-7 rounded-full" />
+									<User.Name className="text-xs font-medium" />
+								</User.Root>
+							</User.Provider>
+						</div>
+					</div>
+				)}
+				<div className="flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
+					<RelayForm />
+				</div>
+				<button
+					type="button"
+					onClick={() =>
+						LumeWindow.openColumn({
+							name: "Browse Relays",
+							url: "/columns/discover-relays",
+							label: "discover_relays",
+						})
+					}
+					className="h-9 w-full px-3 flex items-center justify-between bg-neutral-200/50 hover:bg-neutral-200 rounded-lg dark:bg-neutral-800/50 dark:hover:bg-neutral-800"
+				>
+					<span className="text-xs font-medium">Browse relays</span>
+					<ArrowRight className="size-4" weight="bold" />
+				</button>
+			</div>
+		</div>
+	);
+}
+
+function RelayForm() {
+	const [url, setUrl] = useState("");
+	const [isPending, startTransition] = useTransition();
+
+	const submit = () => {
+		startTransition(async () => {
+			if (!isValidRelayUrl(url)) {
+				await message("Relay URL is not valid", { kind: "error" });
+				return;
+			}
+
+			await LumeWindow.openColumn({
+				name: url,
+				label: `relays_${url.replace(/[^\w\s]/gi, "")}`,
+				url: `/columns/relays/${encodeURIComponent(url)}`,
+			});
+
+			setUrl("");
+		});
+	};
+
+	return (
+		<div className="flex flex-col gap-2 p-2">
+			<label
+				htmlFor="url"
+				className="text-xs font-semibold text-neutral-700 dark:text-neutral-300"
+			>
+				Add custom relay
+			</label>
+			<div className="flex gap-2">
+				<input
+					name="url"
+					type="url"
+					onChange={(e) => setUrl(e.currentTarget.value)}
+					onKeyDown={(event) => {
+						if (event.key === "Enter") submit();
+					}}
+					value={url}
+					disabled={isPending}
+					placeholder="wss://..."
+					spellCheck={false}
+					className="flex-1 px-3 bg-neutral-100 border-transparent rounded-lg h-9 dark:bg-neutral-900 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:placeholder:text-neutral-400"
+				/>
+				<button
+					type="button"
+					disabled={isPending}
+					onClick={() => submit()}
+					className="shrink-0 h-9 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-lg bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+				>
+					Add
 				</button>
 			</div>
 		</div>
@@ -332,14 +507,14 @@ function Interests() {
 					type="button"
 					onClick={() =>
 						LumeWindow.openColumn({
-							name: "Interests",
+							name: "Browse Interests",
 							url: "/columns/discover-interests",
 							label: "discover_interests",
 						})
 					}
 					className="h-9 w-full px-3 flex items-center justify-between bg-neutral-200/50 hover:bg-neutral-200 rounded-lg dark:bg-neutral-800/50 dark:hover:bg-neutral-800"
 				>
-					<span className="text-xs font-medium">Discover interests</span>
+					<span className="text-xs font-medium">Browse interests</span>
 					<ArrowRight className="size-4" weight="bold" />
 				</button>
 			</div>
@@ -386,22 +561,6 @@ function Core() {
 						<button
 							type="button"
 							onClick={() => LumeWindow.openNotification(id)}
-							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
-						>
-							Add
-						</button>
-					</div>
-					<div className="px-3 flex items-center justify-between h-11 rounded-lg bg-neutral-100 dark:bg-neutral-800">
-						<div className="text-sm font-medium">Relays</div>
-						<button
-							type="button"
-							onClick={() =>
-								LumeWindow.openColumn({
-									name: "Relays",
-									label: "relays",
-									url: "/columns/discover-relays",
-								})
-							}
 							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
 						>
 							Add

@@ -67,11 +67,11 @@ impl Default for Settings {
 
 pub const DEFAULT_DIFFICULTY: u8 = 0;
 pub const FETCH_LIMIT: usize = 50;
-pub const QUEUE_DELAY: u64 = 300;
+pub const QUEUE_DELAY: u64 = 150;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
 
 fn main() {
-    // tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt::init();
 
     let builder = Builder::<tauri::Wry>::new().commands(collect_commands![
         get_relays,
@@ -105,6 +105,7 @@ fn main() {
         get_interest,
         get_all_interests,
         get_all_local_interests,
+        get_relay_list,
         set_wallet,
         load_wallet,
         remove_wallet,

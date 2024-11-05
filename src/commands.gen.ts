@@ -248,6 +248,14 @@ async getAllLocalInterests(until: string | null) : Promise<Result<RichEvent[], s
     else return { status: "error", error: e  as any };
 }
 },
+async getRelayList(id: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_relay_list", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async setWallet(uri: string) : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_wallet", { uri }) };

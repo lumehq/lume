@@ -16,7 +16,7 @@ export function NoteQuote({
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => LumeWindow.openEditor(null, event.id)}
+						onClick={() => LumeWindow.openEditor(undefined, event.id)}
 						className={cn(
 							"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
 							label
