@@ -3,7 +3,7 @@ import { Button } from "@getalby/bitcoin-connect-react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-export const Route = createLazyFileRoute("/settings/$id/wallet")({
+export const Route = createLazyFileRoute("/settings/wallet")({
 	component: Screen,
 });
 

@@ -17,7 +17,7 @@ import { settingsQueryOptions } from "../__root";
 
 type Theme = "auto" | "light" | "dark";
 
-export const Route = createLazyFileRoute("/settings/$id/general")({
+export const Route = createLazyFileRoute("/settings/general")({
 	component: Screen,
 });
 
@@ -46,6 +46,7 @@ function Screen() {
 				return;
 			} else {
 				await message(res.error, { kind: "error" });
+				return;
 			}
 		});
 	};

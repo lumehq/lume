@@ -25,6 +25,7 @@ use tauri::{
 };
 use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_notification::{NotificationExt, PermissionState};
+use tauri_plugin_store::StoreExt;
 use tauri_specta::{collect_commands, Builder};
 use tokio::{sync::RwLock, time::sleep};
 
@@ -42,7 +43,7 @@ pub struct Payload {
     id: String,
 }
 
-#[derive(Clone, Serialize, Deserialize, Type)]
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
 pub struct Settings {
     resize_service: bool,
     content_warning: bool,
@@ -74,13 +75,11 @@ fn main() {
     tracing_subscriber::fmt::init();
 
     let builder = Builder::<tauri::Wry>::new().commands(collect_commands![
-        get_relays,
         get_all_relays,
+        get_all_relay_lists,
         is_relay_connected,
         connect_relay,
         remove_relay,
-        get_bootstrap_relays,
-        set_bootstrap_relays,
         get_accounts,
         watch_account,
         import_account,
@@ -278,11 +277,29 @@ fn main() {
                 client
             });
 
+            // Load app settings
+            let store = app.store(".data")?;
+
+            // Parse app settings if exist
+            let settings = if let Some(data) = store.get("tanstack-query-[\"settings\"]") {
+                if let Some(str) = data.as_str() {
+                    let v: Value = serde_json::from_str(str).unwrap();
+                    let data = v["state"]["data"].clone();
+                    let parse: Settings = serde_json::from_value(data).unwrap();
+
+                    RwLock::new(parse)
+                } else {
+                    RwLock::new(Settings::default())
+                }
+            } else {
+                RwLock::new(Settings::default())
+            };
+
             // Create global state
             app.manage(Nostr {
                 client,
+                settings,
                 queue: RwLock::new(HashSet::new()),
-                settings: RwLock::new(Settings::default()),
             });
 
             // Listen for request metadata

@@ -5,17 +5,17 @@
 
 
 export const commands = {
-async getRelays(id: string) : Promise<Result<Relays, string>> {
+async getAllRelays() : Promise<Result<string[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_relays", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_relays") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getAllRelays(until: string | null) : Promise<Result<string[], string>> {
+async getAllRelayLists(until: string | null) : Promise<Result<string[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("get_all_relays", { until }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_all_relay_lists", { until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -40,22 +40,6 @@ async connectRelay(relay: string) : Promise<Result<null, string>> {
 async removeRelay(relay: string) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("remove_relay", { relay }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getBootstrapRelays() : Promise<Result<string[], string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_bootstrap_relays") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async setBootstrapRelays(relays: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("set_bootstrap_relays", { relays }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -536,7 +520,6 @@ export type Column = { label: string; url: string; x: number; y: number; width: 
 export type Mention = { pubkey: string; avatar: string; display_name: string; name: string }
 export type Meta = { content: string; images: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type NewWindow = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean; closable: boolean }
-export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { resize_service: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
 

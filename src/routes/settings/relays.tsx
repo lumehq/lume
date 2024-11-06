@@ -1,12 +1,12 @@
 import { commands } from "@/commands.gen";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/settings/$id/relay")({
-	beforeLoad: async ({ params }) => {
-		const res = await commands.getRelays(params.id);
+export const Route = createFileRoute("/settings/relays")({
+	beforeLoad: async () => {
+		const res = await commands.getAllRelays();
 
 		if (res.status === "ok") {
-			return { relayList: res.data };
+			return { allRelays: res.data };
 		} else {
 			throw new Error(res.error);
 		}

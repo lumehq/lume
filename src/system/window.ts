@@ -121,7 +121,7 @@ export const LumeWindow = {
 			throw new Error(query.error);
 		}
 	},
-	openZap: async (id: string, account?: string) => {
+	openZap: async (id: string) => {
 		const wallet = await commands.loadWallet();
 
 		if (wallet.status === "ok") {
@@ -136,16 +136,14 @@ export const LumeWindow = {
 				hidden_title: true,
 				closable: true,
 			});
-		} else if (account) {
-			await LumeWindow.openSettings(account, "wallet");
+		} else {
+			await LumeWindow.openSettings("wallet");
 		}
 	},
-	openSettings: async (account: string, path?: string) => {
+	openSettings: async (path?: string) => {
 		const query = await commands.openWindow({
 			label: "settings",
-			url: path
-				? `/settings/${account}/${path}`
-				: `/settings/${account}/general`,
+			url: path ? `/settings/${path}` : "/settings/general",
 			title: "Settings",
 			width: 700,
 			height: 500,

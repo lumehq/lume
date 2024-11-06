@@ -27,7 +27,7 @@ function Screen() {
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
 			const until = pageParam > 0 ? pageParam.toString() : null;
-			const res = await commands.getAllRelays(until);
+			const res = await commands.getAllRelayLists(until);
 
 			if (res.status === "ok") {
 				const data: NostrEvent[] = res.data.map((item) => JSON.parse(item));

@@ -154,7 +154,7 @@ function Account({ pubkey }: { pubkey: string }) {
 				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
 					text: "Settings",
-					action: () => LumeWindow.openSettings(pubkey),
+					action: () => LumeWindow.openSettings(),
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
 				MenuItem.new({
