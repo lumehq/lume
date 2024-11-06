@@ -11,16 +11,9 @@ use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use specta_typescript::Typescript;
-use std::{
-    collections::HashSet,
-    fs,
-    io::{self, BufRead},
-    str::FromStr,
-    time::Duration,
-};
+use std::{collections::HashSet, fs, str::FromStr, time::Duration};
 use tauri::{
     menu::{Menu, MenuItem},
-    path::BaseDirectory,
     Emitter, EventTarget, Listener, Manager, WebviewWindowBuilder,
 };
 use tauri_plugin_decorum::WebviewWindowExt;
@@ -70,6 +63,14 @@ pub const DEFAULT_DIFFICULTY: u8 = 0;
 pub const FETCH_LIMIT: usize = 50;
 pub const QUEUE_DELAY: u64 = 150;
 pub const NOTIFICATION_SUB_ID: &str = "lume_notification";
+// Will be removed when almost relays support negentropy
+pub const BOOTSTRAP_RELAYS: [&str; 5] = [
+    "wss://relay.damus.io",
+    "wss://relay.primal.net",
+    "wss://nostr.fmt.wiz.biz",
+    "wss://directory.yabu.me",
+    "wss://purplepag.es",
+];
 
 fn main() {
     tracing_subscriber::fmt::init();
@@ -241,7 +242,7 @@ fn main() {
                     .opts(opts)
                     .build();
 
-                // Get bootstrap relays
+                /* Get bootstrap relays
                 if let Ok(path) = handle
                     .path()
                     .resolve("resources/relays.txt", BaseDirectory::Resource)
@@ -267,6 +268,11 @@ fn main() {
                             }
                         }
                     }
+                }
+                */
+
+                for relay in BOOTSTRAP_RELAYS {
+                    let _ = client.add_relay(relay).await;
                 }
 
                 let _ = client.add_discovery_relay("wss://user.kindpag.es/").await;
@@ -378,7 +384,8 @@ fn main() {
 
                         // Sync notification
                         //
-                        if let Ok(output) = client.sync(filter, &opts).await {
+                        if let Ok(output) = client.sync_with(BOOTSTRAP_RELAYS, filter, &opts).await
+                        {
                             println!("Received: {}", output.received.len())
                         }
 
@@ -418,7 +425,9 @@ fn main() {
 
                                 // Sync metadata
                                 //
-                                if let Ok(output) = client.sync(filter, &opts).await {
+                                if let Ok(output) =
+                                    client.sync_with(BOOTSTRAP_RELAYS, filter, &opts).await
+                                {
                                     println!("Received: {}", output.received.len())
                                 }
 
@@ -431,7 +440,9 @@ fn main() {
 
                                 // Sync text note
                                 //
-                                if let Ok(output) = client.sync(filter, &opts).await {
+                                if let Ok(output) =
+                                    client.sync_with(BOOTSTRAP_RELAYS, filter, &opts).await
+                                {
                                     println!("Received: {}", output.received.len())
                                 }
                             }
