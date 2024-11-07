@@ -75,6 +75,9 @@ const ColumnsLayoutNotificationIdLazyImport = createFileRoute(
 const ColumnsLayoutLaunchpadIdLazyImport = createFileRoute(
   '/columns/_layout/launchpad/$id',
 )()
+const ColumnsLayoutDvmIdLazyImport = createFileRoute(
+  '/columns/_layout/dvm/$id',
+)()
 
 // Create/Update Routes
 
@@ -314,6 +317,14 @@ const ColumnsLayoutLaunchpadIdLazyRoute =
   } as any).lazy(() =>
     import('./routes/columns/_layout/launchpad.$id.lazy').then((d) => d.Route),
   )
+
+const ColumnsLayoutDvmIdLazyRoute = ColumnsLayoutDvmIdLazyImport.update({
+  id: '/dvm/$id',
+  path: '/dvm/$id',
+  getParentRoute: () => ColumnsLayoutRoute,
+} as any).lazy(() =>
+  import('./routes/columns/_layout/dvm.$id.lazy').then((d) => d.Route),
+)
 
 const ColumnsLayoutStoriesIdRoute = ColumnsLayoutStoriesIdImport.update({
   id: '/stories/$id',
@@ -597,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColumnsLayoutStoriesIdImport
       parentRoute: typeof ColumnsLayoutImport
     }
+    '/columns/_layout/dvm/$id': {
+      id: '/columns/_layout/dvm/$id'
+      path: '/dvm/$id'
+      fullPath: '/columns/dvm/$id'
+      preLoaderRoute: typeof ColumnsLayoutDvmIdLazyImport
+      parentRoute: typeof ColumnsLayoutImport
+    }
     '/columns/_layout/launchpad/$id': {
       id: '/columns/_layout/launchpad/$id'
       path: '/launchpad/$id'
@@ -694,6 +712,7 @@ interface ColumnsLayoutRouteChildren {
   ColumnsLayoutInterestsIdRoute: typeof ColumnsLayoutInterestsIdRoute
   ColumnsLayoutNewsfeedIdRoute: typeof ColumnsLayoutNewsfeedIdRoute
   ColumnsLayoutStoriesIdRoute: typeof ColumnsLayoutStoriesIdRoute
+  ColumnsLayoutDvmIdLazyRoute: typeof ColumnsLayoutDvmIdLazyRoute
   ColumnsLayoutLaunchpadIdLazyRoute: typeof ColumnsLayoutLaunchpadIdLazyRoute
   ColumnsLayoutNotificationIdLazyRoute: typeof ColumnsLayoutNotificationIdLazyRoute
   ColumnsLayoutRelaysUrlLazyRoute: typeof ColumnsLayoutRelaysUrlLazyRoute
@@ -718,6 +737,7 @@ const ColumnsLayoutRouteChildren: ColumnsLayoutRouteChildren = {
   ColumnsLayoutInterestsIdRoute: ColumnsLayoutInterestsIdRoute,
   ColumnsLayoutNewsfeedIdRoute: ColumnsLayoutNewsfeedIdRoute,
   ColumnsLayoutStoriesIdRoute: ColumnsLayoutStoriesIdRoute,
+  ColumnsLayoutDvmIdLazyRoute: ColumnsLayoutDvmIdLazyRoute,
   ColumnsLayoutLaunchpadIdLazyRoute: ColumnsLayoutLaunchpadIdLazyRoute,
   ColumnsLayoutNotificationIdLazyRoute: ColumnsLayoutNotificationIdLazyRoute,
   ColumnsLayoutRelaysUrlLazyRoute: ColumnsLayoutRelaysUrlLazyRoute,
@@ -772,6 +792,7 @@ export interface FileRoutesByFullPath {
   '/columns/interests/$id': typeof ColumnsLayoutInterestsIdRoute
   '/columns/newsfeed/$id': typeof ColumnsLayoutNewsfeedIdRoute
   '/columns/stories/$id': typeof ColumnsLayoutStoriesIdRoute
+  '/columns/dvm/$id': typeof ColumnsLayoutDvmIdLazyRoute
   '/columns/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
   '/columns/relays/$url': typeof ColumnsLayoutRelaysUrlLazyRoute
@@ -810,6 +831,7 @@ export interface FileRoutesByTo {
   '/columns/interests/$id': typeof ColumnsLayoutInterestsIdRoute
   '/columns/newsfeed/$id': typeof ColumnsLayoutNewsfeedIdRoute
   '/columns/stories/$id': typeof ColumnsLayoutStoriesIdRoute
+  '/columns/dvm/$id': typeof ColumnsLayoutDvmIdLazyRoute
   '/columns/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
   '/columns/relays/$url': typeof ColumnsLayoutRelaysUrlLazyRoute
@@ -851,6 +873,7 @@ export interface FileRoutesById {
   '/columns/_layout/interests/$id': typeof ColumnsLayoutInterestsIdRoute
   '/columns/_layout/newsfeed/$id': typeof ColumnsLayoutNewsfeedIdRoute
   '/columns/_layout/stories/$id': typeof ColumnsLayoutStoriesIdRoute
+  '/columns/_layout/dvm/$id': typeof ColumnsLayoutDvmIdLazyRoute
   '/columns/_layout/launchpad/$id': typeof ColumnsLayoutLaunchpadIdLazyRoute
   '/columns/_layout/notification/$id': typeof ColumnsLayoutNotificationIdLazyRoute
   '/columns/_layout/relays/$url': typeof ColumnsLayoutRelaysUrlLazyRoute
@@ -892,6 +915,7 @@ export interface FileRouteTypes {
     | '/columns/interests/$id'
     | '/columns/newsfeed/$id'
     | '/columns/stories/$id'
+    | '/columns/dvm/$id'
     | '/columns/launchpad/$id'
     | '/columns/notification/$id'
     | '/columns/relays/$url'
@@ -929,6 +953,7 @@ export interface FileRouteTypes {
     | '/columns/interests/$id'
     | '/columns/newsfeed/$id'
     | '/columns/stories/$id'
+    | '/columns/dvm/$id'
     | '/columns/launchpad/$id'
     | '/columns/notification/$id'
     | '/columns/relays/$url'
@@ -968,6 +993,7 @@ export interface FileRouteTypes {
     | '/columns/_layout/interests/$id'
     | '/columns/_layout/newsfeed/$id'
     | '/columns/_layout/stories/$id'
+    | '/columns/_layout/dvm/$id'
     | '/columns/_layout/launchpad/$id'
     | '/columns/_layout/notification/$id'
     | '/columns/_layout/relays/$url'
@@ -1081,6 +1107,7 @@ export const routeTree = rootRoute
         "/columns/_layout/interests/$id",
         "/columns/_layout/newsfeed/$id",
         "/columns/_layout/stories/$id",
+        "/columns/_layout/dvm/$id",
         "/columns/_layout/launchpad/$id",
         "/columns/_layout/notification/$id",
         "/columns/_layout/relays/$url",
@@ -1181,6 +1208,10 @@ export const routeTree = rootRoute
     },
     "/columns/_layout/stories/$id": {
       "filePath": "columns/_layout/stories.$id.tsx",
+      "parent": "/columns/_layout"
+    },
+    "/columns/_layout/dvm/$id": {
+      "filePath": "columns/_layout/dvm.$id.lazy.tsx",
       "parent": "/columns/_layout"
     },
     "/columns/_layout/launchpad/$id": {

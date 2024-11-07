@@ -20,7 +20,7 @@ export function Column({ column }: { column: LumeColumn }) {
 					y: rect.y,
 					width: rect.width,
 					height: rect.height,
-					url: `${column.url}?label=${column.label}&name=${column.name}`,
+					url: `${column.url}?label=${column.label}&name=${column.name}&account=${column.account}`,
 				});
 
 				if (res.status === "error") {

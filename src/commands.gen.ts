@@ -360,6 +360,38 @@ async getAllEventsFrom(url: string, until: string | null) : Promise<Result<RichE
     else return { status: "error", error: e  as any };
 }
 },
+async getAllEventsByKind(kind: number, until: string | null) : Promise<Result<string[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_events_by_kind", { kind, until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getAllProviders() : Promise<Result<string[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_providers") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async requestEventsFromProvider(provider: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("request_events_from_provider", { provider }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getAllEventsByRequest(id: string, provider: string) : Promise<Result<RichEvent[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_events_by_request", { id, provider }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };

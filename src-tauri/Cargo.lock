@@ -3595,6 +3595,7 @@ dependencies = [
  "async-trait",
  "nostr",
  "thiserror",
+ "webln",
 ]
 
 [[package]]
@@ -7150,6 +7151,19 @@ dependencies = [
  "pkg-config",
  "soup3-sys",
  "system-deps",
+]
+
+[[package]]
+name = "webln"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a75257015c2a40fc43c672fb03b70311f75e48b1020c8acff808ca628c46d87c"
+dependencies = [
+ "js-sys",
+ "secp256k1",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]

@@ -105,13 +105,11 @@ export function NoteRepost({
 
 				if (signer.status === "ok") {
 					if (!signer.data) {
-						if (!signer.data) {
-							const res = await commands.setSigner(account);
+						const res = await commands.setSigner(account);
 
-							if (res.status === "error") {
-								await message(res.error, { kind: "error" });
-								return;
-							}
+						if (res.status === "error") {
+							await message(res.error, { kind: "error" });
+							return;
 						}
 					}
 

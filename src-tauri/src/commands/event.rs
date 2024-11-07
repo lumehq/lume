@@ -241,6 +241,173 @@ pub async fn get_all_events_from(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn get_all_events_by_kind(
+    kind: u16,
+    until: Option<String>,
+    state: State<'_, Nostr>,
+) -> Result<Vec<String>, String> {
+    let client = &state.client;
+
+    let as_of = match until {
+        Some(until) => Timestamp::from_str(&until).map_err(|err| err.to_string())?,
+        None => Timestamp::now(),
+    };
+
+    let filter = Filter::new()
+        .kind(Kind::Custom(kind))
+        .limit(FETCH_LIMIT)
+        .until(as_of);
+
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
+    }
+
+    let alt_events: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
+
+    Ok(alt_events)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_providers(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+    let client = &state.client;
+
+    let filter = Filter::new()
+        .kind(Kind::Custom(31990))
+        .custom_tag(SingleLetterTag::lowercase(Alphabet::K), vec!["5300"]);
+
+    let mut events = Events::new(&[filter.clone()]);
+
+    let mut rx = client
+        .stream_events(vec![filter], Some(Duration::from_secs(3)))
+        .await
+        .map_err(|e| e.to_string())?;
+
+    while let Some(event) = rx.next().await {
+        events.insert(event);
+    }
+
+    let alt_events: Vec<String> = events.iter().map(|ev| ev.as_json()).collect();
+
+    Ok(alt_events)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn request_events_from_provider(
+    provider: String,
+    state: State<'_, Nostr>,
+) -> Result<String, String> {
+    let client = &state.client;
+    let signer = client.signer().await.map_err(|err| err.to_string())?;
+    let public_key = signer
+        .get_public_key()
+        .await
+        .map_err(|err| err.to_string())?;
+    let provider = PublicKey::parse(&provider).map_err(|err| err.to_string())?;
+
+    // Get current user's relay list
+    let relay_list = client
+        .database()
+        .relay_list(public_key)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    let relay_list: Vec<String> = relay_list.iter().map(|item| item.0.to_string()).collect();
+
+    // Create job request
+    let builder = EventBuilder::job_request(
+        Kind::JobRequest(5300),
+        vec![
+            Tag::public_key(provider),
+            Tag::custom(TagKind::Relays, relay_list),
+        ],
+    )
+    .map_err(|err| err.to_string())?;
+
+    match client.send_event_builder(builder).await {
+        Ok(output) => {
+            let filter = Filter::new()
+                .kind(Kind::JobResult(6300))
+                .author(provider)
+                .pubkey(public_key)
+                .since(Timestamp::now());
+
+            let opts = SubscribeAutoCloseOptions::default()
+                .filter(FilterOptions::WaitDurationAfterEOSE(Duration::from_secs(2)));
+
+            let _ = client.subscribe(vec![filter], Some(opts)).await;
+
+            Ok(output.val.to_hex())
+        }
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_events_by_request(
+    id: String,
+    provider: String,
+    state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+    let client = &state.client;
+    let public_key = PublicKey::parse(&id).map_err(|err| err.to_string())?;
+    let provider = PublicKey::parse(&provider).map_err(|err| err.to_string())?;
+
+    let filter = Filter::new()
+        .kind(Kind::JobResult(6300))
+        .author(provider)
+        .pubkey(public_key)
+        .limit(1);
+
+    let events = client
+        .database()
+        .query(vec![filter])
+        .await
+        .map_err(|err| err.to_string())?;
+
+    if let Some(event) = events.first() {
+        let parsed: Vec<Vec<String>> =
+            serde_json::from_str(&event.content).map_err(|err| err.to_string())?;
+
+        let vec: Vec<Tag> = parsed
+            .into_iter()
+            .filter_map(|item| Tag::parse(&item).ok())
+            .collect::<Vec<_>>();
+
+        let tags = Tags::new(vec);
+        let ids: Vec<EventId> = tags.event_ids().copied().collect();
+
+        let filter = Filter::new().ids(ids);
+        let mut events = Events::new(&[filter.clone()]);
+
+        let mut rx = client
+            .stream_events(vec![filter], Some(Duration::from_secs(3)))
+            .await
+            .map_err(|e| e.to_string())?;
+
+        while let Some(event) = rx.next().await {
+            events.insert(event);
+        }
+
+        let alt_events = process_event(client, events, false).await;
+
+        Ok(alt_events)
+    } else {
+        Err("Job result not found.".into())
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn get_local_events(
     until: Option<String>,
     state: State<'_, Nostr>,

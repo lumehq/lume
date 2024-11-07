@@ -71,11 +71,11 @@ pub async fn create_column(
                             if let Ok(public_key) = PublicKey::parse(&id) {
                                 let is_newsfeed = payload.url().to_string().contains("newsfeed");
 
-                                tauri::async_runtime::spawn(async move {
-                                    let state = webview.state::<Nostr>();
-                                    let client = &state.client;
+                                if is_newsfeed {
+                                    tauri::async_runtime::spawn(async move {
+                                        let state = webview.state::<Nostr>();
+                                        let client = &state.client;
 
-                                    if is_newsfeed {
                                         if let Ok(contact_list) =
                                             client.database().contacts_public_keys(public_key).await
                                         {
@@ -102,27 +102,31 @@ pub async fn create_column(
                                                 println!("Subscription error: {}", e);
                                             }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             } else if let Ok(event_id) = EventId::parse(&id) {
-                                tauri::async_runtime::spawn(async move {
-                                    let state = webview.state::<Nostr>();
-                                    let client = &state.client;
+                                let is_thread = payload.url().to_string().contains("events");
 
-                                    let subscription_id = SubscriptionId::new(webview.label());
+                                if is_thread {
+                                    tauri::async_runtime::spawn(async move {
+                                        let state = webview.state::<Nostr>();
+                                        let client = &state.client;
 
-                                    let filter = Filter::new()
-                                        .event(event_id)
-                                        .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
-                                        .since(Timestamp::now());
+                                        let subscription_id = SubscriptionId::new(webview.label());
 
-                                    if let Err(e) = client
-                                        .subscribe_with_id(subscription_id, vec![filter], None)
-                                        .await
-                                    {
-                                        println!("Subscription error: {}", e);
-                                    }
-                                });
+                                        let filter = Filter::new()
+                                            .event(event_id)
+                                            .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
+                                            .since(Timestamp::now());
+
+                                        if let Err(e) = client
+                                            .subscribe_with_id(subscription_id, vec![filter], None)
+                                            .await
+                                        {
+                                            println!("Subscription error: {}", e);
+                                        }
+                                    });
+                                }
                             }
                         }
                     }

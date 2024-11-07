@@ -101,25 +101,19 @@ export function UserButton({ className }: { className?: string }) {
 
 	const submit = (account: string) => {
 		startTransition(async () => {
-			if (!status) {
-				const signer = await commands.hasSigner(account);
+			const signer = await commands.hasSigner(account);
 
-				if (signer.status === "ok") {
-					if (!signer.data) {
-						if (!signer.data) {
-							const res = await commands.setSigner(account);
+			if (signer.status === "ok") {
+				if (!signer.data) {
+					const res = await commands.setSigner(account);
 
-							if (res.status === "error") {
-								await message(res.error, { kind: "error" });
-								return;
-							}
-						}
+					if (res.status === "error") {
+						await message(res.error, { kind: "error" });
+						return;
 					}
-
-					toggleFollow.mutate();
-				} else {
-					return;
 				}
+
+				toggleFollow.mutate();
 			} else {
 				return;
 			}

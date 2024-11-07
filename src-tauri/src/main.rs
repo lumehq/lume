@@ -121,6 +121,10 @@ fn main() {
         get_all_events_by_authors,
         get_all_events_by_hashtags,
         get_all_events_from,
+        get_all_events_by_kind,
+        get_all_providers,
+        request_events_from_provider,
+        get_all_events_by_request,
         get_local_events,
         get_global_events,
         search,
@@ -232,8 +236,7 @@ fn main() {
                 // Config
                 let opts = Options::new()
                     .gossip(true)
-                    .max_avg_latency(Duration::from_millis(300))
-                    .automatic_authentication(true)
+                    .max_avg_latency(Duration::from_millis(500))
                     .timeout(Duration::from_secs(5));
 
                 // Setup nostr client
@@ -546,6 +549,8 @@ fn main() {
                                     ) {
                                         println!("Emit error: {}", e)
                                     }
+                                } else if event.kind == Kind::JobResult(6300) {
+                                    println!("Job result: {}", event.as_json())
                                 }
                             }
                         }

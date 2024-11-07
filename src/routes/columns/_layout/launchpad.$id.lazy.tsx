@@ -11,7 +11,8 @@ import { resolveResource } from "@tauri-apps/api/path";
 import { message } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
-import { useCallback, useState, useTransition } from "react";
+import { memo, useCallback, useState, useTransition } from "react";
+import { minidenticon } from "minidenticons";
 
 export const Route = createLazyFileRoute("/columns/_layout/launchpad/$id")({
 	component: Screen,
@@ -28,6 +29,7 @@ function Screen() {
 				<Newsfeeds />
 				<Relayfeeds />
 				<Interests />
+				<ContentDiscovery />
 				<Core />
 			</ScrollArea.Viewport>
 			<ScrollArea.Scrollbar
@@ -436,22 +438,20 @@ function Interests() {
 							</User.Provider>
 							<h5 className="text-xs font-medium">{name}</h5>
 						</div>
-						<div className="flex items-center gap-3">
-							<button
-								type="button"
-								onClick={() =>
-									LumeWindow.openColumn({
-										label,
-										name,
-										account: id,
-										url: `/columns/interests/${item.id}`,
-									})
-								}
-								className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
-							>
-								Add
-							</button>
-						</div>
+						<button
+							type="button"
+							onClick={() =>
+								LumeWindow.openColumn({
+									label,
+									name,
+									account: id,
+									url: `/columns/interests/${item.id}`,
+								})
+							}
+							className="h-6 w-16 inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white"
+						>
+							Add
+						</button>
 					</div>
 				</div>
 			);
@@ -521,6 +521,132 @@ function Interests() {
 		</div>
 	);
 }
+
+function ContentDiscovery() {
+	const { isLoading, isError, error, data } = useQuery({
+		queryKey: ["content-discovery"],
+		queryFn: async () => {
+			const res = await commands.getAllProviders();
+
+			if (res.status === "ok") {
+				const events: NostrEvent[] = res.data.map((item) => JSON.parse(item));
+				return events;
+			} else {
+				throw new Error(res.error);
+			}
+		},
+		refetchOnWindowFocus: false,
+	});
+
+	return (
+		<div className="mb-12 flex flex-col gap-3">
+			<div className="flex items-center justify-between px-2">
+				<h3 className="font-semibold">Content Discovery</h3>
+			</div>
+			<div className="flex flex-col gap-3">
+				{isLoading ? (
+					<div className="inline-flex items-center gap-1.5">
+						<Spinner className="size-4" />
+						Loading...
+					</div>
+				) : isError ? (
+					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
+						<p className="text-center">{error?.message ?? "Error"}</p>
+					</div>
+				) : !data ? (
+					<div className="flex flex-col items-center justify-center h-16 w-full rounded-xl overflow-hidden bg-neutral-200/50 dark:bg-neutral-800/50">
+						<p className="text-center">Empty.</p>
+					</div>
+				) : (
+					<div className="flex flex-col rounded-xl overflow-hidden bg-white dark:bg-neutral-800/50 shadow-lg shadow-primary dark:ring-1 dark:ring-neutral-800">
+						<div className="flex flex-col gap-2 p-2">
+							{data?.map((item) => (
+								<Provider key={item.id} event={item} />
+							))}
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
+}
+
+const Provider = memo(function Provider({ event }: { event: NostrEvent }) {
+	const { id } = Route.useParams();
+	const [isPending, startTransition] = useTransition();
+
+	const metadata: { [key: string]: string } = JSON.parse(event.content);
+	const fallback = `data:image/svg+xml;utf8,${encodeURIComponent(
+		minidenticon(event.id, 60, 50),
+	)}`;
+
+	const request = (name: string | undefined, provider: string) => {
+		startTransition(async () => {
+			// Ensure signer
+			const signer = await commands.hasSigner(id);
+
+			if (signer.status === "ok") {
+				if (!signer.data) {
+					const res = await commands.setSigner(id);
+
+					if (res.status === "error") {
+						await message(res.error, { kind: "error" });
+						return;
+					}
+				}
+
+				// Send request event to provider
+				const res = await commands.requestEventsFromProvider(provider);
+
+				if (res.status === "ok") {
+					// Open column
+					await LumeWindow.openColumn({
+						label: `dvm_${provider.slice(0, 6)}`,
+						name: name || "Content Discovery",
+						account: id,
+						url: `/columns/dvm/${provider}`,
+					});
+					return;
+				} else {
+					await message(res.error, { kind: "error" });
+					return;
+				}
+			} else {
+				await message(signer.error, { kind: "error" });
+				return;
+			}
+		});
+	};
+
+	return (
+		<div className="group px-3 flex gap-2 items-center justify-between h-16 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+			<div className="shrink-0 size-10 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+				<img
+					src={metadata.picture || fallback}
+					alt={event.id}
+					className="size-10 object-cover"
+				/>
+			</div>
+			<div className="flex-1 flex flex-col truncate">
+				<h5 className="text-sm font-medium">{metadata.name}</h5>
+				<p className="w-full text-sm truncate text-neutral-600 dark:text-neutral-400">
+					{metadata.about}
+				</p>
+			</div>
+			<button
+				type="button"
+				onClick={() => request(metadata.name, event.pubkey)}
+				disabled={isPending}
+				className={cn(
+					"h-6 w-16 group-hover:visible inline-flex items-center justify-center gap-1 text-xs font-semibold rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white",
+					isPending ? "" : "invisible",
+				)}
+			>
+				{isPending ? <Spinner className="size-3" /> : "Add"}
+			</button>
+		</div>
+	);
+});
 
 function Core() {
 	const { id } = Route.useParams();
