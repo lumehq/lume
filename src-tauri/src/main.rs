@@ -549,8 +549,6 @@ fn main() {
                                     ) {
                                         println!("Emit error: {}", e)
                                     }
-                                } else if event.kind == Kind::JobResult(6300) {
-                                    println!("Job result: {}", event.as_json())
                                 }
                             }
                         }
