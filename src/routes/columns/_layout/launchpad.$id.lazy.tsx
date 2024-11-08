@@ -73,7 +73,7 @@ function Newsfeeds() {
 					: item.tags.find((tag) => tag[0] === "title")?.[1] || "Unnamed";
 			const label =
 				item.kind === 3
-					? `newsfeed-${id.slice(0, 5)}`
+					? `newsfeed-${item.pubkey.slice(0, 5)}`
 					: item.tags.find((tag) => tag[0] === "d")?.[1] || nanoid();
 
 			return (

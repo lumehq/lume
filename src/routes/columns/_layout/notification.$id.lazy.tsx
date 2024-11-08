@@ -120,19 +120,19 @@ function Screen() {
 			>
 				<Tabs.List className="h-11 shrink-0 flex items-center">
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-11 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-neutral-100 dark:border-neutral-900 data-[state=active]:border-neutral-200 dark:data-[state=active]:border-neutral-800 data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-11 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-neutral-100 dark:border-neutral-700 data-[state=active]:border-neutral-200 dark:data-[state=active]:border-neutral-600 data-[state=inactive]:opacity-50"
 						value="replies"
 					>
 						Replies
 					</Tabs.Trigger>
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-11 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-neutral-100 dark:border-neutral-900 data-[state=active]:border-neutral-200 dark:data-[state=active]:border-neutral-800 data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-11 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-neutral-100 dark:border-neutral-700 data-[state=active]:border-neutral-200 dark:data-[state=active]:border-neutral-600 data-[state=inactive]:opacity-50"
 						value="reactions"
 					>
 						Reactions
 					</Tabs.Trigger>
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-11 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-neutral-100 dark:border-neutral-900 data-[state=active]:border-neutral-200 dark:data-[state=active]:border-neutral-800 data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-11 items-center justify-center gap-2 px-3 text-sm font-medium border-b border-neutral-100 dark:border-neutral-700 data-[state=active]:border-neutral-200 dark:data-[state=active]:border-neutral-600 data-[state=inactive]:opacity-50"
 						value="zaps"
 					>
 						Zaps

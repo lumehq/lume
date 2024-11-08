@@ -111,16 +111,23 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
     // Handle auth url
     nostr_connect.auth_url_handler(AuthHandler);
 
-    let bunker_uri = nostr_connect
+    let keyring = Entry::new("Lume Safe Storage", &remote_npub).map_err(|err| err.to_string())?;
+
+    let reuse_bunker = nostr_connect
         .bunker_uri()
         .await
         .map_err(|err| err.to_string())?;
 
-    let keyring = Entry::new("Lume Safe Storage", &remote_npub).map_err(|err| err.to_string())?;
+    let mut reuse_uri = reuse_bunker.to_string();
+
+    if let Some(secret) = reuse_bunker.secret() {
+        let replace = format!("&secret={}", secret);
+        reuse_uri = reuse_uri.replace(replace.as_str(), "");
+    }
 
     let account = Account {
         secret_key: app_secret,
-        nostr_connect: Some(bunker_uri.to_string()),
+        nostr_connect: Some(reuse_uri),
     };
 
     // Save secret key to keyring
