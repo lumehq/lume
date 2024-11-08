@@ -1,7 +1,7 @@
 {
 	"$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
 	"productName": "Lume",
-	"version": "24.11.5",
+	"version": "24.11.6",
 	"identifier": "nu.lume.Lume",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
