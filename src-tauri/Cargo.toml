@@ -49,10 +49,8 @@ regex = "1.10.4"
 keyring = { version = "3", features = ["apple-native", "windows-native"] }
 keyring-search = { git = "https://github.com/reyamir/keyring-search" }
 tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
-
-[patch.'https://github.com/rust-nostr/nostr']
-nostr-sdk = { git = "https://github.com/reyamir/nostr", branch = "feat/open-auth-url", features = ["lmdb", "webln", "all-nips"] }
-nostr-connect = { git = "https://github.com/reyamir/nostr", branch = "feat/open-auth-url" }
+async-trait = "0.1.83"
+webbrowser = "1.0.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 border = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }

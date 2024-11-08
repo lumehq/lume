@@ -14,6 +14,17 @@ struct Account {
     nostr_connect: Option<String>,
 }
 
+#[derive(Debug, Clone)]
+struct AuthHandler;
+
+#[async_trait::async_trait]
+impl AuthUrlHandler for AuthHandler {
+    async fn on_auth_url(&self, auth_url: Url) -> Result<()> {
+        webbrowser::open(auth_url.as_str())?;
+        Ok(())
+    }
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn get_accounts() -> Vec<String> {
@@ -94,8 +105,11 @@ pub async fn connect_account(uri: String, state: State<'_, Nostr>) -> Result<Str
     let remote_npub = remote_user.to_bech32().map_err(|err| err.to_string())?;
 
     // Init nostr connect
-    let nostr_connect = NostrConnect::new(bunker_uri, app_keys, Duration::from_secs(120), None)
+    let mut nostr_connect = NostrConnect::new(bunker_uri, app_keys, Duration::from_secs(120), None)
         .map_err(|err| err.to_string())?;
+
+    // Handle auth url
+    nostr_connect.auth_url_handler(AuthHandler);
 
     let bunker_uri = nostr_connect
         .bunker_uri()
@@ -217,7 +231,9 @@ pub async fn set_signer(
             let app_keys = Keys::from_str(&account.secret_key).map_err(|e| e.to_string())?;
 
             match NostrConnect::new(uri, app_keys, Duration::from_secs(120), None) {
-                Ok(signer) => {
+                Ok(mut signer) => {
+                    // Handle auth url
+                    signer.auth_url_handler(AuthHandler);
                     // Update signer
                     client.set_signer(signer).await;
                     // Emit to front-end
