@@ -99,14 +99,9 @@ function ReplyList() {
 			const res = await commands.getReplies(id);
 
 			if (res.status === "ok") {
-				const events = res.data
-					// Create Lume Events
-					.map((item) => LumeEvent.from(item.raw, item.parsed))
-					// Filter quote
-					.filter(
-						(ev) =>
-							!ev.tags.filter((t) => t[0] === "q" || t[3] === "mention").length,
-					);
+				const events = res.data.map((item) =>
+					LumeEvent.from(item.raw, item.parsed),
+				);
 
 				return events;
 			} else {
@@ -179,7 +174,7 @@ function ReplyList() {
 
 	useEffect(() => {
 		const unlisten = getCurrentWindow().listen<EventPayload>(
-			"event",
+			"comment",
 			async (data) => {
 				const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
 
@@ -216,7 +211,7 @@ function ReplyList() {
 			{isLoading ? (
 				<div className="flex items-center justify-center gap-2">
 					<Spinner className="size-4" />
-					<span className="text-sm font-medium">Getting replies...</span>
+					<span className="text-sm font-medium">Loading replies...</span>
 				</div>
 			) : (
 				<div className="flex flex-col gap-3">

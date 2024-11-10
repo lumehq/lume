@@ -71,11 +71,11 @@ pub async fn get_meta_from_event(content: String) -> Result<Meta, ()> {
 #[specta::specta]
 pub async fn get_replies(id: String, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
     let client = &state.client;
-    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
 
+    let event_id = EventId::parse(&id).map_err(|err| err.to_string())?;
     let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
-        .event(event_id);
+        .kind(Kind::Comment)
+        .custom_tag(SingleLetterTag::uppercase(Alphabet::E), [event_id]);
 
     let mut events = Events::new(&[filter.clone()]);
 
@@ -523,39 +523,31 @@ pub async fn reply(content: String, to: String, state: State<'_, Nostr>) -> Resu
         Err(e) => return Err(e.to_string()),
     };
 
-    // Detect root event from reply
-    let root_ids: Vec<&EventId> = reply_to
+    // Find root event from reply
+    let root_tag = reply_to
         .tags
-        .filter_standardized(TagKind::e())
-        .filter_map(|t| match t {
-            TagStandard::Event {
-                event_id, marker, ..
-            } => {
-                if let Some(mkr) = marker {
-                    match mkr {
-                        Marker::Root => Some(event_id),
-                        Marker::Reply => Some(event_id),
-                        _ => None,
-                    }
-                } else {
-                    Some(event_id)
-                }
-            }
-            _ => None,
-        })
-        .collect();
+        .find(TagKind::SingleLetter(SingleLetterTag::uppercase(
+            Alphabet::E,
+        )));
 
     // Get root event if exist
-    let root = match root_ids.first() {
-        Some(&id) => client
-            .database()
-            .event_by_id(id)
-            .await
-            .map_err(|err| err.to_string())?,
+    let root = match root_tag {
+        Some(tag) => match tag.content() {
+            Some(content) => {
+                let id = EventId::parse(content).map_err(|err| err.to_string())?;
+
+                client
+                    .database()
+                    .event_by_id(&id)
+                    .await
+                    .map_err(|err| err.to_string())?
+            }
+            None => None,
+        },
         None => None,
     };
 
-    let builder = EventBuilder::text_note_reply(content, &reply_to, root.as_ref(), None)
+    let builder = EventBuilder::comment(content, &reply_to, root.as_ref(), None)
         .add_tags(tags)
         .pow(DEFAULT_DIFFICULTY);
 

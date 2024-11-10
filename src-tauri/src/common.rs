@@ -56,18 +56,18 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
     // Get words
     let words: Vec<_> = content.split_whitespace().collect();
 
-    // Get mentions
-    let mentions = words
-        .iter()
-        .filter(|&&word| ["nostr:", "@"].iter().any(|&el| word.starts_with(el)))
-        .map(|&s| s.to_string())
-        .collect::<Vec<_>>();
-
     // Get hashtags
     let hashtags = words
         .iter()
         .filter(|&&word| word.starts_with('#'))
         .map(|&s| s.to_string().replace("#", "").to_lowercase())
+        .collect::<Vec<_>>();
+
+    // Get mentions
+    let mentions = words
+        .iter()
+        .filter(|&&word| ["nostr:", "@"].iter().any(|&el| word.starts_with(el)))
+        .map(|&s| s.to_string())
         .collect::<Vec<_>>();
 
     for mention in mentions {
@@ -92,8 +92,11 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
             }
             if entity.starts_with("note") {
                 if let Ok(event_id) = EventId::from_bech32(&entity) {
-                    let hex = event_id.to_hex();
-                    let tag = Tag::parse(&["e", &hex, "", "mention"]).unwrap();
+                    let tag = Tag::from_standardized(TagStandard::Quote {
+                        event_id,
+                        relay_url: None,
+                        public_key: None,
+                    });
                     tags.push(tag);
                 } else {
                     continue;
@@ -101,14 +104,12 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
             }
             if entity.starts_with("nevent") {
                 if let Ok(event) = Nip19Event::from_bech32(&entity) {
-                    let hex = event.event_id.to_hex();
-                    let relay = event.clone().relays.into_iter().next().unwrap_or("".into());
-                    let tag = Tag::parse(&["e", &hex, &relay, "mention"]).unwrap();
-
-                    if let Some(author) = event.author {
-                        let tag = Tag::public_key(author);
-                        tags.push(tag);
-                    }
+                    let relay_url = event.relays.first().map(UncheckedUrl::from);
+                    let tag = Tag::from_standardized(TagStandard::Quote {
+                        event_id: event.event_id,
+                        relay_url,
+                        public_key: event.author,
+                    });
 
                     tags.push(tag);
                 } else {

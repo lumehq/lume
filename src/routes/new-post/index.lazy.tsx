@@ -70,7 +70,7 @@ export const Route = createLazyFileRoute("/new-post/")({
 
 function Screen() {
 	const { reply_to } = Route.useSearch();
-	const { accounts, initialValue, queryClient } = Route.useRouteContext();
+	const { accounts, initialValue } = Route.useRouteContext();
 	const { deferMentionList } = Route.useLoaderData();
 	const users = useAwaited({ promise: deferMentionList })[0];
 

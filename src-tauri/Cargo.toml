@@ -33,9 +33,6 @@ tauri-plugin-theme = "2.1.2"
 tauri-plugin-decorum = { git = "https://github.com/clearlysid/tauri-plugin-decorum" }
 tauri-specta = { version = "2.0.0-rc.15", features = ["derive", "typescript"] }
 
-nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = ["lmdb", "webln", "all-nips"] }
-nostr-connect = { git = "https://github.com/rust-nostr/nostr" }
-
 specta = "^2.0.0-rc.20"
 specta-typescript = "0.0.7"
 tokio = { version = "1", features = ["full"] }
@@ -51,6 +48,13 @@ keyring-search = { git = "https://github.com/reyamir/keyring-search" }
 tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
 async-trait = "0.1.83"
 webbrowser = "1.0.2"
+
+nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = ["lmdb", "webln", "all-nips"] }
+nostr-connect = { git = "https://github.com/rust-nostr/nostr" }
+
+[patch.'https://github.com/rust-nostr/nostr']
+nostr-sdk = { git = "https://github.com/reyamir/nostr", branch = "feat/nip-22", features = ["lmdb", "webln", "all-nips"] }
+nostr-connect = { git = "https://github.com/reyamir/nostr", branch = "feat/nip-22" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 border = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }

@@ -105,28 +105,27 @@ pub async fn create_column(
                                     });
                                 }
                             } else if let Ok(event_id) = EventId::parse(&id) {
-                                let is_thread = payload.url().to_string().contains("events");
+                                tauri::async_runtime::spawn(async move {
+                                    let state = webview.state::<Nostr>();
+                                    let client = &state.client;
 
-                                if is_thread {
-                                    tauri::async_runtime::spawn(async move {
-                                        let state = webview.state::<Nostr>();
-                                        let client = &state.client;
+                                    let subscription_id = SubscriptionId::new(webview.label());
 
-                                        let subscription_id = SubscriptionId::new(webview.label());
+                                    let filter = Filter::new()
+                                        .custom_tag(
+                                            SingleLetterTag::uppercase(Alphabet::E),
+                                            [event_id],
+                                        )
+                                        .kind(Kind::Comment)
+                                        .since(Timestamp::now());
 
-                                        let filter = Filter::new()
-                                            .event(event_id)
-                                            .kinds(vec![Kind::TextNote, Kind::Custom(1111)])
-                                            .since(Timestamp::now());
-
-                                        if let Err(e) = client
-                                            .subscribe_with_id(subscription_id, vec![filter], None)
-                                            .await
-                                        {
-                                            println!("Subscription error: {}", e);
-                                        }
-                                    });
-                                }
+                                    if let Err(e) = client
+                                        .subscribe_with_id(subscription_id, vec![filter], None)
+                                        .await
+                                    {
+                                        println!("Subscription error: {}", e);
+                                    }
+                                });
                             }
                         }
                     }

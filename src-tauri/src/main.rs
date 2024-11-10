@@ -236,8 +236,8 @@ fn main() {
                 // Config
                 let opts = Options::new()
                     .gossip(true)
-                    .max_avg_latency(Duration::from_millis(500))
-                    .timeout(Duration::from_secs(5));
+                    .max_avg_latency(Duration::from_secs(2))
+                    .timeout(Duration::from_secs(10));
 
                 // Setup nostr client
                 let client = ClientBuilder::default()
@@ -532,7 +532,7 @@ fn main() {
                                     if let Err(e) = handle_clone.emit("metadata", event.as_json()) {
                                         println!("Emit error: {}", e)
                                     }
-                                } else if event.kind == Kind::TextNote {
+                                } else if event.kind == Kind::Comment {
                                     let payload = RichEvent {
                                         raw: event.as_json(),
                                         parsed: if event.kind == Kind::TextNote {
@@ -544,7 +544,7 @@ fn main() {
 
                                     if let Err(e) = handle_clone.emit_to(
                                         EventTarget::labeled(subscription_id.to_string()),
-                                        "event",
+                                        "comment",
                                         payload,
                                     ) {
                                         println!("Emit error: {}", e)
