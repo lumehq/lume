@@ -202,8 +202,8 @@ importers:
         specifier: ^5.4.10
         version: 5.4.10
       vite-tsconfig-paths:
-        specifier: ^5.1.1
-        version: 5.1.1(typescript@5.6.3)(vite@5.4.10)
+        specifier: 5.0.0
+        version: 5.0.0(typescript@5.6.3)(vite@5.4.10)
 
 packages:
 
@@ -2319,8 +2319,8 @@ packages:
       vue:
         optional: true
 
-  vite-tsconfig-paths@5.1.1:
-    resolution: {integrity: sha512-0nLY3qQI4GlYw3We4rps16ntW+nAZYCUrJwsuvqxIUCY9Bk3VnSeJDm/VPCmjOcAJ9Kud4k+CK2ZEnf9pbzK9Q==}
+  vite-tsconfig-paths@5.0.0:
+    resolution: {integrity: sha512-sCdKc6uC7ir102lW8deBiMnS0NGEs0100OJX8WZQmf3Uf7tJ/T3uQnzznq/tZWph7tkG+44JYOsKE7YTZjDn+Q==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -4336,7 +4336,7 @@ snapshots:
       react: 19.0.0-rc-cae764ce-20241025
       react-dom: 19.0.0-rc-cae764ce-20241025(react@19.0.0-rc-cae764ce-20241025)
 
-  vite-tsconfig-paths@5.1.1(typescript@5.6.3)(vite@5.4.10):
+  vite-tsconfig-paths@5.0.0(typescript@5.6.3)(vite@5.4.10):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
