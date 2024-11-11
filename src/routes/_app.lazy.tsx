@@ -118,7 +118,7 @@ function Account({ pubkey }: { pubkey: string }) {
 			const items = await Promise.all([
 				MenuItem.new({
 					text: "Unlock",
-					enabled: !isActive || true,
+					enabled: !isActive,
 					action: async () => await commands.setSigner(pubkey),
 				}),
 				PredefinedMenuItem.new({ item: "Separator" }),
@@ -183,7 +183,7 @@ function Account({ pubkey }: { pubkey: string }) {
 
 			await menu.popup().catch((e) => console.error(e));
 		},
-		[pubkey],
+		[isActive, pubkey],
 	);
 
 	useEffect(() => {

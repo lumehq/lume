@@ -5,7 +5,7 @@
 
 #[cfg(target_os = "macos")]
 use border::WebviewWindowExt as BorderWebviewWindowExt;
-use commands::{account::*, event::*, metadata::*, relay::*, window::*};
+use commands::{account::*, event::*, metadata::*, relay::*, sync::*, window::*};
 use common::{get_all_accounts, parse_event};
 use nostr_sdk::prelude::{Profile as DatabaseProfile, *};
 use serde::{Deserialize, Serialize};
@@ -76,6 +76,7 @@ fn main() {
     tracing_subscriber::fmt::init();
 
     let builder = Builder::<tauri::Wry>::new().commands(collect_commands![
+        sync_all,
         get_all_relays,
         get_all_relay_lists,
         is_relay_connected,
@@ -365,6 +366,8 @@ fn main() {
 
                 // Set interval
                 let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(600));
+                // Skip the first tick
+                interval.tick().await;
 
                 loop {
                     interval.tick().await;

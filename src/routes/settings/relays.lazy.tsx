@@ -53,9 +53,20 @@ function Screen() {
 		<div className="w-full px-3 pb-3">
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
-					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-						Connected Relays
-					</h2>
+					<div>
+						<h2 className="text-sm font-semibold">Connected Relays</h2>
+						<p className="text-sm text-neutral-500">
+							Learn more about Relays{" "}
+							<a
+								href="https://nostr.how/en/relays"
+								target="_blank"
+								rel="noreferrer"
+								className="text-blue-500 !underline"
+							>
+								here
+							</a>
+						</p>
+					</div>
 					<div className="flex flex-col px-3 divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl">
 						<div className="flex items-center h-14">
 							<div className="flex items-center w-full gap-2 mb-0">

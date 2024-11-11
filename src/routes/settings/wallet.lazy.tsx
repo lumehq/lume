@@ -33,9 +33,20 @@ function Screen() {
 	return (
 		<div className="w-full px-3 pb-3">
 			<div className="flex flex-col w-full gap-2">
-				<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-					Wallet
-				</h2>
+				<div>
+					<h2 className="text-sm font-semibold">Bitcoin Wallet</h2>
+					<p className="text-sm text-neutral-500">
+						Learn more about Zap{" "}
+						<a
+							href="https://nostr.how/en/zaps"
+							target="_blank"
+							rel="noreferrer"
+							className="text-blue-500 !underline"
+						>
+							here
+						</a>
+					</p>
+				</div>
 				<div className="w-full h-44 flex items-center justify-center bg-black/5 dark:bg-white/5 rounded-xl">
 					<Button
 						onConnected={(provider) =>

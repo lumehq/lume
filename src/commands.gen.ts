@@ -5,6 +5,14 @@
 
 
 export const commands = {
+async syncAll(reader: TAURI_CHANNEL<number>) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("sync_all", { reader }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getAllRelays() : Promise<Result<string[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_all_relays") };
@@ -554,6 +562,7 @@ export type Meta = { content: string; images: string[]; events: string[]; mentio
 export type NewWindow = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean; closable: boolean }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { resize_service: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
+export type TAURI_CHANNEL<TSend> = null
 
 /** tauri-specta globals **/
 

@@ -69,9 +69,7 @@ function Screen() {
 		<div className="relative w-full">
 			<div className="flex flex-col gap-6 px-3 pb-3">
 				<div className="flex flex-col gap-2">
-					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-						General
-					</h2>
+					<h2 className="text-sm font-semibold">General</h2>
 					<div className="flex flex-col px-3 divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl">
 						<Setting
 							name="Content Warning"
@@ -92,9 +90,7 @@ function Screen() {
 					</div>
 				</div>
 				<div className="flex flex-col gap-2">
-					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-						Appearance
-					</h2>
+					<h2 className="text-sm font-semibold">Appearance</h2>
 					<div className="flex flex-col px-3 divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl">
 						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
@@ -140,9 +136,7 @@ function Screen() {
 					</div>
 				</div>
 				<div className="flex flex-col gap-2">
-					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-						Privacy & Performance
-					</h2>
+					<h2 className="text-sm font-semibold">Privacy & Performance</h2>
 					<div className="flex flex-col px-3 divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl">
 						<Setting
 							name="Resize Service"
