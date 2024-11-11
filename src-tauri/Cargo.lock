@@ -301,7 +301,7 @@ dependencies = [
  "futures-lite 2.5.0",
  "parking",
  "polling 3.7.4",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "slab",
  "tracing",
  "windows-sys 0.59.0",
@@ -340,7 +340,7 @@ dependencies = [
  "cfg-if",
  "event-listener 3.1.0",
  "futures-lite 1.13.0",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "windows-sys 0.48.0",
 ]
 
@@ -359,7 +359,7 @@ dependencies = [
  "cfg-if",
  "event-listener 5.3.1",
  "futures-lite 2.5.0",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "tracing",
 ]
 
@@ -386,7 +386,7 @@ dependencies = [
  "cfg-if",
  "futures-core",
  "futures-io",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "signal-hook-registry",
  "slab",
  "windows-sys 0.59.0",
@@ -431,7 +431,7 @@ dependencies = [
  "futures",
  "futures-util",
  "js-sys",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-rustls",
  "tokio-socks",
@@ -679,7 +679,7 @@ dependencies = [
 [[package]]
 name = "border"
 version = "0.1.0"
-source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#0bf90a47e90b22dede48f13444a34af8f8bbbdfc"
+source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#8fa9329f677a199c5c2b445def218cef8ff325b2"
 dependencies = [
  "cocoa 0.25.0",
  "color",
@@ -754,7 +754,7 @@ dependencies = [
  "glib",
  "libc",
  "once_cell",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -797,7 +797,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -987,7 +987,7 @@ dependencies = [
 [[package]]
 name = "color"
 version = "0.1.0"
-source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#0bf90a47e90b22dede48f13444a34af8f8bbbdfc"
+source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#8fa9329f677a199c5c2b445def218cef8ff325b2"
 dependencies = [
  "cocoa 0.25.0",
  "objc",
@@ -1765,7 +1765,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db9c27b72f19a99a895f8ca89e2d26e4ef31013376e56fdafef697627306c3e4"
 dependencies = [
  "nom",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -2029,7 +2029,7 @@ version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc3655aa6818d65bc620d6911f05aa7b6aeb596291e1e9f79e52df85583d1e30"
 dependencies = [
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "windows-targets 0.52.6",
 ]
 
@@ -2079,7 +2079,7 @@ dependencies = [
  "once_cell",
  "pin-project-lite",
  "smallvec",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -2115,7 +2115,7 @@ dependencies = [
  "memchr",
  "once_cell",
  "smallvec",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -2858,7 +2858,7 @@ dependencies = [
  "combine",
  "jni-sys",
  "log",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "walkdir",
  "windows-sys 0.45.0",
 ]
@@ -2893,7 +2893,7 @@ dependencies = [
  "jsonptr",
  "serde",
  "serde_json",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -3034,7 +3034,7 @@ dependencies = [
  "freedesktop_entry_parser",
  "linicon-theme",
  "memmap2",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -3275,7 +3275,7 @@ dependencies = [
  "once_cell",
  "png",
  "serde",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "windows-sys 0.59.0",
 ]
 
@@ -3308,7 +3308,7 @@ dependencies = [
  "ndk-sys",
  "num_enum",
  "raw-window-handle",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -3388,7 +3388,7 @@ dependencies = [
 [[package]]
 name = "nostr"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "aes",
  "async-trait",
@@ -3419,13 +3419,13 @@ dependencies = [
 [[package]]
 name = "nostr-connect"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "async-trait",
  "async-utility",
  "nostr",
  "nostr-relay-pool",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tracing",
 ]
@@ -3433,13 +3433,13 @@ dependencies = [
 [[package]]
 name = "nostr-database"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "async-trait",
  "flatbuffers",
  "lru",
  "nostr",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tracing",
 ]
@@ -3447,12 +3447,12 @@ dependencies = [
 [[package]]
 name = "nostr-lmdb"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "heed",
  "nostr",
  "nostr-database",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tracing",
 ]
@@ -3460,7 +3460,7 @@ dependencies = [
 [[package]]
 name = "nostr-relay-pool"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "async-utility",
  "async-wsocket",
@@ -3469,7 +3469,7 @@ dependencies = [
  "negentropy 0.4.3",
  "nostr",
  "nostr-database",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
  "tracing",
@@ -3478,7 +3478,7 @@ dependencies = [
 [[package]]
 name = "nostr-sdk"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "async-utility",
  "atomic-destructor",
@@ -3489,7 +3489,7 @@ dependencies = [
  "nostr-relay-pool",
  "nostr-zapper",
  "nwc",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tracing",
 ]
@@ -3497,11 +3497,11 @@ dependencies = [
 [[package]]
 name = "nostr-zapper"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "async-trait",
  "nostr",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "webln",
 ]
 
@@ -3631,14 +3631,14 @@ dependencies = [
 [[package]]
 name = "nwc"
 version = "0.36.0"
-source = "git+https://github.com/reyamir/nostr?branch=feat/nip-22#9afd230b93494390438c69fbd6f2a7de79fa0af8"
+source = "git+https://github.com/rust-nostr/nostr#191410b7f14236b7a6b39e78a07099df4c691032"
 dependencies = [
  "async-trait",
  "async-utility",
  "nostr",
  "nostr-relay-pool",
  "nostr-zapper",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tracing",
 ]
 
@@ -4337,7 +4337,7 @@ dependencies = [
  "concurrent-queue",
  "hermit-abi 0.4.0",
  "pin-project-lite",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "tracing",
  "windows-sys 0.59.0",
 ]
@@ -4497,7 +4497,7 @@ dependencies = [
  "rustc-hash",
  "rustls",
  "socket2 0.5.7",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tracing",
 ]
@@ -4514,7 +4514,7 @@ dependencies = [
  "rustc-hash",
  "rustls",
  "slab",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tinyvec",
  "tracing",
 ]
@@ -4657,7 +4657,7 @@ checksum = "ba009ff324d1fc1b900bd1fdb31564febe58a8ccc8a6fdbb93b543d33b13ca43"
 dependencies = [
  "getrandom 0.2.15",
  "libredox",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -4827,9 +4827,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "0.38.39"
+version = "0.38.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "375116bee2be9ed569afe2154ea6a99dfdffd257f533f187498c2a8f5feaf4ee"
+checksum = "99e4ea3e1cdc4b559b8e5650f9c8e5998e3e5c1343b4eaf034565f32318d63c0"
 dependencies = [
  "bitflags 2.6.0",
  "errno",
@@ -5256,7 +5256,7 @@ dependencies = [
 [[package]]
 name = "share-picker"
 version = "0.1.0"
-source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#0bf90a47e90b22dede48f13444a34af8f8bbbdfc"
+source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#8fa9329f677a199c5c2b445def218cef8ff325b2"
 dependencies = [
  "objc2",
  "objc2-app-kit",
@@ -5392,7 +5392,7 @@ checksum = "4ccbb212565d2dc177bc15ecb7b039d66c4490da892436a4eee5b394d620c9bc"
 dependencies = [
  "paste",
  "specta-macros",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -5414,7 +5414,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "12260cbb21abb2e83a0375b1521867910e3aed8a7afa782206150ce552cd2e5a"
 dependencies = [
  "specta",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -5425,7 +5425,7 @@ checksum = "b1e4472229365ceb6395487e3a60d921ad8e21f9ad06eaecc396f098902c9adc"
 dependencies = [
  "specta",
  "specta-serde",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -5719,7 +5719,7 @@ dependencies = [
  "tauri-runtime",
  "tauri-runtime-wry",
  "tauri-utils",
- "thiserror 2.0.1",
+ "thiserror 2.0.3",
  "tokio",
  "tray-icon",
  "url",
@@ -5772,7 +5772,7 @@ dependencies = [
  "sha2",
  "syn 2.0.87",
  "tauri-utils",
- "thiserror 2.0.1",
+ "thiserror 2.0.3",
  "time",
  "url",
  "uuid",
@@ -5822,7 +5822,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -5855,7 +5855,7 @@ dependencies = [
  "tauri",
  "tauri-plugin",
  "tauri-plugin-fs",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "url",
 ]
 
@@ -5875,7 +5875,7 @@ dependencies = [
  "serde_repr",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "url",
  "uuid",
 ]
@@ -5896,7 +5896,7 @@ dependencies = [
  "tauri",
  "tauri-plugin",
  "tauri-plugin-fs",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "url",
  "urlpattern",
@@ -5916,7 +5916,7 @@ dependencies = [
  "serde_repr",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "time",
  "url",
 ]
@@ -5936,7 +5936,7 @@ dependencies = [
  "sys-locale",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -5951,7 +5951,7 @@ dependencies = [
  "strum",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -5981,7 +5981,7 @@ dependencies = [
  "shared_child",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
 ]
 
@@ -5996,7 +5996,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
 ]
 
@@ -6043,7 +6043,7 @@ dependencies = [
  "tauri",
  "tauri-plugin",
  "tempfile",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "time",
  "tokio",
  "url",
@@ -6065,7 +6065,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-util",
 ]
@@ -6082,7 +6082,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-plugin",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -6099,7 +6099,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tauri-utils",
- "thiserror 2.0.1",
+ "thiserror 2.0.3",
  "url",
  "windows 0.58.0",
 ]
@@ -6143,7 +6143,7 @@ dependencies = [
  "specta-typescript",
  "tauri",
  "tauri-specta-macros",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -6187,7 +6187,7 @@ dependencies = [
  "serde_json",
  "serde_with",
  "swift-rs",
- "thiserror 2.0.1",
+ "thiserror 2.0.3",
  "toml 0.8.19",
  "url",
  "urlpattern",
@@ -6225,7 +6225,7 @@ dependencies = [
  "cfg-if",
  "fastrand 2.2.0",
  "once_cell",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "windows-sys 0.59.0",
 ]
 
@@ -6248,27 +6248,27 @@ checksum = "8eaa81235c7058867fa8c0e7314f33dcce9c215f535d1913822a2b3f5e289f3c"
 
 [[package]]
 name = "thiserror"
-version = "1.0.68"
+version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02dd99dc800bbb97186339685293e1cc5d9df1f8fae2d0aecd9ff1c77efea892"
+checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
 dependencies = [
- "thiserror-impl 1.0.68",
+ "thiserror-impl 1.0.69",
 ]
 
 [[package]]
 name = "thiserror"
-version = "2.0.1"
+version = "2.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07c1e40dd48a282ae8edc36c732cbc219144b87fb6a4c7316d611c6b1f06ec0c"
+checksum = "c006c85c7651b3cf2ada4584faa36773bd07bac24acfb39f3c431b36d7e667aa"
 dependencies = [
- "thiserror-impl 2.0.1",
+ "thiserror-impl 2.0.3",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.68"
+version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7c61ec9a6f64d2793d8a45faba21efbe3ced62a886d44c36a009b2b519b4c7e"
+checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -6277,9 +6277,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.1"
+version = "2.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "874aa7e446f1da8d9c3a5c95b1c5eb41d800045252121dc7f8e0ba370cee55f5"
+checksum = "f077553d607adc1caf65430528a576c757a71ed73944b66ebb58ef2bbd243568"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -6432,7 +6432,7 @@ checksum = "0d4770b8024672c1101b3f6733eab95b18007dbe0847a8afe341fcf79e06043f"
 dependencies = [
  "either",
  "futures-util",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "tokio",
 ]
 
@@ -6626,7 +6626,7 @@ dependencies = [
  "once_cell",
  "png",
  "serde",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "windows-sys 0.59.0",
 ]
 
@@ -6652,7 +6652,7 @@ dependencies = [
  "rustls",
  "rustls-pki-types",
  "sha1",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "utf-8",
 ]
 
@@ -6984,7 +6984,7 @@ checksum = "056535ced7a150d45159d3a8dc30f91a2e2d588ca0b23f70e56033622b8016f6"
 dependencies = [
  "cc",
  "downcast-rs",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "scoped-tls",
  "smallvec",
  "wayland-sys",
@@ -6997,7 +6997,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b66249d3fc69f76fd74c82cc319300faa554e9d865dab1f7cd66cc20db10b280"
 dependencies = [
  "bitflags 2.6.0",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "wayland-backend",
  "wayland-scanner",
 ]
@@ -7161,7 +7161,7 @@ version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a3a3e2eeb58f82361c93f9777014668eb3d07e7d174ee4c819575a9208011886"
 dependencies = [
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "windows 0.58.0",
  "windows-core 0.58.0",
 ]
@@ -7668,7 +7668,7 @@ dependencies = [
  "sha2",
  "soup3",
  "tao-macros",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
  "url",
  "webkit2gtk",
  "webkit2gtk-sys",
@@ -7707,7 +7707,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d91ffca73ee7f68ce055750bf9f6eca0780b8c85eff9bc046a3b0da41755e12"
 dependencies = [
  "gethostname 0.4.3",
- "rustix 0.38.39",
+ "rustix 0.38.40",
  "x11rb-protocol",
 ]
 
@@ -7725,7 +7725,7 @@ checksum = "8da84f1a25939b27f6820d92aed108f83ff920fdf11a7b19366c27c4cda81d4f"
 dependencies = [
  "libc",
  "linux-raw-sys 0.4.14",
- "rustix 0.38.39",
+ "rustix 0.38.40",
 ]
 
 [[package]]
@@ -7973,7 +7973,7 @@ dependencies = [
  "displaydoc",
  "indexmap 2.6.0",
  "memchr",
- "thiserror 1.0.68",
+ "thiserror 1.0.69",
 ]
 
 [[package]]

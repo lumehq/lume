@@ -475,7 +475,7 @@ fn main() {
                             Kind::Repost,
                             Kind::Reaction,
                             Kind::ZapReceipt,
-                            Kind::Custom(1111),
+                            Kind::Comment,
                         ])
                         .since(Timestamp::now());
 
@@ -603,7 +603,7 @@ fn send_event_notification(event: &Event, author: Metadata, handle: &tauri::AppH
             if let Err(e) = handle
                 .notification()
                 .builder()
-                .body("Mentioned you in a thread.")
+                .body("You're mentioned in a thread.")
                 .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
                 .show()
             {
@@ -614,7 +614,7 @@ fn send_event_notification(event: &Event, author: Metadata, handle: &tauri::AppH
             if let Err(e) = handle
                 .notification()
                 .builder()
-                .body("Reposted your note.")
+                .body("Your note has been reposted.")
                 .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
                 .show()
             {
@@ -625,7 +625,7 @@ fn send_event_notification(event: &Event, author: Metadata, handle: &tauri::AppH
             if let Err(e) = handle
                 .notification()
                 .builder()
-                .body("Zapped you.")
+                .body("You've received zap.")
                 .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
                 .show()
             {

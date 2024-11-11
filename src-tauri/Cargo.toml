@@ -52,10 +52,6 @@ webbrowser = "1.0.2"
 nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = ["lmdb", "webln", "all-nips"] }
 nostr-connect = { git = "https://github.com/rust-nostr/nostr" }
 
-[patch.'https://github.com/rust-nostr/nostr']
-nostr-sdk = { git = "https://github.com/reyamir/nostr", branch = "feat/nip-22", features = ["lmdb", "webln", "all-nips"] }
-nostr-connect = { git = "https://github.com/reyamir/nostr", branch = "feat/nip-22" }
-
 [target.'cfg(target_os = "macos")'.dependencies]
 border = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
 share-picker = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }

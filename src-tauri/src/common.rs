@@ -104,7 +104,7 @@ pub fn create_tags(content: &str) -> Vec<Tag> {
             }
             if entity.starts_with("nevent") {
                 if let Ok(event) = Nip19Event::from_bech32(&entity) {
-                    let relay_url = event.relays.first().map(UncheckedUrl::from);
+                    let relay_url = event.relays.first().and_then(|i| Url::parse(i).ok());
                     let tag = Tag::from_standardized(TagStandard::Quote {
                         event_id: event.event_id,
                         relay_url,
