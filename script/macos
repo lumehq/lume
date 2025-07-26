@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+
+# if root or if sudo/unavailable, define an empty variable
+if [ "$(id -u)" -eq 0 ]
+then maysudo=''
+else maysudo="$(command -v sudo || command -v doas || true)"
+fi
+
+function finalize {
+  # after packages install (curl, etc), get the rust toolchain
+  which rustup > /dev/null 2>&1 || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  # verify the mold situation
+  if ! command -v mold >/dev/null 2>&1; then
+    echo "Warning: Mold binaries are unavailable on your system." >&2
+    echo "    Builds will be slower without mold. Try: script/install-mold" >&2
+  fi
+  echo "Finished installing MacOS dependencies with script/macos"
+}
+
+# MacOS
+brew=$(command -v brew || true)
+if [[ -n $brew ]]; then
+  deps=(
+    gcc
+    libx11
+    libxkbcommon
+    openssl
+    zstd
+    vulkan-headers
+    libgit2
+    libx11
+    make
+    cmake
+    jq
+    git
+    curl
+    gettext
+  )
+
+  $brew update
+  for dep in "${deps[@]}";do
+  $brew search "$dep";
+  done
+  $brew install "${deps[@]}"
+  finalize
+  exit 0
+fi

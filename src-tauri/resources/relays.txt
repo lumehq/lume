@@ -1,5 +1,0 @@
-wss://relay.damus.io,
-wss://relay.primal.net,
-wss://nostr.fmt.wiz.biz,
-wss://directory.yabu.me,
-wss://purplepag.es,

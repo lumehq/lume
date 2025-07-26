@@ -1,0 +1,46 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+default-members = ["crates/lume"]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[workspace.dependencies]
+# GPUI
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui_tokio = { git = "https://github.com/zed-industries/zed" }
+reqwest_client = { git = "https://github.com/zed-industries/zed" }
+
+# Nostr
+nostr = { git = "https://github.com/rust-nostr/nostr" }
+nostr-connect = { git = "https://github.com/rust-nostr/nostr" }
+nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = [
+    "all-nips",
+    "lmdb",
+] }
+
+# Others
+anyhow = "1.0.44"
+chrono = "0.4.38"
+dirs = "5.0"
+futures = "0.3"
+itertools = "0.13.0"
+log = "0.4"
+oneshot = "0.1.10"
+reqwest = { version = "0.12", features = ["multipart", "stream", "json"] }
+rust-embed = "8.5.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+smallvec = "1.14.0"
+smol = "2"
+tracing = "0.1.40"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

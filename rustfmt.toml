@@ -1,0 +1,9 @@
+tab_spaces = 4
+newline_style = "Auto"
+reorder_imports = true
+reorder_modules = true
+reorder_impl_items = true
+indent_style = "Block"
+normalize_comments = false
+imports_granularity = "Module"
+group_imports = "StdExternalCrate"
