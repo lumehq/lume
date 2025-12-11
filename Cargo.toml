@@ -15,12 +15,9 @@ gpui_tokio = { git = "https://github.com/zed-industries/zed" }
 reqwest_client = { git = "https://github.com/zed-industries/zed" }
 
 # Nostr
-nostr = { git = "https://github.com/rust-nostr/nostr" }
+nostr-lmdb = { git = "https://github.com/rust-nostr/nostr" }
 nostr-connect = { git = "https://github.com/rust-nostr/nostr" }
-nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = [
-    "all-nips",
-    "lmdb",
-] }
+nostr-sdk = { git = "https://github.com/rust-nostr/nostr", features = [ "nip96", "nip59", "nip49", "nip44" ] }
 
 # Others
 anyhow = "1.0.44"
