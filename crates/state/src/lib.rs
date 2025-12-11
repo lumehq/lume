@@ -88,6 +88,11 @@ impl NostrRegistry {
         }
     }
 
+    /// Get the nostr client instance
+    pub fn client(&self) -> Client {
+        self.client.clone()
+    }
+
     /// Establish connection to the bootstrap relays
     async fn connect(client: &Client) {
         // Get all bootstrapping relays
@@ -102,10 +107,5 @@ impl NostrRegistry {
 
         // Connect to all added relays
         client.connect().await;
-    }
-
-    /// Get the nostr client instance
-    pub fn client(&self) -> Client {
-        self.client.clone()
     }
 }

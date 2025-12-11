@@ -3,16 +3,20 @@ use std::sync::Arc;
 use assets::Assets;
 use common::{APP_ID, CLIENT_NAME};
 use gpui::{
-    div, point, px, size, AppContext, Application, Bounds, Context, IntoElement, KeyBinding, Menu,
-    MenuItem, ParentElement, Render, SharedString, Styled, TitlebarOptions, Window,
-    WindowBackgroundAppearance, WindowBounds, WindowDecorations, WindowKind, WindowOptions,
+    point, px, size, AppContext, Application, Bounds, KeyBinding, Menu, MenuItem, SharedString,
+    TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowDecorations, WindowKind,
+    WindowOptions,
 };
-use gpui_component::button::{Button, ButtonVariants};
-use gpui_component::{Root, StyledExt};
+use gpui_component::Root;
 
 use crate::actions::{load_embedded_fonts, quit, Quit};
+use crate::workspace::Workspace;
 
 mod actions;
+mod menus;
+mod themes;
+mod title_bar;
+mod workspace;
 
 fn main() {
     // Initialize logging
@@ -74,29 +78,12 @@ fn main() {
             // Initialize components
             gpui_component::init(cx);
 
-            let view = cx.new(|_| HelloWorld);
-            cx.new(|cx| Root::new(view, window, cx))
+            // Initialize themes
+            themes::init(cx);
+
+            let workspace = cx.new(|cx| Workspace::new(window, cx));
+            cx.new(|cx| Root::new(workspace, window, cx))
         })
         .expect("Failed to open window. Please restart the application.");
     })
-}
-
-pub struct HelloWorld;
-
-impl Render for HelloWorld {
-    fn render(&mut self, _: &mut Window, _: &mut Context<Self>) -> impl IntoElement {
-        div()
-            .v_flex()
-            .gap_2()
-            .size_full()
-            .items_center()
-            .justify_center()
-            .child("Hello, World!")
-            .child(
-                Button::new("ok")
-                    .primary()
-                    .label("Let's Go!")
-                    .on_click(|_, _, _| println!("Clicked!")),
-            )
-    }
 }
