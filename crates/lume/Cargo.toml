@@ -9,7 +9,12 @@ name = "lume"
 path = "src/main.rs"
 
 [dependencies]
+common = { path = "../common" }
+assets = { path = "../assets" }
+state = { path = "../state" }
+
 gpui.workspace = true
+gpui-component.workspace = true
 gpui_tokio.workspace = true
 reqwest_client.workspace = true
 
