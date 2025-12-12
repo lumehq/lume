@@ -81,6 +81,12 @@ fn main() {
             // Initialize themes
             themes::init(cx);
 
+            // Initialize app state
+            state::init(cx);
+
+            // Initialize account
+            account::init(cx);
+
             let workspace = cx.new(|cx| Workspace::new(window, cx));
             cx.new(|cx| Root::new(workspace, window, cx))
         })

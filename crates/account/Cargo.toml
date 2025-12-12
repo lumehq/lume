@@ -1,0 +1,19 @@
+[package]
+name = "account"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+common = { path = "../common" }
+state = { path = "../state" }
+
+gpui.workspace = true
+nostr-sdk.workspace = true
+
+anyhow.workspace = true
+smallvec.workspace = true
+smol.workspace = true
+log.workspace = true
+serde.workspace = true
+serde_json.workspace = true
