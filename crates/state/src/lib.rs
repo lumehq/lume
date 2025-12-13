@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use common::{config_dir, BOOTSTRAP_RELAYS, SEARCH_RELAYS};
 use gpui::{App, AppContext, Context, Entity, Global, Task};
+use nostr_gossip_memory::prelude::*;
 use nostr_lmdb::NostrLmdb;
 use nostr_sdk::prelude::*;
 use smallvec::{smallvec, SmallVec};
@@ -61,7 +62,11 @@ impl NostrRegistry {
         });
 
         // Construct the nostr client
-        let client = ClientBuilder::default().database(lmdb).opts(opts).build();
+        let client = ClientBuilder::default()
+            .database(lmdb)
+            .gossip(NostrGossipMemory::unbounded())
+            .opts(opts)
+            .build();
 
         let mut tasks = smallvec![];
 

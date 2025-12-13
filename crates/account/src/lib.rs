@@ -1,6 +1,7 @@
 use std::env;
 
-use gpui::{App, AppContext, Context, Entity, Global, Task};
+use anyhow::Error;
+use gpui::{App, AppContext, Context, Entity, Global, Subscription, Task};
 use nostr_sdk::prelude::*;
 use smallvec::{smallvec, SmallVec};
 use state::NostrRegistry;
@@ -17,8 +18,11 @@ pub struct Account {
     /// The public key of the account
     public_key: Option<PublicKey>,
 
+    /// Event subscriptions
+    _subscriptions: SmallVec<[Subscription; 1]>,
+
     /// Tasks for asynchronous operations
-    _tasks: SmallVec<[Task<()>; 1]>,
+    _tasks: SmallVec<[Task<Result<(), Error>>; 1]>,
 }
 
 impl Account {
@@ -51,11 +55,12 @@ impl Account {
         let args: Vec<String> = env::args().collect();
         let account = args.get(1).and_then(|s| Keys::parse(s).ok());
 
+        let mut subscriptions = smallvec![];
         let mut tasks = smallvec![];
 
         if let Some(keys) = account {
             tasks.push(
-                // Background
+                // Set signer in background
                 cx.spawn(async move |this, cx| {
                     let public_key = keys.public_key();
 
@@ -72,13 +77,22 @@ impl Account {
                         this.public_key = Some(public_key);
                         cx.notify();
                     })
-                    .ok();
                 }),
             );
         }
 
+        subscriptions.push(
+            // Listen for public key set
+            cx.observe_self(move |this, cx| {
+                if let Some(public_key) = this.public_key {
+                    this.init(public_key, cx);
+                }
+            }),
+        );
+
         Self {
             public_key: None,
+            _subscriptions: subscriptions,
             _tasks: tasks,
         }
     }
@@ -92,5 +106,38 @@ impl Account {
     pub fn public_key(&self) -> PublicKey {
         // This method is only called when user is logged in, so unwrap safely
         self.public_key.unwrap()
+    }
+
+    fn init(&mut self, public_key: PublicKey, cx: &mut Context<Self>) {
+        let nostr = NostrRegistry::global(cx);
+        let client = nostr.read(cx).client();
+
+        let task: Task<Result<(), Error>> = cx.background_spawn(async move {
+            let opts = SubscribeAutoCloseOptions::default().exit_policy(ReqExitPolicy::ExitOnEOSE);
+
+            // Construct a filter to get the user's metadata
+            let filter = Filter::new()
+                .kind(Kind::Metadata)
+                .author(public_key)
+                .limit(1);
+
+            // Subscribe to the user metadata
+            client.subscribe(filter, Some(opts)).await?;
+
+            // Construct a filter to get the user's contact list
+            let filter = Filter::new()
+                .kind(Kind::ContactList)
+                .author(public_key)
+                .limit(1);
+
+            // Subscribe to the user's contact list
+            client.subscribe(filter, Some(opts)).await?;
+
+            log::info!("Subscribed to user metadata and contact list");
+
+            Ok(())
+        });
+
+        self._tasks.push(task);
     }
 }

@@ -9,6 +9,7 @@ use gpui_component::TitleBar;
 
 use crate::menus;
 
+#[allow(clippy::type_complexity)]
 pub struct AppTitleBar {
     /// The app menu bar
     app_menu_bar: Entity<AppMenuBar>,
@@ -35,6 +36,7 @@ impl AppTitleBar {
         }
     }
 
+    #[allow(dead_code)]
     pub fn child<F, E>(mut self, f: F) -> Self
     where
         E: IntoElement,

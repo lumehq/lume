@@ -14,6 +14,8 @@ use crate::workspace::Workspace;
 
 mod actions;
 mod menus;
+mod panels;
+mod sidebar;
 mod themes;
 mod title_bar;
 mod workspace;

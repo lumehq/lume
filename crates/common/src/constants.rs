@@ -19,3 +19,6 @@ pub const SEARCH_RELAYS: [&str; 3] = [
 
 /// Default relay for Nostr Connect
 pub const NOSTR_CONNECT_RELAY: &str = "wss://relay.nsec.app";
+
+/// Default width of the sidebar.
+pub const DEFAULT_SIDEBAR_WIDTH: f32 = 240.;
