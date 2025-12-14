@@ -1,6 +1,6 @@
 use gpui::{
     div, App, AppContext, Context, Entity, EventEmitter, FocusHandle, Focusable, IntoElement,
-    ParentElement, Render, Window,
+    ParentElement, Render, SharedString, Window,
 };
 use gpui_component::dock::{Panel, PanelEvent};
 
@@ -23,6 +23,10 @@ impl Startup {
 impl Panel for Startup {
     fn panel_name(&self) -> &'static str {
         "Startup"
+    }
+
+    fn title(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
+        SharedString::from("Welcome")
     }
 }
 

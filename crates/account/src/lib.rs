@@ -4,7 +4,7 @@ use anyhow::Error;
 use gpui::{App, AppContext, Context, Entity, Global, Subscription, Task};
 use nostr_sdk::prelude::*;
 use smallvec::{smallvec, SmallVec};
-use state::NostrRegistry;
+use state::client;
 
 pub fn init(cx: &mut App) {
     Account::set_global(cx.new(Account::new), cx);
@@ -48,9 +48,6 @@ impl Account {
 
     /// Create a new account instance
     fn new(cx: &mut Context<Self>) -> Self {
-        let nostr = NostrRegistry::global(cx);
-        let client = nostr.read(cx).client();
-
         // Collect command line arguments
         let args: Vec<String> = env::args().collect();
         let account = args.get(1).and_then(|s| Keys::parse(s).ok());
@@ -67,7 +64,9 @@ impl Account {
                     // Set the signer
                     cx.background_executor()
                         .await_on_background(async move {
+                            let client = client();
                             client.set_signer(keys).await;
+
                             log::info!("Signer is set");
                         })
                         .await;
@@ -109,10 +108,8 @@ impl Account {
     }
 
     fn init(&mut self, public_key: PublicKey, cx: &mut Context<Self>) {
-        let nostr = NostrRegistry::global(cx);
-        let client = nostr.read(cx).client();
-
         let task: Task<Result<(), Error>> = cx.background_spawn(async move {
+            let client = client();
             let opts = SubscribeAutoCloseOptions::default().exit_policy(ReqExitPolicy::ExitOnEOSE);
 
             // Construct a filter to get the user's metadata

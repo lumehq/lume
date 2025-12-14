@@ -1,43 +1,18 @@
+use std::sync::OnceLock;
 use std::time::Duration;
 
-use common::{config_dir, BOOTSTRAP_RELAYS, SEARCH_RELAYS};
-use gpui::{App, AppContext, Context, Entity, Global, Task};
+use common::config_dir;
+pub use event::*;
 use nostr_gossip_memory::prelude::*;
 use nostr_lmdb::NostrLmdb;
 use nostr_sdk::prelude::*;
-use smallvec::{smallvec, SmallVec};
 
-pub fn init(cx: &mut App) {
-    NostrRegistry::set_global(cx.new(NostrRegistry::new), cx);
-}
+mod event;
 
-struct GlobalNostrRegistry(Entity<NostrRegistry>);
+static NOSTR_CLIENT: OnceLock<Client> = OnceLock::new();
 
-impl Global for GlobalNostrRegistry {}
-
-/// Nostr Registry
-#[derive(Debug)]
-pub struct NostrRegistry {
-    /// Nostr Client
-    client: Client,
-
-    /// Tasks for asynchronous operations
-    _tasks: SmallVec<[Task<()>; 1]>,
-}
-
-impl NostrRegistry {
-    /// Retrieve the global nostr state
-    pub fn global(cx: &App) -> Entity<Self> {
-        cx.global::<GlobalNostrRegistry>().0.clone()
-    }
-
-    /// Set the global nostr instance
-    fn set_global(state: Entity<Self>, cx: &mut App) {
-        cx.set_global(GlobalNostrRegistry(state));
-    }
-
-    /// Create a new nostr instance
-    fn new(cx: &mut Context<Self>) -> Self {
+pub fn client() -> &'static Client {
+    NOSTR_CLIENT.get_or_init(|| {
         // rustls uses the `aws_lc_rs` provider by default
         // This only errors if the default provider has already
         // been installed. We can ignore this `Result`.
@@ -54,7 +29,7 @@ impl NostrRegistry {
             });
 
         // Construct the lmdb
-        let lmdb = cx.background_executor().block(async move {
+        let lmdb = smol::block_on(async move {
             let path = config_dir().join("nostr");
             NostrLmdb::open(path)
                 .await
@@ -62,55 +37,10 @@ impl NostrRegistry {
         });
 
         // Construct the nostr client
-        let client = ClientBuilder::default()
+        ClientBuilder::default()
             .database(lmdb)
             .gossip(NostrGossipMemory::unbounded())
             .opts(opts)
-            .build();
-
-        let mut tasks = smallvec![];
-
-        tasks.push(
-            // Establish connection to the bootstrap relays
-            //
-            // And handle notifications from the nostr relay pool channel
-            cx.background_spawn({
-                let client = client.clone();
-
-                async move {
-                    // Connect to the bootstrap relays
-                    Self::connect(&client).await;
-
-                    // Handle notifications from the relay pool
-                    // Self::handle_notifications(&client, &gossip, &tracker).await;
-                }
-            }),
-        );
-
-        Self {
-            client,
-            _tasks: tasks,
-        }
-    }
-
-    /// Get the nostr client instance
-    pub fn client(&self) -> Client {
-        self.client.clone()
-    }
-
-    /// Establish connection to the bootstrap relays
-    async fn connect(client: &Client) {
-        // Get all bootstrapping relays
-        let mut urls = vec![];
-        urls.extend(BOOTSTRAP_RELAYS);
-        urls.extend(SEARCH_RELAYS);
-
-        // Add relay to the relay pool
-        for url in urls.into_iter() {
-            client.add_relay(url).await.ok();
-        }
-
-        // Connect to all added relays
-        client.connect().await;
-    }
+            .build()
+    })
 }

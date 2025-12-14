@@ -1,15 +1,15 @@
 use std::sync::Arc;
 
 use assets::Assets;
-use common::{APP_ID, CLIENT_NAME};
+use common::{APP_ID, BOOTSTRAP_RELAYS, CLIENT_NAME, SEARCH_RELAYS};
 use gpui::{
-    point, px, size, AppContext, Application, Bounds, KeyBinding, Menu, MenuItem, SharedString,
-    TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowDecorations, WindowKind,
-    WindowOptions,
+    point, px, size, AppContext, Application, Bounds, SharedString, TitlebarOptions,
+    WindowBackgroundAppearance, WindowBounds, WindowDecorations, WindowKind, WindowOptions,
 };
 use gpui_component::Root;
+use state::client;
 
-use crate::actions::{load_embedded_fonts, quit, Quit};
+use crate::actions::load_embedded_fonts;
 use crate::workspace::Workspace;
 
 mod actions;
@@ -29,27 +29,31 @@ fn main() {
         .with_assets(Assets)
         .with_http_client(Arc::new(reqwest_client::ReqwestClient::new()));
 
+    // Initialize the nostr client
+    let client = client();
+
+    // Establish connection to all bootstrap relays
+    app.background_executor()
+        .spawn_with_priority(gpui::Priority::High, async move {
+            // Add bootstrap relays to the relay pool
+            for url in BOOTSTRAP_RELAYS {
+                client.add_relay(url).await.ok();
+            }
+
+            // Add search relays to the relay pool
+            for url in SEARCH_RELAYS {
+                client.add_relay(url).await.ok();
+            }
+
+            // Connect to all added relays
+            client.connect().await;
+        })
+        .detach();
+
     // Run application
     app.run(move |cx| {
         // Load embedded fonts in assets/fonts
         load_embedded_fonts(cx);
-
-        // Register the `quit` function
-        cx.on_action(quit);
-
-        // Register the `quit` function with CMD+Q (macOS)
-        #[cfg(target_os = "macos")]
-        cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
-
-        // Register the `quit` function with Super+Q (others)
-        #[cfg(not(target_os = "macos"))]
-        cx.bind_keys([KeyBinding::new("super-q", Quit, None)]);
-
-        // Set menu items
-        cx.set_menus(vec![Menu {
-            name: "Lume".into(),
-            items: vec![MenuItem::action("Quit", Quit)],
-        }]);
 
         // Set up the window bounds
         let bounds = Bounds::centered(None, size(px(920.0), px(700.0)), cx);
@@ -82,9 +86,6 @@ fn main() {
 
             // Initialize themes
             themes::init(cx);
-
-            // Initialize app state
-            state::init(cx);
 
             // Initialize account
             account::init(cx);

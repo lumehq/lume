@@ -27,8 +27,3 @@ pub fn load_embedded_fonts(cx: &App) {
         .add_fonts(embedded_fonts.into_inner().unwrap())
         .unwrap();
 }
-
-pub fn quit(_: &Quit, cx: &mut App) {
-    log::info!("Gracefully quitting the application . . .");
-    cx.quit();
-}

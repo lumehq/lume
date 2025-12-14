@@ -34,3 +34,4 @@ futures.workspace = true
 oneshot.workspace = true
 
 tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
+flume = { version = "0.12", default-features = false, features = ["async", "select"] }
