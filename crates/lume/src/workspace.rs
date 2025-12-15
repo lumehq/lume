@@ -1,8 +1,9 @@
+use std::collections::HashSet;
 use std::sync::Arc;
 
 use account::Account;
 use anyhow::Error;
-use common::{CLIENT_NAME, DEFAULT_SIDEBAR_WIDTH};
+use common::{BOOTSTRAP_RELAYS, CLIENT_NAME, DEFAULT_SIDEBAR_WIDTH};
 use gpui::{
     div, px, AppContext, Axis, Context, Entity, InteractiveElement, IntoElement, ParentElement,
     Render, Styled, Subscription, Task, Window,
@@ -10,11 +11,12 @@ use gpui::{
 use gpui_component::dock::{DockArea, DockItem};
 use gpui_component::{v_flex, Root, Theme};
 use nostr_sdk::prelude::*;
+use person::PersonRegistry;
 use smallvec::{smallvec, SmallVec};
 use state::{client, StateEvent};
 
 use crate::panels::startup;
-use crate::sidebar;
+use crate::sidebar::{self, SidebarEvent};
 use crate::title_bar::AppTitleBar;
 
 #[derive(Debug)]
@@ -60,37 +62,90 @@ impl Workspace {
         // Handle nostr notifications
         tasks.push(cx.background_spawn(async move {
             let client = client();
+            let opts = SubscribeAutoCloseOptions::default().exit_policy(ReqExitPolicy::ExitOnEOSE);
             let mut notifications = client.notifications();
+            let mut processed_events: HashSet<EventId> = HashSet::default();
 
             while let Ok(notification) = notifications.recv().await {
-                let RelayPoolNotification::Message { message, relay_url } = notification else {
+                let RelayPoolNotification::Message { message, .. } = notification else {
                     continue;
                 };
 
                 match message {
                     RelayMessage::Event { event, .. } => {
-                        // TODO
+                        // Skip if already processed
+                        if !processed_events.insert(event.id) {
+                            continue;
+                        }
+
+                        match event.kind {
+                            Kind::TextNote => {
+                                // TODO
+                            }
+                            Kind::ContactList => {
+                                // Get all public keys from the event
+                                let public_keys: Vec<PublicKey> =
+                                    event.tags.public_keys().copied().collect();
+
+                                // Construct a filter to get metadata for each public key
+                                let filter = Filter::new()
+                                    .kind(Kind::Metadata)
+                                    .limit(public_keys.len())
+                                    .authors(public_keys);
+
+                                // Subscribe to metadata events in the bootstrap relays
+                                client
+                                    .subscribe_to(BOOTSTRAP_RELAYS, filter, Some(opts))
+                                    .await?;
+
+                                // Notify GPUI of received contact list
+                                tx.send_async(StateEvent::ReceivedContactList).await.ok();
+                            }
+                            Kind::Metadata => {
+                                // Parse metadata from event, default if invalid
+                                let metadata =
+                                    Metadata::from_json(&event.content).unwrap_or_default();
+
+                                // Construct nostr profile with metadata and public key
+                                let profile = Box::new(Profile::new(event.pubkey, metadata));
+
+                                // Notify GPUI of received profile
+                                tx.send_async(StateEvent::ReceivedProfile(profile))
+                                    .await
+                                    .ok();
+                            }
+                            _ => {}
+                        }
                     }
-                    RelayMessage::EndOfStoredEvents(subscription_id) => {
+                    RelayMessage::EndOfStoredEvents(_) => {
                         // TODO
                     }
                     _ => {}
                 }
             }
-
             Ok(())
         }));
 
         // Handle state events
-        tasks.push(cx.spawn_in(window, async move |this, cx| {
+        tasks.push(cx.spawn_in(window, async move |_this, cx| {
             while let Ok(event) = rx.recv_async().await {
-                cx.update(|window, cx| {
-                    // TODO
+                cx.update(|_window, cx| match event {
+                    StateEvent::ReceivedContactList => {
+                        let account = Account::global(cx);
+                        account.update(cx, |this, cx| {
+                            this.load_contacts(cx);
+                        });
+                    }
+                    StateEvent::ReceivedProfile(profile) => {
+                        let person = PersonRegistry::global(cx);
+                        person.update(cx, |this, cx| {
+                            this.insert_or_update(&profile, cx);
+                        });
+                    }
                 })
                 // Entity has been released, ignore any errors
                 .ok();
             }
-
             Ok(())
         }));
 
@@ -102,14 +157,29 @@ impl Workspace {
         }
     }
 
-    fn init_app_layout(&self, window: &mut Window, cx: &mut Context<Self>) {
+    fn init_app_layout(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         let weak_dock = self.dock.downgrade();
 
-        let sidebar = Arc::new(sidebar::init(window, cx));
+        let sidebar = sidebar::init(window, cx);
         let startup = Arc::new(startup::init(window, cx));
 
+        self._subscriptions.push(cx.subscribe_in(
+            &sidebar,
+            window,
+            |_this, _sidebar, event: &SidebarEvent, _window, _cx| {
+                match event {
+                    SidebarEvent::OpenPublicKey(public_key) => {
+                        log::info!("Open public key: {public_key}");
+                    }
+                    SidebarEvent::OpenRelay(relay) => {
+                        log::info!("Open relay url: {relay}")
+                    }
+                };
+            },
+        ));
+
         // Construct left dock (sidebar)
-        let left = DockItem::panel(sidebar);
+        let left = DockItem::panel(Arc::new(sidebar));
 
         // Construct center dock
         let center = DockItem::split_with_sizes(

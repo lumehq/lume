@@ -90,6 +90,9 @@ fn main() {
             // Initialize account
             account::init(cx);
 
+            // Initialize person registry
+            person::init(cx);
+
             let workspace = cx.new(|cx| Workspace::new(window, cx));
             cx.new(|cx| Root::new(workspace, window, cx))
         })

@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::env;
 
 use anyhow::Error;
@@ -15,8 +16,11 @@ struct GlobalAccount(Entity<Account>);
 impl Global for GlobalAccount {}
 
 pub struct Account {
-    /// The public key of the account
+    /// Public Key of the account
     public_key: Option<PublicKey>,
+
+    /// Contact List of the account
+    pub contacts: Entity<HashSet<PublicKey>>,
 
     /// Event subscriptions
     _subscriptions: SmallVec<[Subscription; 1]>,
@@ -48,6 +52,8 @@ impl Account {
 
     /// Create a new account instance
     fn new(cx: &mut Context<Self>) -> Self {
+        let contacts = cx.new(|_| HashSet::default());
+
         // Collect command line arguments
         let args: Vec<String> = env::args().collect();
         let account = args.get(1).and_then(|s| Keys::parse(s).ok());
@@ -56,11 +62,11 @@ impl Account {
         let mut tasks = smallvec![];
 
         if let Some(keys) = account {
+            let public_key = keys.public_key();
+
             tasks.push(
                 // Set signer in background
                 cx.spawn(async move |this, cx| {
-                    let public_key = keys.public_key();
-
                     // Set the signer
                     cx.background_executor()
                         .await_on_background(async move {
@@ -91,20 +97,10 @@ impl Account {
 
         Self {
             public_key: None,
+            contacts,
             _subscriptions: subscriptions,
             _tasks: tasks,
         }
-    }
-
-    /// Check if the account entity has a public key
-    pub fn has_account(&self) -> bool {
-        self.public_key.is_some()
-    }
-
-    /// Get the public key of the account
-    pub fn public_key(&self) -> PublicKey {
-        // This method is only called when user is logged in, so unwrap safely
-        self.public_key.unwrap()
     }
 
     fn init(&mut self, public_key: PublicKey, cx: &mut Context<Self>) {
@@ -136,5 +132,42 @@ impl Account {
         });
 
         self._tasks.push(task);
+    }
+
+    /// Check if the account entity has a public key
+    pub fn has_account(&self) -> bool {
+        self.public_key.is_some()
+    }
+
+    /// Get the public key of the account
+    pub fn public_key(&self) -> PublicKey {
+        // This method is only called when user is logged in, so unwrap safely
+        self.public_key.unwrap()
+    }
+
+    /// Load the contacts of the account from the database
+    pub fn load_contacts(&mut self, cx: &mut Context<Self>) {
+        let task: Task<Result<HashSet<PublicKey>, Error>> = cx.background_spawn(async move {
+            let client = client();
+            let signer = client.signer().await?;
+            let public_key = signer.get_public_key().await?;
+            let contacts = client.database().contacts_public_keys(public_key).await?;
+
+            Ok(contacts)
+        });
+
+        self._tasks.push(cx.spawn(async move |this, cx| {
+            if let Ok(contacts) = task.await {
+                this.update(cx, |this, cx| {
+                    this.contacts.update(cx, |this, cx| {
+                        this.extend(contacts);
+                        cx.notify();
+                    });
+                })
+                .ok();
+            }
+
+            Ok(())
+        }));
     }
 }
