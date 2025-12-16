@@ -8,16 +8,23 @@ use gpui::{
     div, px, AppContext, Axis, Context, Entity, InteractiveElement, IntoElement, ParentElement,
     Render, Styled, Subscription, Task, Window,
 };
-use gpui_component::dock::{DockArea, DockItem};
+use gpui_component::dock::{DockArea, DockItem, DockPlacement, PanelStyle};
 use gpui_component::{v_flex, Root, Theme};
 use nostr_sdk::prelude::*;
 use person::PersonRegistry;
 use smallvec::{smallvec, SmallVec};
 use state::{client, StateEvent};
 
+use crate::panels::feed::Feed;
 use crate::panels::startup;
-use crate::sidebar::{self, SidebarEvent};
+use crate::sidebar;
 use crate::title_bar::AppTitleBar;
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub enum WorkspaceEvent {
+    OpenPublicKey(PublicKey),
+    OpenRelay(RelayUrl),
+}
 
 #[derive(Debug)]
 pub struct Workspace {
@@ -36,11 +43,20 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
-        let dock = cx.new(|cx| DockArea::new("dock", None, window, cx));
-        let title_bar = cx.new(|cx| AppTitleBar::new(CLIENT_NAME, window, cx));
         let account = Account::global(cx);
 
+        // App's title bar
+        let title_bar = cx.new(|cx| AppTitleBar::new(CLIENT_NAME, window, cx));
+
+        // Dock area for the workspace.
+        let dock =
+            cx.new(|cx| DockArea::new("dock", Some(1), window, cx).panel_style(PanelStyle::TabBar));
+
+        // Channel for communication between Nostr and GPUI
+        let (tx, rx) = flume::bounded::<StateEvent>(2048);
+
         let mut subscriptions = smallvec![];
+        let mut tasks = smallvec![];
 
         // Automatically sync theme with system appearance
         subscriptions.push(window.observe_window_appearance(|window, cx| {
@@ -55,9 +71,6 @@ impl Workspace {
                 }
             }),
         );
-
-        let mut tasks = smallvec![];
-        let (tx, rx) = flume::bounded::<StateEvent>(2048);
 
         // Handle nostr notifications
         tasks.push(cx.background_spawn(async move {
@@ -79,9 +92,6 @@ impl Workspace {
                         }
 
                         match event.kind {
-                            Kind::TextNote => {
-                                // TODO
-                            }
                             Kind::ContactList => {
                                 // Get all public keys from the event
                                 let public_keys: Vec<PublicKey> =
@@ -166,13 +176,19 @@ impl Workspace {
         self._subscriptions.push(cx.subscribe_in(
             &sidebar,
             window,
-            |_this, _sidebar, event: &SidebarEvent, _window, _cx| {
+            |this, _sidebar, event: &WorkspaceEvent, window, cx| {
                 match event {
-                    SidebarEvent::OpenPublicKey(public_key) => {
-                        log::info!("Open public key: {public_key}");
+                    WorkspaceEvent::OpenPublicKey(public_key) => {
+                        let view = cx.new(|cx| Feed::new(Some(*public_key), None, window, cx));
+                        this.dock.update(cx, |this, cx| {
+                            this.add_panel(Arc::new(view), DockPlacement::Center, None, window, cx);
+                        });
                     }
-                    SidebarEvent::OpenRelay(relay) => {
-                        log::info!("Open relay url: {relay}")
+                    WorkspaceEvent::OpenRelay(relay) => {
+                        let view = cx.new(|cx| Feed::new(None, Some(relay.to_owned()), window, cx));
+                        this.dock.update(cx, |this, cx| {
+                            this.add_panel(Arc::new(view), DockPlacement::Center, None, window, cx);
+                        });
                     }
                 };
             },
