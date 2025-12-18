@@ -15,6 +15,7 @@ pub fn init(title: impl Into<SharedString>, cx: &mut App) -> Entity<AppMenuBar> 
     cx.observe_global::<Theme>({
         let title = title.clone();
         let app_menu_bar = app_menu_bar.clone();
+
         move |cx| {
             update_app_menu(title.clone(), app_menu_bar.clone(), cx);
         }
@@ -26,6 +27,7 @@ pub fn init(title: impl Into<SharedString>, cx: &mut App) -> Entity<AppMenuBar> 
 
 fn update_app_menu(title: impl Into<SharedString>, app_menu_bar: Entity<AppMenuBar>, cx: &mut App) {
     let mode = cx.theme().mode;
+
     cx.set_menus(vec![
         Menu {
             name: title.into(),
@@ -87,6 +89,7 @@ fn update_app_menu(title: impl Into<SharedString>, app_menu_bar: Entity<AppMenuB
 fn theme_menu(cx: &App) -> MenuItem {
     let themes = ThemeRegistry::global(cx).sorted_themes();
     let current_name = cx.theme().theme_name();
+
     MenuItem::Submenu(Menu {
         name: "Theme".into(),
         items: themes

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use assets::Assets;
-use common::{APP_ID, BOOTSTRAP_RELAYS, CLIENT_NAME, SEARCH_RELAYS};
+use common::{APP_ID, BOOTSTRAP_RELAYS, CLIENT_NAME};
 use gpui::{
     point, px, size, AppContext, Application, Bounds, SharedString, TitlebarOptions,
     WindowBackgroundAppearance, WindowBounds, WindowDecorations, WindowKind, WindowOptions,
@@ -37,11 +37,6 @@ fn main() {
         .spawn_with_priority(gpui::Priority::High, async move {
             // Add bootstrap relays to the relay pool
             for url in BOOTSTRAP_RELAYS {
-                client.add_relay(url).await.ok();
-            }
-
-            // Add search relays to the relay pool
-            for url in SEARCH_RELAYS {
                 client.add_relay(url).await.ok();
             }
 

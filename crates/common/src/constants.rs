@@ -1,4 +1,7 @@
+/// Client (or application) name.
 pub const CLIENT_NAME: &str = "Lume";
+
+/// Application ID.
 pub const APP_ID: &str = "su.reya.lume";
 
 /// Bootstrap Relays.
@@ -8,13 +11,6 @@ pub const BOOTSTRAP_RELAYS: [&str; 5] = [
     "wss://relay.nos.social",
     "wss://user.kindpag.es",
     "wss://purplepag.es",
-];
-
-/// Search Relays.
-pub const SEARCH_RELAYS: [&str; 3] = [
-    "wss://relay.nostr.band",
-    "wss://search.nos.today",
-    "wss://relay.noswhere.com",
 ];
 
 /// Default relay for Nostr Connect

@@ -1,4 +1,3 @@
-use account::Account;
 use common::BOOTSTRAP_RELAYS;
 use gpui::{
     div, App, AppContext, Context, Entity, EventEmitter, FocusHandle, Focusable,
@@ -47,8 +46,7 @@ impl Focusable for Sidebar {
 impl Render for Sidebar {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let person = PersonRegistry::global(cx);
-        let account = Account::global(cx);
-        let contacts = account.read(cx).contacts.read(cx);
+        let contacts = Vec::new();
 
         v_flex()
             .id("sidebar-wrapper")

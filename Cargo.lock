@@ -3512,7 +3512,6 @@ dependencies = [
  "anyhow",
  "assets",
  "common",
- "dirs 5.0.1",
  "flume 0.12.0",
  "futures",
  "gpui",
@@ -3522,7 +3521,6 @@ dependencies = [
  "log",
  "nostr-connect",
  "nostr-sdk",
- "oneshot",
  "person",
  "reqwest_client",
  "serde",
@@ -4016,6 +4014,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "note"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "common",
+ "flume 0.12.0",
+ "gpui",
+ "log",
+ "nostr-sdk",
+ "smallvec",
+ "state",
+]
+
+[[package]]
 name = "notify"
 version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4316,12 +4328,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
-name = "oneshot"
-version = "0.1.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4ce411919553d3f9fa53a0880544cda985a112117a0444d5ff1e870a893d6ea"
-
-[[package]]
 name = "oo7"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4552,13 +4558,11 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "common",
+ "flume 0.12.0",
  "gpui",
  "log",
  "nostr-sdk",
- "serde",
- "serde_json",
  "smallvec",
- "smol",
  "state",
 ]
 

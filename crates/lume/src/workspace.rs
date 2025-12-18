@@ -1,22 +1,18 @@
-use std::collections::HashSet;
 use std::sync::Arc;
 
 use account::Account;
-use anyhow::Error;
-use common::{BOOTSTRAP_RELAYS, CLIENT_NAME, DEFAULT_SIDEBAR_WIDTH};
+use common::{CLIENT_NAME, DEFAULT_SIDEBAR_WIDTH};
 use gpui::{
     div, px, AppContext, Axis, Context, Entity, InteractiveElement, IntoElement, ParentElement,
-    Render, Styled, Subscription, Task, Window,
+    Render, Styled, Subscription, Window,
 };
 use gpui_component::dock::{DockArea, DockItem, DockPlacement, PanelStyle};
 use gpui_component::{v_flex, Root, Theme};
 use nostr_sdk::prelude::*;
-use person::PersonRegistry;
 use smallvec::{smallvec, SmallVec};
-use state::{client, StateEvent};
 
 use crate::panels::feed::Feed;
-use crate::panels::startup;
+use crate::panels::{onboarding, startup};
 use crate::sidebar;
 use crate::title_bar::AppTitleBar;
 
@@ -36,32 +32,23 @@ pub struct Workspace {
 
     /// Event subscriptions
     _subscriptions: SmallVec<[Subscription; 1]>,
-
-    /// Background tasks
-    _tasks: SmallVec<[Task<Result<(), Error>>; 2]>,
 }
 
 impl Workspace {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
-        let account = Account::global(cx);
-
         // App's title bar
         let title_bar = cx.new(|cx| AppTitleBar::new(CLIENT_NAME, window, cx));
 
         // Dock area for the workspace.
-        let dock =
-            cx.new(|cx| DockArea::new("dock", Some(1), window, cx).panel_style(PanelStyle::TabBar));
+        let dock = cx.new(|cx| {
+            let startup = Arc::new(onboarding::init(window, cx));
+            let mut this = DockArea::new("dock", None, window, cx).panel_style(PanelStyle::TabBar);
+            this.set_center(DockItem::panel(startup), window, cx);
+            this
+        });
 
-        // Channel for communication between Nostr and GPUI
-        let (tx, rx) = flume::bounded::<StateEvent>(2048);
-
+        let account = Account::global(cx);
         let mut subscriptions = smallvec![];
-        let mut tasks = smallvec![];
-
-        // Automatically sync theme with system appearance
-        subscriptions.push(window.observe_window_appearance(|window, cx| {
-            Theme::sync_system_appearance(Some(window), cx);
-        }));
 
         // Observe account entity changes
         subscriptions.push(
@@ -72,98 +59,15 @@ impl Workspace {
             }),
         );
 
-        // Handle nostr notifications
-        tasks.push(cx.background_spawn(async move {
-            let client = client();
-            let opts = SubscribeAutoCloseOptions::default().exit_policy(ReqExitPolicy::ExitOnEOSE);
-            let mut notifications = client.notifications();
-            let mut processed_events: HashSet<EventId> = HashSet::default();
-
-            while let Ok(notification) = notifications.recv().await {
-                let RelayPoolNotification::Message { message, .. } = notification else {
-                    continue;
-                };
-
-                match message {
-                    RelayMessage::Event { event, .. } => {
-                        // Skip if already processed
-                        if !processed_events.insert(event.id) {
-                            continue;
-                        }
-
-                        match event.kind {
-                            Kind::ContactList => {
-                                // Get all public keys from the event
-                                let public_keys: Vec<PublicKey> =
-                                    event.tags.public_keys().copied().collect();
-
-                                // Construct a filter to get metadata for each public key
-                                let filter = Filter::new()
-                                    .kind(Kind::Metadata)
-                                    .limit(public_keys.len())
-                                    .authors(public_keys);
-
-                                // Subscribe to metadata events in the bootstrap relays
-                                client
-                                    .subscribe_to(BOOTSTRAP_RELAYS, filter, Some(opts))
-                                    .await?;
-
-                                // Notify GPUI of received contact list
-                                tx.send_async(StateEvent::ReceivedContactList).await.ok();
-                            }
-                            Kind::Metadata => {
-                                // Parse metadata from event, default if invalid
-                                let metadata =
-                                    Metadata::from_json(&event.content).unwrap_or_default();
-
-                                // Construct nostr profile with metadata and public key
-                                let profile = Box::new(Profile::new(event.pubkey, metadata));
-
-                                // Notify GPUI of received profile
-                                tx.send_async(StateEvent::ReceivedProfile(profile))
-                                    .await
-                                    .ok();
-                            }
-                            _ => {}
-                        }
-                    }
-                    RelayMessage::EndOfStoredEvents(_) => {
-                        // TODO
-                    }
-                    _ => {}
-                }
-            }
-            Ok(())
-        }));
-
-        // Handle state events
-        tasks.push(cx.spawn_in(window, async move |_this, cx| {
-            while let Ok(event) = rx.recv_async().await {
-                cx.update(|_window, cx| match event {
-                    StateEvent::ReceivedContactList => {
-                        let account = Account::global(cx);
-                        account.update(cx, |this, cx| {
-                            this.load_contacts(cx);
-                        });
-                    }
-                    StateEvent::ReceivedProfile(profile) => {
-                        let person = PersonRegistry::global(cx);
-                        person.update(cx, |this, cx| {
-                            this.insert_or_update(&profile, cx);
-                        });
-                    }
-                })
-                // Entity has been released, ignore any errors
-                .ok();
-            }
-            Ok(())
+        // Automatically sync theme with system appearance
+        subscriptions.push(window.observe_window_appearance(|window, cx| {
+            Theme::sync_system_appearance(Some(window), cx);
         }));
 
         Self {
             dock,
             title_bar,
             _subscriptions: subscriptions,
-            _tasks: tasks,
         }
     }
 

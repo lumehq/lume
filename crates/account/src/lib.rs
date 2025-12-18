@@ -1,6 +1,3 @@
-use std::collections::HashSet;
-use std::env;
-
 use anyhow::Error;
 use gpui::{App, AppContext, Context, Entity, Global, Subscription, Task};
 use nostr_sdk::prelude::*;
@@ -18,9 +15,6 @@ impl Global for GlobalAccount {}
 pub struct Account {
     /// Public Key of the account
     public_key: Option<PublicKey>,
-
-    /// Contact List of the account
-    pub contacts: Entity<HashSet<PublicKey>>,
 
     /// Event subscriptions
     _subscriptions: SmallVec<[Subscription; 1]>,
@@ -52,39 +46,7 @@ impl Account {
 
     /// Create a new account instance
     fn new(cx: &mut Context<Self>) -> Self {
-        let contacts = cx.new(|_| HashSet::default());
-
-        // Collect command line arguments
-        let args: Vec<String> = env::args().collect();
-        let account = args.get(1).and_then(|s| Keys::parse(s).ok());
-
         let mut subscriptions = smallvec![];
-        let mut tasks = smallvec![];
-
-        if let Some(keys) = account {
-            let public_key = keys.public_key();
-
-            tasks.push(
-                // Set signer in background
-                cx.spawn(async move |this, cx| {
-                    // Set the signer
-                    cx.background_executor()
-                        .await_on_background(async move {
-                            let client = client();
-                            client.set_signer(keys).await;
-
-                            log::info!("Signer is set");
-                        })
-                        .await;
-
-                    // Update state
-                    this.update(cx, |this, cx| {
-                        this.public_key = Some(public_key);
-                        cx.notify();
-                    })
-                }),
-            );
-        }
 
         subscriptions.push(
             // Listen for public key set
@@ -97,9 +59,8 @@ impl Account {
 
         Self {
             public_key: None,
-            contacts,
             _subscriptions: subscriptions,
-            _tasks: tasks,
+            _tasks: smallvec![],
         }
     }
 
@@ -126,7 +87,24 @@ impl Account {
             // Subscribe to the user's contact list
             client.subscribe(filter, Some(opts)).await?;
 
-            log::info!("Subscribed to user metadata and contact list");
+            // Construct a filter to get the user's other metadata
+            let filter = Filter::new()
+                .kinds(vec![
+                    Kind::MuteList,
+                    Kind::Bookmarks,
+                    Kind::BookmarkSet,
+                    Kind::SearchRelays,
+                    Kind::BlockedRelays,
+                    Kind::RelaySet,
+                    Kind::Custom(10012),
+                ])
+                .author(public_key)
+                .limit(24);
+
+            // Subscribe to the user's other metadata
+            client.subscribe(filter, Some(opts)).await?;
+
+            log::info!("Subscribed to user metadata");
 
             Ok(())
         });
@@ -143,31 +121,5 @@ impl Account {
     pub fn public_key(&self) -> PublicKey {
         // This method is only called when user is logged in, so unwrap safely
         self.public_key.unwrap()
-    }
-
-    /// Load the contacts of the account from the database
-    pub fn load_contacts(&mut self, cx: &mut Context<Self>) {
-        let task: Task<Result<HashSet<PublicKey>, Error>> = cx.background_spawn(async move {
-            let client = client();
-            let signer = client.signer().await?;
-            let public_key = signer.get_public_key().await?;
-            let contacts = client.database().contacts_public_keys(public_key).await?;
-
-            Ok(contacts)
-        });
-
-        self._tasks.push(cx.spawn(async move |this, cx| {
-            if let Ok(contacts) = task.await {
-                this.update(cx, |this, cx| {
-                    this.contacts.update(cx, |this, cx| {
-                        this.extend(contacts);
-                        cx.notify();
-                    });
-                })
-                .ok();
-            }
-
-            Ok(())
-        }));
     }
 }

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use gpui::{App, AppContext, AsyncApp, Context, Entity, Global, Task};
 use nostr_sdk::prelude::*;
@@ -20,7 +20,7 @@ pub struct PersonRegistry {
     pub persons: HashMap<PublicKey, Entity<Profile>>,
 
     /// Tasks for asynchronous operations
-    _tasks: SmallVec<[Task<()>; 2]>,
+    _tasks: SmallVec<[Task<()>; 3]>,
 }
 
 impl PersonRegistry {
@@ -38,6 +38,9 @@ impl PersonRegistry {
     pub(crate) fn new(cx: &mut Context<Self>) -> Self {
         let mut tasks = smallvec![];
 
+        // Channel for communication between Nostr and GPUI
+        let (tx, rx) = flume::bounded::<Profile>(1024);
+
         tasks.push(
             // Load all user profiles from the database
             cx.spawn(async move |this, cx| {
@@ -53,6 +56,47 @@ impl PersonRegistry {
                     Err(e) => {
                         log::error!("Failed to load user profiles from database: {e}");
                     }
+                }
+            }),
+        );
+
+        tasks.push(
+            // Handle nostr notifications
+            cx.background_spawn(async move {
+                let client = client();
+                let mut notifications = client.notifications();
+                let mut processed_events: HashSet<EventId> = HashSet::default();
+
+                while let Ok(notification) = notifications.recv().await {
+                    let RelayPoolNotification::Message { message, .. } = notification else {
+                        continue;
+                    };
+
+                    if let RelayMessage::Event { event, .. } = message {
+                        // Skip if already processed
+                        if !processed_events.insert(event.id) {
+                            continue;
+                        }
+
+                        if event.kind == Kind::Metadata {
+                            let metadata = Metadata::from_json(&event.content).unwrap_or_default();
+                            let profile = Profile::new(event.pubkey, metadata);
+
+                            tx.send_async(profile).await.ok();
+                        }
+                    }
+                }
+            }),
+        );
+
+        tasks.push(
+            // Update GPUI state
+            cx.spawn(async move |this, cx| {
+                while let Ok(profile) = rx.recv_async().await {
+                    this.update(cx, |this, cx| {
+                        this.insert_or_update(&profile, cx);
+                    })
+                    .ok();
                 }
             }),
         );
@@ -110,8 +154,7 @@ impl PersonRegistry {
     pub fn get(&self, public_key: &PublicKey, cx: &App) -> Profile {
         self.persons
             .get(public_key)
-            .map(|e| e.read(cx))
-            .cloned()
+            .map(|e| e.read(cx).clone())
             .unwrap_or(Profile::new(public_key.to_owned(), Metadata::default()))
     }
 }
