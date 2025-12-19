@@ -16,5 +16,8 @@ pub const BOOTSTRAP_RELAYS: [&str; 5] = [
 /// Default relay for Nostr Connect
 pub const NOSTR_CONNECT_RELAY: &str = "wss://relay.nsec.app";
 
+/// Default timeout for Nostr Connect (seconds)
+pub const NOSTR_CONNECT_TIMEOUT: u64 = 30;
+
 /// Default width of the sidebar.
 pub const DEFAULT_SIDEBAR_WIDTH: f32 = 240.;

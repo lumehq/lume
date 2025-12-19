@@ -34,3 +34,5 @@ futures.workspace = true
 flume.workspace = true
 
 tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
+qrcode = "0.14.1"
+webbrowser = "1.0.6"

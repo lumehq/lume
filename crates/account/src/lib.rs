@@ -112,6 +112,12 @@ impl Account {
         self._tasks.push(task);
     }
 
+    /// Set the public key of the account
+    pub fn set_public_key(&mut self, public_key: PublicKey, cx: &mut Context<Self>) {
+        self.public_key = Some(public_key);
+        cx.notify();
+    }
+
     /// Check if the account entity has a public key
     pub fn has_account(&self) -> bool {
         self.public_key.is_some()

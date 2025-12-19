@@ -10,7 +10,7 @@ use gpui_component::{h_flex, v_flex, ActiveTheme, StyledExt};
 use nostr_sdk::prelude::*;
 use person::PersonRegistry;
 
-use crate::workspace::WorkspaceEvent;
+use crate::workspace::OpenPanel;
 
 pub fn init(window: &mut Window, cx: &mut App) -> Entity<Sidebar> {
     cx.new(|cx| Sidebar::new(window, cx))
@@ -35,7 +35,7 @@ impl Panel for Sidebar {
 }
 
 impl EventEmitter<PanelEvent> for Sidebar {}
-impl EventEmitter<WorkspaceEvent> for Sidebar {}
+impl EventEmitter<OpenPanel> for Sidebar {}
 
 impl Focusable for Sidebar {
     fn focus_handle(&self, _cx: &App) -> FocusHandle {
@@ -80,7 +80,7 @@ impl Render for Sidebar {
                                     .child(div().text_sm().child(SharedString::from(relay)))
                                     .on_click(cx.listener(move |_this, _ev, _window, cx| {
                                         if let Ok(url) = RelayUrl::parse(relay) {
-                                            cx.emit(WorkspaceEvent::OpenRelay(url));
+                                            cx.emit(OpenPanel::Relay(url));
                                         }
                                     })),
                             )
@@ -117,9 +117,7 @@ impl Render for Sidebar {
                                     .hover(|this| this.bg(cx.theme().list_hover))
                                     .child(div().text_sm().child(name.clone()))
                                     .on_click(cx.listener(move |_this, _ev, _window, cx| {
-                                        cx.emit(WorkspaceEvent::OpenPublicKey(
-                                            profile.public_key(),
-                                        ));
+                                        cx.emit(OpenPanel::PublicKey(profile.public_key()));
                                     })),
                             )
                         }

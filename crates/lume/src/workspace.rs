@@ -12,14 +12,16 @@ use nostr_sdk::prelude::*;
 use smallvec::{smallvec, SmallVec};
 
 use crate::panels::feed::Feed;
-use crate::panels::{onboarding, startup};
+use crate::panels::{login, new_account, onboarding, startup};
 use crate::sidebar;
 use crate::title_bar::AppTitleBar;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub enum WorkspaceEvent {
-    OpenPublicKey(PublicKey),
-    OpenRelay(RelayUrl),
+pub enum OpenPanel {
+    PublicKey(PublicKey),
+    Relay(RelayUrl),
+    Signup,
+    Login,
 }
 
 #[derive(Debug)]
@@ -36,18 +38,19 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+        let account = Account::global(cx);
+        let onboarding = Arc::new(onboarding::init(window, cx));
+
         // App's title bar
         let title_bar = cx.new(|cx| AppTitleBar::new(CLIENT_NAME, window, cx));
 
         // Dock area for the workspace.
         let dock = cx.new(|cx| {
-            let startup = Arc::new(onboarding::init(window, cx));
             let mut this = DockArea::new("dock", None, window, cx).panel_style(PanelStyle::TabBar);
-            this.set_center(DockItem::panel(startup), window, cx);
+            this.set_center(DockItem::panel(onboarding.clone()), window, cx);
             this
         });
 
-        let account = Account::global(cx);
         let mut subscriptions = smallvec![];
 
         // Observe account entity changes
@@ -58,6 +61,31 @@ impl Workspace {
                 }
             }),
         );
+
+        // Observe onboarding panel events
+        subscriptions.push(cx.subscribe_in(
+            &onboarding,
+            window,
+            |this, _sidebar, event: &OpenPanel, window, cx| {
+                match event {
+                    OpenPanel::Login => {
+                        let view = login::init(window, cx);
+
+                        this.dock.update(cx, |this, cx| {
+                            this.set_center(DockItem::panel(Arc::new(view)), window, cx);
+                        });
+                    }
+                    OpenPanel::Signup => {
+                        let view = new_account::init(window, cx);
+
+                        this.dock.update(cx, |this, cx| {
+                            this.set_center(DockItem::panel(Arc::new(view)), window, cx);
+                        });
+                    }
+                    _ => {}
+                };
+            },
+        ));
 
         // Automatically sync theme with system appearance
         subscriptions.push(window.observe_window_appearance(|window, cx| {
@@ -80,20 +108,23 @@ impl Workspace {
         self._subscriptions.push(cx.subscribe_in(
             &sidebar,
             window,
-            |this, _sidebar, event: &WorkspaceEvent, window, cx| {
+            |this, _sidebar, event: &OpenPanel, window, cx| {
                 match event {
-                    WorkspaceEvent::OpenPublicKey(public_key) => {
+                    OpenPanel::PublicKey(public_key) => {
                         let view = cx.new(|cx| Feed::new(Some(*public_key), None, window, cx));
+
                         this.dock.update(cx, |this, cx| {
                             this.add_panel(Arc::new(view), DockPlacement::Center, None, window, cx);
                         });
                     }
-                    WorkspaceEvent::OpenRelay(relay) => {
+                    OpenPanel::Relay(relay) => {
                         let view = cx.new(|cx| Feed::new(None, Some(relay.to_owned()), window, cx));
+
                         this.dock.update(cx, |this, cx| {
                             this.add_panel(Arc::new(view), DockPlacement::Center, None, window, cx);
                         });
                     }
+                    _ => {}
                 };
             },
         ));
